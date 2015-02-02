@@ -2,5 +2,5 @@ Rust 	- Name of language - for UI, (example: Java)
 Rust 	- Name of language - for class names, (example: Java)
 com.github.rustdt	- base ID of plugins (example: org.eclipse.jdt)
 RustDT 	- Name of IDE (example: Java Development Tools)
-LANG_IDE_UPDATE_SITE - URL of Update site of the project
-LANG_IDE_WEBSITE_GIT_REPO - URL of Git repository of *project website*
+http://rustdt.github.io/releases/ - URL of Update site of the project
+https://github.com/RustDT/rustdt.github.io.git - URL of Git repository of *project website*
