@@ -1,6 +1,0 @@
-Rust 	- Name of language - for UI, (example: Java)
-Rust 	- Name of language - for class names, (example: Java)
-com.github.rustdt	- base ID of plugins (example: org.eclipse.jdt)
-RustDT 	- Name of IDE (example: Java Development Tools)
-http://rustdt.github.io/releases/ - URL of Update site of the project
-https://github.com/RustDT/rustdt.github.io.git - URL of Git repository of *project website*
