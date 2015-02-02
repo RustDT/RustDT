@@ -18,9 +18,9 @@ import org.eclipse.debug.core.model.ISourceLocator;
  * This class may not customize anything of GdbLaunch, but it exists to differenciate
  * from other GdbLaunch for CDT or other IDEs.
  */
-public class LANGUAGE_GdbLaunch extends GdbLaunch {
+public class RustGdbLaunch extends GdbLaunch {
 	
-	protected LANGUAGE_GdbLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
+	protected RustGdbLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
 		super(launchConfiguration, mode, locator);
 	}
 	

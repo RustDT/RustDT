@@ -5,8 +5,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
-import com.github.rustdt.ide.ui.editor.LANGUAGE_SimpleSourceViewerConfiguration;
-import com.github.rustdt.ide.ui.text.LANGUAGE_PartitionScanner;
+import com.github.rustdt.ide.ui.editor.RustSimpleSourceViewerConfiguration;
+import com.github.rustdt.ide.ui.text.RustPartitionScanner;
 
 
 public class TextSettings_Actual {
@@ -26,12 +26,12 @@ public class TextSettings_Actual {
 	}
 	
 	public static IPartitionTokenScanner createPartitionScanner() {
-		return new LANGUAGE_PartitionScanner();
+		return new RustPartitionScanner();
 	}
 	
-	public static LANGUAGE_SimpleSourceViewerConfiguration createSimpleSourceViewerConfiguration(
+	public static RustSimpleSourceViewerConfiguration createSimpleSourceViewerConfiguration(
 			IPreferenceStore preferenceStore, CColorManager colorManager) {
-		return new LANGUAGE_SimpleSourceViewerConfiguration(preferenceStore, colorManager);
+		return new RustSimpleSourceViewerConfiguration(preferenceStore, colorManager);
 	}
 	
 }

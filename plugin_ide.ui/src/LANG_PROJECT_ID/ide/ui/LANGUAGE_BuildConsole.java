@@ -12,10 +12,10 @@ package com.github.rustdt.ide.ui;
 
 import melnorme.lang.ide.ui.tools.console.ToolsConsole;
 
-public class LANGUAGE_BuildConsole extends ToolsConsole {
+public class RustBuildConsole extends ToolsConsole {
 	
-	public LANGUAGE_BuildConsole(String name) {
-		super(name, LANGUAGE_Images.TOOLS_CONSOLE.getDescriptor());
+	public RustBuildConsole(String name) {
+		super(name, RustImages.TOOLS_CONSOLE.getDescriptor());
 	}
 	
 }

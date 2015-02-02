@@ -6,9 +6,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 
 
-public class LANGUAGE_MainLaunchConfigurationTab extends MainLaunchConfigurationTab {
+public class RustMainLaunchConfigurationTab extends MainLaunchConfigurationTab {
 	
-	public LANGUAGE_MainLaunchConfigurationTab() {
+	public RustMainLaunchConfigurationTab() {
 		super();
 	}
 	

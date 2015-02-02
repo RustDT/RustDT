@@ -1,5 +1,5 @@
 LANGUAGE 	- Name of language - for UI, (example: Java)
-LANGUAGE_ 	- Name of language - for class names, (example: Java)
+Rust 	- Name of language - for class names, (example: Java)
 com.github.rustdt	- base ID of plugins (example: org.eclipse.jdt)
 RustDT 	- Name of IDE (example: Java Development Tools)
 LANG_IDE_UPDATE_SITE - URL of Update site of the project

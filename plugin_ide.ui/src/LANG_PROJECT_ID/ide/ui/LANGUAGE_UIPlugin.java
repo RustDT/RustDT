@@ -4,7 +4,7 @@ import melnorme.lang.ide.ui.LangUIPlugin;
 
 import org.osgi.framework.BundleContext;
 
-public class LANGUAGE_UIPlugin extends LangUIPlugin {
+public class RustUIPlugin extends LangUIPlugin {
 
 	@Override
 	protected void doCustomStop(BundleContext context) {

@@ -16,12 +16,12 @@ import melnorme.lang.tooling.ast.SourceRange;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class LANGUAGE_OpenDefinitionHandler extends AbstractOpenDefinitionHandler  {
+public class RustOpenDefinitionHandler extends AbstractOpenDefinitionHandler  {
 	
 	@Override
-	public LANGUAGE_OracleOpenDefinitionOperation createOperation(ITextEditor editor, SourceRange range,
+	public RustOracleOpenDefinitionOperation createOperation(ITextEditor editor, SourceRange range,
 			OpenNewEditorMode newEditorMode) {
-		return new LANGUAGE_OracleOpenDefinitionOperation(editor, range, newEditorMode);
+		return new RustOracleOpenDefinitionOperation(editor, range, newEditorMode);
 	}
 	
 }

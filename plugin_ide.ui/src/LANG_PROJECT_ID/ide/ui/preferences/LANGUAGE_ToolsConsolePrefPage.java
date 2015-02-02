@@ -13,6 +13,6 @@ package com.github.rustdt.ide.ui.preferences;
 import melnorme.lang.ide.ui.tools.console.AbstractToolsConsolePrefPage;
 
 
-public class LANGUAGE_ToolsConsolePrefPage extends AbstractToolsConsolePrefPage {
+public class RustToolsConsolePrefPage extends AbstractToolsConsolePrefPage {
 	
 }

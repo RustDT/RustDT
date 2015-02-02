@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: com.github.rustdt.ide.core;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %pluginProvider
-Bundle-Activator: com.github.rustdt.ide.core.LANGUAGE_Core
+Bundle-Activator: com.github.rustdt.ide.core.RustCore
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

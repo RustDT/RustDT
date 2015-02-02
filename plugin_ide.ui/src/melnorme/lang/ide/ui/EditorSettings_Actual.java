@@ -12,7 +12,7 @@ package melnorme.lang.ide.ui;
 
 public class EditorSettings_Actual {
 	
-	public static final String EDITOR_ID = "com.github.rustdt.ide.ui.editor.LANGUAGE_Editor";
+	public static final String EDITOR_ID = "com.github.rustdt.ide.ui.editor.RustEditor";
 	public static final String EDITOR_CONTEXT_ID = "com.github.rustdt.ide.ui.Contexts.Editor";
 	
 	public static final String EDITOR_CODE_TARGET = "com.github.rustdt.ide.ui.Editor.HyperlinkCodeTarget";

@@ -17,6 +17,6 @@ public interface OperationsConsolePrefDefaults_Actual {
 	static RGB INFO_COLOR_DEFAULT = new RGB(0, 0, 200);
 	static RGB STDERR_COLOR_DEFAULT = new RGB(255, 0, 0);
 	static RGB STDOUT_COLOR_DEFAULT = new RGB(0, 0, 0);
-	static RGB BACKGROUND_COLOR_DEFAULT = new RGB(124, 232, 52); // Change this: LANGUAGE_
+	static RGB BACKGROUND_COLOR_DEFAULT = new RGB(124, 232, 52); // Change this: Rust
 	
 }

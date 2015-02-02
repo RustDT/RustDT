@@ -12,6 +12,6 @@ package com.github.rustdt.ide.ui.editor;
 
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 
-public class LANGUAGE_EditorActionContributor extends TextEditorActionContributor {
+public class RustEditorActionContributor extends TextEditorActionContributor {
 	
 }

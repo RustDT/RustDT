@@ -12,7 +12,7 @@
    <extension
          point="org.eclipse.debug.core.launchDelegates">
       <launchDelegate
-            delegate="com.github.rustdt.ide.debug.ui.LANGUAGE_DebugLaunchConfigurationDelegate"
+            delegate="com.github.rustdt.ide.debug.ui.RustDebugLaunchConfigurationDelegate"
             id="com.github.rustdt.ide.debug.launchDelegate"
             modes="debug"
             sourceLocatorId="com.github.rustdt.ide.debug.SourceLocator"
@@ -25,9 +25,9 @@
 
    <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="com.github.rustdt.ide.debug.ui.LANGUAGE_DebugTabGroup"
+            class="com.github.rustdt.ide.debug.ui.RustDebugTabGroup"
             description="%DebugTabGroup.description"
-            id="com.github.rustdt.ide.debug.ui.LANGUAGE_DebugTabGroup"
+            id="com.github.rustdt.ide.debug.ui.RustDebugTabGroup"
             type="com.github.rustdt.ide.core.LaunchConfigurationType">
          <launchMode mode="debug" />
       </launchConfigurationTabGroup>
@@ -38,14 +38,14 @@
             class="melnorme.lang.ide.debug.ui.LangToggleBreakpointsTargetFactory"
             id="com.github.rustdt.ide.debug.toggleTargetFactory">
          <enablement>
-            <instanceof value="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor" />
+            <instanceof value="com.github.rustdt.ide.ui.editor.RustEditor" />
          </enablement>
       </toggleTargetFactory>
    </extension>
 
    <extension point="org.eclipse.ui.editorActions">
       <editorContribution
-         targetID="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor"
+         targetID="com.github.rustdt.ide.ui.editor.RustEditor"
          id="com.github.rustdt.ide.debug.ui.EditorBreakpointRulerActions">
 
          <action label="%dummyLabel"
@@ -58,7 +58,7 @@
    <extension
       point="org.eclipse.ui.menus">
       <menuContribution
-             locationURI="popup:#LANGUAGE_RulerContext?after=debug">
+             locationURI="popup:#RustRulerContext?after=debug">
          <menu 
               id="breakpointTypes.com.github.rustdt" 
               label="%BreakpointTypes.label">
@@ -73,7 +73,7 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            targetID="#LANGUAGE_RulerContext"
+            targetID="#RustRulerContext"
             id="com.github.rustdt.ide.debug.ui.EditorRulerDebugPopupActions">
          <action
                label="%RulerBreakpointProperties.label"
@@ -117,7 +117,7 @@
    
    <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            targetID="#LANGUAGE_EditorContext"
+            targetID="#RustEditorContext"
             id="com.github.rustdt.ide.debug.ui.EditorDebugPopupActions">
          <visibility>
             <and>
@@ -167,7 +167,7 @@
    <extension point="org.eclipse.core.runtime.adapters">
       <factory
             class="org.eclipse.cdt.debug.internal.ui.actions.RetargettableActionAdapterFactory"
-            adaptableType="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor">
+            adaptableType="com.github.rustdt.ide.ui.editor.RustEditor">
          <adapter type="org.eclipse.debug.ui.actions.IRunToLineTarget"/>
          <adapter type="org.eclipse.cdt.debug.internal.ui.actions.IResumeAtLineTarget"/>
          <adapter type="org.eclipse.cdt.debug.internal.ui.actions.IMoveToLineTarget"/>
@@ -176,7 +176,7 @@
    
    <extension point="org.eclipse.core.runtime.adapters">
       <factory 
-        	class="com.github.rustdt.ide.debug.ui.LANGUAGE_GdbAdapterFactory" 
+        	class="com.github.rustdt.ide.debug.ui.RustGdbAdapterFactory" 
 	        adaptableType="com.github.rustdtE.ide.debug.core.DeeGdbLaunch">
          <adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IElementContentProvider"/>
          <adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactory"/>

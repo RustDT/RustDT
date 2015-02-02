@@ -6,7 +6,7 @@
          id="nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
-         <run class="com.github.rustdt.ide.core.LANGUAGE_Nature"/>
+         <run class="com.github.rustdt.ide.core.RustNature"/>
       </runtime>
    </extension>
    
@@ -64,7 +64,7 @@
 	<extension
 		 point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
-			 delegate="com.github.rustdt.ide.core.launch.LANGUAGE_LaunchConfigDelegate"
+			 delegate="com.github.rustdt.ide.core.launch.RustLaunchConfigDelegate"
 			 id="com.github.rustdt.ide.core.LaunchConfigurationType"
 			 modes="run"
 			name="%localApplication">

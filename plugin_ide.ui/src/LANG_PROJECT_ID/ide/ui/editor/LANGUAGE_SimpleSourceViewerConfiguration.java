@@ -21,9 +21,9 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 
-public class LANGUAGE_SimpleSourceViewerConfiguration extends LANGUAGE_SourceViewerConfiguration {
+public class RustSimpleSourceViewerConfiguration extends RustSourceViewerConfiguration {
 	
-	public LANGUAGE_SimpleSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager) {
+	public RustSimpleSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager) {
 		super(preferenceStore, colorManager, null);
 	}
 	

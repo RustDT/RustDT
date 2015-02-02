@@ -12,6 +12,6 @@ package com.github.rustdt.ide.ui.text;
 
 import melnorme.lang.ide.ui.text.LangDocumentPartitionerSetup;
 
-public class LANGUAGE_DocumentSetupParticipant extends LangDocumentPartitionerSetup {
+public class RustDocumentSetupParticipant extends LangDocumentPartitionerSetup {
 	
 }

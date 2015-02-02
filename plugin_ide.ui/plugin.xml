@@ -18,7 +18,7 @@
 		 name="LANGUAGE Document Setup Participant"
 		 point="org.eclipse.core.filebuffers.documentSetup">
 		<participant
-			class="com.github.rustdt.ide.ui.text.LANGUAGE_DocumentSetupParticipant"
+			class="com.github.rustdt.ide.ui.text.RustDocumentSetupParticipant"
 			contentTypeId="com.github.rustdt.ide.core.content.source">
 		</participant>
 	</extension>
@@ -26,11 +26,11 @@
 	
 	<extension point="org.eclipse.ui.editors">
 		<editor
-		 class="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor"
-		 contributorClass="com.github.rustdt.ide.ui.editor.LANGUAGE_EditorActionContributor"
+		 class="com.github.rustdt.ide.ui.editor.RustEditor"
+		 contributorClass="com.github.rustdt.ide.ui.editor.RustEditorActionContributor"
 		 default="true"
 		 icon="icons/obj/editor_file.png"
-		 id="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor"
+		 id="com.github.rustdt.ide.ui.editor.RustEditor"
 		 name="%LangEditor.name">
 			<contentTypeBinding contentTypeId="com.github.rustdt.ide.core.content.source" />
 		</editor>
@@ -57,7 +57,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
 		<hyperlinkDetector
-			class="com.github.rustdt.ide.ui.editor.LANGUAGE_HyperlinkDetector"
+			class="com.github.rustdt.ide.ui.editor.RustHyperlinkDetector"
 			id="com.github.rustdt.ide.ui.Editor.HyperlinkDetector"
 			name="%hyperlinkDetector.name"
 			targetId="com.github.rustdt.ide.ui.Editor.HyperlinkCodeTarget">
@@ -75,7 +75,7 @@
 		
 		<command
 	        categoryId="com.github.rustdt.ide.ui.commands.Category"
-	        defaultHandler="com.github.rustdt.ide.ui.actions.LANGUAGE_OpenDefinitionHandler"
+	        defaultHandler="com.github.rustdt.ide.ui.actions.RustOpenDefinitionHandler"
 	        description="%OpenDefinitionAction.tooltip"
 	        id="com.github.rustdt.ide.ui.commands.openDefinition"
 	        name="%OpenDefinitionAction.name">
@@ -95,26 +95,26 @@
 	
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			class="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
 			name="%LangRootPreferencePage.name">
 		</page>
 		
 		<page
-			category="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			class="com.github.rustdt.ide.ui.preferences.LANGUAGE_DaemonPreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.LANGUAGE_DaemonPreferencePage"
+			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustDaemonPreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.RustDaemonPreferencePage"
 			name="%LangDaemonToolPrefPage.name">
 		</page>
 		<page
-			category="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			class="com.github.rustdt.ide.ui.preferences.LANGUAGE_ToolsConsolePrefPage"
-			id=   "com.github.rustdt.ide.ui.preferences.LANGUAGE_ToolsConsolePrefPage"
+			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustToolsConsolePrefPage"
+			id=   "com.github.rustdt.ide.ui.preferences.RustToolsConsolePrefPage"
 			name="%LangToolsConsolePrefPage.name">
 		</page>
 		
 		<page
-			category="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
 			class="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
 			id=   "com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
 			name="%LangEditorPreferencePage.name">
@@ -147,9 +147,9 @@
 	
 	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
 		<launchConfigurationTabGroup
-			class="com.github.rustdt.ide.ui.launch.LANGUAGE_TabGroup"
+			class="com.github.rustdt.ide.ui.launch.RustTabGroup"
 			description="%LangTabGroup.description"
-			id="com.github.rustdt.ide.ui.LANGUAGE_LaunchTabGroup"
+			id="com.github.rustdt.ide.ui.RustLaunchTabGroup"
 			type="com.github.rustdt.ide.core.LaunchConfigurationType">
 		</launchConfigurationTabGroup>
 	</extension>

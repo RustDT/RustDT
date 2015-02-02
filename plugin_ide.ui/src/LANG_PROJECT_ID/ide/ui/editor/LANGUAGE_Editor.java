@@ -14,11 +14,11 @@ import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.editor.AbstractLangEditor;
 import melnorme.lang.ide.ui.editor.AbstractLangEditorActions;
 
-public class LANGUAGE_Editor extends AbstractLangEditor {
+public class RustEditor extends AbstractLangEditor {
 	
 	@Override
-	protected LANGUAGE_SourceViewerConfiguration createSourceViewerConfiguration() {
-		return new LANGUAGE_SourceViewerConfiguration(getPreferenceStore(),
+	protected RustSourceViewerConfiguration createSourceViewerConfiguration() {
+		return new RustSourceViewerConfiguration(getPreferenceStore(),
 			LangUIPlugin.getInstance().getColorManager(), this);
 	}
 	

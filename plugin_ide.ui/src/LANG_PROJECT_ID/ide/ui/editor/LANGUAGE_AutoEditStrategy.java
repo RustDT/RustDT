@@ -15,9 +15,9 @@ import melnorme.lang.ide.ui.editor.text.LangAutoEditStrategyExt;
 
 import org.eclipse.jface.text.ITextViewer;
 
-public class LANGUAGE_AutoEditStrategy extends LangAutoEditStrategyExt {
+public class RustAutoEditStrategy extends LangAutoEditStrategyExt {
 	
-	public LANGUAGE_AutoEditStrategy(String contentType, ITextViewer viewer) {
+	public RustAutoEditStrategy(String contentType, ITextViewer viewer) {
 		super(TextSettings_Actual.PARTITIONING_ID, contentType, viewer);
 	}
 	

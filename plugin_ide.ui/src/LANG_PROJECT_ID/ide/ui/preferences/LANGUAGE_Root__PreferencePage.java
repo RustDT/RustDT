@@ -23,9 +23,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 /**
  * The root preference page for DDT 
  */
-public class LANGUAGE_Root__PreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
+public class RustRoot__PreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
 	
-	public LANGUAGE_Root__PreferencePage() {
+	public RustRoot__PreferencePage() {
 		setPreferenceStore(LangUIPlugin.getPrefStore());
 	}
 	

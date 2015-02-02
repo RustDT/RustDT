@@ -3,7 +3,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import melnorme.lang.ide.ui.text.coloring.ColoringItemPreference;
 
-public interface LANGUAGE_ColorPreferences {
+public interface RustColorPreferences {
 	
 	String PREFIX = "editor.coloring."; 
 	

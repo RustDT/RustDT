@@ -19,19 +19,19 @@ import melnorme.util.swt.jface.LabeledTreeElement;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import com.github.rustdt.ide.ui.text.LANGUAGE_ColorPreferences;
+import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
 public class SourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
 	
 	protected static final LabeledTreeElement[] treeElements = array(
 		new SourceColoringCategory("Source", array(
-			new SourceColoringElement("Default", LANGUAGE_ColorPreferences.DEFAULT.key),
-			new SourceColoringElement("Keywords", LANGUAGE_ColorPreferences.KEYWORDS.key),
-			new SourceColoringElement("Keywords - Literals", LANGUAGE_ColorPreferences.KEYWORDS_VALUES.key),
-			new SourceColoringElement("Strings", LANGUAGE_ColorPreferences.STRINGS.key)
+			new SourceColoringElement("Default", RustColorPreferences.DEFAULT.key),
+			new SourceColoringElement("Keywords", RustColorPreferences.KEYWORDS.key),
+			new SourceColoringElement("Keywords - Literals", RustColorPreferences.KEYWORDS_VALUES.key),
+			new SourceColoringElement("Strings", RustColorPreferences.STRINGS.key)
 		)),
 		new SourceColoringCategory("Comments", array(
-			new SourceColoringElement("Comment", LANGUAGE_ColorPreferences.COMMENTS.key)
+			new SourceColoringElement("Comment", RustColorPreferences.COMMENTS.key)
 		))
 	);
 	

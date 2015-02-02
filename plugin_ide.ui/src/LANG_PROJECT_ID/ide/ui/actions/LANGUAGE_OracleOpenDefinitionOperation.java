@@ -24,9 +24,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class LANGUAGE_OracleOpenDefinitionOperation extends AbstractOpenElementOperation {
+public class RustOracleOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
-	public LANGUAGE_OracleOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
+	public RustOracleOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
 			OpenNewEditorMode openEditorMode) {
 		super(OPEN_DEFINITION_OpName, editor, range, openEditorMode);
 	}

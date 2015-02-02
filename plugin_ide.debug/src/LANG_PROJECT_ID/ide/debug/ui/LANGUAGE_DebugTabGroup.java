@@ -4,14 +4,14 @@ import melnorme.lang.ide.debug.ui.AbstractLangDebugTabGroup;
 
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
-import com.github.rustdt.ide.ui.launch.LANGUAGE_MainLaunchConfigurationTab;
+import com.github.rustdt.ide.ui.launch.RustMainLaunchConfigurationTab;
 
 
-public class LANGUAGE_DebugTabGroup extends AbstractLangDebugTabGroup {
+public class RustDebugTabGroup extends AbstractLangDebugTabGroup {
 	
 	@Override
 	protected ILaunchConfigurationTab createMainLaunchConfigTab() {
-		return new LANGUAGE_MainLaunchConfigurationTab();
+		return new RustMainLaunchConfigurationTab();
 	}
 	
 }

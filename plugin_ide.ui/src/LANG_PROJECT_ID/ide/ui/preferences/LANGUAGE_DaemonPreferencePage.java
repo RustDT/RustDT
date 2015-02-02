@@ -3,7 +3,7 @@ package com.github.rustdt.ide.ui.preferences;
 
 import melnorme.lang.ide.ui.tools.AbstractDeamonToolPrefPage;
 
-public class LANGUAGE_DaemonPreferencePage extends AbstractDeamonToolPrefPage {
+public class RustDaemonPreferencePage extends AbstractDeamonToolPrefPage {
 	
 	@Override
 	protected String getDaemonToolName() {

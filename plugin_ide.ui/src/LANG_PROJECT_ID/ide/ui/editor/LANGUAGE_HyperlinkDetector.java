@@ -17,19 +17,19 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import com.github.rustdt.ide.ui.actions.LANGUAGE_OpenDefinitionHandler;
+import com.github.rustdt.ide.ui.actions.RustOpenDefinitionHandler;
 
-public class LANGUAGE_HyperlinkDetector extends LangHyperlinkDetector {
+public class RustHyperlinkDetector extends LangHyperlinkDetector {
 	
 	@Override
 	protected AbstractLangElementHyperlink createHyperlink(IRegion requestedRegion, ITextEditor textEditor,
 			IRegion wordRegion) {
-		return new LANGUAGE_ElementHyperlink(wordRegion, textEditor);
+		return new RustElementHyperlink(wordRegion, textEditor);
 	}
 	
-	public class LANGUAGE_ElementHyperlink extends AbstractLangElementHyperlink {
+	public class RustElementHyperlink extends AbstractLangElementHyperlink {
 		
-		public LANGUAGE_ElementHyperlink(IRegion region, ITextEditor textEditor) {
+		public RustElementHyperlink(IRegion region, ITextEditor textEditor) {
 			super(region, textEditor);
 		}
 		
@@ -37,7 +37,7 @@ public class LANGUAGE_HyperlinkDetector extends LangHyperlinkDetector {
 		public void open() {
 			textEditor.doSave(new NullProgressMonitor());
 			
-			new LANGUAGE_OpenDefinitionHandler().createOperation(textEditor,
+			new RustOpenDefinitionHandler().createOperation(textEditor,
 				getElementRange(), OpenNewEditorMode.TRY_REUSING_EXISTING_EDITORS).executeAndHandle();
 		}
 		

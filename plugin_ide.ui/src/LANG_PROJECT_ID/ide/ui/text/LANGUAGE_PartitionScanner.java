@@ -9,11 +9,11 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.Token;
 
-public class LANGUAGE_PartitionScanner extends RuleBasedPartitionScanner {
+public class RustPartitionScanner extends RuleBasedPartitionScanner {
 	
 	private static final char NO_ESCAPE_CHAR = (char) -1;
 	
-	public LANGUAGE_PartitionScanner() {
+	public RustPartitionScanner() {
 		IToken tkString = new Token(LangPartitionTypes.STRING);
 		IToken tkComment = new Token(LangPartitionTypes.COMMENT);
 		

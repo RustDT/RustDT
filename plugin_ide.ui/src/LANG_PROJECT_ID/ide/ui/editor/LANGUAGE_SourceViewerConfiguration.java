@@ -21,24 +21,24 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 
-import com.github.rustdt.ide.ui.text.LANGUAGE_CodeScanner;
-import com.github.rustdt.ide.ui.text.LANGUAGE_ColorPreferences;
+import com.github.rustdt.ide.ui.text.RustCodeScanner;
+import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
-public class LANGUAGE_SourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
+public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	
-	public LANGUAGE_SourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager,
-			LANGUAGE_Editor editor) {
+	public RustSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager,
+			RustEditor editor) {
 		super(preferenceStore, colorManager, editor);
 	}
 	
 	@Override
 	protected void createScanners() {
-		addScanner(new LANGUAGE_CodeScanner(getTokenStoreFactory()), IDocument.DEFAULT_CONTENT_TYPE);
+		addScanner(new RustCodeScanner(getTokenStoreFactory()), IDocument.DEFAULT_CONTENT_TYPE);
 		
-		addScanner(createSingleTokenScanner(LANGUAGE_ColorPreferences.COMMENTS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS.key), 
 			LangPartitionTypes.COMMENT);
 		
-		addScanner(createSingleTokenScanner(LANGUAGE_ColorPreferences.STRINGS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.STRINGS.key), 
 			LangPartitionTypes.STRING);
 	}
 	
