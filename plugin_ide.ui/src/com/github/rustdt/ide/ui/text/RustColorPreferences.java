@@ -1,25 +1,40 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Bruno Medeiros - initial API and implementation
+ *******************************************************************************/
 package com.github.rustdt.ide.ui.text;
 import org.eclipse.swt.graphics.RGB;
 
+import melnorme.lang.ide.ui.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.text.coloring.ColoringItemPreference;
 
 public interface RustColorPreferences {
 	
 	String PREFIX = "editor.coloring."; 
 	
+	// Defaults mostly based from: http://static.rust-lang.org/doc/master/rust.css
+	
+	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + LangPartitionTypes.COMMENT,
+		true, new RGB(0x8E, 0x90, 0x8C), false, false, false);
+	ColoringItemPreference DOC_COMMENTS = new ColoringItemPreference(PREFIX + LangPartitionTypes.DOC_COMMENT,
+		true, new RGB(63, 95, 191), false, false, false);
+	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + LangPartitionTypes.STRING,
+		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+	ColoringItemPreference CHARACTER = new ColoringItemPreference(PREFIX + LangPartitionTypes.CHARACTER,
+		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+	
+	
 	ColoringItemPreference DEFAULT = new ColoringItemPreference(PREFIX + "default",
 		true, new RGB(0, 0, 0), false, false, false);
 	ColoringItemPreference KEYWORDS = new ColoringItemPreference(PREFIX + "keyword",
-		true, new RGB(0, 0, 127), true, false, false);
+		true, new RGB(0x89, 0x59, 0xA8), true, false, false);
 	ColoringItemPreference KEYWORDS_VALUES = new ColoringItemPreference(PREFIX + "keyword_literals",
-		true, new RGB(0, 0, 127), false, false, false);
-	ColoringItemPreference OPERATORS = new ColoringItemPreference(PREFIX + "operators",
-		true, new RGB(120, 0, 127), false, false, false);
-	
-	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + "string",
-		true, new RGB(130, 60, 0), false, false, false);
-	
-	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + "comment",
-		true, new RGB(100, 100, 100), false, false, false);
+		true, new RGB(0x89, 0x59, 0xA8), false, false, false);
 	
 }

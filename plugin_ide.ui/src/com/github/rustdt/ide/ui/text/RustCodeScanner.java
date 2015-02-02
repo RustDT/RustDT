@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Bruno Medeiros - initial API and implementation
+ *******************************************************************************/
 package com.github.rustdt.ide.ui.text;
 
 import java.util.ArrayList;
@@ -20,7 +30,6 @@ public class RustCodeScanner extends AbstractLangScanner {
 		RustColorPreferences.DEFAULT.key,
 		RustColorPreferences.KEYWORDS.key,
 		RustColorPreferences.KEYWORDS_VALUES.key,
-		RustColorPreferences.OPERATORS.key
 	};
 	
 	public RustCodeScanner(ITokenStoreFactory factory) {
@@ -34,7 +43,6 @@ public class RustCodeScanner extends AbstractLangScanner {
 		IToken tkOther = getToken(RustColorPreferences.DEFAULT.key);
 		IToken tkKeywords = getToken(RustColorPreferences.KEYWORDS.key);
 		IToken tkKeywordValues = getToken(RustColorPreferences.KEYWORDS_VALUES.key);
-		IToken tkOperators = getToken(RustColorPreferences.OPERATORS.key);
 		
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new LangWhitespaceDetector()));
@@ -47,9 +55,6 @@ public class RustCodeScanner extends AbstractLangScanner {
 		wordRule.addWord("true", tkKeywordValues);
 		wordRule.addWord("false", tkKeywordValues);
 		
-		
-		wordRule.addWord("==",  tkOperators);
-		wordRule.addWord("!=",  tkOperators);
 		
 		rules.add(wordRule);
 		

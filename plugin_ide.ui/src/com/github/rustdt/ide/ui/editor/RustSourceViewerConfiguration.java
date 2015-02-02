@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2014 IBM Corporation and others.
+ * Copyright (c) 2014, 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,10 +36,14 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 		addScanner(new RustCodeScanner(getTokenStoreFactory()), IDocument.DEFAULT_CONTENT_TYPE);
 		
 		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS.key), 
-			LangPartitionTypes.COMMENT);
+			LangPartitionTypes.COMMENT.getId());
+		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS.key), 
+			LangPartitionTypes.DOC_COMMENT.getId());
 		
 		addScanner(createSingleTokenScanner(RustColorPreferences.STRINGS.key), 
-			LangPartitionTypes.STRING);
+			LangPartitionTypes.STRING.getId());
+		addScanner(createSingleTokenScanner(RustColorPreferences.CHARACTER.key), 
+			LangPartitionTypes.CHARACTER.getId());
 	}
 	
 	// TODO:
