@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.ui.actions;
+package com.github.rustdt.ide.ui.actions;
 
 import melnorme.lang.ide.ui.actions.AbstractOpenDefinitionHandler;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;

@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.ui.launch;
+package com.github.rustdt.ide.ui.launch;
 
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 

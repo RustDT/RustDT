@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.ui;
+package com.github.rustdt.ide.ui;
 
 import melnorme.lang.ide.ui.tools.console.ToolsConsole;
 

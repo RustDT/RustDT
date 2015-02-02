@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="LANG_PROJECT_ID"
+      id="com.github.rustdt"
       label="%featureName"
       version="0.0.1.qualifier"
       provider-name="%providerName"
-      plugin="LANG_PROJECT_ID.ide.ui">
+      plugin="com.github.rustdt.ide.ui">
 
    <description>
       %description
@@ -25,21 +25,21 @@
    </requires>
 
    <plugin
-         id="LANG_PROJECT_ID.ide.core"
+         id="com.github.rustdt.ide.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="LANG_PROJECT_ID.ide.ui"
+         id="com.github.rustdt.ide.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="LANG_PROJECT_ID.tooling"
+         id="com.github.rustdt.tooling"
          download-size="0"
          install-size="0"
          version="0.0.0"

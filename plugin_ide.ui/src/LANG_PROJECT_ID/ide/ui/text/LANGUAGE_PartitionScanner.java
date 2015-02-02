@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.ui.text;
+package com.github.rustdt.ide.ui.text;
 
 import melnorme.lang.ide.ui.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.text.PatternRule_Fixed;

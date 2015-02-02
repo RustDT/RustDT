@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.ui.editor;
+package com.github.rustdt.ide.ui.editor;
 
 import melnorme.lang.ide.ui.TextSettings_Actual;
 import melnorme.lang.ide.ui.editor.text.LangAutoEditStrategyExt;

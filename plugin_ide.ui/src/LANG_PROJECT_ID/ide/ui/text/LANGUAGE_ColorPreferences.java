@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.ui.text;
+package com.github.rustdt.ide.ui.text;
 import org.eclipse.swt.graphics.RGB;
 
 import melnorme.lang.ide.ui.text.coloring.ColoringItemPreference;

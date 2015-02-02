@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.debug.ui;
+package com.github.rustdt.ide.debug.ui;
 
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;

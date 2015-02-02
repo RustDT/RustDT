@@ -10,7 +10,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>LANG_PROJECT_ID.ide.core.tests</artifactId>
+	<artifactId>com.github.rustdt.ide.core.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 	
 	<build>

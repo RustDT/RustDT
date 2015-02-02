@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.ui.text;
+package com.github.rustdt.ide.ui.text;
 
 import java.util.ArrayList;
 import java.util.List;

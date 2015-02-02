@@ -5,13 +5,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
-import LANG_PROJECT_ID.ide.ui.editor.LANGUAGE_SimpleSourceViewerConfiguration;
-import LANG_PROJECT_ID.ide.ui.text.LANGUAGE_PartitionScanner;
+import com.github.rustdt.ide.ui.editor.LANGUAGE_SimpleSourceViewerConfiguration;
+import com.github.rustdt.ide.ui.text.LANGUAGE_PartitionScanner;
 
 
 public class TextSettings_Actual {
 	
-	public static final String PARTITIONING_ID = "LANG_PROJECT_ID.Partitioning";
+	public static final String PARTITIONING_ID = "com.github.rustdt.Partitioning";
 	
 	public static final String[] PARTITION_TYPES = new String[] { 
 		LangPartitionTypes.CODE,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="LANG_PROJECT_ID">
+   <feature id="com.github.rustdt">
       <category name="ide.category"/>
    </feature>
    <category-def name="ide.category" label="RustDT Project"/>

@@ -10,7 +10,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>LANG_PROJECT_ID</artifactId>
+	<artifactId>com.github.rustdt</artifactId>
 	<packaging>eclipse-feature</packaging>
 
 </project>

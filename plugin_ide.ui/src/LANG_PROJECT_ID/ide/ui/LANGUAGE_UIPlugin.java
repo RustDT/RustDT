@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.ui;
+package com.github.rustdt.ide.ui;
 
 import melnorme.lang.ide.ui.LangUIPlugin;
 

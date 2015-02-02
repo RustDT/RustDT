@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.core;
+package com.github.rustdt.ide.core;
 
 import melnorme.lang.ide.core.LangNature;
 

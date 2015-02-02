@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.debug.ui;
+package com.github.rustdt.ide.debug.ui;
 
 import melnorme.lang.ide.debug.ui.LangToggleBreakpointAdapter;
 

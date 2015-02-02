@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.ui.editor;
+package com.github.rustdt.ide.ui.editor;
 
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.LangHyperlinkDetector;
@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import LANG_PROJECT_ID.ide.ui.actions.LANGUAGE_OpenDefinitionHandler;
+import com.github.rustdt.ide.ui.actions.LANGUAGE_OpenDefinitionHandler;
 
 public class LANGUAGE_HyperlinkDetector extends LangHyperlinkDetector {
 	

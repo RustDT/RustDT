@@ -5,8 +5,8 @@
 	<extension point="org.eclipse.ui.ide.projectNatureImages">
       <image
             icon="icons/project-nature.png"
-            id="LANG_PROJECT_ID.ide.ui.NatureImage"
-            natureId="LANG_PROJECT_ID.ide.core.nature">
+            id="com.github.rustdt.ide.ui.NatureImage"
+            natureId="com.github.rustdt.ide.core.nature">
       </image>
 	</extension>
 	
@@ -14,25 +14,25 @@
 	<!-- ============ EDITOR ============= -->
 		
 	<extension
-		 id="LANG_PROJECT_ID.DocumentSetupParticipant"
+		 id="com.github.rustdt.DocumentSetupParticipant"
 		 name="LANGUAGE Document Setup Participant"
 		 point="org.eclipse.core.filebuffers.documentSetup">
 		<participant
-			class="LANG_PROJECT_ID.ide.ui.text.LANGUAGE_DocumentSetupParticipant"
-			contentTypeId="LANG_PROJECT_ID.ide.core.content.source">
+			class="com.github.rustdt.ide.ui.text.LANGUAGE_DocumentSetupParticipant"
+			contentTypeId="com.github.rustdt.ide.core.content.source">
 		</participant>
 	</extension>
 	
 	
 	<extension point="org.eclipse.ui.editors">
 		<editor
-		 class="LANG_PROJECT_ID.ide.ui.editor.LANGUAGE_Editor"
-		 contributorClass="LANG_PROJECT_ID.ide.ui.editor.LANGUAGE_EditorActionContributor"
+		 class="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor"
+		 contributorClass="com.github.rustdt.ide.ui.editor.LANGUAGE_EditorActionContributor"
 		 default="true"
 		 icon="icons/obj/editor_file.png"
-		 id="LANG_PROJECT_ID.ide.ui.editor.LANGUAGE_Editor"
+		 id="com.github.rustdt.ide.ui.editor.LANGUAGE_Editor"
 		 name="%LangEditor.name">
-			<contentTypeBinding contentTypeId="LANG_PROJECT_ID.ide.core.content.source" />
+			<contentTypeBinding contentTypeId="com.github.rustdt.ide.core.content.source" />
 		</editor>
 	</extension>
 	
@@ -41,7 +41,7 @@
 			name="%LangEditContext.name"
 			description="%LangEditContext.description"
 			parentId="org.eclipse.ui.textEditorScope"
-			id="LANG_PROJECT_ID.ide.ui.Contexts.Editor">
+			id="com.github.rustdt.ide.ui.Contexts.Editor">
 		</context>
 	</extension>
 	
@@ -50,17 +50,17 @@
 	
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target 
-			id="LANG_PROJECT_ID.ide.ui.Editor.HyperlinkCodeTarget"
+			id="com.github.rustdt.ide.ui.Editor.HyperlinkCodeTarget"
 			name="%hyperlinkDetector.target.name">
 		<context type="org.eclipse.ui.texteditor.ITextEditor" />
 		</target>
 	</extension>
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
 		<hyperlinkDetector
-			class="LANG_PROJECT_ID.ide.ui.editor.LANGUAGE_HyperlinkDetector"
-			id="LANG_PROJECT_ID.ide.ui.Editor.HyperlinkDetector"
+			class="com.github.rustdt.ide.ui.editor.LANGUAGE_HyperlinkDetector"
+			id="com.github.rustdt.ide.ui.Editor.HyperlinkDetector"
 			name="%hyperlinkDetector.name"
-			targetId="LANG_PROJECT_ID.ide.ui.Editor.HyperlinkCodeTarget">
+			targetId="com.github.rustdt.ide.ui.Editor.HyperlinkCodeTarget">
 		</hyperlinkDetector>
 	</extension>
 	
@@ -70,22 +70,22 @@
 		<category
 			name="%CommandsCategory.name"
 			description="%CommandsCategory.description"
-			id="LANG_PROJECT_ID.ide.ui.commands.Category">
+			id="com.github.rustdt.ide.ui.commands.Category">
 		</category>
 		
 		<command
-	        categoryId="LANG_PROJECT_ID.ide.ui.commands.Category"
-	        defaultHandler="LANG_PROJECT_ID.ide.ui.actions.LANGUAGE_OpenDefinitionHandler"
+	        categoryId="com.github.rustdt.ide.ui.commands.Category"
+	        defaultHandler="com.github.rustdt.ide.ui.actions.LANGUAGE_OpenDefinitionHandler"
 	        description="%OpenDefinitionAction.tooltip"
-	        id="LANG_PROJECT_ID.ide.ui.commands.openDefinition"
+	        id="com.github.rustdt.ide.ui.commands.openDefinition"
 	        name="%OpenDefinitionAction.name">
 		</command>
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
 		<key
-			commandId="LANG_PROJECT_ID.ide.ui.commands.openDefinition"
-			contextId="LANG_PROJECT_ID.ide.ui.Contexts.Editor"
+			commandId="com.github.rustdt.ide.ui.commands.openDefinition"
+			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="F3">
 		</key>
@@ -95,40 +95,40 @@
 	
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			class="LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			id=   "LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
 			name="%LangRootPreferencePage.name">
 		</page>
 		
 		<page
-			category="LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			class="LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_DaemonPreferencePage"
-			id=   "LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_DaemonPreferencePage"
+			category="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.LANGUAGE_DaemonPreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.LANGUAGE_DaemonPreferencePage"
 			name="%LangDaemonToolPrefPage.name">
 		</page>
 		<page
-			category="LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			class="LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_ToolsConsolePrefPage"
-			id=   "LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_ToolsConsolePrefPage"
+			category="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.LANGUAGE_ToolsConsolePrefPage"
+			id=   "com.github.rustdt.ide.ui.preferences.LANGUAGE_ToolsConsolePrefPage"
 			name="%LangToolsConsolePrefPage.name">
 		</page>
 		
 		<page
-			category="LANG_PROJECT_ID.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
-			class="LANG_PROJECT_ID.ide.ui.preferences.EditorPreferencePage"
-			id=   "LANG_PROJECT_ID.ide.ui.preferences.EditorPreferencePage"
+			category="com.github.rustdt.ide.ui.preferences.LANGUAGE_Root__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
 			name="%LangEditorPreferencePage.name">
 		</page>
 		<page
-			category="LANG_PROJECT_ID.ide.ui.preferences.EditorPreferencePage"
-			class="LANG_PROJECT_ID.ide.ui.preferences.EditorSmartTypingPreferencePage"
-			id=   "LANG_PROJECT_ID.ide.ui.preferences.EditorSmartTypingPreferencePage"
+			category="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.EditorSmartTypingPreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.EditorSmartTypingPreferencePage"
 			name="%LangEditorTypingPreferencePage.name">
 		</page>
 		<page
-			category="LANG_PROJECT_ID.ide.ui.preferences.EditorPreferencePage"
-			class="LANG_PROJECT_ID.ide.ui.preferences.SourceColoringPreferencePage"
-			id=   "LANG_PROJECT_ID.ide.ui.preferences.SourceColoringPreferencePage"
+			category="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.SourceColoringPreferencePage"
+			id=   "com.github.rustdt.ide.ui.preferences.SourceColoringPreferencePage"
 			name="%LangEditorSyntaxColoringPreferencePage.name">
 		</page>
 		
@@ -139,18 +139,18 @@
 	
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
-			configTypeID="LANG_PROJECT_ID.ide.core.LaunchConfigurationType"
+			configTypeID="com.github.rustdt.ide.core.LaunchConfigurationType"
 			icon="icons/actions/application_launch.png"
-			id="LANG_PROJECT_ID.ide.core.LaunchConfigurationType_Image">
+			id="com.github.rustdt.ide.core.LaunchConfigurationType_Image">
 		</launchConfigurationTypeImage>
 	</extension>
 	
 	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
 		<launchConfigurationTabGroup
-			class="LANG_PROJECT_ID.ide.ui.launch.LANGUAGE_TabGroup"
+			class="com.github.rustdt.ide.ui.launch.LANGUAGE_TabGroup"
 			description="%LangTabGroup.description"
-			id="LANG_PROJECT_ID.ide.ui.LANGUAGE_LaunchTabGroup"
-			type="LANG_PROJECT_ID.ide.core.LaunchConfigurationType">
+			id="com.github.rustdt.ide.ui.LANGUAGE_LaunchTabGroup"
+			type="com.github.rustdt.ide.core.LaunchConfigurationType">
 		</launchConfigurationTabGroup>
 	</extension>
 	

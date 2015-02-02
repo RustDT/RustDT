@@ -10,7 +10,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>LANG_PROJECT_ID.tooling</artifactId>
+	<artifactId>com.github.rustdt.tooling</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<properties>

@@ -1,6 +1,6 @@
 package melnorme.lang.ide.core;
 
-import LANG_PROJECT_ID.ide.core.LANGUAGE_Core;
+import com.github.rustdt.ide.core.LANGUAGE_Core;
 
 public class LangCore_Actual {
 	

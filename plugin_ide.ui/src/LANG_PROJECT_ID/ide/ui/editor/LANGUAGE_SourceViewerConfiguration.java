@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.ui.editor;
+package com.github.rustdt.ide.ui.editor;
 
 import static melnorme.utilbox.core.CoreUtil.array;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
@@ -21,8 +21,8 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 
-import LANG_PROJECT_ID.ide.ui.text.LANGUAGE_CodeScanner;
-import LANG_PROJECT_ID.ide.ui.text.LANGUAGE_ColorPreferences;
+import com.github.rustdt.ide.ui.text.LANGUAGE_CodeScanner;
+import com.github.rustdt.ide.ui.text.LANGUAGE_ColorPreferences;
 
 public class LANGUAGE_SourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	

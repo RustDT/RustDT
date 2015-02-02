@@ -1,4 +1,4 @@
-package LANG_PROJECT_ID.ide.core.launch;
+package com.github.rustdt.ide.core.launch;
 
 
 import melnorme.lang.ide.launching.AbstractLangLaunchConfigurationDelegate;

@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.ui.preferences;
+package com.github.rustdt.ide.ui.preferences;
 
 import static melnorme.utilbox.core.CoreUtil.array;
 
@@ -19,7 +19,7 @@ import melnorme.util.swt.jface.LabeledTreeElement;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import LANG_PROJECT_ID.ide.ui.text.LANGUAGE_ColorPreferences;
+import com.github.rustdt.ide.ui.text.LANGUAGE_ColorPreferences;
 
 public class SourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
 	
