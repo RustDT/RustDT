@@ -1,6 +1,6 @@
 ## User Guide
 
-*Note:* For an overview of LANG_IDE_NAME features, see [Features](Features.md#ddt-features). This also serves to document 
+*Note:* For an overview of RustDT features, see [Features](Features.md#ddt-features). This also serves to document 
 the major functionalities available.
 
 ### Eclipse basics

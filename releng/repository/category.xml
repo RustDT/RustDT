@@ -3,5 +3,5 @@
    <feature id="LANG_PROJECT_ID">
       <category name="ide.category"/>
    </feature>
-   <category-def name="ide.category" label="LANG_IDE_NAME Project"/>
+   <category-def name="ide.category" label="RustDT Project"/>
 </site>

@@ -2,7 +2,7 @@
 
  Notes:
 
- * Please report the LANG_IDE_NAME version you are using (can be found on `"Help/About/Installation Details/Installed Software"` ),
+ * Please report the RustDT version you are using (can be found on `"Help/About/Installation Details/Installed Software"` ),
  and operating system and architecture.
  * Check the Eclipse Error Log for errors or Java exceptions (see 
  `"Help/About/Installation Details/Configuration/Error Log"`). 

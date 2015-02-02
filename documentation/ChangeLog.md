@@ -1,6 +1,6 @@
-## LANG_IDE_NAME release ChangeLog
+## RustDT release ChangeLog
 
 ▶ Recommended/tested CDT version: 8.5.0
 
-### LANG_IDE_NAME 0.0.x
+### RustDT 0.0.x
   
