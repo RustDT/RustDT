@@ -15,7 +15,7 @@
 		
 	<extension
 		 id="com.github.rustdt.DocumentSetupParticipant"
-		 name="LANGUAGE Document Setup Participant"
+		 name="Rust Document Setup Participant"
 		 point="org.eclipse.core.filebuffers.documentSetup">
 		<participant
 			class="com.github.rustdt.ide.ui.text.RustDocumentSetupParticipant"

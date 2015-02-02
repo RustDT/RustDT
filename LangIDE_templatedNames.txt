@@ -1,4 +1,4 @@
-LANGUAGE 	- Name of language - for UI, (example: Java)
+Rust 	- Name of language - for UI, (example: Java)
 Rust 	- Name of language - for class names, (example: Java)
 com.github.rustdt	- base ID of plugins (example: org.eclipse.jdt)
 RustDT 	- Name of IDE (example: Java Development Tools)

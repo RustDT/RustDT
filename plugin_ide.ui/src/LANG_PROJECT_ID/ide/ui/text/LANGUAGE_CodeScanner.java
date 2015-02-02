@@ -12,7 +12,7 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 /**
- * Sample LANGUAGE code scanner
+ * Sample Rust code scanner
  */
 public class RustCodeScanner extends AbstractLangScanner {
 	
