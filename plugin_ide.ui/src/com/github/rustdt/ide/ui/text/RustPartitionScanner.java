@@ -44,10 +44,10 @@ public class RustPartitionScanner extends RuleBasedPartitionScanner {
 		rules.add(new PatternRule_Fixed("b'", "'", tkCharacter, '\\', true, true));
 		
 		IToken tkString = new Token(LangPartitionTypes.STRING.getId());
-		rules.add(new PatternRule_Fixed("\"", "\"", tkString, '\\', true, true));
-		rules.add(new PatternRule_Fixed("b\"", "\"", tkString, '\\', true, true));
-		rules.add(new PatternRule_Fixed("r##\"", "\"", tkString, NO_ESCAPE_CHAR, true, true));
-		rules.add(new PatternRule_Fixed("br##\"", "\"", tkString, NO_ESCAPE_CHAR, true, true));
+		rules.add(new PatternRule_Fixed("\"", "\"", tkString, '\\', false, true));
+		rules.add(new PatternRule_Fixed("b\"", "\"", tkString, '\\', false, true));
+		rules.add(new PatternRule_Fixed("r##\"", "\"##", tkString, NO_ESCAPE_CHAR, false, true));
+		rules.add(new PatternRule_Fixed("br##\"", "\"##", tkString, NO_ESCAPE_CHAR, false, true));
 		
 		setPredicateRules(rules.toArray(IPredicateRule.class));
 	}
