@@ -24,21 +24,26 @@ public class RustPartitionScanner extends RuleBasedPartitionScanner {
 	private static final char NO_ESCAPE_CHAR = (char) -1;
 	
 	public RustPartitionScanner() {
-		IToken tkComment = new Token(LangPartitionTypes.COMMENT.getId());
-		IToken tkDocComment = new Token(LangPartitionTypes.DOC_COMMENT.getId());
-		IToken tkString = new Token(LangPartitionTypes.STRING.getId());
-		IToken tkCharacter = new Token(LangPartitionTypes.CHARACTER.getId());
 		
 		ArrayList2<IPredicateRule> rules = new ArrayList2<>();
 		
+		IToken tkDocComment = new Token(LangPartitionTypes.DOC_COMMENT.getId());
 		rules.add(new PatternRule_Fixed("///", null, tkDocComment, NO_ESCAPE_CHAR, true, true));
 		rules.add(new PatternRule_Fixed("/**", "*/", tkDocComment, NO_ESCAPE_CHAR, false, true));
+		
+		IToken tkComment = new Token(LangPartitionTypes.COMMENT.getId());
 		rules.add(new PatternRule_Fixed("//", null, tkComment, NO_ESCAPE_CHAR, true, true));
 		rules.add(new PatternRule_Fixed("/*", "*/", tkComment, NO_ESCAPE_CHAR, false, true));
 		
+		IToken tkAttribute = new Token(LangPartitionTypes.ATTRIBUTE.getId());
+		rules.add(new PatternRule_Fixed("#[", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
+		rules.add(new PatternRule_Fixed("#![", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
 		
+		IToken tkCharacter = new Token(LangPartitionTypes.CHARACTER.getId());
 		rules.add(new PatternRule_Fixed("'", "'", tkCharacter, '\\', true, true));
 		rules.add(new PatternRule_Fixed("b'", "'", tkCharacter, '\\', true, true));
+		
+		IToken tkString = new Token(LangPartitionTypes.STRING.getId());
 		rules.add(new PatternRule_Fixed("\"", "\"", tkString, '\\', true, true));
 		rules.add(new PatternRule_Fixed("b\"", "\"", tkString, '\\', true, true));
 		rules.add(new PatternRule_Fixed("r##\"", "\"", tkString, NO_ESCAPE_CHAR, true, true));

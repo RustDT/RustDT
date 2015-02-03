@@ -26,7 +26,7 @@ public class TextSettings_Actual {
 	public static final String[] PARTITION_TYPES = LangPartitionTypes.PARTITION_TYPES;
 	
 	public static enum LangPartitionTypes {
-		CODE, COMMENT, DOC_COMMENT, STRING, CHARACTER;
+		CODE, COMMENT, DOC_COMMENT, STRING, CHARACTER, ATTRIBUTE;
 		
 		public String getId() {
 			if(ordinal() == 0) {
@@ -36,7 +36,7 @@ public class TextSettings_Actual {
 		}
 		
 		public static final String[] PARTITION_TYPES = { 
-			CODE.getId(), COMMENT.getId(), DOC_COMMENT.getId(), STRING.getId(), CHARACTER.getId() 
+			CODE.getId(), COMMENT.getId(), DOC_COMMENT.getId(), STRING.getId(), CHARACTER.getId(), ATTRIBUTE.getId() 
 		};
 		
 	}

@@ -21,6 +21,7 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 
+import com.github.rustdt.ide.ui.text.RustAttributeScanner;
 import com.github.rustdt.ide.ui.text.RustCodeScanner;
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
@@ -44,6 +45,8 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 			LangPartitionTypes.STRING.getId());
 		addScanner(createSingleTokenScanner(RustColorPreferences.CHARACTER.key), 
 			LangPartitionTypes.CHARACTER.getId());
+		addScanner(new RustAttributeScanner(getTokenStoreFactory()), 
+			LangPartitionTypes.ATTRIBUTE.getId());
 	}
 	
 	// TODO:

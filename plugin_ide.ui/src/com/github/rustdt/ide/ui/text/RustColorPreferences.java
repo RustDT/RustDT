@@ -28,6 +28,8 @@ public interface RustColorPreferences {
 		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
 	ColoringItemPreference CHARACTER = new ColoringItemPreference(PREFIX + LangPartitionTypes.CHARACTER,
 		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+	ColoringItemPreference ATTRIBUTE = new ColoringItemPreference(PREFIX + LangPartitionTypes.ATTRIBUTE,
+		true, new RGB(0xC8, 0x28, 0x29), false, false, false);
 	
 	
 	ColoringItemPreference DEFAULT = new ColoringItemPreference(PREFIX + "default",

@@ -22,7 +22,7 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 /**
- * Sample Rust code scanner
+ * Rust scanner for the code partition
  */
 public class RustCodeScanner extends AbstractLangScanner {
 	
@@ -30,6 +30,18 @@ public class RustCodeScanner extends AbstractLangScanner {
 		RustColorPreferences.DEFAULT.key,
 		RustColorPreferences.KEYWORDS.key,
 		RustColorPreferences.KEYWORDS_VALUES.key,
+	};
+	
+	
+	public static final String[] keywords_control = { 
+			"abstract", "alignof", "as", "be", "box", "break", "const", "continue", "crate", 
+			"do", "else", "enum", "extern", "final", "fn", "for", "if", "impl", "in", "let", 
+			"loop", "macro", "match", "mod", "move", "mut", "offsetof", "override", 
+			"priv", "pub", "pure", "ref", "return", "sizeof", "static", "struct", 
+			"trait", "type", "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield" 
+	};
+	public static final String[] keywords_values = { 
+			"true", "false", "self", "super", "null" // Is null actually used?
 	};
 	
 	public RustCodeScanner(ITokenStoreFactory factory) {
@@ -49,12 +61,12 @@ public class RustCodeScanner extends AbstractLangScanner {
 		
 		WordRule wordRule = new WordRule(new JavaWordDetector(), tkOther);
 		
-		wordRule.addWord("keyword",  tkKeywords);
-
-		wordRule.addWord("null", tkKeywordValues);
-		wordRule.addWord("true", tkKeywordValues);
-		wordRule.addWord("false", tkKeywordValues);
-		
+		for (String keyword : keywords_control) {
+			wordRule.addWord(keyword,  tkKeywords);
+		}
+		for (String keyword : keywords_values) {
+			wordRule.addWord(keyword,  tkKeywordValues);
+		}
 		
 		rules.add(wordRule);
 		
