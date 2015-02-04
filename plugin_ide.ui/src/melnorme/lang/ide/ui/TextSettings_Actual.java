@@ -10,6 +10,9 @@
  *******************************************************************************/
 package melnorme.lang.ide.ui;
 
+import melnorme.utilbox.core.fntypes.Function;
+import melnorme.utilbox.misc.ArrayUtil;
+
 import org.eclipse.cdt.internal.ui.text.util.CColorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
@@ -26,7 +29,7 @@ public class TextSettings_Actual {
 	public static final String[] PARTITION_TYPES = LangPartitionTypes.PARTITION_TYPES;
 	
 	public static enum LangPartitionTypes {
-		CODE, COMMENT, DOC_COMMENT, STRING, CHARACTER, ATTRIBUTE;
+		CODE, COMMENT, DOC_COMMENT, STRING, RAW_STRING, CHARACTER, ATTRIBUTE;
 		
 		public String getId() {
 			if(ordinal() == 0) {
@@ -35,9 +38,14 @@ public class TextSettings_Actual {
 			return toString();
 		}
 		
-		public static final String[] PARTITION_TYPES = { 
-			CODE.getId(), COMMENT.getId(), DOC_COMMENT.getId(), STRING.getId(), CHARACTER.getId(), ATTRIBUTE.getId() 
-		};
+		public static final String[] PARTITION_TYPES = ArrayUtil.map(values(), 
+			new Function<LangPartitionTypes, String>() {
+				@Override
+				public String evaluate(LangPartitionTypes obj) {
+					return obj.getId();
+				}
+			}, String.class
+		);
 		
 	}
 	

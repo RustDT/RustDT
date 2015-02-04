@@ -42,7 +42,9 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 			LangPartitionTypes.DOC_COMMENT.getId());
 		
 		addScanner(createSingleTokenScanner(RustColorPreferences.STRINGS.key), 
-			LangPartitionTypes.STRING.getId());
+			LangPartitionTypes.STRING.getId(),
+			LangPartitionTypes.RAW_STRING.getId()
+			);
 		addScanner(createSingleTokenScanner(RustColorPreferences.CHARACTER.key), 
 			LangPartitionTypes.CHARACTER.getId());
 		addScanner(new RustAttributeScanner(getTokenStoreFactory()), 
