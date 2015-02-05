@@ -1,4 +1,4 @@
-package mmrnmhrm.tests;
+package com.github.rustdt.ide.core.tests;
 
 import org.junit.Test;
 
