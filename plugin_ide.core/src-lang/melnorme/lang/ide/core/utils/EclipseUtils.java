@@ -78,6 +78,7 @@ public class EclipseUtils extends ResourceUtils {
 		project.setDescription(description, null);
 	}
 	
+	/** Remove nature from given project, if project has given nature. */
 	public static void removeNature(IProject project, String natureID) throws CoreException {
 		IProjectDescription description = project.getDescription();
 		String[] natures = description.getNatureIds();
