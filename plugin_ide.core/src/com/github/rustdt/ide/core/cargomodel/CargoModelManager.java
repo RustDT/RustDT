@@ -17,23 +17,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.LangNature;
 import melnorme.lang.ide.core.bundlemodel.BundleModelManager;
-import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.tooling.IBundleInfo;
 import melnorme.utilbox.misc.SimpleLogger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.cargomodel.CargoWorkspaceModel.ProjectInfo;
 
 public class CargoModelManager extends BundleModelManager {
 	
-	protected static final Path BUNDLE_MANIFEST_FILE = new Path("Cargo.toml");
+	public static final Path BUNDLE_MANIFEST_FILE = new Path("Cargo.toml");
 	
 	protected static boolean projectHasDubManifestFile(IProject project) {
 		IResource packageFile = project.findMember(BUNDLE_MANIFEST_FILE);
@@ -72,17 +69,6 @@ public class CargoModelManager extends BundleModelManager {
 	protected void bundleProjectAdded(final IProject project) {
 		model.setProjectInfo(project, new ProjectInfo());
 		
-		// TODO: will need to change this:
-		getModelAgent().submit(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					EclipseUtils.addNature(project, LangNature.NATURE_ID);
-				} catch (CoreException ce) {
-					LangCore.logStatus(ce);
-				}
-			}
-		});
 	}
 	
 	@Override
@@ -90,19 +76,9 @@ public class CargoModelManager extends BundleModelManager {
 		if(model.getProjectInfo(project) != null) {
 			model.removeProjectInfo(project);
 		} else {
-			System.out.println("HUM");
+			LangCore.logWarning("Unexpected: model.getProjectInfo(project) != null");
 		}
 		
-		getModelAgent().submit(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					EclipseUtils.removeNature(project, LangNature.NATURE_ID);
-				} catch (CoreException ce) {
-					LangCore.logStatus(ce);
-				}
-			}
-		});
 	}
 	
 	@Override

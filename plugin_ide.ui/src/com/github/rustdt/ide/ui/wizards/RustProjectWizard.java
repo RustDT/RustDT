@@ -11,6 +11,7 @@
 package com.github.rustdt.ide.ui.wizards;
 
 
+import static melnorme.utilbox.misc.MiscUtil.getClassResourceAsString;
 import melnorme.lang.ide.ui.WizardMessages_Actual;
 import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
@@ -19,8 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 
+import com.github.rustdt.ide.core.cargomodel.CargoModelManager;
+
 /**
- * LANGUAGE New Project Wizard.
+ * Rust New Project Wizard.
  */
 public class RustProjectWizard extends LangNewProjectWizard {
 	
@@ -43,18 +46,33 @@ public class RustProjectWizard extends LangNewProjectWizard {
 	
 	@Override
 	protected ProjectCreator_ForWizard createProjectCreator() {
-		return new DeeProjectCreator();
+		return new RustProjectCreator();
 	}
 	
-	public class DeeProjectCreator extends ProjectCreator_ForWizard {
+	protected static final String HelloWorld_DubJsonTemplate = getClassResourceAsString(
+		RustProjectWizard.class, "hello_world.Cargo.toml");
+	protected static final String HelloWorld_ModuleContents = getClassResourceAsString(
+		RustProjectWizard.class, "hello_world.rs");
+	
+	public class RustProjectCreator extends ProjectCreator_ForWizard {
 		
-		public DeeProjectCreator() {
+		public RustProjectCreator() {
 			super(RustProjectWizard.this);
 		}
 		
 		@Override
 		protected void configureCreatedProject(IProgressMonitor monitor) throws CoreException {
-			// TODO:
+			createSampleHelloWorldBundle(CargoModelManager.BUNDLE_MANIFEST_FILE.toOSString(), "src", "main.rs");
+		}
+		
+		@Override
+		protected String getDefaultManifestFileContents() {
+			return HelloWorld_DubJsonTemplate;
+		}
+		
+		@Override
+		protected String getHelloWorldContents() {
+			return HelloWorld_ModuleContents;
 		}
 		
 	}

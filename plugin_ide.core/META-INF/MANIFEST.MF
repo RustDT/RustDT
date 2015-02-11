@@ -18,6 +18,7 @@ Require-Bundle: com.github.rustdt.tooling;visibility:=reexport,
  org.eclipse.core.filesystem;bundle-version="1.4.0"
 Bundle-ClassPath: .
 Export-Package: com.github.rustdt.ide.core,
+ com.github.rustdt.ide.core.cargomodel,
  com.github.rustdt.ide.core.launch,
  melnorme.lang.ide.core,
  melnorme.lang.ide.core.operations,
