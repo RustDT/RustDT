@@ -10,6 +10,20 @@
       </image>
 	</extension>
 	
+	<extension point="org.eclipse.ui.perspectives">
+		<perspective
+			class="com.github.rustdt.ide.ui.RustPerspective"
+			icon="icons/views/Perspective.16.png"
+			id="com.github.rustdt.ide.ui.Perspective"
+			name="%LangPerspective.name">
+		</perspective>
+	</extension>
+	
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="com.github.rustdt.ide.ui.Perspective">
+			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer" />
+		</perspectiveExtension>
+	</extension>
 	
 	<!-- ============ EDITOR ============= -->
 		
@@ -47,7 +61,6 @@
 	
 	
 	
-	
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target 
 			id="com.github.rustdt.ide.ui.Editor.HyperlinkCodeTarget"
@@ -74,11 +87,11 @@
 		</category>
 		
 		<command
-	        categoryId="com.github.rustdt.ide.ui.commands.Category"
-	        defaultHandler="com.github.rustdt.ide.ui.actions.RustOpenDefinitionHandler"
-	        description="%OpenDefinitionAction.tooltip"
-	        id="com.github.rustdt.ide.ui.commands.openDefinition"
-	        name="%OpenDefinitionAction.name">
+			categoryId="com.github.rustdt.ide.ui.commands.Category"
+			defaultHandler="com.github.rustdt.ide.ui.actions.RustOpenDefinitionHandler"
+			description="%OpenDefinitionAction.tooltip"
+			id="com.github.rustdt.ide.ui.commands.openDefinition"
+			name="%OpenDefinitionAction.name">
 		</command>
 	</extension>
 	
@@ -134,7 +147,26 @@
 		
 	</extension>
 	
-		
+	
+	<!-- ============ Wizards ============= -->
+	
+	<extension point="org.eclipse.ui.newWizards">
+		<category
+			id="com.github.rustdt.ide.ui.category"
+			name="%LangWizardsCategory.name"/>
+		<wizard
+			category="com.github.rustdt.ide.ui.category"
+			id="com.github.rustdt.ide.ui.wizards.NewProjectWizard"
+			class="com.github.rustdt.ide.ui.wizards.RustProjectWizard"
+			icon="icons/actions/new_project_wizard.16.png"
+			name="%NewProjectWizard.name"
+			finalPerspective="com.github.rustdt.ide.ui.Perspective"
+			preferredPerspectives="com.github.rustdt.ide.ui.Perspective"
+			project="true">
+		</wizard>
+	</extension>
+	
+	
 	<!-- ============ Launch ============= -->
 	
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
