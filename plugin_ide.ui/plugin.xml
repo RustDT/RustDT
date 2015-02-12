@@ -128,19 +128,19 @@
 		
 		<page
 			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
-			class="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustEditorPreferencePage"
 			id=   "com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
 			name="%LangEditorPreferencePage.name">
 		</page>
 		<page
 			category="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
-			class="com.github.rustdt.ide.ui.preferences.EditorSmartTypingPreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustEditorTypingPreferencePage"
 			id=   "com.github.rustdt.ide.ui.preferences.EditorSmartTypingPreferencePage"
 			name="%LangEditorTypingPreferencePage.name">
 		</page>
 		<page
 			category="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
-			class="com.github.rustdt.ide.ui.preferences.SourceColoringPreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustSourceColoringPreferencePage"
 			id=   "com.github.rustdt.ide.ui.preferences.SourceColoringPreferencePage"
 			name="%LangEditorSyntaxColoringPreferencePage.name">
 		</page>

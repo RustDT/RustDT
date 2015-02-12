@@ -12,20 +12,12 @@ package com.github.rustdt.ide.ui.preferences;
 
 
 import melnorme.lang.ide.ui.LangUIPlugin;
-import melnorme.lang.ide.ui.preferences.AbstractPreferencesComponentPrefPage;
-import melnorme.lang.ide.ui.preferences.IPreferencesBlock;
+import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage_Old;
 
-public class SourceColoringPreferencePage extends AbstractPreferencesComponentPrefPage {
+public class RustSourceColoringPreferencePage extends AbstractPreferencesBlockPrefPage_Old {
 	
-	public final static String PAGE_ID = SourceColoringPreferencePage.class.getName();
-	
-	public SourceColoringPreferencePage() {
+	public RustSourceColoringPreferencePage() {
 		super(LangUIPlugin.getInstance().getPreferenceStore());
-	}
-	
-	@Override
-	protected void setDescription() {
-		setDescription(null);
 	}
 	
 	@Override
@@ -34,7 +26,7 @@ public class SourceColoringPreferencePage extends AbstractPreferencesComponentPr
 	}
 	
 	@Override
-	protected IPreferencesBlock createPreferencesComponent() {
+	protected SourceColoringConfigurationBlock createPreferencesComponent() {
 		return new SourceColoringConfigurationBlock(getPreferenceStore());
 	}
 	

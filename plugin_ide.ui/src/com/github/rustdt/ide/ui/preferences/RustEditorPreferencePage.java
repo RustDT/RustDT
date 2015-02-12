@@ -13,32 +13,23 @@ package com.github.rustdt.ide.ui.preferences;
 
 
 import melnorme.lang.ide.ui.LangUIPlugin;
-import melnorme.lang.ide.ui.preferences.AbstractPreferencesComponentPrefPage;
-import melnorme.lang.ide.ui.preferences.IPreferencesBlock;
-import melnorme.lang.ide.ui.preferences.LangEditorSmartTypingConfigurationBlock;
+import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
 
 
-public class EditorSmartTypingPreferencePage extends AbstractPreferencesComponentPrefPage {
+public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
 	
-	public final static String PAGE_ID = EditorSmartTypingPreferencePage.class.getName();
-	
-	public EditorSmartTypingPreferencePage() {
+	public RustEditorPreferencePage() {
 		super(LangUIPlugin.getInstance().getPreferenceStore());
-	}
-	
-	@Override
-	protected void setDescription() {
-		setDescription(null);
-	}
-	
-	@Override
-	protected IPreferencesBlock createPreferencesComponent() {
-		return new LangEditorSmartTypingConfigurationBlock(this);
 	}
 	
 	@Override
 	protected String getHelpId() {
 		return null;
+	}
+	
+	@Override
+	protected EditorConfigurationBlock createPreferencesComponent() {
+		return new EditorConfigurationBlock(this);
 	}
 	
 }

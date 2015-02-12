@@ -10,34 +10,20 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import melnorme.lang.ide.ui.LangUIPlugin;
-
-import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
+import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 
 
 /**
- * The root preference page for DDT 
+ * The root preference page for Rust
  */
-public class RustRoot__PreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
+public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	
 	public RustRoot__PreferencePage() {
-		setPreferenceStore(LangUIPlugin.getPrefStore());
 	}
-	
+
 	@Override
-	public void init(IWorkbench workbench) {
-		// Nothing to do
-	}
-	
-	@Override
-	protected Control createContents(Composite parent) {
-		Composite content = new Composite(parent, SWT.NONE);
-		return content;
+	protected String getHelpId() {
+		return null;
 	}
 	
 }
