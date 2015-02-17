@@ -11,27 +11,44 @@
 package melnorme.lang.ide.ui.preferences.common;
 
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
-import melnorme.lang.ide.ui.preferences.common.IPreferencesAdapterComponent.BooleanFieldAdapter;
-import melnorme.lang.ide.ui.preferences.common.IPreferencesAdapterComponent.ComboFieldAdapter;
-import melnorme.lang.ide.ui.preferences.common.IPreferencesAdapterComponent.StringFieldAdapter;
+import melnorme.lang.ide.ui.preferences.common.IPreferencesDialogComponent.BooleanFieldAdapter;
+import melnorme.lang.ide.ui.preferences.common.IPreferencesDialogComponent.ComboFieldAdapter;
+import melnorme.lang.ide.ui.preferences.common.IPreferencesDialogComponent.StringFieldAdapter;
+import melnorme.lang.tooling.data.IFieldValidator;
+import melnorme.lang.tooling.data.LocationOrSinglePathValidator;
+import melnorme.lang.tooling.data.LocationValidator;
+import melnorme.lang.tooling.data.StatusException;
+import melnorme.lang.tooling.data.StatusException.StatusLevel;
 import melnorme.util.swt.components.AbstractField;
+import melnorme.util.swt.components.IFieldValueListener;
 import melnorme.util.swt.components.fields.ComboBoxField;
+import melnorme.util.swt.components.fields.DirectoryTextField;
+import melnorme.util.swt.components.fields.FileTextField;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 
 /**
  * This is the preferred way to create Preference pages (as of 2015-02).
  * 
  * This page delegates apply/cancel/revert to preference components (Usually connected to {@link AbstractField}).
  */
-public abstract class AbstractComponentsPrefPage extends AbstractLangPreferencesPage {
+public abstract class AbstractComponentsPrefPage extends AbstractLangPreferencesPage 
+	implements IPreferencesDialog {
 	
-	private final ArrayList<IPreferencesAdapterComponent> prefComponents = new ArrayList<>();
+	private final ArrayList<IPreferencesDialogComponent> prefComponents = new ArrayList<>();
+	private final LinkedHashMap<AbstractField<String>, IFieldValidator<?>> validators = new LinkedHashMap<>();
+	
+	private StatusException currentStatus = null;
 	
 	public AbstractComponentsPrefPage(IPreferenceStore store) {
 		super(store);
@@ -43,38 +60,79 @@ public abstract class AbstractComponentsPrefPage extends AbstractLangPreferences
 		super.setPreferenceStore(store);
 	}
 	
-	protected void addComponent(IPreferencesAdapterComponent prefComponent) {
+	@Override
+	public void addComponent(IPreferencesDialogComponent prefComponent) {
 		prefComponents.add(prefComponent);
 		prefComponent.loadFromStore(getPreferenceStore());
 	}
 	
-	protected void addStringComponent(String prefKey, AbstractField<String> field) {
-		addComponent(new StringFieldAdapter(prefKey, field));
-	}
-	protected void addBooleanComponent(String prefKey, AbstractField<Boolean> field) {
-		addComponent(new BooleanFieldAdapter(prefKey, field));
-	}
-	protected void addComboComponent(String prefKey, ComboBoxField field) {
-		addComponent(new ComboFieldAdapter(prefKey, field));
-	}
-	
-	protected void addStringComponent(String prefKey, Composite parent, AbstractField<String> field) {
-		addComponent(new StringFieldAdapter(prefKey, field));
-		field.createComponentInlined(parent);
-	}
-	protected void addBooleanComponent(String prefKey, Composite parent, AbstractField<Boolean> field) {
-		addComponent(new BooleanFieldAdapter(prefKey, field));
-		field.createComponentInlined(parent);
-	}
-	protected void addComboComponent(String prefKey, Composite parent, ComboBoxField field) {
-		addComponent(new ComboFieldAdapter(prefKey, field));
-		field.createComponentInlined(parent);
-	}
-	
 	public void loadFromStore() {
-		for(IPreferencesAdapterComponent configField : prefComponents) {
+		for(IPreferencesDialogComponent configField : prefComponents) {
 			configField.loadFromStore(getPreferenceStore());
 		}	
+	}
+	
+	public StatusLevel getFieldStatus(AbstractField<String> field) {
+		IFieldValidator<?> validator = validators.get(field);
+		StatusException fieldStatus = LocationValidator.getFieldStatus(validator, field.getFieldValue());
+		if(fieldStatus == null) {
+			return StatusLevel.OK;
+		}
+		return fieldStatus.getStatusLevel();
+	}
+	
+	protected void connectStringField(String prefKey, AbstractField<String> field, IFieldValidator<?> validator) {
+		addStringComponent(prefKey, field);
+		
+		validators.put(field, validator);
+		
+		field.addValueChangedListener(new IFieldValueListener() {
+			@Override
+			public void fieldValueChanged() {
+				updateStatusMessage();
+			}
+		});
+	}
+	
+	protected void updateStatusMessage() {
+		if(!isControlCreated()) {
+			return;
+		}
+		
+		currentStatus = null;
+		setMessage(null);
+		setValid(true);
+		
+		for (Entry<AbstractField<String>, IFieldValidator<?>> entry : validators.entrySet()) {
+			AbstractField<String> field = entry.getKey();
+			IFieldValidator<?> validator = entry.getValue();
+			
+			try {
+				validator.getValidatedField(field.getFieldValue());
+			} catch (StatusException se) {
+				if(currentStatus == null || se.getStatusLevelOrdinal() > currentStatus.getStatusLevelOrdinal()) {
+					currentStatus = se;
+					setMessage(se.getMessage(), statusLevelToMessageType(se.getStatusLevel()));
+					setValid(se.getStatusLevel() != StatusLevel.ERROR);
+				}
+			}
+		}
+	}
+	
+	public static int statusLevelToMessageType(StatusLevel statusLevel) {
+		switch (statusLevel) {
+		case OK: return IMessageProvider.NONE;
+		case INFO: return IMessageProvider.INFORMATION;
+		case WARNING: return IMessageProvider.WARNING;
+		case ERROR: return IMessageProvider.ERROR;
+		}
+		throw assertFail();
+	}
+	
+	@Override
+	public final void createControl(Composite parent) {
+		super.createControl(parent);
+		updateStatusMessage();
 	}
 	
 	/* -----------------  ----------------- */
@@ -87,7 +145,7 @@ public abstract class AbstractComponentsPrefPage extends AbstractLangPreferences
 	}
 	
 	public void loadStoreDefaults() {
-		for(IPreferencesAdapterComponent configField : prefComponents) {
+		for(IPreferencesDialogComponent configField : prefComponents) {
 			configField.loadStoreDefaults(getPreferenceStore());
 		}
 	}
@@ -99,9 +157,62 @@ public abstract class AbstractComponentsPrefPage extends AbstractLangPreferences
 	}
 	
 	public void saveToStore() {
-		for(IPreferencesAdapterComponent configField : prefComponents) {
+		for(IPreferencesDialogComponent configField : prefComponents) {
 			configField.saveToStore(getPreferenceStore());
 		}
+	}
+	
+	/* ----------------- Helpers:  ----------------- */
+	
+	public void addStringComponent(String prefKey, AbstractField<String> field) {
+		addComponent(new StringFieldAdapter(prefKey, field));
+	}
+	public void addBooleanComponent(String prefKey, AbstractField<Boolean> field) {
+		addComponent(new BooleanFieldAdapter(prefKey, field));
+	}
+	public void addComboComponent(String prefKey, ComboBoxField field) {
+		addComponent(new ComboFieldAdapter(prefKey, field));
+	}
+	
+	public void addStringComponent(String prefKey, Composite parent, AbstractField<String> field) {
+		addStringComponent(prefKey, field);
+		field.createComponentInlined(parent);
+	}
+	public void addBooleanComponent(String prefKey, Composite parent, AbstractField<Boolean> field) {
+		addBooleanComponent(prefKey, field);
+		field.createComponentInlined(parent);
+	}
+	public void addComboComponent(String prefKey, Composite parent, ComboBoxField field) {
+		addComboComponent(prefKey, field);
+		field.createComponentInlined(parent);
+	}
+	
+	public void connectFileField(String prefKey, AbstractField<String> stringField, boolean allowSinglePath) {
+		LocationValidator validator = allowSinglePath ? new LocationOrSinglePathValidator() : new LocationValidator();
+		validator.fileOnly = true;
+		connectStringField(prefKey, stringField, validator);
+	}
+	public void connectDirectoryField(String prefKey, AbstractField<String> stringField, boolean allowSinglePath) {
+		LocationValidator validator = allowSinglePath ? new LocationOrSinglePathValidator() : new LocationValidator();
+		validator.directoryOnly = true;
+		connectStringField(prefKey, stringField, validator);
+	}
+	
+	public void createFileComponent(Group group, String label, String prefKey) {
+		createFileComponent(group, label, prefKey, false);
+	}
+	public void createFileComponent(Group group, String label, String prefKey, boolean allowSinglePath) {
+		FileTextField pathField = new FileTextField(label);
+		pathField.createComponentInlined(group);
+		connectFileField(prefKey, pathField, allowSinglePath);
+	}
+	public void createDirectoryComponent(Group group, String label, String prefKey) {
+		createDirectoryComponent(group, label, prefKey, false);
+	}
+	public void createDirectoryComponent(Group group, String label, String prefKey, boolean allowSinglePath) {
+		DirectoryTextField pathField = new DirectoryTextField(label);
+		pathField.createComponentInlined(group);
+		connectDirectoryField(prefKey, pathField, allowSinglePath);
 	}
 	
 }
