@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
+import java.text.MessageFormat;
+
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
+import melnorme.utilbox.misc.Location;
 
 
 /**
@@ -20,10 +23,29 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	
 	public RustRoot__PreferencePage() {
 	}
-
+	
 	@Override
 	protected String getHelpId() {
 		return null;
+	}
+	
+	@Override
+	protected RustSDKLocationValidator getSDKValidator() {
+		return new RustSDKLocationValidator();
+	}
+	
+	protected static class RustSDKLocationValidator extends SDKLocationValidator {
+		
+		@Override
+		protected String getSDKExecutable_append() {
+			return "bin/cargo";
+		}
+		
+		@Override
+		protected String getSDKExecutableErrorMessage(Location exeLocation) {
+			return MessageFormat.format("Cargo executable not found at Rust SDK location (`{0}`). ", exeLocation);
+		}
+		
 	}
 	
 }
