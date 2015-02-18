@@ -36,7 +36,7 @@ public class RustBuilder extends LangProjectBuilderExt {
 		
 		@Override
 		protected String getSDKExecutableErrorMessage(Location exeLocation) {
-			return MessageFormat.format("Cargo executable not found at Rust SDK location (`{0}`). ", exeLocation);
+			return MessageFormat.format("Cargo executable not found at Rust location (`{0}`). ", exeLocation);
 		}
 	}
 	

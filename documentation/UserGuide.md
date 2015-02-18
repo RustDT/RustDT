@@ -23,9 +23,12 @@ with 4Gb of RAM or more, the following is recommended as minimum values:
 
 ### Project setup
 
-##### Project creation:
+##### Project Creation:
 A new Rust project can be created in the Project Explorer view. Open `New / Project...` and then `Rust / Rust Cargo Project`.
 
+##### Project Building
+
+The [Rust installation](http://www.rust-lang.org/install.html) is required for project building. The path to the installation should be configured in `Preferences/Rust`.  
 
 ### Launch and Debug:
 To run a Rust project that builds to an executable, you will need to create a launch configuration. Locate the main menu, open 'Run' / 'Run Configurations...'. Then double click 'Rust Application" to create a new Rust launch, and configure it accordingly. You can run these launches from the 'Run Configurations...', or for quicker access, from the Launch button in the Eclipse toolbar.
