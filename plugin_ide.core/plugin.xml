@@ -8,18 +8,7 @@
       <runtime>
          <run class="com.github.rustdt.ide.core.RustNature"/>
       </runtime>
-   </extension>
-   
-   <extension
-         point="org.eclipse.core.contenttype.contentTypes">
-      <content-type
-            base-type="org.eclipse.core.runtime.text"
-            default-charset="UTF-8"
-            file-extensions="%contentType_FileExtensions_actual"
-            id="com.github.rustdt.ide.core.content.source"
-            name="%contentType_Name_actual"
-            priority="high">
-      </content-type>
+		<builder id="com.github.rustdt.ide.core.Builder" />
    </extension>
    
    <extension point="org.eclipse.core.expressions.definitions">
@@ -57,7 +46,39 @@
       </definition>
    </extension>
 	
+   	<!-- ============ Content type ============= -->
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            default-charset="UTF-8"
+            file-extensions="%contentType_FileExtensions_actual"
+            id="com.github.rustdt.ide.core.content.source"
+            name="%contentType_Name_actual"
+            priority="high">
+      </content-type>
+   </extension>
+   
+	<!-- ============ BUILDER/PROBLEMS ============= -->
 	
+	<extension point="org.eclipse.core.resources.builders"
+		id="Builder"
+		name="%Builder_Name">
+		<builder
+			callOnEmptyDelta="true"	
+			hasNature="true"
+			isConfigurable="true">
+		<run class="com.github.rustdt.ide.core.operations.RustBuilder" />
+	</builder>
+	</extension>
+	
+	<extension point="org.eclipse.core.resources.markers"
+		id="marker.problem"
+		name="%ProblemMarker_Name">
+		<super type="org.eclipse.core.resources.problemmarker" />
+		<persistent value="true" />
+	</extension>	
 	
 	<!-- ============ Launch configuration type ============= -->
 	

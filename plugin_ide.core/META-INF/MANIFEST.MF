@@ -20,6 +20,7 @@ Bundle-ClassPath: .
 Export-Package: com.github.rustdt.ide.core,
  com.github.rustdt.ide.core.cargomodel,
  com.github.rustdt.ide.core.launch,
+ com.github.rustdt.ide.core.operations,
  melnorme.lang.ide.core,
  melnorme.lang.ide.core.bundlemodel,
  melnorme.lang.ide.core.operations,

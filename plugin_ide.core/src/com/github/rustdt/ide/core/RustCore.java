@@ -8,8 +8,6 @@ import com.github.rustdt.ide.core.cargomodel.CargoModelManager;
 
 public class RustCore extends LangCore {
 	
-	public static final String PLUGIN_ID = "com.github.rustdt.ide.core";
-	
 	protected static final CargoModelManager bundleModelManager = new CargoModelManager();
 	
 	public static CargoModelManager getBundleModelManager() {
