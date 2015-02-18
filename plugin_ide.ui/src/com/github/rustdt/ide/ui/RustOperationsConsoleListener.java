@@ -8,15 +8,10 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.lang.ide.ui;
+package com.github.rustdt.ide.ui;
 
-import org.eclipse.swt.graphics.RGB;
+import melnorme.lang.ide.ui.tools.console.AbstractToolsConsoleHandler;
 
-public interface OperationsConsolePrefDefaults_Actual {
-	
-	static RGB INFO_COLOR_DEFAULT = new RGB(0, 0, 200);
-	static RGB STDERR_COLOR_DEFAULT = new RGB(255, 0, 0);
-	static RGB STDOUT_COLOR_DEFAULT = new RGB(0, 0, 0);
-	static RGB BACKGROUND_COLOR_DEFAULT = new RGB(242, 252, 244);
+public class RustOperationsConsoleListener extends AbstractToolsConsoleHandler {
 	
 }

@@ -1,7 +1,6 @@
 package melnorme.lang.ide.core;
 
 import melnorme.lang.ide.core.operations.AbstractToolsManager;
-import melnorme.lang.ide.core.operations.ILangOperationsListener;
 
 public class LangCore_Actual {
 	
@@ -11,8 +10,8 @@ public class LangCore_Actual {
 	public static final String BUILDER_ID = PLUGIN_ID + ".Builder";
 	public static final String BUILD_PROBLEM_ID = PLUGIN_ID + ".marker.problem";
 	
-	public static AbstractToolsManager<ILangOperationsListener> createToolManagerSingleton() {
-		return new AbstractToolsManager<ILangOperationsListener>() { };
+	public static AbstractToolsManager<ILangOperationsListener_Actual> createToolManagerSingleton() {
+		return new AbstractToolsManager<ILangOperationsListener_Actual>() { };
 	}
 	
 }

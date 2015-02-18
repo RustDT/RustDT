@@ -5,9 +5,4 @@ import melnorme.lang.ide.ui.tools.AbstractDeamonToolPrefPage;
 
 public class RustDaemonPreferencePage extends AbstractDeamonToolPrefPage {
 	
-	@Override
-	protected String getDaemonToolName() {
-		return "lang_daemon"; /* FIXME: */
-	}
-	
 }

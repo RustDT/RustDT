@@ -31,6 +31,10 @@ public final class LangUIPlugin_Actual {
 		return new RustAutoEditStrategy(contentType, sourceViewer);
 	}
 	
+	/* ----------------- UI messages:  ----------------- */
+	
+	public static final String LANGUAGE_NAME = "Rust";
+	public static final String DAEMON_TOOL_Name = "lang_daemon"; // None yet
 	public static final String DAEMON_TOOL_ConsoleName = "lang_daemon log";
 	
 }
