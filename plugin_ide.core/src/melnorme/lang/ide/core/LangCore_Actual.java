@@ -10,8 +10,8 @@ public class LangCore_Actual {
 	public static final String BUILDER_ID = PLUGIN_ID + ".Builder";
 	public static final String BUILD_PROBLEM_ID = PLUGIN_ID + ".marker.problem";
 	
-	public static AbstractToolsManager<ILangOperationsListener_Actual> createToolManagerSingleton() {
-		return new AbstractToolsManager<ILangOperationsListener_Actual>() { };
+	public static AbstractToolsManager createToolManagerSingleton() {
+		return new AbstractToolsManager() { };
 	}
 	
 }

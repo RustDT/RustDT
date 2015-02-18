@@ -46,20 +46,19 @@
       </definition>
    </extension>
 	
-   	<!-- ============ Content type ============= -->
-   
-   <extension
-         point="org.eclipse.core.contenttype.contentTypes">
-      <content-type
-            base-type="org.eclipse.core.runtime.text"
-            default-charset="UTF-8"
-            file-extensions="%contentType_FileExtensions_actual"
-            id="com.github.rustdt.ide.core.content.source"
-            name="%contentType_Name_actual"
-            priority="high">
-      </content-type>
-   </extension>
-   
+	<!-- ============ Content type ============= -->
+	
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<content-type
+			base-type="org.eclipse.core.runtime.text"
+			default-charset="UTF-8"
+			file-extensions="%contentType_FileExtensions_actual"
+			id="com.github.rustdt.ide.core.content.source"
+			name="%contentType_Name_actual"
+			priority="high">
+		</content-type>
+	</extension>
+	
 	<!-- ============ BUILDER/PROBLEMS ============= -->
 	
 	<extension point="org.eclipse.core.resources.builders"
@@ -78,7 +77,7 @@
 		name="%ProblemMarker_Name">
 		<super type="org.eclipse.core.resources.problemmarker" />
 		<persistent value="true" />
-	</extension>	
+	</extension>
 	
 	<!-- ============ Launch configuration type ============= -->
 	
