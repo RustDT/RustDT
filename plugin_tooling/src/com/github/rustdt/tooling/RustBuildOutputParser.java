@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +30,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
 	
 	@Override
-	protected void doParseLine(String outputLine) {
+	protected void doParseLine(String outputLine, BufferedReader br) throws IOException {
 		if(!outputLine.contains(":")) {
 			return; // Ignore line
 		}
