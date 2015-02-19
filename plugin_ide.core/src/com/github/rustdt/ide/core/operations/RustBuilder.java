@@ -11,17 +11,20 @@
 package com.github.rustdt.ide.core.operations;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 
 import melnorme.lang.ide.core.operations.LangProjectBuilderExt;
 import melnorme.lang.ide.core.operations.SDKLocationValidator;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.LocationValidator;
-import melnorme.lang.tooling.ops.ToolSourceError;
-import melnorme.utilbox.collections.ArrayList2;
+import melnorme.lang.tooling.ops.ToolSourceMessage;
+import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 import org.eclipse.core.runtime.CoreException;
+
+import com.github.rustdt.tooling.RustBuildOutputParser;
 
 /**
  * Rust builder, using Cargo.
@@ -55,9 +58,15 @@ public class RustBuilder extends LangProjectBuilderExt {
 	
 	@Override
 	protected void processBuildResult(ExternalProcessResult buildAllResult) throws CoreException {
-		ArrayList2<ToolSourceError> buildErrors = new ArrayList2<>(); // TODO: process errors from result
 		
-		addErrorMarkers(buildErrors, ResourceUtils.getProjectLocation(getProject()));
+		ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() { 
+			@Override
+			protected void handleLineParseError(CommonException ce) {
+//				 LangCore.logStatus(LangCore.createCoreException(ce));
+			}
+		}.parseOutput(buildAllResult);
+		
+		addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(getProject()));
 	}
 	
 	@Override
