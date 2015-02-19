@@ -81,7 +81,7 @@ public abstract class BuildOutputParser extends ParseHelper {
 		}
 	}
 	
-	protected final void handleUnknownLineSyntax(String line) {
+	protected void handleUnknownLineSyntax(String line) {
 		handleLineParseError(new CommonException("Unknown error line syntax: " + line));
 	}
 	

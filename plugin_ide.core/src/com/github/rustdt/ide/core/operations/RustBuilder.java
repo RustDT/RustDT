@@ -13,6 +13,7 @@ package com.github.rustdt.ide.core.operations;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
+import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.LangProjectBuilderExt;
 import melnorme.lang.ide.core.operations.SDKLocationValidator;
 import melnorme.lang.ide.core.utils.ResourceUtils;
@@ -59,10 +60,15 @@ public class RustBuilder extends LangProjectBuilderExt {
 	@Override
 	protected void processBuildResult(ExternalProcessResult buildAllResult) throws CoreException {
 		
-		ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() { 
+		ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
+			@Override
+			protected void handleUnknownLineSyntax(String line) {
+				// Ignore, don't log error, since lot's of Rust line fall into this category.
+			};
+			
 			@Override
 			protected void handleLineParseError(CommonException ce) {
-//				 LangCore.logStatus(LangCore.createCoreException(ce));
+				 LangCore.logStatus(LangCore.createCoreException(ce));
 			}
 		}.parseOutput(buildAllResult);
 		
