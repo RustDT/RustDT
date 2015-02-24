@@ -15,6 +15,8 @@ public final class LangUIPlugin_Actual {
 	
 	public static final String PLUGIN_ID = "com.github.rustdt.ide.ui";
 	
+	public static final String ROOT_PREF_PAGE_ID = PLUGIN_ID + ".PreferencePages.Root";
+	
 	public static final String RULER_CONTEXT = "#RustRulerContext";
 	public static final String EDITOR_CONTEXT = "#RustEditorContext";
 	

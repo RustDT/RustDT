@@ -108,40 +108,40 @@
 	
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
+			id="com.github.rustdt.ide.ui.PreferencePages.Root"
 			class="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
 			name="%LangRootPreferencePage.name">
 		</page>
 		
 		<page
-			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			category="com.github.rustdt.ide.ui.PreferencePages.Root"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.RustDaemon"
 			class="com.github.rustdt.ide.ui.preferences.RustDaemonPreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.RustDaemonPreferencePage"
 			name="%LangDaemonToolPrefPage.name">
 		</page>
 		<page
-			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			category="com.github.rustdt.ide.ui.PreferencePages.Root"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.RustToolsConsole"
 			class="com.github.rustdt.ide.ui.preferences.RustToolsConsolePrefPage"
-			id=   "com.github.rustdt.ide.ui.preferences.RustToolsConsolePrefPage"
 			name="%LangToolsConsolePrefPage.name">
 		</page>
 		
 		<page
-			category="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			category="com.github.rustdt.ide.ui.PreferencePages.Root"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor"
 			class="com.github.rustdt.ide.ui.preferences.RustEditorPreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
 			name="%LangEditorPreferencePage.name">
 		</page>
 		<page
-			category="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
+			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.Typing"
 			class="com.github.rustdt.ide.ui.preferences.RustEditorTypingPreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.EditorSmartTypingPreferencePage"
 			name="%LangEditorTypingPreferencePage.name">
 		</page>
 		<page
-			category="com.github.rustdt.ide.ui.preferences.EditorPreferencePage"
+			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.SourceColoring"
 			class="com.github.rustdt.ide.ui.preferences.RustSourceColoringPreferencePage"
-			id=   "com.github.rustdt.ide.ui.preferences.SourceColoringPreferencePage"
 			name="%LangEditorSyntaxColoringPreferencePage.name">
 		</page>
 		
