@@ -33,6 +33,11 @@ import com.github.rustdt.tooling.RustBuildOutputParser;
 public class RustBuilder extends LangProjectBuilderExt {
 	
 	public static class RustSDKLocationValidator extends SDKLocationValidator {
+		
+		public RustSDKLocationValidator() {
+			super("Rust installation:");
+		}
+		
 		@Override
 		protected String getSDKExecutable_append() {
 			return "bin/cargo"; 
