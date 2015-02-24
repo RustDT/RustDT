@@ -63,31 +63,31 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 		
 		{
 			
-			testParseError(buildParser_allowParseErrors, "libbar\blah.rs:", listFrom());
-			testParseError(buildParser_allowParseErrors, "libbar\blah.rs:1:2: info: BLAH BLAH", listFrom());
+			testParseError(buildParser_allowParseErrors, "libbar/blah.rs:", listFrom());
+			testParseError(buildParser_allowParseErrors, "libbar/blah.rs:1:2: info: BLAH BLAH", listFrom());
 			
-			testParseError(buildParser_allowParseErrors, "libbar\blah.rs:1:2: 3:16 info: BLAH BLAH", listFrom());
+			testParseError(buildParser_allowParseErrors, "libbar/blah.rs:1:2: 3:16 info: BLAH BLAH", listFrom());
 		}
 		
 		testParseError(buildParser, 
-			"src\\main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n", 
+			"src/main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n", 
 			listFrom(msg(path("src/main.rs"), 1, 2, 3, 17, WARNING, "BLAH BLAH BLAH")));
 		
 		testParseError(buildParser, 
-			"src\\main.rs:1:2: warning: BLAH BLAH BLAH\n", 
+			"src/main.rs:1:2: warning: BLAH BLAH BLAH\n", 
 			listFrom(msg(path("src/main.rs"), 1, 2, -1, -1, WARNING, "BLAH BLAH BLAH")));
 
 		testParseError(buildParser, 
-			"src\\main.rs:1: warning: BLAH BLAH BLAH\n", 
+			"src/main.rs:1: warning: BLAH BLAH BLAH\n", 
 			listFrom(msg(path("src/main.rs"), 1, -1, -1, -1, WARNING, "BLAH BLAH BLAH")));
 		
 		
 		testParseError(buildParser_allowParseErrors, 
-			"src\\main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n" +
-			"src\\main.rs:1:2: 3: warning: INVALID\n" +
-			"src\\main.rs:1:2: :17 warning: INVALID\n" +
-			"src\\main.rs:1:2: 3:17 blah: INVALID\n" +
-			"src\\main.rs:1: warning: BLAH BLAH BLAH\n" +
+			"src/main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n" +
+			"src/main.rs:1:2: 3: warning: INVALID\n" +
+			"src/main.rs:1:2: :17 warning: INVALID\n" +
+			"src/main.rs:1:2: 3:17 blah: INVALID\n" +
+			"src/main.rs:1: warning: BLAH BLAH BLAH\n" +
 			"src/foo/main.rs:2:1: 4:18 error: XXX\n",
 			listFrom(
 				msg(path("src/main.rs"), 1, 2, 3, 17, WARNING, "BLAH BLAH BLAH"),
