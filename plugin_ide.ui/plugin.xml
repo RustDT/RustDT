@@ -113,12 +113,14 @@
 			name="%LangRootPreferencePage.name">
 		</page>
 		
+<!--
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Root"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.RustDaemon"
 			class="com.github.rustdt.ide.ui.preferences.RustDaemonPreferencePage"
 			name="%LangDaemonToolPrefPage.name">
 		</page>
+-->
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Root"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.RustToolsConsole"
