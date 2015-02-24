@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.github.rustdt.ide.core.tests;singleton:=true
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.1.0.qualifier
 Bundle-Name: Rust IDE Core Tests
-Fragment-Host: com.github.rustdt.ide.core;bundle-version="0.0.1"
+Fragment-Host: com.github.rustdt.ide.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit;bundle-version="4.8.0"
 Bundle-ClassPath: .
