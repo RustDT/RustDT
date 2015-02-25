@@ -7,3 +7,4 @@
  * Added: Rust/Cargo Project wizard.
  * Added: Rust/Cargo project builder.
    * With in-editor build errors reporting.
+ * Added: Debugging support using [CDT](https://eclipse.org/cdt/)'s GDB integration. 
