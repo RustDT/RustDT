@@ -1,7 +1,6 @@
-## RustDT :
-[![sample_basic](screenshots/sample_basic.png)](:)
+## RustDT
 
-## RustDT Features:
+### Features:
 
  * Rust source code editor, with:
    * Syntax highlighting. 
@@ -9,6 +8,9 @@
  * Rust/Cargo Project wizard.
  * Rust/Cargo project builder.
    * With in-editor build errors reporting.
+
+| [![sample_basic](screenshots/sample_basic.thumb.png)](screenshots/sample_basic.png?raw=true)<br/>`Editor and workbench screenshot` |
+|----|
    
 #### Debugging functionality. 
 Fully featured GDB debugger support (uses Eclipse CDT's GDB integration)
