@@ -10,15 +10,19 @@
  *******************************************************************************/
 package melnorme.lang.ide.ui;
 
+import melnorme.lang.ide.ui.editor.AbstractLangEditor;
+import melnorme.lang.ide.ui.text.LangDocumentPartitionerSetup;
 import melnorme.utilbox.core.fntypes.Function;
 import melnorme.utilbox.misc.ArrayUtil;
 
-import org.eclipse.cdt.internal.ui.text.util.CColorManager;
+import org.eclipse.cdt.ui.text.IColorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
 import com.github.rustdt.ide.ui.editor.RustSimpleSourceViewerConfiguration;
+import com.github.rustdt.ide.ui.editor.RustSourceViewerConfiguration;
+import com.github.rustdt.ide.ui.text.RustDocumentSetupParticipant;
 import com.github.rustdt.ide.ui.text.RustPartitionScanner;
 
 
@@ -53,8 +57,18 @@ public class TextSettings_Actual {
 		return new RustPartitionScanner();
 	}
 	
+	public static LangDocumentPartitionerSetup createDocumentSetupHelper() {
+		return new RustDocumentSetupParticipant();
+	}
+	
+	public static RustSourceViewerConfiguration createSourceViewerConfiguration(
+			IPreferenceStore preferenceStore, AbstractLangEditor editor) {
+		IColorManager colorManager = LangUIPlugin.getInstance().getColorManager();
+		return new RustSourceViewerConfiguration(preferenceStore, colorManager, editor);
+	}
+	
 	public static RustSimpleSourceViewerConfiguration createSimpleSourceViewerConfiguration(
-			IPreferenceStore preferenceStore, CColorManager colorManager) {
+			IPreferenceStore preferenceStore, IColorManager colorManager) {
 		return new RustSimpleSourceViewerConfiguration(preferenceStore, colorManager);
 	}
 	

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.editor;
 
-import org.eclipse.ui.editors.text.TextEditorActionContributor;
+import melnorme.lang.ide.ui.editor.LangEditorActionContributor;
 
-public class RustEditorActionContributor extends TextEditorActionContributor {
+public class RustEditorActionContributor extends LangEditorActionContributor {
 	
 }

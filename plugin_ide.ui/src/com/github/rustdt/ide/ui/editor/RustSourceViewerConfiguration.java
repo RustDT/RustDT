@@ -13,6 +13,7 @@ package com.github.rustdt.ide.ui.editor;
 import static melnorme.utilbox.core.CoreUtil.array;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.ui.TextSettings_Actual.LangPartitionTypes;
+import melnorme.lang.ide.ui.editor.AbstractLangEditor;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
 
 import org.eclipse.cdt.ui.text.IColorManager;
@@ -28,7 +29,7 @@ import com.github.rustdt.ide.ui.text.RustColorPreferences;
 public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	
 	public RustSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager,
-			RustEditor editor) {
+			AbstractLangEditor editor) {
 		super(preferenceStore, colorManager, editor);
 	}
 	
