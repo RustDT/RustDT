@@ -3,6 +3,8 @@ See project page ( http://rustdt.github.io/ ) for user information.
 Developers Guide
 ================
 
+[![Build Status](https://travis-ci.org/RustDT/RustDT.svg?branch=latest)](https://travis-ci.org/RustDT/RustDT)
+
 #### Setting up the development environment:
  * Clone the Git repository.
  * In Eclipse, use the "import existing projects" wizard, navigate to the Git repository, and add all the Eclipse projects that are present in the root directory of the Git repo. Java Compiler settings should automatically be configured, since each project has project-specific settings stored in source control.
