@@ -8,9 +8,9 @@
  * Contributors:
 
  *******************************************************************************/
-package com.github.rustdt.ide.ui.text;
+package com.github.rustdt.ide.core.text;
 
-import melnorme.lang.ide.ui.text.LangDocumentPartitionerSetup;
+import melnorme.lang.ide.core.text.LangDocumentPartitionerSetup;
 
 public class RustDocumentSetupParticipant extends LangDocumentPartitionerSetup {
 	

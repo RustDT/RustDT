@@ -11,7 +11,7 @@
 package com.github.rustdt.ide.ui.text;
 import org.eclipse.swt.graphics.RGB;
 
-import melnorme.lang.ide.ui.TextSettings_Actual.LangPartitionTypes;
+import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.text.coloring.ColoringItemPreference;
 
 public interface RustColorPreferences {

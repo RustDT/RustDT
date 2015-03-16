@@ -26,16 +26,6 @@
 	</extension>
 	
 	<!-- ============ EDITOR ============= -->
-		
-	<extension
-		 id="com.github.rustdt.DocumentSetupParticipant"
-		 name="Rust Document Setup Participant"
-		 point="org.eclipse.core.filebuffers.documentSetup">
-		<participant
-			class="com.github.rustdt.ide.ui.text.RustDocumentSetupParticipant"
-			contentTypeId="com.github.rustdt.ide.core.content.source">
-		</participant>
-	</extension>
 	
 	
 	<extension point="org.eclipse.ui.editors">

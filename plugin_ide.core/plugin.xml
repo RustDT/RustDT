@@ -46,7 +46,7 @@
       </definition>
    </extension>
 	
-	<!-- ============ Content type ============= -->
+	<!-- ============ TEXT ============= -->
 	
 	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
@@ -58,6 +58,17 @@
 			priority="high">
 		</content-type>
 	</extension>
+	
+	<extension
+		 id="com.github.rustdt.DocumentSetupParticipant"
+		 name="Rust Document Setup Participant"
+		 point="org.eclipse.core.filebuffers.documentSetup">
+		<participant
+			class="com.github.rustdt.ide.core.text.RustDocumentSetupParticipant"
+			contentTypeId="com.github.rustdt.ide.core.content.source">
+		</participant>
+	</extension>
+	
 	
 	<!-- ============ BUILDER/PROBLEMS ============= -->
 	
