@@ -2,6 +2,7 @@
 
 ### RustDT 0.2.0
  * Added: Source menu with shift rigth/left operations.
+ * Fixed: missing UserGuide screenshot of debug launch configuration.
 
 ### RustDT 0.1.0 - Initial release 
  * Added: Rust source code editor, with:
