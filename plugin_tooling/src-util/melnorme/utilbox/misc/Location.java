@@ -10,16 +10,15 @@
  *******************************************************************************/
 package melnorme.utilbox.misc;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.PathUtil.InvalidPathExceptionX;
 
 /**
  * A location is a normalized, absolute path, based upon {@link Path}.
@@ -35,33 +34,28 @@ public class Location {
 		return new Location(absolutePath);
 	}
 	
-	/** @return a new {@link Location} from given path. 
-	 * @throws InvalidPathExceptionX if path is not absolute. */
-	@Deprecated
-	public static Location create(Path path) throws PathUtil.InvalidPathExceptionX {
-		if(!path.isAbsolute()) {
-			throw new PathUtil.InvalidPathExceptionX(new InvalidPathException(path.toString(), 
-					"Invalid location: path is not absolute"));
-		}
-		return new Location(path);
-	}
-	
 	public static Location create2(Path path) throws CommonException {
+		return createValidLocation(path, "Invalid location: ");
+	}
+	public static Location create2(String pathString) throws CommonException {
+		return createValidLocation(pathString, "Invalid location: ");
+	}
+	
+	/** @return a valid {@link Location} from given path. 
+	 * @throws CommonException if a valid Location could not be created. 
+	 * Given errorMessagePrefix will be used as a prefix in {@link CommonException}'s message. */
+	public static Location createValidLocation(Path path, String errorMessagePrefix) throws CommonException {
 		if(!path.isAbsolute()) {
-			throw new CommonException("Invalid location: path is not absolute");
+			throw new CommonException(errorMessagePrefix + "Path `"+ path.toString()+"` is not absolute.");
 		}
 		return new Location(path);
 	}
-	
-	/** @return a new {@link Location} from given path string. 
-	 * @throws InvalidPathExceptionX if path is not absolute. */
-	@Deprecated
-	public static Location create(String pathString) throws PathUtil.InvalidPathExceptionX {
-		return create(PathUtil.createPath(pathString));
-	}
-	
-	public static Location create2(String pathString) throws CommonException {
-		return create2(PathUtil.createPath2(pathString));
+	/** @return a valid {@link Location} from given pathString. 
+	 * @throws CommonException if a valid Location could not be created. 
+	 * Given errorMessagePrefix will be used as a prefix in {@link CommonException}'s message. */
+	public static Location createValidLocation(String pathString, String errorMessagePrefix) throws CommonException {
+		Path path = PathUtil.createPath(pathString, errorMessagePrefix);
+		return createValidLocation(path, errorMessagePrefix);
 	}
 	
 	/** @return a new {@link Location} from given path, or null if path is not absolute.  */
@@ -77,12 +71,28 @@ public class Location {
 		}
 	}
 	
+	public static Location validateLocation(Path filePath, boolean isRequired, String descText) 
+			throws CommonException {
+		if(filePath == null) {
+			if(isRequired) {
+				throw new CommonException("Path not specified for " + descText + "."); 
+			}
+			return null;
+		}
+		try {
+			return create2(filePath);
+		} catch (CommonException e) {
+			throw new CommonException("Invalid location for " + descText + ", path not absolute: " + filePath);
+		}
+	}
+	
 	/* -----------------  ----------------- */
 	
-	public final Path path;
+	public final Path path; // non-null
 	
 	protected Location(Path absolutePath) {
-		assertTrue(absolutePath != null && absolutePath.isAbsolute());
+		assertNotNull(absolutePath);
+		assertTrue(absolutePath.isAbsolute());
 		this.path = absolutePath.normalize();
 	}
 	
@@ -126,6 +136,13 @@ public class Location {
 		return path.toUri();
 	}
 	
+	/* -----------------  ----------------- */
+	
+	public Location resolve(String subPathStr) throws CommonException {
+		Path subPath = PathUtil.createPath2(subPathStr);
+		return resolve(subPath);
+	}
+	
 	/**
 	 * @return an new Location resolved from this Location against the given otherPathString. 
 	 * null if the other path is not valid. 
@@ -148,6 +165,10 @@ public class Location {
 		return resolve(otherPath);
 	}
 	
+	public Location resolve_valid(String otherPathString) {
+		return resolve_fromValid(otherPathString);
+	}
+	
 	public Location resolve(Path otherPath) {
 		// resolving should always result in a valid path: absolute and non-null
 		return Location.create_fromValid(path.resolve(otherPath));
@@ -161,19 +182,12 @@ public class Location {
 		return Location.create_fromValid(parent);
 	}
 	
-	public static Location validateLocation(Path filePath, boolean isRequired, String descText) 
-			throws CommonException {
-		if(filePath == null) {
-			if(isRequired) {
-				throw new CommonException("Path not specified for " + descText + "."); 
-			}
-			return null;
-		}
-		try {
-			return create2(filePath);
-		} catch (CommonException e) {
-			throw new CommonException("Invalid location for " + descText + ", path not absolute: " + filePath);
-		}
+	public boolean startsWith(Location otherLoc) {
+		return path.startsWith(otherLoc.path);
+	}
+	
+	public Path relativize(Location packageLoc) {
+		return path.relativize(packageLoc.path);
 	}
 	
 }

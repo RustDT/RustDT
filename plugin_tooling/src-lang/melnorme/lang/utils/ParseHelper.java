@@ -13,8 +13,8 @@ package melnorme.lang.utils;
 import java.nio.file.Path;
 
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
-import melnorme.utilbox.misc.PathUtil.InvalidPathExceptionX;
 
 /**
  * Fairly basic for now, more methods can be added.
@@ -38,12 +38,12 @@ public class ParseHelper {
 		}
 	}
 	
-	protected Path parsePath(String string) throws CommonException {
-		try {
-			return MiscUtil.createPath(string);
-		} catch (InvalidPathExceptionX e) {
-			throw new CommonException("Invalid path. ", e);
-		}
+	protected Path parsePath(String pathString) throws CommonException {
+		return MiscUtil.createPath2(pathString);
+	}
+	
+	protected Location parseLocation(String pathString) throws CommonException {
+		return Location.create2(pathString);
 	}
 	
 }

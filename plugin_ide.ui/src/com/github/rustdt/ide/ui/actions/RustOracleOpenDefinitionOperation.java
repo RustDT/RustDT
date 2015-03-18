@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.actions;
 
-import java.nio.file.Path;
-
 import melnorme.lang.ide.ui.EditorSettings_Actual;
 import melnorme.lang.ide.ui.actions.AbstractOpenElementOperation;
 import melnorme.lang.ide.ui.editor.EditorUtils;
@@ -29,10 +27,6 @@ public class RustOracleOpenDefinitionOperation extends AbstractOpenElementOperat
 	public RustOracleOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
 			OpenNewEditorMode openEditorMode) {
 		super(OPEN_DEFINITION_OpName, editor, range, openEditorMode);
-	}
-	
-	protected Path getFilePath() {
-		return inputPath;
 	}
 	
 	@Override

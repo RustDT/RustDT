@@ -20,8 +20,8 @@ import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.utils.WorkbenchUtils;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.utilbox.misc.PathUtil;
-import melnorme.utilbox.misc.PathUtil.InvalidPathExceptionX;
+import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.Location;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -104,6 +104,10 @@ public class EditorUtils {
 		return getAssociatedFile(editor.getEditorInput());
 	}
 	
+	public static IEditorInput getBestEditorInputForLoc(Location fileLoc) {
+		return getBestEditorInputForUri(fileLoc.toUri());
+	}
+	@Deprecated
 	public static IEditorInput getBestEditorInputForPath(Path filePath) {
 		return getBestEditorInputForUri(filePath.toUri());
 	}
@@ -154,16 +158,16 @@ public class EditorUtils {
 		return null;
 	}
 	
-	public static Path getLocationFromEditor(IEditorInput editorInput) throws CoreException {
-		String filePath = getFilePathFromEditorInput(editorInput).toString();
+	public static Location getLocationFromEditorInput(IEditorInput editorInput) throws CoreException {
+		Path filePath = getFilePathFromEditorInput(editorInput);
 		if (filePath == null) {
 			throw LangCore.createCoreException("Error: Could not determine file path for editor.", null);
 		}
 		
 		try {
-			return PathUtil.createPath(filePath);
-		} catch (InvalidPathExceptionX e) {
-			throw LangCore.createCoreException("Invalid editor path.", e);
+			return Location.createValidLocation(filePath, "Invalid editorInput path: ");
+		} catch (CommonException ce) {
+			throw LangCore.createCoreException(ce);
 		}
 	}
 	
