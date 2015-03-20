@@ -114,7 +114,7 @@ class CargoWorkspaceModel extends Object /*implements IWorkspaceModel*/ {
 	protected synchronized ProjectInfo setProjectInfo(IProject project, ProjectInfo newProjectInfo) {
 		String projectName = project.getName();
 		projectInfos.put(projectName, newProjectInfo);
-		log.println("DUB project model added: " + projectName);
+		log.println("Cargo project model added: " + projectName);
 //		fireUpdateEvent(new DubModelUpdateEvent(project, newProjectInfo.getBundleDesc()));
 		return newProjectInfo;
 	}
@@ -123,7 +123,7 @@ class CargoWorkspaceModel extends Object /*implements IWorkspaceModel*/ {
 		ProjectInfo oldProjectInfo = projectInfos.remove(project.getName());
 		assertNotNull(oldProjectInfo);
 //		DubBundleDescription oldDesc = oldProjectInfo.getBundleDesc();
-		log.println("DUB project model removed: " + project.getName());
+		log.println("Cargo project model removed: " + project.getName());
 //		fireUpdateEvent(new DubModelUpdateEvent(project, oldDesc));
 	}
 	
