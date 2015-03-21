@@ -12,12 +12,13 @@ package com.github.rustdt.ide.ui.editor;
 
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.LangHyperlinkDetector;
+import melnorme.lang.tooling.ast.SourceRange;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import com.github.rustdt.ide.ui.actions.RustOpenDefinitionHandler;
+import com.github.rustdt.ide.ui.actions.RustOracleOpenDefinitionOperation;
 
 public class RustHyperlinkDetector extends LangHyperlinkDetector {
 	
@@ -37,8 +38,9 @@ public class RustHyperlinkDetector extends LangHyperlinkDetector {
 		public void open() {
 			textEditor.doSave(new NullProgressMonitor());
 			
-			new RustOpenDefinitionHandler().createOperation(textEditor,
-				getElementRange(), OpenNewEditorMode.TRY_REUSING_EXISTING_EDITORS).executeAndHandle();
+			SourceRange sr = getElementRange();
+			new RustOracleOpenDefinitionOperation(textEditor, sr, OpenNewEditorMode.TRY_REUSING_EXISTING_EDITORS).
+				executeAndHandle();
 		}
 		
 	}

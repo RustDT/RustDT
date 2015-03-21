@@ -78,7 +78,6 @@
 		
 		<command
 			categoryId="com.github.rustdt.ide.ui.commands.Category"
-			defaultHandler="com.github.rustdt.ide.ui.actions.RustOpenDefinitionHandler"
 			description="%OpenDefinitionAction.tooltip"
 			id="com.github.rustdt.ide.ui.commands.openDefinition"
 			name="%OpenDefinitionAction.name">

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2014 IBM Corporation and others.
+ * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,10 +8,16 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.editor;
+package com.github.rustdt.ide.ui.actions;
 
-import melnorme.lang.ide.ui.editor.AbstractLangEditor;
+import melnorme.lang.ide.ui.editor.LangEditorContextMenuContributor;
 
-public class RustEditor extends AbstractLangEditor {
+import org.eclipse.ui.services.IServiceLocator;
+
+public class RustEditorContextMenuContributor extends LangEditorContextMenuContributor {
+	
+	public RustEditorContextMenuContributor(IServiceLocator svcLocator) {
+		super(svcLocator);
+	}
 	
 }

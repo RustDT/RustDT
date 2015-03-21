@@ -11,10 +11,14 @@
 package melnorme.lang.ide.ui;
 
 import melnorme.lang.ide.ui.editor.AbstractLangEditor;
+import melnorme.lang.ide.ui.editor.LangEditorContextMenuContributor;
 
 import org.eclipse.cdt.ui.text.IColorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.services.IServiceLocator;
 
+import com.github.rustdt.ide.ui.actions.RustEditorContextMenuContributor;
+import com.github.rustdt.ide.ui.editor.RustEditor;
 import com.github.rustdt.ide.ui.editor.RustSimpleSourceViewerConfiguration;
 import com.github.rustdt.ide.ui.editor.RustSourceViewerConfiguration;
 
@@ -36,8 +40,20 @@ public class EditorSettings_Actual {
 		return new RustSimpleSourceViewerConfiguration(preferenceStore, colorManager);
 	}
 	
+	public static Class<RustEditor> editorKlass() {
+		return RustEditor.class;
+	}
+	
 	/* ----------------- actions ----------------- */
 	
-	public static final String COMMAND_OpenDef_ID = "com.github.rustdt.ide.ui.commands.openDefinition";
+	public static interface EditorCommandIds {
+		
+		public static final String OpenDef_ID = "com.github.rustdt.ide.ui.commands.openDefinition";
+		
+	}
+	
+	public static LangEditorContextMenuContributor createCommandsContribHelper(IServiceLocator svcLocator) {
+		return new RustEditorContextMenuContributor(svcLocator);
+	}
 	
 }
