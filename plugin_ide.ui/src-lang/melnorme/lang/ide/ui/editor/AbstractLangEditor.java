@@ -169,7 +169,7 @@ public abstract class AbstractLangEditor extends TextEditor {
 		setRulerContextMenuId(LangUIPlugin_Actual.RULER_CONTEXT);
 	}
 	
-	protected AbstractLangEditorActions editorActionsManager;
+	protected LangEditorContextMenuContributor editorActionsManager;
 	
 	@Override
 	protected void createActions() {
@@ -178,7 +178,9 @@ public abstract class AbstractLangEditor extends TextEditor {
 		editorActionsManager = createActionsManager();
 	}
 	
-	protected abstract AbstractLangEditorActions createActionsManager();
+	protected LangEditorContextMenuContributor createActionsManager() {
+		return EditorSettings_Actual.createCommandsContribHelper(getSite().getWorkbenchWindow());
+	}
 	
 	@Override
 	protected void editorContextMenuAboutToShow(IMenuManager menu) {
