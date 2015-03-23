@@ -24,10 +24,10 @@ import com.github.rustdt.ide.ui.editor.RustSourceViewerConfiguration;
 
 public class EditorSettings_Actual {
 	
-	public static final String EDITOR_ID = "com.github.rustdt.ide.ui.editor.RustEditor";
-	public static final String EDITOR_CONTEXT_ID = "com.github.rustdt.ide.ui.Contexts.Editor";
+	public static final String EDITOR_ID = LangUIPlugin.PLUGIN_ID + ".editor.RustEditor";
+	public static final String EDITOR_CONTEXT_ID = LangUIPlugin.PLUGIN_ID + ".Contexts.Editor";
 	
-	public static final String EDITOR_CODE_TARGET = "com.github.rustdt.ide.ui.Editor.HyperlinkCodeTarget";
+	public static final String EDITOR_CODE_TARGET = LangUIPlugin.PLUGIN_ID + ".Editor.HyperlinkCodeTarget";
 	
 	public static RustSourceViewerConfiguration createSourceViewerConfiguration(
 			IPreferenceStore preferenceStore, AbstractLangEditor editor) {
@@ -48,10 +48,10 @@ public class EditorSettings_Actual {
 	
 	public static interface EditorCommandIds {
 		
-		public static final String OpenDef_ID = "com.github.rustdt.ide.ui.commands.openDefinition";
+		public static final String OpenDef_ID = LangUIPlugin.PLUGIN_ID + ".commands.openDefinition";
 		
-		public static final String GoToMatchingBracket = "com.github.rustdt.ide.ui.commands.GoToMatchingBracket";
-		public static final String ToggleComment = "com.github.rustdt.ide.ui.commands.ToggleComment";
+		public static final String GoToMatchingBracket = LangUIPlugin.PLUGIN_ID + ".commands.GoToMatchingBracket";
+		public static final String ToggleComment = LangUIPlugin.PLUGIN_ID + ".commands.ToggleComment";
 		
 	}
 	
