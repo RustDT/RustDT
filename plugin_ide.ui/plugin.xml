@@ -49,7 +49,20 @@
 		</context>
 	</extension>
 	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="com.github.rustdt.ide.ui.expressions.InContext">
+			<or>
+				<with variable="activeEditorId"> 
+					<equals value="com.github.rustdt.ide.ui.editor.RustEditor"/> 
+				</with>
+				<with variable="activeWorkbenchWindow.activePerspective"> 
+					<equals value="com.github.rustdt.ide.ui.Perspective"/> 
+				</with>
+			</or>
+		</definition>
+	</extension>
 	
+	<!-- ============ EDITOR - Other ============= -->
 	
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target 
