@@ -177,7 +177,7 @@
    <extension point="org.eclipse.core.runtime.adapters">
       <factory 
         	class="com.github.rustdt.ide.debug.ui.RustGdbAdapterFactory" 
-	        adaptableType="com.github.rustdtE.ide.debug.core.DeeGdbLaunch">
+	        adaptableType="com.github.rustdt.ide.debug.ui.RustGdbLaunch">
          <adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IElementContentProvider"/>
          <adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactory"/>
          <adapter type="org.eclipse.debug.ui.contexts.ISuspendTrigger"/>
