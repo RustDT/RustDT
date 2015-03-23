@@ -50,6 +50,9 @@ public class EditorSettings_Actual {
 		
 		public static final String OpenDef_ID = "com.github.rustdt.ide.ui.commands.openDefinition";
 		
+		public static final String GoToMatchingBracket = "com.github.rustdt.ide.ui.commands.GoToMatchingBracket";
+		public static final String ToggleComment = "com.github.rustdt.ide.ui.commands.ToggleComment";
+		
 	}
 	
 	public static LangEditorContextMenuContributor createCommandsContribHelper(IServiceLocator svcLocator) {

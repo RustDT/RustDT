@@ -62,6 +62,7 @@
 		</definition>
 	</extension>
 	
+	
 	<!-- ============ EDITOR - Other ============= -->
 	
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
@@ -95,7 +96,19 @@
 			id="com.github.rustdt.ide.ui.commands.openDefinition"
 			name="%OpenDefinitionAction.name">
 		</command>
-	</extension>
+		
+		<command categoryId="com.github.rustdt.ide.ui.commands.Category"
+			id="com.github.rustdt.ide.ui.commands.GoToMatchingBracket"
+			name="%GoToMatchingBracketAction.name"
+			description="%GoToMatchingBracketAction.description"
+		/>
+		
+		<command categoryId="com.github.rustdt.ide.ui.commands.Category"
+			id="com.github.rustdt.ide.ui.commands.ToggleComment"
+			name="%ToggleCommentAction.name"
+			description="%ToggleCommentAction.description"
+		/>
+			</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
 		<key
@@ -103,6 +116,24 @@
 			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="F3">
+		</key>
+		<key
+			commandId="com.github.rustdt.ide.ui.commands.GoToMatchingBracket"
+			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+M2+P">
+		</key>
+		<key
+			commandId="com.github.rustdt.ide.ui.commands.ToggleComment"
+			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+M2+C">
+		</key>
+		<key
+			commandId="com.github.rustdt.ide.ui.commands.ToggleComment"
+			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+/">
 		</key>
 	</extension>
 	

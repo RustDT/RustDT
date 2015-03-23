@@ -39,8 +39,8 @@ public class RustHyperlinkDetector extends LangHyperlinkDetector {
 			textEditor.doSave(new NullProgressMonitor());
 			
 			SourceRange sr = getElementRange();
-			new RustOracleOpenDefinitionOperation(textEditor, sr, OpenNewEditorMode.TRY_REUSING_EXISTING_EDITORS).
-				executeAndHandle();
+			new RustOracleOpenDefinitionOperation(textEditor, sr, OpenNewEditorMode.TRY_REUSING_EXISTING).
+				executeAndHandleResult();
 		}
 		
 	}
