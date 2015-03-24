@@ -11,7 +11,13 @@
 package com.github.rustdt.ide.ui.editor;
 
 import melnorme.lang.ide.ui.editor.AbstractLangEditor;
+import melnorme.lang.ide.ui.editor.text.LangPairMatcher;
 
 public class RustEditor extends AbstractLangEditor {
+	
+	@Override
+	protected LangPairMatcher init_createBracketMatcher() {
+		return new LangPairMatcher("{}[]()".toCharArray());
+	}
 	
 }
