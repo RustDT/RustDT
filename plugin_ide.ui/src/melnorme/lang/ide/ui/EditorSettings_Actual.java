@@ -10,7 +10,6 @@
  *******************************************************************************/
 package melnorme.lang.ide.ui;
 
-import melnorme.lang.ide.ui.editor.AbstractLangEditor;
 import melnorme.lang.ide.ui.editor.LangEditorContextMenuContributor;
 import melnorme.lang.ide.ui.editor.text.EditorPrefConstants_Common;
 
@@ -21,7 +20,6 @@ import org.eclipse.ui.services.IServiceLocator;
 import com.github.rustdt.ide.ui.actions.RustEditorContextMenuContributor;
 import com.github.rustdt.ide.ui.editor.RustEditor;
 import com.github.rustdt.ide.ui.editor.RustSimpleSourceViewerConfiguration;
-import com.github.rustdt.ide.ui.editor.RustSourceViewerConfiguration;
 
 public class EditorSettings_Actual {
 	
@@ -29,12 +27,6 @@ public class EditorSettings_Actual {
 	public static final String EDITOR_CONTEXT_ID = LangUIPlugin.PLUGIN_ID + ".Contexts.Editor";
 	
 	public static final String EDITOR_CODE_TARGET = LangUIPlugin.PLUGIN_ID + ".Editor.HyperlinkCodeTarget";
-	
-	public static RustSourceViewerConfiguration createSourceViewerConfiguration(
-			IPreferenceStore preferenceStore, AbstractLangEditor editor) {
-		IColorManager colorManager = LangUIPlugin.getInstance().getColorManager();
-		return new RustSourceViewerConfiguration(preferenceStore, colorManager, editor);
-	}
 	
 	public static RustSimpleSourceViewerConfiguration createSimpleSourceViewerConfiguration(
 			IPreferenceStore preferenceStore, IColorManager colorManager) {

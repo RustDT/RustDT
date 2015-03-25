@@ -10,14 +10,24 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.editor;
 
+import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.editor.AbstractLangEditor;
 import melnorme.lang.ide.ui.editor.text.LangPairMatcher;
+import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
+
+import org.eclipse.cdt.ui.text.IColorManager;
 
 public class RustEditor extends AbstractLangEditor {
 	
 	@Override
 	protected LangPairMatcher init_createBracketMatcher() {
 		return new LangPairMatcher("{}[]()".toCharArray());
+	}
+	
+	@Override
+	protected AbstractLangSourceViewerConfiguration createSourceViewerConfiguration() {
+		IColorManager colorManager = LangUIPlugin.getInstance().getColorManager();
+		return new RustSourceViewerConfiguration(getPreferenceStore(), colorManager, this);
 	}
 	
 }
