@@ -58,26 +58,32 @@ public class RustBuilder extends LangProjectBuilderExt {
 	}
 	
 	@Override
-	protected ProcessBuilder createBuildPB() throws CoreException {
-		return createSDKProcessBuilder("build");
+	protected AbstractRunBuildOperation createBuildOp() {
+		return new RustRunBuildOperationExtension();
 	}
 	
-	@Override
-	protected void processBuildResult(ExternalProcessResult buildAllResult) throws CoreException {
+	protected class RustRunBuildOperationExtension extends AbstractRunBuildOperation {
+		@Override
+		protected ProcessBuilder createBuildPB() throws CoreException {
+			return createSDKProcessBuilder("build");
+		}
 		
-		ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
-			@Override
-			protected void handleUnknownLineSyntax(String line) {
-				// Ignore, don't log error, since lot's of Rust line fall into this category.
-			};
+		@Override
+		protected void doBuild_processBuildResult(ExternalProcessResult buildAllResult) throws CoreException {
+			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
+				@Override
+				protected void handleUnknownLineSyntax(String line) {
+					// Ignore, don't log error, since lot's of Rust line fall into this category.
+				};
+				
+				@Override
+				protected void handleLineParseError(CommonException ce) {
+					 LangCore.logStatus(LangCore.createCoreException(ce));
+				}
+			}.parseOutput(buildAllResult);
 			
-			@Override
-			protected void handleLineParseError(CommonException ce) {
-				 LangCore.logStatus(LangCore.createCoreException(ce));
-			}
-		}.parseOutput(buildAllResult);
-		
-		addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(getProject()));
+			addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(getProject()));
+		}
 	}
 	
 	@Override
