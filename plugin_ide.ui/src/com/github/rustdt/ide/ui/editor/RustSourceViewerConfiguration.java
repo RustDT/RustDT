@@ -61,6 +61,13 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 //		return null;
 //	}
 	
+	/* ----------------- Modification operations ----------------- */
+	
+	@Override
+	protected String getToggleCommentPrefix() {
+		return "//";
+	}
+	
 	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		if(IDocument.DEFAULT_CONTENT_TYPE.equals(contentType)) {
