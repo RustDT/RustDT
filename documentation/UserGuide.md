@@ -24,7 +24,7 @@ with 4Gb of RAM or more, the following is recommended as minimum values:
 ### Project setup
 
 ##### Project Creation:
-A new Rust project can be created in the Project Explorer view. Open `New / Project...` and then `Rust / Rust Cargo Project`.
+A new Rust project can be created in the Project Explorer view. Open `New / Project...` and then `Rust / Rust Cargo Project`. This wizard can also be used to import existing Cargo projects into Eclipse.
 
 ##### Project Building
 
