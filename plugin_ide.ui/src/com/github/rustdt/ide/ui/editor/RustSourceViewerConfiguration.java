@@ -15,6 +15,8 @@ import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.ui.editor.AbstractLangEditor;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
+import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
+import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 
 import org.eclipse.cdt.ui.text.IColorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -75,6 +77,23 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 		} else {
 			return super.getAutoEditStrategies(sourceViewer, contentType);
 		}
+	}
+	
+	/* ----------------- Content Assist ----------------- */
+	
+	@Override
+	protected ContentAssistCategoriesBuilder getContentAssistCategoriesProvider() {
+		return new ContentAssistCategoriesBuilder() {
+			@Override
+			protected ILangCompletionProposalComputer createDefaultSymbolsProposalComputer() {
+				return null;
+			}
+			
+			@Override
+			protected ILangCompletionProposalComputer createSnippetsProposalComputer() {
+				return null; // TODO 
+			}
+		};
 	}
 	
 }
