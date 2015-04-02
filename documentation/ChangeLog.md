@@ -1,8 +1,9 @@
 ## RustDT release ChangeLog
 
-### RustDT 0.2.0
+### (NextVersion)
  * Added: Source menu with shift rigth/left operations.
  * Fixed: missing UserGuide screenshot of debug launch configuration.
+ * Doc - Installation guide: Added note for users in China.
  * Added: Toggle Comment action (Ctrl+/) .
  * Added editor Go To Matching Bracket action (shortcut: Ctrl+Shift+P)
 
