@@ -10,9 +10,15 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+
 import melnorme.lang.ide.ui.LangUIPreferencesInitializer;
 
 
 public class RustUIPreferencesInitializer extends LangUIPreferencesInitializer {
+	
+	@Override
+	protected void initializeDefaultPreferences_other(IPreferenceStore langUIStore) {
+	}
 	
 }
