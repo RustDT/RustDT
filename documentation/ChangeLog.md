@@ -6,6 +6,7 @@
  * Doc - Installation guide: Added note for users in China.
  * Added: Toggle Comment action (Ctrl+/) .
  * Added editor Go To Matching Bracket action (shortcut: Ctrl+Shift+P)
+ * Fixed minor bug with block comments syntax highlighting.
 
 ### RustDT 0.1.0 - Initial release 
  * Added: Rust source code editor, with:

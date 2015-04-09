@@ -20,9 +20,9 @@ public interface RustColorPreferences {
 	
 	// Defaults mostly based from: http://static.rust-lang.org/doc/master/rust.css
 	
-	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + LangPartitionTypes.COMMENT,
+	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + "COMMENT",
 		true, new RGB(0x8E, 0x90, 0x8C), false, false, false);
-	ColoringItemPreference DOC_COMMENTS = new ColoringItemPreference(PREFIX + LangPartitionTypes.DOC_COMMENT,
+	ColoringItemPreference DOC_COMMENTS = new ColoringItemPreference(PREFIX + "DOC_COMMENT",
 		true, new RGB(63, 95, 191), false, false, false);
 	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + LangPartitionTypes.STRING,
 		true, new RGB(0x71, 0x8C, 0x00), false, false, false);

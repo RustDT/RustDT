@@ -16,7 +16,10 @@ public class TextSettings_Actual {
 	public static final String PARTITIONING_ID = "com.github.rustdt.Partitioning";
 	
 	public static enum LangPartitionTypes {
-		CODE, COMMENT, DOC_COMMENT, STRING, RAW_STRING, CHARACTER, ATTRIBUTE;
+		CODE, 
+		LINE_COMMENT, BLOCK_COMMENT, 
+		DOC_LINE_COMMENT, DOC_BLOCK_COMMENT, 
+		STRING, RAW_STRING, CHARACTER, ATTRIBUTE;
 		
 		public String getId() {
 			if(ordinal() == 0) {
