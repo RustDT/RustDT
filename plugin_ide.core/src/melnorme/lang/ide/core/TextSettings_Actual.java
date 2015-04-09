@@ -15,8 +15,6 @@ public class TextSettings_Actual {
 	
 	public static final String PARTITIONING_ID = "com.github.rustdt.Partitioning";
 	
-	public static final String[] PARTITION_TYPES = LangPartitionTypes.PARTITION_TYPES;
-	
 	public static enum LangPartitionTypes {
 		CODE, COMMENT, DOC_COMMENT, STRING, RAW_STRING, CHARACTER, ATTRIBUTE;
 		
@@ -27,15 +25,6 @@ public class TextSettings_Actual {
 			return toString();
 		}
 		
-		public static final String[] PARTITION_TYPES = ArrayUtil.map(values(), 
-			new Function<LangPartitionTypes, String>() {
-				@Override
-				public String evaluate(LangPartitionTypes obj) {
-					return obj.getId();
-				}
-			}, String.class
-		);
-		
 	}
 	
 	public static IPartitionTokenScanner createPartitionScanner() {
@@ -45,5 +34,16 @@ public class TextSettings_Actual {
 	public static LangDocumentPartitionerSetup createDocumentSetupHelper() {
 		return new RustDocumentSetupParticipant();
 	}
+	
+	/* ----------------- Common code ----------------- */
+	
+	public static final String[] PARTITION_TYPES = ArrayUtil.map(LangPartitionTypes.values(), 
+		new Function<LangPartitionTypes, String>() {
+			@Override
+			public String evaluate(LangPartitionTypes obj) {
+				return obj.getId();
+			}
+		}, String.class
+	);
 	
 }
