@@ -10,6 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional
 Bundle-ClassPath: .
 Export-Package: com.github.rustdt.tooling,
+ com.github.rustdt.tooling.lexer,
  melnorme.lang.tests,
  melnorme.lang.tooling,
  melnorme.lang.tooling.ast,

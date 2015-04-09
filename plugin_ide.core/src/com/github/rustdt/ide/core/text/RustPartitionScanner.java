@@ -11,13 +11,16 @@
 package com.github.rustdt.ide.core.text;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.core.text.PatternRule_Fixed;
+import melnorme.lang.ide.core.text.LexingRulePredicateRule;
 import melnorme.lang.ide.core.text.RuleBasedPartitionScannerExt;
 import melnorme.utilbox.collections.ArrayList2;
 
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.PatternRule;
 import org.eclipse.jface.text.rules.Token;
+
+import com.github.rustdt.tooling.lexer.RustCharacterLexingRule;
 
 public class RustPartitionScanner extends RuleBasedPartitionScannerExt {
 	
@@ -35,20 +38,18 @@ public class RustPartitionScanner extends RuleBasedPartitionScannerExt {
 		);
 		
 		IToken tkAttribute = new Token(LangPartitionTypes.ATTRIBUTE.getId());
-		rules.add(new PatternRule_Fixed("#[", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
-		rules.add(new PatternRule_Fixed("#![", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
+		rules.add(new PatternRule("#[", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
+		rules.add(new PatternRule("#![", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
 		
-		IToken tkCharacter = new Token(LangPartitionTypes.CHARACTER.getId());
-		rules.add(new PatternRule_Fixed("'", "'", tkCharacter, '\\', true, true));
-		rules.add(new PatternRule_Fixed("b'", "'", tkCharacter, '\\', true, true));
+		rules.add(new LexingRulePredicateRule(LangPartitionTypes.CHARACTER.getId(), new RustCharacterLexingRule()));
 		
 		IToken tkString = new Token(LangPartitionTypes.STRING.getId());
-		rules.add(new PatternRule_Fixed("\"", "\"", tkString, '\\', false, true));
-		rules.add(new PatternRule_Fixed("b\"", "\"", tkString, '\\', false, true));
+		rules.add(new PatternRule("\"", "\"", tkString, '\\', false, true));
+		rules.add(new PatternRule("b\"", "\"", tkString, '\\', false, true));
 		// Raw strings have different terminate, so they need to a different partition type.
 		IToken tkRawString = new Token(LangPartitionTypes.RAW_STRING.getId());
-		rules.add(new PatternRule_Fixed("r##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
-		rules.add(new PatternRule_Fixed("br##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
+		rules.add(new PatternRule("r##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
+		rules.add(new PatternRule("br##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
 		
 	}
 	

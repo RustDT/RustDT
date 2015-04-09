@@ -7,6 +7,7 @@
  * Added: Toggle Comment action (Ctrl+/) .
  * Added editor Go To Matching Bracket action (shortcut: Ctrl+Shift+P)
  * Fixed minor bug with block comments syntax highlighting.
+ * Fixed #2: Lifetimes are incorrectly hilighted as char
 
 ### RustDT 0.1.0 - Initial release 
  * Added: Rust source code editor, with:
