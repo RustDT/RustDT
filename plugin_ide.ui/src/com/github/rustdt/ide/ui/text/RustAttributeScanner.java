@@ -17,6 +17,8 @@ import melnorme.lang.ide.ui.text.coloring.AbstractLangScanner;
 
 import org.eclipse.cdt.ui.text.ITokenStoreFactory;
 import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.PatternRule;
 
 /**
  * Scanner for Attribute partion
@@ -25,6 +27,7 @@ public class RustAttributeScanner extends AbstractLangScanner {
 	
 	private static String tokenPrefProperties[] = new String[] {
 		RustColorPreferences.ATTRIBUTE.key,
+		RustColorPreferences.STRINGS.key,
 	};
 	
 	public RustAttributeScanner(ITokenStoreFactory factory) {
@@ -34,6 +37,10 @@ public class RustAttributeScanner extends AbstractLangScanner {
 	
 	protected List<IRule> createRules() {
 		List<IRule> rules = new ArrayList<IRule>();
+		
+		IToken tkString = getToken(RustColorPreferences.STRINGS.key);
+		
+		rules.add(new PatternRule("\"", "\"", tkString, '\\', false, true));
 		
 		setDefaultReturnToken(getToken(RustColorPreferences.ATTRIBUTE.key));
 		return rules;
