@@ -8,6 +8,7 @@
  * Added editor Go To Matching Bracket action (shortcut: Ctrl+Shift+P)
  * Fixed minor bug with block comments syntax highlighting.
  * Fixed #2: Lifetimes are incorrectly hilighted as char
+ * Fixed: "Attribute" syntax highlighting option missing from Source Coloring preference page.
 
 ### RustDT 0.1.0 - Initial release 
  * Added: Rust source code editor, with:
