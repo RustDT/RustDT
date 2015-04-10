@@ -19,7 +19,7 @@ public class TextSettings_Actual {
 		CODE, 
 		LINE_COMMENT, BLOCK_COMMENT, 
 		DOC_LINE_COMMENT, DOC_BLOCK_COMMENT, 
-		STRING, RAW_STRING, CHARACTER, ATTRIBUTE;
+		STRING, RAW_STRING, CHARACTER, LIFETIME, ATTRIBUTE;
 		
 		public String getId() {
 			if(ordinal() == 0) {

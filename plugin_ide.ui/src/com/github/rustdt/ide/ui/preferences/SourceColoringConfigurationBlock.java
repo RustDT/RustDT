@@ -30,6 +30,7 @@ public class SourceColoringConfigurationBlock extends AbstractSourceColoringConf
 			new SourceColoringElement("Keywords - Literals", RustColorPreferences.KEYWORDS_VALUES.key),
 			new SourceColoringElement("Strings", RustColorPreferences.STRINGS.key),
 			new SourceColoringElement("Characters", RustColorPreferences.CHARACTER.key),
+			new SourceColoringElement("Lifetime", RustColorPreferences.LIFETIME.key),
 			new SourceColoringElement("Attribute", RustColorPreferences.ATTRIBUTE.key)
 		)),
 		new SourceColoringCategory("Comments", array(

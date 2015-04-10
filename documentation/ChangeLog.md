@@ -9,6 +9,7 @@
  * Fixed minor bug with block comments syntax highlighting.
  * Fixed #2: Lifetimes are incorrectly hilighted as char
  * Fixed: "Attribute" syntax highlighting option missing from Source Coloring preference page.
+ * Added: Can now do syntax highlighting for lifetime token.
 
 ### RustDT 0.1.0 - Initial release 
  * Added: Rust source code editor, with:
