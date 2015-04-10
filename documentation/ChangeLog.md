@@ -1,16 +1,16 @@
 ## RustDT release ChangeLog
 
-### (NextVersion)
- * Added: Source menu with shift rigth/left operations.
- * Fixed: missing UserGuide screenshot of debug launch configuration.
- * Doc - Installation guide: Added note for users in China.
- * Added: Toggle Comment action (Ctrl+/) .
- * Added editor Go To Matching Bracket action (shortcut: Ctrl+Shift+P)
- * Fixed minor bug with block comments syntax highlighting.
- * Fixed #2: Lifetimes are incorrectly hilighted as char
+### 0.1.1
+ * Added: Source menu with shift right/left operations.
+ * Added: Toggle Comment action (shortcut: Ctrl+/) to Source Menu.
+ * Added: Editor Go To Matching Bracket action (shortcut: Ctrl+Shift+P).
+ * Fixed #2: Lifetimes are incorrectly highlighted as char
  * Fixed: "Attribute" syntax highlighting option missing from Source Coloring preference page.
- * Added: Can now do syntax highlighting for lifetime token.
- * Added: Strings inside attribute now highlighted as well.
+ * Added: Syntax highlighting for lifetime token.
+ * Added: Syntax highlighting for strings inside attribute region.
+ * Fixed minor bug with block comments syntax highlighting.
+ * [Doc] Fixed: missing UserGuide screenshot of debug launch configuration.
+ * [Doc] Added: Installation guide note for users in China.
 
 ### RustDT 0.1.0 - Initial release 
  * Added: Rust source code editor, with:
