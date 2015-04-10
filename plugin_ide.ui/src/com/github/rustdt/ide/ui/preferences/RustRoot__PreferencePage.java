@@ -10,9 +10,13 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
+import melnorme.lang.ide.core.bundlemodel.SDKPreferences;
+import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
+import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 
 import com.github.rustdt.ide.core.operations.RustBuilder.RustSDKLocationValidator;
+import com.github.rustdt.ide.ui.preferences.RustToolsConfigBlock.RustRacerLocationValidator;
 
 
 /**
@@ -26,6 +30,20 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	@Override
 	protected String getHelpId() {
 		return null;
+	}
+	
+	@Override
+	protected LangSDKConfigBlock createLangSDKConfigBlock() {
+		RustToolsConfigBlock langToolsBlock = new RustToolsConfigBlock();
+		
+		connectStringField(SDKPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
+			getSDKValidator());
+		
+		connectStringField(DaemonEnginePreferences.DAEMON_PATH.key, langToolsBlock.racerGroup.toolLocation, 
+			new RustRacerLocationValidator());
+		
+		return langToolsBlock;
+		
 	}
 	
 	@Override
