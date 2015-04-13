@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import java.text.MessageFormat;
-
-import melnorme.lang.ide.core.operations.SDKLocationValidator;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.PreferencesMessages;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractComponentExt;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
-import melnorme.utilbox.misc.Location;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
@@ -67,23 +63,6 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		
 		@Override
 		public void updateComponentFromInput() {
-		}
-	}
-	
-	public static class RustRacerLocationValidator extends SDKLocationValidator {
-		
-		public RustRacerLocationValidator() {
-			super("Racer installation:");
-		}
-		
-		@Override
-		protected String getSDKExecutable_append() {
-			return "racer"; 
-		}
-		
-		@Override
-		protected String getSDKExecutableErrorMessage(Location exeLocation) {
-			return MessageFormat.format("Racer executable not found at location (`{0}`). ", exeLocation);
 		}
 	}
 	

@@ -93,7 +93,7 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 		return new ContentAssistCategoriesBuilder() {
 			@Override
 			protected ILangCompletionProposalComputer createDefaultSymbolsProposalComputer() {
-				return null;
+				return new RustCompletionProposalComputer();
 			}
 			
 			@Override

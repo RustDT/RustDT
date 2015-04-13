@@ -15,8 +15,8 @@ import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 
-import com.github.rustdt.ide.core.operations.RustBuilder.RustSDKLocationValidator;
-import com.github.rustdt.ide.ui.preferences.RustToolsConfigBlock.RustRacerLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
+import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 
 
 /**

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 
 import com.github.rustdt.ide.core.cargomodel.CargoModelManager;
-import com.github.rustdt.ide.core.operations.RustBuilder.RustSDKLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 /**
  * Rust New Project Wizard.

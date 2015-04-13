@@ -10,44 +10,25 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.LangProjectBuilderExt;
-import melnorme.lang.ide.core.operations.SDKLocationValidator;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.LocationValidator;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 import org.eclipse.core.runtime.CoreException;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 /**
  * Rust builder, using Cargo.
  */
 public class RustBuilder extends LangProjectBuilderExt {
-	
-	public static class RustSDKLocationValidator extends SDKLocationValidator {
-		
-		public RustSDKLocationValidator() {
-			super("Rust installation:");
-		}
-		
-		@Override
-		protected String getSDKExecutable_append() {
-			return "bin/cargo"; 
-		}
-		
-		@Override
-		protected String getSDKExecutableErrorMessage(Location exeLocation) {
-			return MessageFormat.format("Cargo executable not found at Rust location (`{0}`). ", exeLocation);
-		}
-	}
 	
 	public RustBuilder() {
 	}
