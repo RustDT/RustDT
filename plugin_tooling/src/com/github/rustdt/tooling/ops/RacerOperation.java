@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
-
 import java.text.MessageFormat;
 
 import melnorme.lang.tooling.data.SDKLocationValidator;
@@ -25,8 +23,6 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public abstract class RacerOperation extends AbstractToolOperation<ExternalProcessResult> {
 	
-	protected final IProcessRunner processRunner;
-	
 	protected final String toolPath;
 	protected final String rustPath;
 	protected final ArrayList2<String> arguments;
@@ -35,13 +31,12 @@ public abstract class RacerOperation extends AbstractToolOperation<ExternalProce
 	
 	public RacerOperation(IProcessRunner processRunner, String toolPath, String rustPath, 
 			ArrayList2<String> arguments) {
-		this.processRunner = assertNotNull(processRunner);
+		super(processRunner);
 		this.toolPath = toolPath;
 		this.rustPath = rustPath;
 		this.arguments = arguments;
 	}
 	
-	@Override
 	public ExternalProcessResult execute() throws CommonException, OperationCancellation {
 		
 		String toolExePath = new RustRacerLocationValidator().getValidatedField(toolPath).toPathString();
