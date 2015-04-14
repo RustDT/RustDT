@@ -27,6 +27,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import com.github.rustdt.ide.ui.text.RustAttributeScanner;
 import com.github.rustdt.ide.ui.text.RustCodeScanner;
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
+import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 
 public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	

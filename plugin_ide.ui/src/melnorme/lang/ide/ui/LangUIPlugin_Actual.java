@@ -5,8 +5,9 @@ import java.util.List;
 import org.eclipse.jface.text.source.ISourceViewer;
 
 import melnorme.lang.ide.ui.editor.ILangEditorTextHover;
+
 import com.github.rustdt.ide.ui.RustImages;
-import com.github.rustdt.ide.ui.editor.RustAutoEditStrategy;
+import com.github.rustdt.ide.ui.text.RustAutoEditStrategy;
 
 /**
  * Actual/concrete IDE constants and other bindings, for Lang UI code. 
