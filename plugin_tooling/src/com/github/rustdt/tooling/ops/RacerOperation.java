@@ -21,7 +21,7 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-public abstract class RacerOperation extends AbstractToolOperation<ExternalProcessResult> {
+public abstract class RacerOperation extends AbstractToolOperation {
 	
 	protected final String toolPath;
 	protected final String rustPath;

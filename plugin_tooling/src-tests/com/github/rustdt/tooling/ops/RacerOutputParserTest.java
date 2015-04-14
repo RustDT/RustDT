@@ -16,8 +16,9 @@ import static melnorme.utilbox.core.CoreUtil.listFrom;
 import java.util.List;
 
 import melnorme.lang.tests.CommonToolingTest;
-import melnorme.lang.tooling.completion.LangCompletionProposal;
+import melnorme.lang.tooling._actual.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
+import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.utilbox.core.CommonException;
 
 import org.junit.Test;
@@ -45,8 +46,8 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH BufRead;BufRead;519;10;/RustProject/src/xpto2.rs;Trait;pub trait BufRead : Read {\n"
 			, 
 			listFrom(
-				new LangCompletionProposal(offset, "BufReader", 0),
-				new LangCompletionProposal(offset, "BufRead", 0)
+				new ToolCompletionProposal(offset, "BufReader", 0),
+				new ToolCompletionProposal(offset, "BufRead", 0)
 			)
 		);
 		
@@ -55,14 +56,15 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH BufReader;BufReader;32;11;/RustProject/src/xpto.rs;Struct;pub struct BufReader<R> {\n"
 			, 
 			listFrom(
-				new LangCompletionProposal(offset-2, "BufReader", 2)
+				new ToolCompletionProposal(offset-2, "BufReader", 2)
 			)
 		);
 	}
 	
-	protected void testParseOutput(RacerOutputParser parser, String output, List<?> expected) throws CommonException {
+	protected void testParseOutput(RacerOutputParser parser, String output, List<?> expected) 
+			throws CommonException, OperationSoftFailure {
 		LangCompletionResult result = parser.parse(output);
-		assertAreEqualLists((List<?>) result.getProposals(), expected);
+		assertAreEqualLists((List<?>) result.getValidatedProposals(), expected);
 	}
 	
 }

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
-import melnorme.lang.tooling.completion.LangCompletionProposal;
+import melnorme.lang.tooling._actual.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.utils.ParseHelper;
 import melnorme.lang.utils.SimpleLexingHelper;
@@ -40,7 +40,7 @@ public class RacerOutputParser extends ParseHelper {
 		
 		SimpleLexingHelper lexer = new SimpleLexingHelper(input);
 		
-		ArrayList2<LangCompletionProposal> proposals = new ArrayList2<>();
+		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
 
 		while(true) {
@@ -75,14 +75,14 @@ public class RacerOutputParser extends ParseHelper {
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	protected LangCompletionProposal parseProposal(String line) {
+	protected ToolCompletionProposal parseProposal(String line) {
 		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
 		
 		lineLexer.tryConsume("MATCH ");
 		
 		String replaceString = lineLexer.consumeDelimitedString(';', '\\');
 		
-		return new LangCompletionProposal(offset - prefixLength, replaceString, prefixLength);
+		return new ToolCompletionProposal(offset - prefixLength, replaceString, prefixLength);
 	}
 	
 }
