@@ -10,19 +10,18 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.text.completion;
 
-import melnorme.lang.ide.core.bundlemodel.SDKPreferences;
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistInvocationContext;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 
 import org.eclipse.core.runtime.CoreException;
 
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
@@ -34,19 +33,14 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		context.getEditor_nonNull().doSave(pm);
 		
 		String racerPath = DaemonEnginePreferences.DAEMON_PATH.get();
-		String sdkSrcPath = SDKPreferences.SDK_PATH.get();
+		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH.get();
 		
 		int line_0 = context.getInvocationLine_0();
 		int col_0 = context.getInvocationColumn_0();
 		Location fileLocation = context.getEditorInputLocation();
 		
-		ArrayList2<String> arguments = new ArrayList2<String>("complete-with-snippet");
-		arguments.add(Integer.toString(line_0 + 1)); // use one-based index
-		arguments.add(Integer.toString(col_0)); // But this one is zero-based index
-		arguments.add(fileLocation.toPathString());
-		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(new ToolProcessRunner(pm), 
-			racerPath, sdkSrcPath, offset, arguments);
+			racerPath, sdkSrcPath, offset, line_0, col_0, fileLocation);
 		return racerCompletionOp.executeAndProcessOutput();
 	}
 	

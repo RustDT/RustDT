@@ -1,7 +1,7 @@
 ## RustDT release ChangeLog
 
 ### next
- * Added: Code Completion using Racer. (TODO 'src' dir config)
+ * Added: Code Completion using Racer.
 
 ### 0.1.1
  * Added: Source menu with shift right/left operations.

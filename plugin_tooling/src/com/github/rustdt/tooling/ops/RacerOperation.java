@@ -10,15 +10,12 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
-import java.text.MessageFormat;
-
-import melnorme.lang.tooling.data.SDKLocationValidator;
+import melnorme.lang.tooling.data.LocationOrSinglePathValidator;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IProcessRunner;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public abstract class RacerOperation extends AbstractToolOperation {
@@ -38,10 +35,8 @@ public abstract class RacerOperation extends AbstractToolOperation {
 	}
 	
 	public ExternalProcessResult execute() throws CommonException, OperationCancellation {
-		
 		String toolExePath = new RustRacerLocationValidator().getValidatedField(toolPath).toPathString();
-		String rustSrcPath = new RustSDKLocationValidator().getValidatedField(rustPath).resolve_fromValid("../../src").
-				toPathString();
+		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedField(rustPath).toPathString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
 		
@@ -54,21 +49,13 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		return processRunner.runProcess(pb, input);
 	}
 	
-	public static class RustRacerLocationValidator extends SDKLocationValidator {
+	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
 		
 		public RustRacerLocationValidator() {
-			super("Racer installation:");
+			super("Racer executable:");
+			fileOnly = true;
 		}
 		
-		@Override
-		protected String getSDKExecutable_append() {
-			return "racer"; 
-		}
-		
-		@Override
-		protected String getSDKExecutableErrorMessage(Location exeLocation) {
-			return MessageFormat.format("Racer executable not found at location (`{0}`). ", exeLocation);
-		}
 	}
 	
 }

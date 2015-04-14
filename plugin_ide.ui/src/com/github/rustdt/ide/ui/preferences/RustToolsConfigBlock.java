@@ -11,18 +11,24 @@
 package com.github.rustdt.ide.ui.preferences;
 
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
-import melnorme.lang.ide.ui.preferences.PreferencesMessages;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractComponentExt;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
+import melnorme.util.swt.components.fields.FileTextField;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
 public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
+	protected final ButtonTextField racerLocation = new FileTextField("Executable:");
+	protected final ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
+	
 	protected final RustToolsConfigBlock.RacerLocationGroup racerGroup = new RacerLocationGroup(); 
+	
+	public RustToolsConfigBlock() {
+	}
 	
 	@Override
 	protected void createContents(Composite topControl) {
@@ -31,13 +37,22 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		racerGroup.createComponent(topControl, gdFillDefaults().grab(true, false).create());
 	}
 	
-	public static class RacerLocationGroup extends AbstractComponentExt {
+	
+	@Override
+	protected LanguageSDKLocationGroup createSDKLocationGroup() {
+		return new LanguageSDKLocationGroup() {
+			
+			@Override
+			protected void createContents(Composite topControl) {
+				super.createContents(topControl);
+				sdkSrcLocation.createComponentInlined(topControl);
+			}
+			
+		};
+	}
+	
+	public class RacerLocationGroup extends AbstractComponentExt {
 		
-		protected final ButtonTextField toolLocation = createLocationField();
-		
-		protected ButtonTextField createLocationField() {
-			return new DirectoryTextField(PreferencesMessages.ROOT_SDKGroup_path_Label);
-		}
 		
 		@Override
 		protected Composite doCreateTopLevelControl(Composite parent) {
@@ -56,9 +71,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		
 		@Override
 		protected void createContents(Composite topControl) {
-			toolLocation.createComponentInlined(topControl);
-			
-			
+			racerLocation.createComponentInlined(topControl);
 		}
 		
 		@Override

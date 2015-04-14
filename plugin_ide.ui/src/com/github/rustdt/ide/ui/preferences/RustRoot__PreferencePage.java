@@ -15,8 +15,10 @@ import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 
 /**
@@ -39,11 +41,13 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 		connectStringField(SDKPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
 			getSDKValidator());
 		
-		connectStringField(DaemonEnginePreferences.DAEMON_PATH.key, langToolsBlock.racerGroup.toolLocation, 
+		connectStringField(RustSDKPreferences.SDK_SRC_PATH.key, langToolsBlock.sdkSrcLocation, 
+			new RustSDKSrcLocationValidator());
+		
+		connectStringField(DaemonEnginePreferences.DAEMON_PATH.key, langToolsBlock.racerLocation, 
 			new RustRacerLocationValidator());
 		
 		return langToolsBlock;
-		
 	}
 	
 	@Override
