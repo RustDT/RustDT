@@ -20,6 +20,19 @@ A new Rust project can be created in the Project Explorer view. Open `New / Proj
 
 The [Rust installation](http://www.rust-lang.org/install.html) is required for project building. The path to the installation should be configured in `Preferences/Rust`.  
 
+### Editor and Navigation
+
+##### Editor newline auto-indentation:
+The editor will auto-indent new lines after an Enter is pressed. Pressing Backspace with the cursor after the indent characters in the start of the line will delete the indent and preceding newline, thus joining the rest of the line with the previous line. Pressing Delete before a newline will have an identical effect.
+This is unlike most source editors - if instead you want to just remove one level of indent (or delete the preceding Tab), press Shift-Tab. 
+
+##### Code-Completion/Auto-Complete:
+Invoked with Ctrl-Space. This functionality is generally called Content Assist in Eclipse. 
+
+Content Assist is provided by means of the [Racer tool](https://github.com/phildawes/racer). You must install this tool, and then configure its location in the `Rust` preference page.  
+
+> If there is a problem with this operation, and you need a diagnostics log, the output of gocode can be seen in the `RustDT Racer log` console page in the Eclipse Console view.
+
 ### Launch and Debug:
 To run a Rust project that builds to an executable, you will need to create a launch configuration. Locate the main menu, open 'Run' / 'Run Configurations...'. Then double click 'Rust Application" to create a new Rust launch, and configure it accordingly. You can run these launches from the 'Run Configurations...', or for quicker access, from the Launch button in the Eclipse toolbar.
 
