@@ -37,9 +37,9 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		int col_0 = context.getInvocationColumn_0();
 		Location fileLocation = context.getEditorInputLocation();
 		
-		ArrayList2<String> arguments = new ArrayList2<String>("complete");
+		ArrayList2<String> arguments = new ArrayList2<String>("complete-with-snippet");
 		arguments.add(Integer.toString(line_0 + 1)); // use one-based index
-		arguments.add(Integer.toString(col_0 + 1)); // use one-based index
+		arguments.add(Integer.toString(col_0)); // But this one is zero-based index
 		arguments.add(fileLocation.toPathString());
 		
 		
