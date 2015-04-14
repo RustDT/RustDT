@@ -16,27 +16,36 @@ import melnorme.lang.tooling.ops.IProcessRunner;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public abstract class RacerOperation extends AbstractToolOperation {
 	
-	protected final String toolPath;
-	protected final String rustPath;
+	protected final String racerPath;
+	protected final String sdkSrcPath;
 	protected final ArrayList2<String> arguments;
 	
 	protected String input = "";
 	
-	public RacerOperation(IProcessRunner processRunner, String toolPath, String rustPath, 
+	public RacerOperation(IProcessRunner processRunner, String racerPath, String sdkSrcPath, 
 			ArrayList2<String> arguments) {
 		super(processRunner);
-		this.toolPath = toolPath;
-		this.rustPath = rustPath;
+		this.racerPath = racerPath;
+		this.sdkSrcPath = sdkSrcPath;
 		this.arguments = arguments;
 	}
 	
+	protected static ArrayList2<String> getArguments(String opName, int line_0, int col_0, Location fileLocation) {
+		ArrayList2<String> arguments = new ArrayList2<String>(opName);
+		arguments.add(Integer.toString(line_0 + 1)); // use one-based index
+		arguments.add(Integer.toString(col_0)); // But this one is zero-based index
+		arguments.add(fileLocation.toPathString());
+		return arguments;
+	}
+	
 	public ExternalProcessResult execute() throws CommonException, OperationCancellation {
-		String toolExePath = new RustRacerLocationValidator().getValidatedField(toolPath).toPathString();
-		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedField(rustPath).toPathString();
+		String toolExePath = new RustRacerLocationValidator().getValidatedField(racerPath).toPathString();
+		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedField(sdkSrcPath).toPathString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
 		

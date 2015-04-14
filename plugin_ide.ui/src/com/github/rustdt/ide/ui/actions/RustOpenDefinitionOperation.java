@@ -10,47 +10,40 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.actions;
 
-import melnorme.lang.ide.ui.EditorSettings_Actual;
+import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.ui.LangUIMessages;
-import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
-import melnorme.lang.ide.ui.editor.EditorUtils;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
+import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
+import melnorme.lang.ide.ui.tools.ToolProcessRunner;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.utilbox.concurrency.OperationCancellation;
-import melnorme.utilbox.core.DevelopmentCodeMarkers;
+import melnorme.utilbox.core.CommonException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class RustOracleOpenDefinitionOperation extends AbstractOpenElementOperation {
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
+import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
+
+public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
-	public RustOracleOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
+	public RustOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
 			OpenNewEditorMode openEditorMode) {
 		super(LangUIMessages.Op_OpenDefinition_Name, editor, range, openEditorMode);
 	}
 	
 	@Override
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
-			throws CoreException, OperationCancellation {
-		return null; // TODO Auto-generated method stub
-	}
-	
-	@Override
-	protected void performOperation_handleResult() throws CoreException {
-		if(DevelopmentCodeMarkers.UNIMPLEMENTED_FUNCTIONALITY) {
-		} else {
-			MessageDialog.openInformation(editor.getSite().getWorkbenchWindow().getShell(), "Error", "Not implemented.");
-			return;
-		}
+			throws CoreException, OperationCancellation, CommonException {
 		
-		IEditorInput newInput = editorInput;
+		String racerPath = DaemonEnginePreferences.DAEMON_PATH.get();
+		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH.get();
 		
-		EditorUtils.openTextEditorAndSetSelection(editor, EditorSettings_Actual.EDITOR_ID, newInput, 
-			openEditorMode, new SourceRange(0, 0));
+		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(new ToolProcessRunner(monitor), 
+			racerPath, sdkSrcPath, range.getOffset(), line_0, col_0, inputLoc);
+		return op.executeAndProcessOutput();
 	}
 	
 }

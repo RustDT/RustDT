@@ -10,28 +10,28 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
-import melnorme.lang.tooling.completion.LangCompletionResult;
+import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.IProcessRunner;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-public class RacerCompletionOperation extends RacerOperation {
+public class RacerFindDefinitionOperation extends RacerOperation {
 	
 	protected final int offset;
 	
-	public RacerCompletionOperation(IProcessRunner processRunner, String racerPath, String rustSrcPath, int offset,
+	public RacerFindDefinitionOperation(IProcessRunner processRunner, String racerPath, String sdkSrcPath, int offset,
 			int line_0, int col_0, Location fileLocation) {
-		super(processRunner, racerPath, rustSrcPath, getArguments("complete-with-snippet", line_0, col_0, fileLocation));
+		super(processRunner, racerPath, sdkSrcPath, getArguments("find-definition", line_0, col_0, fileLocation));
 		
 		this.offset = offset;
 	}
 	
-	public LangCompletionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
+	public FindDefinitionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
 		ExternalProcessResult result = execute();
-		
-		return new RacerOutputParser(offset).parse(result);
+		// TODO: parse result
+		return new FindDefinitionResult("Not supported");
 	}
 	
 }

@@ -12,7 +12,7 @@ package com.github.rustdt.ide.ui.editor;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import com.github.rustdt.ide.ui.actions.RustOracleOpenDefinitionOperation;
+import com.github.rustdt.ide.ui.actions.RustOpenDefinitionOperation;
 
 import melnorme.lang.ide.ui.editor.actions.AbstractEditorOperation;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
@@ -24,7 +24,7 @@ public class RustEditorActionContributor extends LangEditorActionContributor {
 	@Override
 	protected AbstractEditorOperation createOpenDefinitionOperation(ITextEditor editor, SourceRange range,
 			OpenNewEditorMode newEditorMode) {
-		return new RustOracleOpenDefinitionOperation(editor, range, newEditorMode);
+		return new RustOpenDefinitionOperation(editor, range, newEditorMode);
 	}
 	
 	@Override

@@ -12,8 +12,9 @@ package com.github.rustdt.ide.ui.text.completion;
 
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
+import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
-import melnorme.lang.ide.ui.text.completion.LangContentAssistInvocationContext;
+import melnorme.lang.ide.ui.tools.ToolProcessRunner;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -27,7 +28,7 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
-	protected LangCompletionResult doComputeProposals(LangContentAssistInvocationContext context, int offset,
+	protected LangCompletionResult doComputeProposals(SourceOperationContext context, int offset,
 			TimeoutProgressMonitor pm) throws CoreException, CommonException, OperationCancellation {
 		
 		context.getEditor_nonNull().doSave(pm);

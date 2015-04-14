@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import com.github.rustdt.ide.ui.actions.RustOracleOpenDefinitionOperation;
+import com.github.rustdt.ide.ui.actions.RustOpenDefinitionOperation;
 
 public class RustHyperlinkDetector extends LangHyperlinkDetector {
 	
@@ -39,7 +39,7 @@ public class RustHyperlinkDetector extends LangHyperlinkDetector {
 			textEditor.doSave(new NullProgressMonitor());
 			
 			SourceRange sr = getElementRange();
-			new RustOracleOpenDefinitionOperation(textEditor, sr, OpenNewEditorMode.TRY_REUSING_EXISTING).
+			new RustOpenDefinitionOperation(textEditor, sr, OpenNewEditorMode.TRY_REUSING_EXISTING).
 				executeAndHandleResult();
 		}
 		
