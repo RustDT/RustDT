@@ -30,6 +30,9 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	@Override
 	protected LangCompletionResult doComputeProposals(LangContentAssistInvocationContext context, int offset,
 			TimeoutProgressMonitor pm) throws CoreException, CommonException, OperationCancellation {
+		
+		context.getEditor_nonNull().doSave(pm);
+		
 		String racerPath = DaemonEnginePreferences.DAEMON_PATH.get();
 		String sdkSrcPath = SDKPreferences.SDK_PATH.get();
 		
@@ -41,7 +44,6 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		arguments.add(Integer.toString(line_0 + 1)); // use one-based index
 		arguments.add(Integer.toString(col_0)); // But this one is zero-based index
 		arguments.add(fileLocation.toPathString());
-		
 		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(new ToolProcessRunner(pm), 
 			racerPath, sdkSrcPath, offset, arguments);
