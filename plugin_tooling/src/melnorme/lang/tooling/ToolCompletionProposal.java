@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.lang.tooling._actual;
+package melnorme.lang.tooling;
 
 import melnorme.lang.tooling.completion.LangToolCompletionProposal;
 
