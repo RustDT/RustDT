@@ -50,7 +50,8 @@ public class RustBuilder extends LangProjectBuilderExt {
 		}
 		
 		@Override
-		protected void doBuild_processBuildResult(ExternalProcessResult buildAllResult) throws CoreException {
+		protected void doBuild_processBuildResult(ExternalProcessResult buildAllResult) 
+				throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
 				protected void handleUnknownLineSyntax(String line) {

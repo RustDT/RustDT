@@ -15,6 +15,7 @@ import melnorme.lang.tooling.ops.IProcessRunner;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public class RacerFindDefinitionOperation extends RacerOperation {
@@ -30,8 +31,9 @@ public class RacerFindDefinitionOperation extends RacerOperation {
 	
 	public FindDefinitionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
 		ExternalProcessResult result = execute();
-		// TODO: parse result
-		return new FindDefinitionResult("Not supported");
+		
+		String output = result.getStdOutBytes().toString(StringUtil.UTF8);
+		return new RacerCompletionOutputParser(offset).parseResolvedMatch(output);
 	}
 	
 }

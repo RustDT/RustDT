@@ -10,32 +10,29 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
-import melnorme.lang.tooling._actual.ToolCompletionProposal;
+import java.nio.file.Path;
+
+import melnorme.lang.tooling.ToolCompletionProposal;
+import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.utils.ParseHelper;
+import melnorme.lang.tooling.ops.AbstractToolOutputParser;
+import melnorme.lang.tooling.ops.FindDefinitionResult;
+import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.lang.utils.SimpleLexingHelper;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-public class RacerOutputParser extends ParseHelper {
+public class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCompletionResult> {
 	
 	protected final int offset;
 	
 	protected int prefixLength;
 
-	public RacerOutputParser(int offset) {
+	public RacerCompletionOutputParser(int offset) {
 		this.offset = offset;
 	}
 	
-	public LangCompletionResult parse(ExternalProcessResult result) throws CommonException {
-		if(result.exitValue != 0) {
-			throw new CommonException("Tool exited with non-zero status: " + result.exitValue);
-		}
-		
-		return parse(result.getStdOutBytes().toString());
-	}
-	
+	@Override
 	protected LangCompletionResult parse(String input) throws CommonException {
 		
 		SimpleLexingHelper lexer = new SimpleLexingHelper(input);
@@ -62,10 +59,6 @@ public class RacerOutputParser extends ParseHelper {
 		
 	}
 	
-	protected void handleLineParseError(CommonException ce) throws CommonException {
-		 throw ce;
-	}
-	
 	protected void parsePrefix(String line) throws CommonException {
 		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
 		lineLexer.tryConsume("PREFIX ");
@@ -75,7 +68,7 @@ public class RacerOutputParser extends ParseHelper {
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	protected ToolCompletionProposal parseProposal(String line) {
+	public ToolCompletionProposal parseProposal(String line) {
 		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
 		
 		lineLexer.tryConsume("MATCH ");
@@ -83,6 +76,33 @@ public class RacerOutputParser extends ParseHelper {
 		String replaceString = lineLexer.consumeDelimitedString(';', '\\');
 		
 		return new ToolCompletionProposal(offset - prefixLength, replaceString, prefixLength);
+	}
+	
+	public FindDefinitionResult parseResolvedMatch(String lineInput) {
+		
+		try {
+			return doParseResolvedMatch(lineInput);
+		} catch (CommonException e) {
+			return new FindDefinitionResult(
+				ToolingMessages.FIND_DEFINITION_ToolError + e.getMessage());
+		}
+	}
+	
+	protected FindDefinitionResult doParseResolvedMatch(String lineInput) throws CommonException {
+		SimpleLexingHelper lineLexer = new SimpleLexingHelper(lineInput);
+		
+		if(lineLexer.tryConsume("MATCH ") == false) {
+			return new FindDefinitionResult(ToolingMessages.FIND_DEFINITION_NoTargetFound);
+		}
+		
+		@SuppressWarnings("unused")
+		String elementName = lineLexer.consumeDelimitedString(',', '\\');
+		int line_1 = parsePositiveInt(lineLexer.consumeDelimitedString(',', '\\'));
+		int column_0 = parsePositiveInt(lineLexer.consumeDelimitedString(',', '\\'));
+		Path path = parsePath(lineLexer.consumeDelimitedString(',', '\\'));
+		
+		SourceLineColumnRange position = new SourceLineColumnRange(path, line_1, column_0 + 1);
+		return new FindDefinitionResult(null, position);
 	}
 	
 }

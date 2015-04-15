@@ -26,12 +26,19 @@ The [Rust installation](http://www.rust-lang.org/install.html) is required for p
 The editor will auto-indent new lines after an Enter is pressed. Pressing Backspace with the cursor after the indent characters in the start of the line will delete the indent and preceding newline, thus joining the rest of the line with the previous line. Pressing Delete before a newline will have an identical effect.
 This is unlike most source editors - if instead you want to just remove one level of indent (or delete the preceding Tab), press Shift-Tab. 
 
-##### Code-Completion/Auto-Complete:
-Invoked with Ctrl-Space. This functionality is generally called Content Assist in Eclipse. 
+##### Content Assist / Open Definition:
+Content Assist (also know as Code Completion, Auto Complete) is invoked with `Ctrl-Space`. 
+Content Assist is provided by means of the [Racer](https://github.com/phildawes/racer) tool. 
+You must install this tool, and then configure its location in the `Rust` preference page.  
 
-Content Assist is provided by means of the [Racer tool](https://github.com/phildawes/racer). You must install this tool, and then configure its location in the `Rust` preference page.  
+The Open Definition functionality is invoked by pressing F3 in the source editor. 
+Open Definition is also available in the editor context menu and by means of editor *hyper-linking* 
+(hold Ctrl and click on a reference with the mouse cursor). 
+The [Racer](https://github.com/phildawes/racer) tool is also used to provide this functionality. 
 
-> If there is a problem with this operation, and you need a diagnostics log, the output of gocode can be seen in the `RustDT Racer log` console page in the Eclipse Console view.
+> If there is a problem with these operations, and you need a diagnostics log, 
+the output of Racer can be seen in the `RustDT Racer log` console page in the Eclipse Console view.
+
 
 ### Launch and Debug:
 To run a Rust project that builds to an executable, you will need to create a launch configuration. Locate the main menu, open 'Run' / 'Run Configurations...'. Then double click 'Rust Application" to create a new Rust launch, and configure it accordingly. You can run these launches from the 'Run Configurations...', or for quicker access, from the Launch button in the Eclipse toolbar.

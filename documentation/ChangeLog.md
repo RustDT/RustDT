@@ -1,8 +1,9 @@
 ## RustDT release ChangeLog
 
 ### next
- * Added: Code Completion using Racer.
-  * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#code-completionauto-complete
+ * Added: Code Completion functionality using Racer.
+ * Added: Open Definition functionality using Racer.
+  * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#content-assistopen-definition
  * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#editor-newline-auto-indentation
 
 ### 0.1.1

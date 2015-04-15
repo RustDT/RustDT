@@ -22,6 +22,7 @@ import melnorme.utilbox.core.CommonException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
@@ -32,6 +33,13 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	public RustOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
 			OpenNewEditorMode openEditorMode) {
 		super(LangUIMessages.Op_OpenDefinition_Name, editor, range, openEditorMode);
+	}
+	
+	@Override
+	protected void prepareOperation() throws CoreException {
+		super.prepareOperation();
+		
+		getContext().getEditor_nonNull().doSave(new NullProgressMonitor());
 	}
 	
 	@Override

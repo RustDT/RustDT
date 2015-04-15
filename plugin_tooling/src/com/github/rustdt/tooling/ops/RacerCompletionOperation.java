@@ -31,7 +31,7 @@ public class RacerCompletionOperation extends RacerOperation {
 	public LangCompletionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
 		ExternalProcessResult result = execute();
 		
-		return new RacerOutputParser(offset).parse(result);
+		return new RacerCompletionOutputParser(offset).parse(result);
 	}
 	
 }
