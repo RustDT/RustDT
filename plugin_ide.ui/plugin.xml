@@ -85,6 +85,18 @@
 		</hyperlinkDetector>
 	</extension>
 	
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			class="com.github.rustdt.ide.ui.editor.templates.RustTemplateContextType"
+			id="com.github.rustdt.ide.ui.TemplateContextType"
+			name="%LangTemplateContext.name">
+		</contextType>
+		<include
+			file="templates/default-templates.xml"
+			translations="templates/default-templates.properties">
+		</include>
+	</extension>
+	
 	<!-- ============ Actions/Commands ============= -->
 	
 	<extension point="org.eclipse.ui.commands">
