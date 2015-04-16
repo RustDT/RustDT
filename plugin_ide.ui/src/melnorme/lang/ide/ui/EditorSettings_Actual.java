@@ -20,6 +20,7 @@ import org.eclipse.ui.services.IServiceLocator;
 import com.github.rustdt.ide.ui.actions.RustEditorContextMenuContributor;
 import com.github.rustdt.ide.ui.editor.RustEditor;
 import com.github.rustdt.ide.ui.editor.RustSimpleSourceViewerConfiguration;
+import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
 public class EditorSettings_Actual {
 	
@@ -43,6 +44,8 @@ public class EditorSettings_Actual {
 	
 	public static final String TEMPLATE_CONTEXT_TYPE_ID = LangUIPlugin.PLUGIN_ID + ".TemplateContextType";
 	
+	public static final String CODE_DEFAULT_COLOR = RustColorPreferences.DEFAULT.key;
+		
 	/* ----------------- actions ----------------- */
 	
 	public static interface EditorCommandIds {
