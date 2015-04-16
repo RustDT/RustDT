@@ -5,6 +5,7 @@
  * Added: Open Definition functionality using Racer.
   * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#content-assistopen-definition
  * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#editor-newline-auto-indentation
+ * Added: Content Assist of code snippets. Configurable in `Preferences/Rust/Editor/Code Snippets`. TODO more defaults
 
 ### 0.1.1
  * Added: Source menu with shift right/left operations.

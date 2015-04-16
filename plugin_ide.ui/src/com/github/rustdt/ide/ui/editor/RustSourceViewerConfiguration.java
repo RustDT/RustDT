@@ -96,11 +96,6 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 			protected ILangCompletionProposalComputer createDefaultSymbolsProposalComputer() {
 				return new RustCompletionProposalComputer();
 			}
-			
-			@Override
-			protected ILangCompletionProposalComputer createSnippetsProposalComputer() {
-				return null; // TODO 
-			}
 		};
 	}
 	

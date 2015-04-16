@@ -210,6 +210,11 @@
 			class="com.github.rustdt.ide.ui.preferences.RustSourceColoringPreferencePage"
 			name="%LangEditorSyntaxColoringPreferencePage.name">
 		</page>
+		<page
+			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.CodeTemplates"
+			class="com.github.rustdt.ide.ui.editor.templates.RustTemplatePreferencePage"
+			name="%LangCodeTemplatesPreferencePage.name" />
 		
 	</extension>
 	
