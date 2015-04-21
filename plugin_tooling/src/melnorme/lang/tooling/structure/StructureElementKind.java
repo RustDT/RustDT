@@ -11,6 +11,7 @@
 package melnorme.lang.tooling.structure;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertUnreachable;
+import melnorme.lang.tooling.AbstractKindVisitor;
 import melnorme.lang.tooling.LANG_SPECIFIC;
 
 
@@ -32,7 +33,7 @@ public enum StructureElementKind {
 	TEMPLATE,
 	ALIAS;
 	
-	public static abstract class StructureElementKindVisitor<RET> extends AbstractStructureElementKindVisitor<RET> {
+	public static abstract class StructureElementKindVisitor<RET> extends AbstractKindVisitor<RET> {
 		
 		public RET switchOnKind(StructureElementKind kind) {
 			switch(kind) {
@@ -45,12 +46,21 @@ public enum StructureElementKind {
 			case INTERFACE: return visitInterface();
 			case STRUCT: return visitStruct();
 			
-			case MODULEDEC: return visitModuleDeclaration();
+			case MODULEDEC: return visitModule();
 			
 			case TEMPLATE: return visitTemplate();
 			case ALIAS: return visitAlias();
 			
 			}
+			throw assertUnreachable();
+		}
+		
+		@Override
+		protected RET visitUnknown() {
+			throw assertUnreachable();
+		}
+		@Override
+		protected RET visitKeyword() {
 			throw assertUnreachable();
 		}
 		
