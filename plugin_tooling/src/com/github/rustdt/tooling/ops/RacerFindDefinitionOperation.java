@@ -11,7 +11,7 @@
 package com.github.rustdt.tooling.ops;
 
 import melnorme.lang.tooling.ops.FindDefinitionResult;
-import melnorme.lang.tooling.ops.IProcessRunner;
+import melnorme.lang.tooling.ops.IOperationHelper;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -22,7 +22,7 @@ public class RacerFindDefinitionOperation extends RacerOperation {
 	
 	protected final int offset;
 	
-	public RacerFindDefinitionOperation(IProcessRunner processRunner, String racerPath, String sdkSrcPath, int offset,
+	public RacerFindDefinitionOperation(IOperationHelper processRunner, String racerPath, String sdkSrcPath, int offset,
 			int line_0, int col_0, Location fileLocation) {
 		super(processRunner, racerPath, sdkSrcPath, getArguments("find-definition", line_0, col_0, fileLocation));
 		
@@ -33,7 +33,7 @@ public class RacerFindDefinitionOperation extends RacerOperation {
 		ExternalProcessResult result = execute();
 		
 		String output = result.getStdOutBytes().toString(StringUtil.UTF8);
-		return new RacerCompletionOutputParser(offset).parseResolvedMatch(output);
+		return createRacerOutputParser(offset).parseResolvedMatch(output);
 	}
 	
 }

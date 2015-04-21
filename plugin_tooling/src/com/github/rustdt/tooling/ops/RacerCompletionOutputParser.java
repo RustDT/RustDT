@@ -10,8 +10,10 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import java.io.File;
 import java.nio.file.Path;
 
+import melnorme.lang.tooling.CompletionProposalKind;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.completion.LangCompletionResult;
@@ -21,8 +23,9 @@ import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.lang.utils.SimpleLexingHelper;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.StringUtil;
 
-public class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCompletionResult> {
+public abstract class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCompletionResult> {
 	
 	protected final int offset;
 	
@@ -62,21 +65,62 @@ public class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCo
 	protected void parsePrefix(String line) throws CommonException {
 		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
 		lineLexer.tryConsume("PREFIX ");
-		int prefixStart = parsePositiveInt(lineLexer.consumeDelimitedString(',', '\\'));
-		int prefixEnd = parsePositiveInt(lineLexer.consumeDelimitedString(',', '\\'));
+		int prefixStart = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
+		int prefixEnd = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
 		
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	public ToolCompletionProposal parseProposal(String line) {
+	protected String consumeCommaDelimitedString(SimpleLexingHelper lineLexer) {
+		return lineLexer.consumeDelimitedString(',', -1);
+	}
+	
+	public ToolCompletionProposal parseProposal(String line) throws CommonException {
 		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
 		
 		lineLexer.tryConsume("MATCH ");
 		
-		String replaceString = lineLexer.consumeDelimitedString(';', '\\');
+		String replaceString = consumeSemicolonDelimitedString(lineLexer);
+		String rawLabel = consumeSemicolonDelimitedString(lineLexer);
 		
-		return new ToolCompletionProposal(offset - prefixLength, replaceString, prefixLength);
+		consumeSemicolonDelimitedString(lineLexer); // Line no
+		consumeSemicolonDelimitedString(lineLexer); // Char no
+		
+		String rawModuleName = consumeSemicolonDelimitedString(lineLexer);
+		String rawKind = consumeSemicolonDelimitedString(lineLexer);
+		
+		String label = replaceString; // TODO: parse rawLabel
+		CompletionProposalKind kind = parseKind(rawKind); 
+		String moduleName = parseModuleName(rawModuleName);
+		
+		int completionOffset = offset - prefixLength;
+		return new ToolCompletionProposal(completionOffset, prefixLength, replaceString, label, kind, moduleName);
 	}
+	
+	protected String consumeSemicolonDelimitedString(SimpleLexingHelper lineLexer) {
+		return lineLexer.consumeDelimitedString(';', -1);
+	}
+	
+	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
+		String matchKindString = rawKind;
+		try {
+			return CompletionProposalKind.valueOf(matchKindString);
+		} catch (IllegalArgumentException e) {
+			handleInvalidMatchKindString(matchKindString);
+			return CompletionProposalKind.UNKNOWN;
+		}
+	}
+	
+	protected abstract void handleInvalidMatchKindString(String matchKindString) throws CommonException;
+	
+	protected String parseModuleName(String rawModuleName) {
+		String moduleName = StringUtil.substringAfterLastMatch(rawModuleName, File.separator);
+		// For Window OSes, also trim module name using "/"
+		moduleName = StringUtil.substringAfterLastMatch(moduleName, "/");
+		return moduleName;
+	}
+	
+	/* ----------------- find-definition ----------------- */
 	
 	public FindDefinitionResult parseResolvedMatch(String lineInput) {
 		
@@ -96,10 +140,10 @@ public class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCo
 		}
 		
 		@SuppressWarnings("unused")
-		String elementName = lineLexer.consumeDelimitedString(',', '\\');
-		int line_1 = parsePositiveInt(lineLexer.consumeDelimitedString(',', '\\'));
-		int column_0 = parsePositiveInt(lineLexer.consumeDelimitedString(',', '\\'));
-		Path path = parsePath(lineLexer.consumeDelimitedString(',', '\\'));
+		String elementName = consumeCommaDelimitedString(lineLexer);
+		int line_1 = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
+		int column_0 = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
+		Path path = parsePath(consumeCommaDelimitedString(lineLexer));
 		
 		SourceLineColumnRange position = new SourceLineColumnRange(path, line_1, column_0 + 1);
 		return new FindDefinitionResult(null, position);

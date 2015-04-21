@@ -16,6 +16,7 @@ import static melnorme.utilbox.core.CoreUtil.listFrom;
 import java.util.List;
 
 import melnorme.lang.tests.CommonToolingTest;
+import melnorme.lang.tooling.CompletionProposalKind;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.completion.LangCompletionResult;
@@ -29,17 +30,24 @@ import org.junit.Test;
 
 public class RacerOutputParserTest extends CommonToolingTest {
 	
+	protected RacerCompletionOutputParser createTestsParser(int offset) {
+		return new RacerCompletionOutputParser(offset) {
+			@Override
+			protected void handleLineParseError(CommonException ce) {
+				assertFail();
+			}
+			@Override
+			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
+			}
+		};
+	}
+	
 	@Test
 	public void test() throws Exception { test$(); }
 	public void test$() throws Exception {
 		int offset = 10;
 		
-		RacerCompletionOutputParser buildParser = new RacerCompletionOutputParser(offset) {
-			@Override
-			protected void handleLineParseError(CommonException ce) {
-				assertFail();
-			}
-		};
+		RacerCompletionOutputParser buildParser = createTestsParser(offset);
 		
 		testParseOutput(buildParser, "", listFrom());  // Empty
 		
@@ -49,17 +57,17 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH BufRead;BufRead;519;10;/RustProject/src/xpto2.rs;Trait;pub trait BufRead : Read {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, "BufReader", 0),
-				new ToolCompletionProposal(offset, "BufRead", 0)
+				new ToolCompletionProposal(offset, 0, "BufReader", CompletionProposalKind.Struct, "xpto.rs"),
+				new ToolCompletionProposal(offset, 0, "BufRead", CompletionProposalKind.Trait, "xpto2.rs")
 			)
 		);
 		
 		testParseOutput(buildParser, 
 			"PREFIX 4,6,pr\n" +
-			"MATCH BufReader;BufReader;32;11;/RustProject/src/xpto.rs;Struct;pub struct BufReader<R> {\n"
+			"MATCH BufReader;BufReader;32;11;/RustProject/src/xpto.rs;Let;pub struct BufReader<R> {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset-2, "BufReader", 2)
+				new ToolCompletionProposal(offset-2, 2, "BufReader", CompletionProposalKind.Let, "xpto.rs")
 			)
 		);
 	}
@@ -74,12 +82,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 	public void parseMatchLine() throws Exception { parseMatchLine$(); }
 	public void parseMatchLine$() throws Exception {
 		
-		RacerCompletionOutputParser buildParser = new RacerCompletionOutputParser(0) {
-			@Override
-			protected void handleLineParseError(CommonException ce) {
-				assertFail();
-			}
-		};
+		RacerCompletionOutputParser buildParser = createTestsParser(0);
 		
 		testParseResolvedMatch(buildParser, "", 
 			new FindDefinitionResult(ToolingMessages.FIND_DEFINITION_NoTargetFound));

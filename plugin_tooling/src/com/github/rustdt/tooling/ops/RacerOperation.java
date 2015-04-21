@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import melnorme.lang.tooling.data.LocationOrSinglePathValidator;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
-import melnorme.lang.tooling.ops.IProcessRunner;
+import melnorme.lang.tooling.ops.IOperationHelper;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -27,9 +27,9 @@ public abstract class RacerOperation extends AbstractToolOperation {
 	
 	protected String input = "";
 	
-	public RacerOperation(IProcessRunner processRunner, String racerPath, String sdkSrcPath, 
+	public RacerOperation(IOperationHelper opHelper, String racerPath, String sdkSrcPath, 
 			ArrayList2<String> arguments) {
-		super(processRunner);
+		super(opHelper);
 		this.racerPath = racerPath;
 		this.sdkSrcPath = sdkSrcPath;
 		this.arguments = arguments;
@@ -55,7 +55,7 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		
 		pb.environment().put("RUST_SRC_PATH", rustSrcPath);
 		
-		return processRunner.runProcess(pb, input);
+		return operationHelper.runProcess(pb, input);
 	}
 	
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
@@ -65,6 +65,22 @@ public abstract class RacerOperation extends AbstractToolOperation {
 			fileOnly = true;
 		}
 		
+	}
+	
+	/* -----------------  ----------------- */
+	
+	protected RacerCompletionOutputParser createRacerOutputParser(int offset) {
+		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
+			@Override
+			protected void handleLineParseError(CommonException ce) throws CommonException {
+				 throw ce;
+			}
+			@Override
+			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
+				getOperationHelper().logStatus(new CommonException("Unknown Match Kind: " + matchKindString));
+			}
+		};
+		return parser;
 	}
 	
 }
