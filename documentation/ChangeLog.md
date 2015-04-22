@@ -2,11 +2,11 @@
 
 ### next
  * Added: Open Definition functionality using Racer.
- * Added: Code Completion functionality using Racer. TODO: Features pics
-  * Added auto-insert of function arguments for function proposals.
-  * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#content-assistopen-definition .
- * [Doc] Added section https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#editor-newline-auto-indentation .
- * Added: Content Assist of code snippets. Configurable in `Preferences/Rust/Editor/Code Snippets`. TODO more defaults
+ * Added: Code Completion functionality using Racer.
+  * Added: auto-insert of function arguments for Content Assist function proposals.
+  * [Doc] Added [Content Assist / Open Definition](documentation/UserGuide.md#content-assistopen-definition) section.
+ * Added: Code snippets proposals for Content Assist. Configurable in `Preferences/Rust/Editor/Code Snippets`. TODO more defaults
+ * [Doc] Added [Editor auto-indentation](documentation/UserGuide.md#editor-newline-auto-indentation) section.
 
 ### 0.1.1
  * Added: Source menu with shift right/left operations.

@@ -11,6 +11,11 @@
 
 | [![sample_basic](screenshots/sample_basic.thumb.png)](screenshots/sample_basic.png?raw=true)<br/>`Editor and workbench screenshot` |
 |----|
+
+ * Content Assist and Find Definition using Racer.
+
+| [![sample_basic](screenshots/Feature_ContentAssist.thumb.png)](screenshots/Feature_ContentAssist.png?raw=true)<br/>`Racer Content Assist screenshot` |
+|----| 
    
 #### Debugging functionality. 
 Fully featured GDB debugger support (uses Eclipse CDT's GDB integration)
