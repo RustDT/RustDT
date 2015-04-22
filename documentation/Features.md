@@ -14,10 +14,10 @@
 
  * Content Assist and Find Definition using Racer.
 
-| [![sample_basic](screenshots/Feature_ContentAssist.thumb.png)](screenshots/Feature_ContentAssist.png?raw=true)<br/>`Racer Content Assist screenshot` |
+| [![sample_basic](screenshots/Feature_ContentAssist.thumb.png)](screenshots/Feature_ContentAssist.png?raw=true)<br/>`Content Assist screenshot` |
 |----| 
    
-#### Debugging functionality. 
+##### Debugging functionality. 
 Fully featured GDB debugger support (uses Eclipse CDT's GDB integration)
   * Stop/resume program execution. Listing program threads and stack frame contents.
   * Setting breakpoints, watchpoints (breakpoint on data/variables), tracepoints. Breakpoint conditions.
