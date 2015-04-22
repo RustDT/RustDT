@@ -10,19 +10,23 @@
  *******************************************************************************/
 package melnorme.lang.tooling;
 
+import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.completion.LangToolCompletionProposal;
+import melnorme.utilbox.collections.Indexable;
 
 @LANG_SPECIFIC
 public class ToolCompletionProposal extends LangToolCompletionProposal {
 	
 	public ToolCompletionProposal(int replaceOffset, int replaceLength, String replaceString, String label,
 			CompletionProposalKind kind, String moduleName) {
-		super(replaceOffset, replaceLength, replaceString, label, kind, moduleName);
+		super(replaceOffset, replaceLength, replaceString, label, kind, moduleName, replaceString, null);
 	}
 	
-	public ToolCompletionProposal(int replaceOffset, int replaceLength, String replaceString, 
-			CompletionProposalKind kind, String moduleName) {
-		super(replaceOffset, replaceLength, replaceString, replaceString, kind, moduleName);
+	public ToolCompletionProposal(int replaceOffset, int replaceLength, String replaceString, String label,
+			CompletionProposalKind kind, String moduleName, 
+			String fullReplaceString, Indexable<SourceRange> sourceSubElements) {
+		super(replaceOffset, replaceLength, replaceString, label, kind, moduleName, fullReplaceString, 
+			sourceSubElements);
 	}
 	
 	@Override

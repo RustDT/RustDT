@@ -16,7 +16,6 @@ import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.ide.ui.tools.ToolManagerOperationHelper;
-import melnorme.lang.tooling.CompletionProposalKind;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.utilbox.concurrency.OperationCancellation;
@@ -59,15 +58,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	@Override
 	protected ICompletionProposal adaptToolProposal(ToolCompletionProposal proposal) {
 		IContextInformation ctxInfo = null; // TODO: context information
-		return new LangCompletionProposal(proposal, null, getImage(proposal), ctxInfo) {
-			@Override
-			protected String getReplaceString() {
-				if(proposal.getKind() == CompletionProposalKind.Module) {
-					return super.getReplaceString() + "::";
-				}
-				return super.getReplaceString();
-			}
-		};
+		return new LangCompletionProposal(proposal, null, getImage(proposal), ctxInfo);
 	}
 	
 }

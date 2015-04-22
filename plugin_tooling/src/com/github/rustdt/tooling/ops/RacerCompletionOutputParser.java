@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import melnorme.lang.tooling.CompletionProposalKind;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
+import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.AbstractToolOutputParser;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
@@ -80,7 +81,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		lineLexer.tryConsume("MATCH ");
 		
-		String replaceString = consumeSemicolonDelimitedString(lineLexer);
+		String baseName = consumeSemicolonDelimitedString(lineLexer);
 		String rawLabel = consumeSemicolonDelimitedString(lineLexer);
 		
 		consumeSemicolonDelimitedString(lineLexer); // Line no
@@ -89,31 +90,62 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		String rawModuleName = consumeSemicolonDelimitedString(lineLexer);
 		String rawKind = consumeSemicolonDelimitedString(lineLexer);
 		
-		String label = parseRawLabel(rawLabel);
 		CompletionProposalKind kind = parseKind(rawKind); 
 		String moduleName = parseModuleName(rawModuleName);
+		ArrayList2<String> params = parseParametersFromRawLabel(rawLabel);
+		
+		String label = baseName;
+		ArrayList2<SourceRange> subElements = null;
+		String fullReplaceString = baseName;
+		
+		if(params != null) {
+			label = baseName + "(" + StringUtil.collToString(params, ", ") + ")";
+			subElements = new ArrayList2<>();
+			fullReplaceString = buildFullReplacementStringAndSubElements(baseName, params, subElements);
+		}
+		
+		if(kind == CompletionProposalKind.Module) {
+			fullReplaceString = baseName + "::";
+		}
 		
 		int completionOffset = offset - prefixLength;
-		return new ToolCompletionProposal(completionOffset, prefixLength, replaceString, label, kind, moduleName);
+		return new ToolCompletionProposal(completionOffset, prefixLength, baseName, label, kind, moduleName,
+			fullReplaceString, subElements);
 	}
 	
 	protected String consumeSemicolonDelimitedString(SimpleLexingHelper lineLexer) {
 		return lineLexer.consumeDelimitedString(';', -1);
 	}
 	
-	protected String parseRawLabel(String rawLabel) {
-		SimpleLexerExt lexer = new SimpleLexerExt(rawLabel);
-		
-		String baseName = lexer.consumeUntil("(");
-		if(!lexer.tryConsume("(")) {
-			return baseName;
+	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
+		String matchKindString = rawKind;
+		try {
+			return CompletionProposalKind.valueOf(matchKindString);
+		} catch (IllegalArgumentException e) {
+			handleInvalidMatchKindString(matchKindString);
+			return CompletionProposalKind.UNKNOWN;
 		}
-		
-		ArrayList2<String> args = parseRawLabelArgs(lexer);
-		return baseName + "(" + StringUtil.collToString(args, ", ") + ")";
 	}
 	
-	protected ArrayList2<String> parseRawLabelArgs(SimpleLexerExt lexer) {
+	protected abstract void handleInvalidMatchKindString(String matchKindString) throws CommonException;
+	
+	protected String parseModuleName(String rawModuleName) {
+		String moduleName = StringUtil.substringAfterLastMatch(rawModuleName, File.separator);
+		// For Window OSes, also trim module name using "/"
+		moduleName = StringUtil.substringAfterLastMatch(moduleName, "/");
+		return moduleName;
+	}
+	
+	/* -----------------  ----------------- */
+	
+	protected ArrayList2<String> parseParametersFromRawLabel(String rawLabel) {
+		SimpleLexerExt lexer = new SimpleLexerExt(rawLabel);
+		
+		lexer.consumeUntil("(");
+		if(!lexer.tryConsume("(")) {
+			return null;
+		}
+		
 		ArrayList2<String> args = new ArrayList2<>();
 		
 		while(!lexer.lookaheadIsEOF()){
@@ -134,23 +166,37 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		return lexer.consumeUntil("}", true);
 	}
 	
-	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
-		String matchKindString = rawKind;
-		try {
-			return CompletionProposalKind.valueOf(matchKindString);
-		} catch (IllegalArgumentException e) {
-			handleInvalidMatchKindString(matchKindString);
-			return CompletionProposalKind.UNKNOWN;
+	protected String buildFullReplacementStringAndSubElements(String baseName, ArrayList2<String> params, 
+			ArrayList2<SourceRange> subElements) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(baseName);
+		
+		sb.append("(");
+		boolean first = true;
+		for (String param : params) {
+			if(!first) {
+				sb.append(", ");
+			}
+			
+			String paramName = getParamNameSuggestion(param);
+			
+			subElements.add(new SourceRange(sb.length(), paramName.length()));
+			sb.append(paramName);
+			
+			first = false;
 		}
+		sb.append(")");
+		
+		return sb.toString();
 	}
 	
-	protected abstract void handleInvalidMatchKindString(String matchKindString) throws CommonException;
-	
-	protected String parseModuleName(String rawModuleName) {
-		String moduleName = StringUtil.substringAfterLastMatch(rawModuleName, File.separator);
-		// For Window OSes, also trim module name using "/"
-		moduleName = StringUtil.substringAfterLastMatch(moduleName, "/");
-		return moduleName;
+	protected String getParamNameSuggestion(String param) {
+		String declaredParamName = StringUtil.substringUntilMatch(param, ":");
+		if(declaredParamName.isEmpty()) {
+			return "__";
+		}
+		return declaredParamName;
 	}
 	
 	/* ----------------- find-definition ----------------- */
