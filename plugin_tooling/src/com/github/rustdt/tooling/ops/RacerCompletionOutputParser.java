@@ -89,7 +89,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		String rawModuleName = consumeSemicolonDelimitedString(lineLexer);
 		String rawKind = consumeSemicolonDelimitedString(lineLexer);
 		
-		String label = replaceString; // TODO: parse rawLabel
+		String label = parseRawLabel(rawLabel);
 		CompletionProposalKind kind = parseKind(rawKind); 
 		String moduleName = parseModuleName(rawModuleName);
 		
@@ -99,6 +99,39 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	
 	protected String consumeSemicolonDelimitedString(SimpleLexingHelper lineLexer) {
 		return lineLexer.consumeDelimitedString(';', -1);
+	}
+	
+	protected String parseRawLabel(String rawLabel) {
+		SimpleLexerExt lexer = new SimpleLexerExt(rawLabel);
+		
+		String baseName = lexer.consumeUntil("(");
+		if(!lexer.tryConsume("(")) {
+			return baseName;
+		}
+		
+		ArrayList2<String> args = parseRawLabelArgs(lexer);
+		return baseName + "(" + StringUtil.collToString(args, ", ") + ")";
+	}
+	
+	protected ArrayList2<String> parseRawLabelArgs(SimpleLexerExt lexer) {
+		ArrayList2<String> args = new ArrayList2<>();
+		
+		while(!lexer.lookaheadIsEOF()){
+			if(lexer.tryConsume(")")) {
+				break;
+			}
+			if(lexer.tryConsume("${")) {
+				args.add(parseRawLabelArg(lexer));
+			}
+			lexer.read();
+		}
+		
+		return args;
+	}
+	
+	protected String parseRawLabelArg(SimpleLexerExt lexer) {
+		lexer.consumeUntil(":", true);
+		return lexer.consumeUntil("}", true);
 	}
 	
 	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
@@ -147,6 +180,22 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		SourceLineColumnRange position = new SourceLineColumnRange(path, line_1, column_0 + 1);
 		return new FindDefinitionResult(null, position);
+	}
+	
+}
+
+class SimpleLexerExt extends SimpleLexingHelper {
+	
+	public SimpleLexerExt(String source) {
+		super(source);
+	}
+	
+	public String consumeUntil(String endString, boolean consumeEndString) {
+		String firstString = consumeUntil(endString);
+		if(consumeEndString) {
+			tryConsume(endString);
+		}
+		return firstString;
 	}
 	
 }

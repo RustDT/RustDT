@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import static melnorme.lang.tooling.CompletionProposalKind.Function;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.CoreUtil.listFrom;
 
@@ -64,10 +65,37 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		
 		testParseOutput(buildParser, 
 			"PREFIX 4,6,pr\n" +
-			"MATCH BufReader;BufReader;32;11;/RustProject/src/xpto.rs;Let;pub struct BufReader<R> {\n"
+			"MATCH BufReader;BufReader;32;11;relativeDir/src/xpto.rs;Let;pub struct BufReader<R> {\n"
 			, 
 			listFrom(
 				new ToolCompletionProposal(offset-2, 2, "BufReader", CompletionProposalKind.Let, "xpto.rs")
+			)
+		);
+		
+		testParseOutput(buildParser, 
+			"PREFIX 1,1,\n" +
+			"MATCH stdin;stdin();122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {\n" +
+			"MATCH repeat;repeat(${1:byte: u8});75;7;/rustc-nightly/src/libstd/io/util.rs;Function;"
+					+"pub fn repeat(byte: u8) -> Repeat { Repeat { byte: byte } }\n" +
+			"MATCH copy;copy(${1:r: &mut R}, ${2:w: &mut W});31;7;/rustc-nightly/src/libstd/io/util.rs;Function;"
+					+"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {\n"
+			, 
+			listFrom(
+				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, "stdio.rs"),
+				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, "util.rs"),
+				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, "util.rs")
+			)
+		);
+		
+		// Test error case
+		testParseOutput(buildParser, 
+			"PREFIX 1,1,\n" +
+			"MATCH stdin;stdin(;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {\n"+
+			"MATCH stdin2;stdin2(${;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {\n"
+			, 
+			listFrom(
+				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, "stdio.rs"),
+				new ToolCompletionProposal(offset, 0, "stdin2", "stdin2()", Function, "stdio.rs")
 			)
 		);
 	}
