@@ -12,6 +12,7 @@ package com.github.rustdt.ide.ui.text.completion;
 
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
+import melnorme.lang.ide.core.text.TextUtils;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
@@ -58,7 +59,14 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	@Override
 	protected ICompletionProposal adaptToolProposal(ToolCompletionProposal proposal) {
 		IContextInformation ctxInfo = null; // TODO: context information
-		return new LangCompletionProposal(proposal, null, getImage(proposal), ctxInfo);
+		
+		return new LangCompletionProposal(proposal, null, getImage(proposal), ctxInfo) {
+			@Override
+			protected boolean isValidPrefix(String prefix) {
+				String rplString = getBaseReplaceString();
+				return TextUtils.isPrefix(prefix, rplString, false);
+			}
+		};
 	}
 	
 }
