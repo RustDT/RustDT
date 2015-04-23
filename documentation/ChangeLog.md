@@ -1,13 +1,16 @@
 ## RustDT release ChangeLog
 
-### next
+### 0.2.0
  * Added: Open Definition functionality using Racer.
- * Added: Code Completion functionality using Racer.
-  * Added: auto-insert of function arguments for Content Assist function proposals.
-  * [Doc] Added [Content Assist / Open Definition](documentation/UserGuide.md#content-assistopen-definition) section.
- * Added: Code snippets proposals for Content Assist. Configurable in `Preferences/Rust/Editor/Code Snippets`. TODO more defaults
+ * Added: Content Assist functionality using Racer.
+  * Added: Content Assist auto-insert of function arguments for function proposals.
+  * Added: Content Assist code snippet proposals. Configurable in `Preferences/Rust/Editor/Code Snippets`. (needs more defaults)
+  * [Doc] Added [Content Assist / Open Definition](documentation/UserGuide.md#content-assist--open-definition) section.
+ * Added: Automatically set up Rust GDB pretty-printers for debug launches. (#6)
+  * [Doc] Added [GDB pretty-printers](documentation/UserGuide.md#gdb-pretty-printers) section.
+  * Note: I couldn't get this to work on any Windows GDB (Cygwin, TDM-GCC, MinGW-w64) .
+ * Upgraded minimum CDT version to 8.6.0.
  * [Doc] Added [Editor auto-indentation](documentation/UserGuide.md#editor-newline-auto-indentation) section.
-  ▶ Recommended/tested CDT version: 8.6.0
   
 
 ### 0.1.1
