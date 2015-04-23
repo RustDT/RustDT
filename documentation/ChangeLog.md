@@ -8,7 +8,7 @@
   * [Doc] Added [Content Assist / Open Definition](documentation/UserGuide.md#content-assist--open-definition) section.
  * Added: Automatically set up Rust GDB pretty-printers for debug launches. (#6)
   * [Doc] Added [GDB pretty-printers](documentation/UserGuide.md#gdb-pretty-printers) section.
-  * Note: I couldn't get this to work on any Windows GDB (Cygwin, TDM-GCC, MinGW-w64) .
+  * Note: I couldn't get this to work on any Windows GDB (Cygwin, TDM-GCC, MinGW-w64).
  * Upgraded minimum CDT version to 8.6.0.
  * [Doc] Added [Editor auto-indentation](documentation/UserGuide.md#editor-newline-auto-indentation) section.
   
