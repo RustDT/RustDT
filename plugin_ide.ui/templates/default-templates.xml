@@ -3,4 +3,7 @@
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="BUG" description="BUG here comment" enabled="true" name="BUG">/* FIXME: BUG here${cursor}*/</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="FIXME" description="FIXME comment" enabled="true" name="FIXME">/* FIXME: ${cursor}*/</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="header_comment" description="header comment" enabled="true" name="headerbar">/* ----------------- ${header} ----------------- */</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="forin" description="iterate over an iterable" enabled="true" name="forin">for ${iterable_element} in ${iterable} {&#13;
+	${cursor}&#13;
+}</template>
 </templates>
