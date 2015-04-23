@@ -13,7 +13,12 @@ package com.github.rustdt.ide.debug.ui;
 
 import static com.github.rustdt.ide.core.operations.RustSDKPreferences.SDK_PATH_Acessor;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
@@ -89,25 +94,40 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 		
 		@Override
 		protected Process launchGDBProcess(String[] commandLine) throws CoreException {
-			Process proc = null;
 			String[] launchEnvironment = LaunchUtils.getLaunchEnvironment(fLaunchConfiguration);
 			if(prettyPrintLoc != null) {
-				String pythonPath = System.getenv("PYTHONPATH");
-				pythonPath = pythonPath == null ? "" : pythonPath;
-				pythonPath += prettyPrintLoc.toPathString();
-				launchEnvironment = launchEnvironment == null ? new String[0] : launchEnvironment;
-				launchEnvironment = ArrayUtil.concat(launchEnvironment, "PYTHONPATH=" + pythonPath);
+				// launchEnvironment should be null for non-CDT projects anyways
+				if(launchEnvironment != null) {
+					LangCore.logWarning("Ignoring previous CDT GDB launch environment");
+				}
+				launchEnvironment = getModifiedPythonEnvironment();
 			}
 			try {
-				proc = ProcessFactory.getFactory().exec(commandLine, launchEnvironment);
+				return ProcessFactory.getFactory().exec(commandLine, launchEnvironment);
 			} catch (IOException e) {
 			    String message = "Error while launching command: " + StringUtil.join(commandLine, " "); //$NON-NLS-1$ //$NON-NLS-2$
 			    throw new CoreException(new Status(IStatus.ERROR, GdbPlugin.PLUGIN_ID, -1, message, e));
 			}
-			
-			return proc;
 		}
 		
+		protected String[] getModifiedPythonEnvironment() {
+			HashMap<String, String> envMap = new HashMap<>(System.getenv());
+			String pythonPath = envMap.get("PYTHONPATH");
+			pythonPath = pythonPath == null ? "" : pythonPath + File.pathSeparator;
+			pythonPath += prettyPrintLoc.toPathString();
+			envMap.put("PYTHONPATH", pythonPath);
+			
+			return convertoToEnvpFormat(envMap);
+		}
+		
+	}
+	
+	protected static String[] convertoToEnvpFormat(HashMap<String, String> envMap) {
+		List<String> envp = new ArrayList<>(envMap.size());
+		for(Entry<String, String> entry : envMap.entrySet()) {
+			envp.add(entry.getKey() + "=" + entry.getValue());
+		}
+		return ArrayUtil.createFrom(envp, String.class);
 	}
 	
 }
