@@ -7,6 +7,8 @@
   * [Doc] Added [Content Assist / Open Definition](documentation/UserGuide.md#content-assistopen-definition) section.
  * Added: Code snippets proposals for Content Assist. Configurable in `Preferences/Rust/Editor/Code Snippets`. TODO more defaults
  * [Doc] Added [Editor auto-indentation](documentation/UserGuide.md#editor-newline-auto-indentation) section.
+  ▶ Recommended/tested CDT version: 8.6.0
+  
 
 ### 0.1.1
  * Added: Source menu with shift right/left operations.
