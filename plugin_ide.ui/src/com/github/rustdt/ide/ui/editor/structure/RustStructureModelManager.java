@@ -11,9 +11,15 @@
 package com.github.rustdt.ide.ui.editor.structure;
 
 import melnorme.lang.ide.ui.editor.structure.StructureModelManager;
+import melnorme.lang.tooling.ast.SourceRange;
+import melnorme.lang.tooling.structure.IStructureElement;
+import melnorme.lang.tooling.structure.SourceFileStructure;
+import melnorme.lang.tooling.structure.StructureElement;
+import melnorme.lang.tooling.structure.StructureElementData;
+import melnorme.lang.tooling.structure.StructureElementKind;
+import melnorme.lang.utils.M_WorkerThread;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.Location;
-
-import org.eclipse.jface.text.IDocument;
 
 public class RustStructureModelManager extends StructureModelManager {
 	
@@ -21,8 +27,12 @@ public class RustStructureModelManager extends StructureModelManager {
 	}
 	
 	@Override
-	public void rebuild(Location location, IDocument document) {
+	public void rebuild(Location location, String source, M_WorkerThread reconcilerWorkerThread) {
 		// TODO: LANG
+		
+		StructureElement fakeElement = new StructureElement("NOT_IMPLEMENT", new SourceRange(0, source.length()), 
+			new SourceRange(0, source.length()), StructureElementKind.MODULEDEC, new StructureElementData(), null, null);
+		addNewStructure(location, new SourceFileStructure(location, new ArrayList2<IStructureElement>(fakeElement)));
 	}
 	
 }
