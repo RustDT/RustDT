@@ -11,6 +11,8 @@
 package com.github.rustdt.tooling.ops;
 
 import melnorme.lang.tooling.data.LocationOrSinglePathValidator;
+import melnorme.lang.tooling.data.StatusException;
+import melnorme.lang.tooling.data.StatusLevel;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IOperationHelper;
 import melnorme.utilbox.collections.ArrayList2;
@@ -77,7 +79,8 @@ public abstract class RacerOperation extends AbstractToolOperation {
 			}
 			@Override
 			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
-				getOperationHelper().logStatus(new CommonException("Unknown Match Kind: " + matchKindString));
+				getOperationHelper().logStatus(new StatusException(StatusLevel.WARNING,
+					"Unknown Match Kind: " + matchKindString));
 			}
 		};
 		return parser;
