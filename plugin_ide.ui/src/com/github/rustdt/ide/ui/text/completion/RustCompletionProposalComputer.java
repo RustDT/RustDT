@@ -13,6 +13,7 @@ package com.github.rustdt.ide.ui.text.completion;
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
 import melnorme.lang.ide.core.text.TextUtils;
+import melnorme.lang.ide.ui.LangImageProvider;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
@@ -28,7 +29,6 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-import com.github.rustdt.ide.ui.RustImageProvider;
 import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
@@ -52,8 +52,8 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	}
 	
 	@Override
-	protected RustImageProvider getImageProvider() {
-		return new RustImageProvider();
+	protected LangImageProvider getImageProvider() {
+		return new LangImageProvider();
 	}
 	
 	@Override

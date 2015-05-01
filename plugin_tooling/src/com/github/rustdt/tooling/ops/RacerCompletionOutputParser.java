@@ -14,6 +14,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 import melnorme.lang.tooling.CompletionProposalKind;
+import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
@@ -108,9 +109,11 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			fullReplaceString = baseName + "::";
 		}
 		
+		ElementAttributes attributes = new ElementAttributes(null); // TODO
+		
 		int completionOffset = offset - prefixLength;
-		return new ToolCompletionProposal(completionOffset, prefixLength, baseName, label, kind, moduleName,
-			fullReplaceString, subElements);
+		return new ToolCompletionProposal(completionOffset, prefixLength, baseName, label, kind, attributes,
+			moduleName, fullReplaceString, subElements);
 	}
 	
 	protected String consumeSemicolonDelimitedString(SimpleLexingHelper lineLexer) {

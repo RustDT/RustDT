@@ -20,6 +20,7 @@ import static melnorme.utilbox.core.CoreUtil.listFrom;
 import java.util.List;
 
 import melnorme.lang.tests.CommonToolingTest;
+import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
@@ -51,6 +52,10 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		return new SourceRange(offset, length);
 	}
 	
+	protected static ElementAttributes att() {
+		return new ElementAttributes(null);
+	}
+	
 	@Test
 	public void test() throws Exception { test$(); }
 	public void test$() throws Exception {
@@ -66,8 +71,8 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH BufRead;BufRead;519;10;/RustProject/src/xpto2.rs;Trait;pub trait BufRead : Read {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "BufReader", "BufReader", Struct, "xpto.rs"),
-				new ToolCompletionProposal(offset, 0, "BufRead", "BufRead", Trait, "xpto2.rs")
+				new ToolCompletionProposal(offset, 0, "BufReader", "BufReader", Struct, att(), "xpto.rs"),
+				new ToolCompletionProposal(offset, 0, "BufRead", "BufRead", Trait, att(),  "xpto2.rs")
 			)
 		);
 		
@@ -76,7 +81,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH BufReader;BufReader;32;11;relativeDir/src/xpto.rs;Let;pub struct BufReader<R> {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, "xpto.rs")
+				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, att(), "xpto.rs")
 			)
 		);
 		
@@ -89,11 +94,11 @@ public class RacerOutputParserTest extends CommonToolingTest {
 					+"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, att(), "stdio.rs",
 					"stdin()", new ArrayList2<SourceRange>()),
-				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, "util.rs",
+				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, att(), "util.rs",
 					"repeat(byte)", new ArrayList2<>(sr(7, 4))),
-				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, "util.rs",
+				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, att(), "util.rs",
 					"copy(r, w)", new ArrayList2<>(sr(5, 1), sr(8, 1)))
 			)
 		);
@@ -105,9 +110,9 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH xxx2;xxx2(${;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), "stdio.rs",
 					"xxx()", new ArrayList2<SourceRange>()),
-				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), "stdio.rs",
 					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
 			)
 		);

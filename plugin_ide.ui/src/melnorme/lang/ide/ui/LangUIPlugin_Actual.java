@@ -6,6 +6,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 
 import melnorme.lang.ide.ui.editor.ILangEditorTextHover;
 import melnorme.lang.ide.ui.editor.structure.StructureModelManager;
+import melnorme.lang.ide.ui.views.StructureElementLabelProvider;
 
 import com.github.rustdt.ide.ui.RustImages;
 import com.github.rustdt.ide.ui.editor.structure.RustStructureModelManager;
@@ -38,6 +39,11 @@ public final class LangUIPlugin_Actual {
 	
 	public static StructureModelManager createStructureModelManager() {
 		return new RustStructureModelManager();
+	}
+	
+	public static StructureElementLabelProvider getStructureElementLabelProvider() {
+		return new StructureElementLabelProvider() {
+		};
 	}
 	
 	/* ----------------- UI messages:  ----------------- */
