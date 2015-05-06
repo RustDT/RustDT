@@ -126,7 +126,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			return CompletionProposalKind.valueOf(matchKindString);
 		} catch (IllegalArgumentException e) {
 			handleInvalidMatchKindString(matchKindString);
-			return null;
+			return CompletionProposalKind.UNKNOWN;
 		}
 	}
 	

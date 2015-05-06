@@ -13,7 +13,7 @@ package melnorme.lang.ide.ui;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertUnreachable;
 
-import com.github.rustdt.ide.ui.RustObjImages;
+import com.github.rustdt.ide.ui.RustElementImages;
 
 import melnorme.lang.ide.ui.views.AbstractLangImageProvider;
 import melnorme.lang.tooling.LANG_SPECIFIC;
@@ -61,12 +61,12 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	@Override
 	public IManagedImage visitType() {
 		// This is an alias
-		return RustObjImages.T_TYPE;
+		return RustElementImages.T_TYPE;
 	}
 	
 	@Override
 	public IManagedImage visitTrait() {
-		return RustObjImages.T_TRAIT;
+		return RustElementImages.T_TRAIT;
 	}
 	
 	@Override

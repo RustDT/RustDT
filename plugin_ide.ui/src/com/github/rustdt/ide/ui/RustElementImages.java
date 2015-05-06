@@ -14,9 +14,11 @@ import melnorme.lang.ide.ui.LangElementImages;
 import melnorme.lang.ide.ui.LangImages;
 import melnorme.lang.ide.ui.utils.PluginImagesHelper.ImageHandle;
 
-public interface RustObjImages extends LangElementImages {
+public interface RustElementImages extends LangElementImages {
 	
-	ImageHandle T_TRAIT = LangImages.createManaged(CAT_OBJ, "t_trait.png");
-	ImageHandle T_TYPE = LangImages.createManaged(CAT_OBJ, "t_type.png");
+	String CAT = "language_elements";
+	
+	ImageHandle T_TRAIT = LangImages.createManaged(CAT, "t_trait.png");
+	ImageHandle T_TYPE = LangImages.createManaged(CAT, "t_type.png");
 	
 }
