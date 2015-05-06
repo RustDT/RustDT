@@ -16,7 +16,7 @@ import static melnorme.utilbox.core.Assert.AssertNamespace.assertUnreachable;
 public enum CompletionProposalKind {
 	
 	KEYWORD,
-	UNKNOWN,
+	ERROR,
 	
 	// The rest, based upon https://github.com/phildawes/racer/blob/master/src/racer/mod.rs#L22
     Struct,
@@ -40,7 +40,7 @@ public enum CompletionProposalKind {
 	public <RET> RET switchOnKind(ProposalKindVisitor<RET> visitor) {
 		switch(this) {
 		case KEYWORD: return visitor.visitKeyword();
-		case UNKNOWN: return visitor.visitUnknown();
+		case ERROR: return visitor.visitError();
 		
 		case Let: return visitor.visitVariable();
 		case IfLet: return visitor.visitVariable();
@@ -68,6 +68,8 @@ public enum CompletionProposalKind {
 	}
 	
 	public static interface ProposalKindVisitor<RET> extends AbstractKindVisitor<RET> {
+			
+		RET visitError();
 		
 		public abstract RET visitType();
 		

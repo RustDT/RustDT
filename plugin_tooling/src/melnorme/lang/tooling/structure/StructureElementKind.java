@@ -60,6 +60,8 @@ public enum StructureElementKind {
 	
 	public static interface StructureElementKindVisitor<RET> extends AbstractKindVisitor<RET> {
 		
+		public abstract RET visitTemplate();
+		
 	}
 	
 }

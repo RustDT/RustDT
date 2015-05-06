@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui;
 
+import melnorme.lang.ide.ui.LangElementImages;
 import melnorme.lang.ide.ui.LangImages;
-import melnorme.lang.ide.ui.LangObjImages;
 import melnorme.lang.ide.ui.utils.PluginImagesHelper.ImageHandle;
 
-public interface RustObjImages extends LangObjImages {
+public interface RustObjImages extends LangElementImages {
 	
 	ImageHandle T_TRAIT = LangImages.createManaged(CAT_OBJ, "t_trait.png");
 	ImageHandle T_TYPE = LangImages.createManaged(CAT_OBJ, "t_type.png");

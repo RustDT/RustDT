@@ -23,10 +23,6 @@ import melnorme.util.swt.jface.IManagedImage;
 public class LangImageProvider extends AbstractLangImageProvider {
 	
 	@Override
-	public IManagedImage visitUnknown() {
-		throw assertUnreachable();
-	}
-	@Override
 	public IManagedImage visitKeyword() {
 		throw assertUnreachable();
 	}
@@ -75,7 +71,7 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	
 	@Override
 	public IManagedImage visitModule() {
-		return LangObjImages.PACKAGE;
+		return LangElementImages.PACKAGE;
 	}
 	
 	@Override
