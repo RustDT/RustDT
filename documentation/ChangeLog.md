@@ -1,7 +1,8 @@
 ## RustDT release ChangeLog
 
 ### next-version
- * Fixed: snippets Content Assist preview information hover not showing up. 
+ * Fixed: snippets Content Assist preview information hover not showing up.
+ * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes. 
 
 ### 0.2.0
  * Added: Open Definition functionality using Racer.
