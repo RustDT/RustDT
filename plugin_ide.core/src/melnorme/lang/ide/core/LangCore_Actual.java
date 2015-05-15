@@ -1,5 +1,8 @@
 package melnorme.lang.ide.core;
 
+import com.github.rustdt.ide.core.engine.RustEngineClient;
+
+import melnorme.lang.ide.core.engine.EngineClient;
 import melnorme.lang.ide.core.operations.AbstractToolsManager;
 
 public class LangCore_Actual {
@@ -12,6 +15,10 @@ public class LangCore_Actual {
 	
 	public static AbstractToolsManager createToolManagerSingleton() {
 		return new AbstractToolsManager() { };
+	}
+	
+	public static EngineClient createEngineClient() {
+		return new RustEngineClient();
 	}
 	
 }

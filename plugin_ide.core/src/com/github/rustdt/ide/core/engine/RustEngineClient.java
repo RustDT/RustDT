@@ -8,9 +8,13 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.editor.structure;
+package com.github.rustdt.ide.core.engine;
 
-import melnorme.lang.ide.ui.editor.structure.StructureModelManager;
+import org.eclipse.jface.text.IDocument;
+
+import melnorme.lang.ide.core.engine.EngineClient;
+import melnorme.lang.ide.core.engine.StructureModelManager.StructureInfo;
+import melnorme.lang.ide.core.engine.StructureModelManager.StructureUpdateTask;
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.structure.SourceFileStructure;
@@ -19,20 +23,34 @@ import melnorme.lang.tooling.structure.StructureElementKind;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.Location;
 
-public class RustStructureModelManager extends StructureModelManager {
+public class RustEngineClient extends EngineClient {
 	
-	public RustStructureModelManager() {
+	public RustEngineClient() {
 	}
 	
 	@Override
-	protected StructureUpdateTask createStructureUpdateTask(Location location, String source) {
-		return new StructureUpdateTask(location, source) {
+	protected StructureUpdateTask createUpdateTask(StructureInfo structureInfo, final Location fileLocation,
+			IDocument document, boolean isDirty) {
+		
+		final String source = document.get();
+		
+		return new StructureUpdateTask(structureInfo) {
 			@Override
 			protected SourceFileStructure createSourceFileStructure() {
 				SourceRange sr = new SourceRange(0, source.length());
 				StructureElement element = new StructureElement("Outline_Not_Implemented", sr, sr, 
 					StructureElementKind.MODULEDEC, new ElementAttributes(null), null, null);
-				return new SourceFileStructure(location, new ArrayList2<StructureElement>(element));
+				return new SourceFileStructure(fileLocation, new ArrayList2<StructureElement>(element), null);
+			}
+		};
+	}
+	
+	@Override
+	protected StructureUpdateTask createDisposeTask(StructureInfo structureInfo, Location fileLocation) {
+		return new StructureUpdateTask(structureInfo) {
+			@Override
+			protected SourceFileStructure createSourceFileStructure() {
+				return null;
 			}
 		};
 	}
