@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### next-version
+ * Upgraded minimum Java version to Java 8
  * Fixed: snippets Content Assist preview information hover not showing up.
  * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes. 
 
