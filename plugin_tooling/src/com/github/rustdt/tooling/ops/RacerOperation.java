@@ -46,8 +46,8 @@ public abstract class RacerOperation extends AbstractToolOperation {
 	}
 	
 	public ExternalProcessResult execute() throws CommonException, OperationCancellation {
-		String toolExePath = new RustRacerLocationValidator().getValidatedField(racerPath).toPathString();
-		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedField(sdkSrcPath).toPathString();
+		String toolExePath = new RustRacerLocationValidator().getValidatedPath(racerPath).toString();
+		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedLocation(sdkSrcPath).toString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
 		

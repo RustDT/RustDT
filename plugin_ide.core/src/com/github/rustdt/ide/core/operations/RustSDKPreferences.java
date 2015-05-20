@@ -10,7 +10,7 @@ public interface RustSDKPreferences extends SDKPreferences {
 	
 	public static class RustSDKAcessor {
 		public Location getSDKLocation() throws ValidationException {
-			return new LocationValidator("Rust installation:").getValidatedField(SDK_PATH.get());
+			return new LocationValidator("Rust installation:").getValidatedLocation(SDK_PATH.get());
 		}
 	}
 	

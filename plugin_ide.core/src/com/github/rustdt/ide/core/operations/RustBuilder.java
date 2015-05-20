@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.LangProjectBuilderExt;
 import melnorme.lang.ide.core.utils.ResourceUtils;
-import melnorme.lang.tooling.data.LocationValidator;
+import melnorme.lang.tooling.data.PathValidator;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
@@ -34,7 +34,7 @@ public class RustBuilder extends LangProjectBuilderExt {
 	}
 	
 	@Override
-	protected LocationValidator getSDKLocationValidator() {
+	protected PathValidator getBuildToolPathValidator() {
 		return new RustSDKLocationValidator();
 	}
 	
@@ -45,7 +45,7 @@ public class RustBuilder extends LangProjectBuilderExt {
 	
 	protected class RustRunBuildOperationExtension extends AbstractRunBuildOperation {
 		@Override
-		protected ProcessBuilder createBuildPB() throws CoreException {
+		protected ProcessBuilder createBuildPB() throws CoreException, CommonException {
 			return createSDKProcessBuilder("build");
 		}
 		
@@ -69,7 +69,7 @@ public class RustBuilder extends LangProjectBuilderExt {
 	}
 	
 	@Override
-	protected ProcessBuilder createCleanPB() throws CoreException {
+	protected ProcessBuilder createCleanPB() throws CoreException, CommonException {
 		return createSDKProcessBuilder("clean");
 	}
 	
