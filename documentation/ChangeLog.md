@@ -3,7 +3,8 @@
 ### next-version
  * Upgraded minimum Java version to Java 8
  * Fixed: snippets Content Assist preview information hover not showing up.
- * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes. 
+ * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes.
+ * Fixed #31: Added workaround to fix OS X issue "Could not execute process `rustc -vV`". 
 
 ### 0.2.0
  * Added: Open Definition functionality using Racer.
