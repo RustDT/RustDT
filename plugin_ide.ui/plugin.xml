@@ -184,11 +184,30 @@
 	
 	<!-- ============ Preference pages ============= -->
 	
+	<extension point="org.eclipse.ui.keywords">
+		<keyword id="com.github.rustdt.ide.ui.RootPreferencePage"
+		                              label="%RootPreferencePage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.EditorPreferencePage"
+		                              label="%EditorPreferencePage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.EditorTypingPreferencePage"
+		                              label="%EditorTypingPreferencePage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.EditorSyntaxColoringPreferencePage"
+		                              label="%EditorSyntaxColoringPreferencePage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.CodeTemplatesPreferencePage"
+		                              label="%CodeTemplatesPreferencePage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.DaemonToolPrefPage"
+		                              label="%DaemonToolPrefPage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.ToolsConsolePrefPage"
+		                              label="%ToolsConsolePrefPage.keywords"/>
+	</extension>
+	
+	
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			id="com.github.rustdt.ide.ui.PreferencePages.Root"
 			class="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
-			name="%LangRootPreferencePage.name">
+			name="%RootPreferencePage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.RootPreferencePage"/>
 		</page>
 		
 <!--
@@ -196,39 +215,46 @@
 			category="com.github.rustdt.ide.ui.PreferencePages.Root"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.RustDaemon"
 			class="com.github.rustdt.ide.ui.preferences.RustDaemonPreferencePage"
-			name="%LangDaemonToolPrefPage.name">
+			name="%DaemonToolPrefPage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.DaemonToolPrefPage"/>
 		</page>
 -->
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Root"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.RustToolsConsole"
 			class="com.github.rustdt.ide.ui.preferences.RustToolsConsolePrefPage"
-			name="%LangToolsConsolePrefPage.name">
+			name="%ToolsConsolePrefPage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.ToolsConsolePrefPage"/>
 		</page>
 		
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Root"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor"
 			class="com.github.rustdt.ide.ui.preferences.RustEditorPreferencePage"
-			name="%LangEditorPreferencePage.name">
+			name="%EditorPreferencePage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.EditorPreferencePage"/>
 		</page>
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.Typing"
 			class="com.github.rustdt.ide.ui.preferences.RustEditorTypingPreferencePage"
-			name="%LangEditorTypingPreferencePage.name">
+			name="%EditorTypingPreferencePage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.EditorTypingPreferencePage"/>
 		</page>
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.SourceColoring"
 			class="com.github.rustdt.ide.ui.preferences.RustSourceColoringPreferencePage"
-			name="%LangEditorSyntaxColoringPreferencePage.name">
+			name="%EditorSyntaxColoringPreferencePage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.EditorSyntaxColoringPreferencePage"/>
 		</page>
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
 			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.CodeTemplates"
 			class="com.github.rustdt.ide.ui.editor.templates.RustTemplatePreferencePage"
-			name="%LangCodeTemplatesPreferencePage.name" />
+			name="%CodeTemplatesPreferencePage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.CodeTemplatesPreferencePage"/>
+		</page>
 		
 	</extension>
 	
