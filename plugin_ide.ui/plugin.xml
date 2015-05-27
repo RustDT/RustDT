@@ -193,6 +193,8 @@
 		                              label="%EditorTypingPreferencePage.keywords"/>
 		<keyword id="com.github.rustdt.ide.ui.EditorSyntaxColoringPreferencePage"
 		                              label="%EditorSyntaxColoringPreferencePage.keywords"/>
+		<keyword id="com.github.rustdt.ide.ui.ContentAssistPreferencePage"
+		                              label="%ContentAssistPreferencePage.keywords"/>
 		<keyword id="com.github.rustdt.ide.ui.CodeTemplatesPreferencePage"
 		                              label="%CodeTemplatesPreferencePage.keywords"/>
 		<keyword id="com.github.rustdt.ide.ui.DaemonToolPrefPage"
@@ -247,6 +249,13 @@
 			class="com.github.rustdt.ide.ui.preferences.RustSourceColoringPreferencePage"
 			name="%EditorSyntaxColoringPreferencePage.name">
 			<keywordReference id="com.github.rustdt.ide.ui.EditorSyntaxColoringPreferencePage"/>
+		</page>
+		<page
+			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
+			id=      "com.github.rustdt.ide.ui.PreferencePages.Editor.ContentAssist"
+			class="com.github.rustdt.ide.ui.preferences.RustContentAssistPreferencePage"
+			name="%ContentAssistPreferencePage.name">
+			<keywordReference id="com.github.rustdt.ide.ui.ContentAssistPreferencePage"/>
 		</page>
 		<page
 			category="com.github.rustdt.ide.ui.PreferencePages.Editor"
