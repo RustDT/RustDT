@@ -24,7 +24,12 @@ public class RustContentAssistPreferencePage extends AbstractPreferencesBlockPre
 	
 	@Override
 	protected LangEditorContentAssistConfigurationBlock createPreferencesComponent() {
-		return new LangEditorContentAssistConfigurationBlock(this);
+		return new LangEditorContentAssistConfigurationBlock(this) {
+			@Override
+			protected boolean createAutoActivation_DoubleColonOption() {
+				return true;
+			}
+		};
 	}
 	
 	@Override
