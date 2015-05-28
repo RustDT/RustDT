@@ -55,11 +55,6 @@ public class RustSimpleSourceViewerConfiguration extends RustSourceViewerConfigu
 	}
 	
 	@Override
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
-		return null;
-	}
-	
-	@Override
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		return null;
 	}
