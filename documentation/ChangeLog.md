@@ -7,6 +7,7 @@
  * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes.
  * Fixed #31: Added workaround to fix OS X issue "Could not execute process `rustc -vV`". 
  * Fixed #27: the preference pages are now searchable in the Preferences dialog search field, by means of relevant keywords.
+ * Fixed: `Tab policy: "Spaces Only"` preference ignored when pressing TAB.
  
 
 ### 0.2.0
