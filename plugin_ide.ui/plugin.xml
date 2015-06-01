@@ -37,7 +37,7 @@
 		 class="com.github.rustdt.ide.ui.editor.RustEditor"
 		 contributorClass="com.github.rustdt.ide.ui.editor.RustEditorActionContributor"
 		 default="true"
-		 icon="icons/obj/editor_file.png"
+		 icon="icons/views/SourceEditor.png"
 		 id="com.github.rustdt.ide.ui.editor.RustEditor"
 		 name="%LangEditor.name">
 			<contentTypeBinding contentTypeId="com.github.rustdt.ide.core.content.source" />
