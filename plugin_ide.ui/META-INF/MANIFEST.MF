@@ -25,5 +25,6 @@ Require-Bundle: com.github.rustdt.ide.core,
 Export-Package: com.github.rustdt.ide.ui.launch,
  melnorme.lang.ide.ui;x-friends:="com.github.rustdt.ide.debug",
  melnorme.lang.ide.ui.editor;x-friends:="com.github.rustdt.ide.debug",
+ melnorme.lang.ide.ui.editor.hover,
  melnorme.lang.ide.ui.launch
 Bundle-ClassPath: .
