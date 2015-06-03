@@ -3,6 +3,7 @@
 ### next-version
  * Added #23: Content Assist preference page, with auto-activation options.
  * Upgraded minimum Java version to Java 8
+  * Added: Show error message dialog if starting Eclipse with a Java version below the minimum.
  * Fixed: snippets Content Assist preview information hover not showing up.
  * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes.
  * Fixed #31: Added workaround to fix OS X issue "Could not execute process `rustc -vV`". 
