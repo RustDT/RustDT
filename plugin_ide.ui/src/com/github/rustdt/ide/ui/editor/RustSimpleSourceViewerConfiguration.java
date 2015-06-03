@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.editor;
 
-import org.eclipse.cdt.ui.text.IColorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -20,6 +19,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
+
+import _org.eclipse.cdt.ui.text.IColorManager;
 
 public class RustSimpleSourceViewerConfiguration extends RustSourceViewerConfiguration {
 	

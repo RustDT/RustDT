@@ -15,10 +15,11 @@ import java.util.List;
 
 import melnorme.lang.ide.ui.text.coloring.AbstractLangScanner;
 
-import org.eclipse.cdt.ui.text.ITokenStoreFactory;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.PatternRule;
+
+import _org.eclipse.cdt.ui.text.ITokenStoreFactory;
 
 /**
  * Scanner for Attribute partion
