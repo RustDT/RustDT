@@ -13,7 +13,7 @@ package com.github.rustdt.ide.ui.editor;
 import static melnorme.utilbox.core.CoreUtil.array;
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
-import melnorme.lang.ide.ui.editor.AbstractLangEditor;
+import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
 import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
@@ -34,7 +34,7 @@ import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	
 	public RustSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager,
-			AbstractLangEditor editor) {
+			AbstractLangStructureEditor editor) {
 		super(preferenceStore, colorManager, editor);
 	}
 	
