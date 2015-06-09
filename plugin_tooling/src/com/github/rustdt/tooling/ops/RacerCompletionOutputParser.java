@@ -22,7 +22,7 @@ import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.AbstractToolOutputParser;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
-import melnorme.lang.utils.SimpleLexingHelper;
+import melnorme.lang.utils.parse.StringParserHelper;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
@@ -40,7 +40,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	@Override
 	protected LangCompletionResult parse(String input) throws CommonException {
 		
-		SimpleLexingHelper lexer = new SimpleLexingHelper(input);
+		StringParserHelper lexer = new StringParserHelper(input);
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
@@ -65,7 +65,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected void parsePrefix(String line) throws CommonException {
-		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
+		StringParserHelper lineLexer = new StringParserHelper(line);
 		lineLexer.tryConsume("PREFIX ");
 		int prefixStart = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
 		int prefixEnd = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
@@ -73,12 +73,12 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	protected String consumeCommaDelimitedString(SimpleLexingHelper lineLexer) {
+	protected String consumeCommaDelimitedString(StringParserHelper lineLexer) {
 		return lineLexer.consumeDelimitedString(',', -1);
 	}
 	
 	public ToolCompletionProposal parseProposal(String line) throws CommonException {
-		SimpleLexingHelper lineLexer = new SimpleLexingHelper(line);
+		StringParserHelper lineLexer = new StringParserHelper(line);
 		
 		lineLexer.tryConsume("MATCH ");
 		
@@ -116,7 +116,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			moduleName, fullReplaceString, subElements);
 	}
 	
-	protected String consumeSemicolonDelimitedString(SimpleLexingHelper lineLexer) {
+	protected String consumeSemicolonDelimitedString(StringParserHelper lineLexer) {
 		return lineLexer.consumeDelimitedString(';', -1);
 	}
 	
@@ -142,7 +142,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	/* -----------------  ----------------- */
 	
 	protected ArrayList2<String> parseParametersFromRawLabel(String rawLabel) {
-		SimpleLexerExt lexer = new SimpleLexerExt(rawLabel);
+		StringParserHelper lexer = new StringParserHelper(rawLabel);
 		
 		lexer.consumeUntil("(");
 		if(!lexer.tryConsume("(")) {
@@ -158,13 +158,13 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			if(lexer.tryConsume("${")) {
 				args.add(parseRawLabelArg(lexer));
 			}
-			lexer.read();
+			lexer.consume();
 		}
 		
 		return args;
 	}
 	
-	protected String parseRawLabelArg(SimpleLexerExt lexer) {
+	protected String parseRawLabelArg(StringParserHelper lexer) {
 		lexer.consumeUntil(":", true);
 		return lexer.consumeUntil("}", true);
 	}
@@ -215,7 +215,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected FindDefinitionResult doParseResolvedMatch(String lineInput) throws CommonException {
-		SimpleLexingHelper lineLexer = new SimpleLexingHelper(lineInput);
+		StringParserHelper lineLexer = new StringParserHelper(lineInput);
 		
 		if(lineLexer.tryConsume("MATCH ") == false) {
 			return new FindDefinitionResult(ToolingMessages.FIND_DEFINITION_NoTargetFound);
@@ -229,22 +229,6 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		SourceLineColumnRange position = new SourceLineColumnRange(path, line_1, column_0 + 1);
 		return new FindDefinitionResult(null, position);
-	}
-	
-}
-
-class SimpleLexerExt extends SimpleLexingHelper {
-	
-	public SimpleLexerExt(String source) {
-		super(source);
-	}
-	
-	public String consumeUntil(String endString, boolean consumeEndString) {
-		String firstString = consumeUntil(endString);
-		if(consumeEndString) {
-			tryConsume(endString);
-		}
-		return firstString;
 	}
 	
 }
