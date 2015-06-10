@@ -74,7 +74,7 @@ public abstract class RacerOperation extends AbstractToolOperation {
 	protected RacerCompletionOutputParser createRacerOutputParser(int offset) {
 		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
 			@Override
-			protected void handleLineParseError(CommonException ce) throws CommonException {
+			protected void handleMessageParseError(CommonException ce) throws CommonException {
 				 throw ce;
 			}
 			@Override

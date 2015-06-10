@@ -31,6 +31,8 @@ import org.junit.Test;
 
 public class RustBuildOutputParserTest extends CommonToolingTest {
 	
+	protected static final String NL = "\n";
+	
 	protected static ToolSourceMessage msg(Path path, int line, int column, int endLine, int endColumn, 
 			StatusLevel level, String errorMessage) {
 		
@@ -50,21 +52,19 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 	public void test$() throws Exception {
 		RustBuildOutputParser buildParser = new RustBuildOutputParser() {
 			@Override
-			protected void handleLineParseError(CommonException ce) {
+			protected void handleMessageParseError(CommonException ce) {
 				assertFail();
 			}
 		};
 		RustBuildOutputParser buildParser_allowParseErrors = new RustBuildOutputParser() {
 			@Override
-			protected void handleLineParseError(CommonException ce) {
+			protected void handleMessageParseError(CommonException ce) {
 			}
 		};
 
 		
 		testParseMessages(buildParser, "", listFrom());  // Empty
 		
-		// Test that this line is ignored without reporting a syntax error.
-		testParseMessages(buildParser, "asdfsdaf/asdfsd", listFrom());
 		
 		{
 			
@@ -104,10 +104,10 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 		// test Rust message source text component
 		testParseMessages(buildParser, 
 			"src/main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n"+
-			"src/main.rs:1 const STRING2 : str  = xxx;" +"\n"+
-			"                                     ^~~" +"\n"+
+			"src/main.rs:1 const STRING2 : str  = xxx;" +NL+
+			"                                     ^~~" +NL+
 			"src/main.rs:2:2: 3:10 error: XXX\n"+
-			"src/main.rs:1 const STRING2 : str  = ;" +"\n"+
+			"src/main.rs:1 const STRING2 : str  = ;" +NL+
 			"                                     ^"
 			, 
 			listFrom(
@@ -118,7 +118,7 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 		
 		// Test actual multiline message
 		testParseMessages(buildParser, 
-			"src/main.rs:1:2: 3:17 error: " + MULTILINE_MESSAGE + "\n" +
+			"src/main.rs:1:2: 3:17 error: " + MULTILINE_MESSAGE + NL +
 			"src/main.rs:1: warning: xxx" + MULTILINE_MESSAGE,
 			listFrom(
 				msg(path("src/main.rs"), 1, 2, 3, 17, ERROR, MULTILINE_MESSAGE),
@@ -126,12 +126,37 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 			)
 		);
 		
+		testMacroExpansionMessages(buildParser);
 	}
 	
 	protected void testParseMessages(RustBuildOutputParser buildProcessor, String stderr, List<?> expected) 
 			throws CommonException {
 		ArrayList<ToolSourceMessage> buildMessages = buildProcessor.parseMessages(stderr);
 		assertEquals(buildMessages, expected);
+	}
+	
+	public static final String MACRO_MSG_1 = "src/main.rs:52:18: 52:28 error: unresolved name `abc`";
+	public static final String MACRO_MSG_2 = "src/main.rs:46:1: 58:2 note: in expansion of create_function!";
+	public static final String MACRO_MSG_3 = "src/main.rs:60:1: 60:23 note: expansion site";
+	
+	protected void testMacroExpansionMessages(RustBuildOutputParser buildParser) throws CommonException {
+		// Test macro expansion error message
+		testParseMessages(buildParser,
+			MACRO_MSG_1 +NL+
+			"src/main.rs:52         	let a = $func_name;" +NL+
+			"                       	        ^~~~~~~~~~" +NL+
+			MACRO_MSG_2 +NL+
+			MACRO_MSG_3 +NL+
+			"error: aborting due to previous error",
+			
+			listFrom(
+				msg(path("src/main.rs"), 52, 18, 52, 28, ERROR, "unresolved name `abc`" 
+						+NL+ MACRO_MSG_2 +NL+ MACRO_MSG_3)
+				, msg(path("src/main.rs"), 60, 1, 60, 23, ERROR, "expansion site"
+//						+NL+ MACRO_MSG_2 +NL+ MACRO_MSG_1
+						)
+			)
+		);
 	}
 	
 }

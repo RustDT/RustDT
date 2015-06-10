@@ -55,7 +55,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			} else if(line.startsWith("MATCH ")) {
 				proposals.add(parseProposal(line));
 			} else {
-				handleLineParseError(new CommonException("Unknown line format: " + line));
+				handleMessageParseError(new CommonException("Unknown line format: " + line));
 			}
 			
 		}

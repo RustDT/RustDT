@@ -54,7 +54,7 @@ public class RustBuilder extends LangProjectBuilderExt {
 				throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
-				protected void handleLineParseError(CommonException ce) {
+				protected void handleMessageParseError(CommonException ce) {
 					 LangCore.logStatus(LangCore.createCoreException(ce));
 				}
 			}.parseOutput(buildAllResult);

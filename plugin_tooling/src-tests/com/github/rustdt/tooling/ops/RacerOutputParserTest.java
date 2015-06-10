@@ -39,7 +39,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 	protected RacerCompletionOutputParser createTestsParser(int offset) {
 		return new RacerCompletionOutputParser(offset) {
 			@Override
-			protected void handleLineParseError(CommonException ce) {
+			protected void handleMessageParseError(CommonException ce) {
 				assertFail();
 			}
 			@Override

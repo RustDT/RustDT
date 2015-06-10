@@ -10,67 +10,100 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+import static melnorme.utilbox.core.CoreUtil.areEqual;
+
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import melnorme.lang.tooling.ops.BuildOutputParser;
 import melnorme.lang.utils.parse.StringParseSource;
+import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.core.CommonException;
 
 
 public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
+	protected boolean isMessageEnd(String nextLine) {
+		return nextLine.startsWith("error: aborting due to previous error");
+	}
+	
+	@Override
+	protected CompositeToolMessageData parseMessageData(StringParseSource output) throws CommonException {
+		
+		String outputLine = output.consumeLine();
+		
+		if(isMessageEnd(outputLine)) {
+			// We reached the end of messages, exhaust remaining tool output.
+			while(output.consume() != -1) {
+			}
+			return null;
+		}
+		
+		CompositeToolMessageData messageData = parseSimpleMessage(outputLine);
+		if(messageData == null) {
+			throw createUnknownLineSyntaxError(outputLine);
+		}
+		
+		parseMultiLineMessageText(output, messageData);
+		
+		parseAssociatedMessage(output, messageData);
+		
+		return messageData;
+	}
+
 	protected static final Pattern MESSAGE_LINE_Regex = Pattern.compile(
 		"^([^:\\n]*):" + // file
 		"(\\d*):((\\d*):)?" +// line:column
 		"( (\\d*):(\\d*))?" + // end line:column
-		" (warning|error):" + // column-end
+		" (warning|error|note):" + // column-end
 		"\\s(.*)$" // error message
 	);
 	
-	
-	@Override
-	protected void doParseLine(String outputLine, StringParseSource output) {
-		if(!outputLine.contains(":")) {
-			return; // Ignore line
-		}
-		
-		Matcher matcher = MESSAGE_LINE_Regex.matcher(outputLine);
+	public CompositeToolMessageData parseSimpleMessage(String line) {
+		Matcher matcher = MESSAGE_LINE_Regex.matcher(line);
 		if(!matcher.matches()) {
-			handleUnknownLineSyntax(outputLine);
-			return;
+			return null;
 		}
 		
-		String pathString = matcher.group(1);
-		String lineString = matcher.group(2);
-		String columnString = matcher.group(4);
+		CompositeToolMessageData msgData = new CompositeToolMessageData();
 		
-		String endLineString = matcher.group(6);
-		String endColumnString = matcher.group(7);
+		msgData.pathString = matcher.group(1);
+		msgData.lineString = matcher.group(2);
+		msgData.columnString = matcher.group(4);
 		
-		String messageTypeString = matcher.group(8);
+		msgData.endLineString = matcher.group(6);
+		msgData.endColumnString = matcher.group(7);
 		
-		String message = matcher.group(9);
+		msgData.messageTypeString = matcher.group(8);
+		if(areEqual(msgData.messageTypeString, "note")) {
+			
+			msgData.messageTypeString = "info";
+		}
 		
+		msgData.messageText = matcher.group(9);
+		msgData.sourceBeforeMessageText = line.substring(0, line.length() - msgData.messageText.length());
 		
+		return msgData;
+	}
+	
+	protected void parseMultiLineMessageText(StringParseSource output, CompositeToolMessageData msg) {
 		while(true) {
-			String nextLine = output.stringUntilNewline();
+			String lineAhead = output.stringUntilNewline();
 			
-			if(nextLine.isEmpty() || MESSAGE_LINE_Regex.matcher(nextLine).matches()) {
+			if(lineAhead.isEmpty() || MESSAGE_LINE_Regex.matcher(lineAhead).matches()) {
+				break;
+			}
+			if(isMessageEnd(lineAhead)) {
 				break;
 			}
 			
-			if(nextLine.startsWith("error: aborting due to previous error")) {
-				// We reached the end of messages, exhaust remaining tool output.
-				while(output.consume() != -1) {
-				}
-				break;
-			}
-			
-			// We assume this is a multi line message.
+			// Then this should be a multi line message text.
 			output.consumeLine();
 			
-			// However, first try to determine if this is the source range component, 
-			// which we don't need
+			// However, first try to determine if this is the source snippet text, 
+			// which we don't need to be part of message text
 			
 			String thirdLine = output.stringUntilNewline();
 			String thirdLineTrimmed = thirdLine.trim();
@@ -81,10 +114,86 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 				break;
 			}
 			
-			message += "\n" + nextLine;
+			msg.messageText += "\n" + lineAhead;
 		}
-		
-		addMessage(pathString, lineString, columnString, endLineString, endColumnString, messageTypeString, message);
 	}
 	
+	protected void parseAssociatedMessage(StringParseSource output, CompositeToolMessageData msg)
+			throws CommonException {
+		String lineAhead = output.stringUntilNewline();
+		
+		CompositeToolMessageData nextMessage = parseSimpleMessage(lineAhead);
+		if(nextMessage != null) {
+			
+			if(isTemplateInstantiationMessage(nextMessage)) {
+				nextMessage = parseMessageData(output);
+				msg.nextMessage = nextMessage;
+				msg.messageText += "\n" + nextMessage.getFullMessageSource(); 
+			}
+			
+		}
+	}
+	
+	public static class CompositeToolMessageData extends ToolMessageData {
+		
+		public CompositeToolMessageData nextMessage;
+		public CompositeToolMessageData extendedMessageText;
+		
+		public String getFullMessageSource() {
+			assertNotNull(sourceBeforeMessageText);
+			assertNotNull(messageText);
+			
+			return sourceBeforeMessageText + messageText;
+		}
+		
+		@Override
+		public String toString() {
+			return getFullMessageSource();
+		}
+		
+	}
+	
+	protected boolean isTemplateInstantiationMessage(ToolMessageData nextMessage) {
+		String messageText = nextMessage.messageText;
+		return 
+			areEqual(nextMessage.messageTypeString, "info") && messageText != null &&
+			(messageText.startsWith("in expansion of") || areEqual(messageText, "expansion site"));
+	}
+	
+	@Override
+	protected void addBuildMessage(ToolMessageData toolMessage_) throws CommonException {
+		super.addBuildMessage(toolMessage_);
+		
+		if(toolMessage_ instanceof CompositeToolMessageData) {
+			CompositeToolMessageData toolMessage = (CompositeToolMessageData) toolMessage_;
+			if(toolMessage.nextMessage != null && areEqual(toolMessage.messageTypeString, "error")) {
+				// This error message has linked errors - try to find expansion site error
+				
+				ArrayList2<CompositeToolMessageData> linkedErrors = new ArrayList2<>();
+				buildChain(toolMessage, linkedErrors);
+				
+				Collections.reverse(linkedErrors);
+				
+				CompositeToolMessageData topError = linkedErrors.get(0);
+				if(topError.messageText.equals("expansion site")) {
+					
+//					CompositeToolMessageData expansionErrorMsg = new CompositeToolMessageData();
+					// TODO link errors expansionErrorMsg
+					topError.messageTypeString = "error";
+					super.addBuildMessage(topError);
+				}
+			}
+		}
+	}
+	
+	protected void buildChain(CompositeToolMessageData msg, ArrayList2<CompositeToolMessageData> errorsChain) {
+		errorsChain.add(msg);
+		
+		if(msg.nextMessage == null) {
+			return;
+		}
+		
+		buildChain(msg.nextMessage, errorsChain);
+	}
+
 }

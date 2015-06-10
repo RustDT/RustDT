@@ -10,6 +10,7 @@
  * Fixed #27: the preference pages are now searchable in the Preferences dialog search field, by means of relevant keywords.
  * Fixed: `Tab policy: "Spaces Only"` preference ignored when pressing TAB.
  * Fixed #39: Unable to parse multiline rustc error messages
+ * Fixed #37: No editor problem underlining for macro expansion errors
  
 
 ### 0.2.0
