@@ -53,7 +53,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		
 		
 		while(true) {
-			String nextLine = output.stringUntil("\n");
+			String nextLine = output.stringUntilNewline(0);
 			
 			if(nextLine.isEmpty() || MESSAGE_LINE_Regex.matcher(nextLine).matches()) {
 				break;
@@ -67,18 +67,16 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 			}
 			
 			// We assume this is a multi line message.
-			output.consumeAhead(nextLine);
-			output.tryConsume("\n"); /* FIXME: consume Line */
+			output.consumeLine();
 			
 			// However, first try to determine if this is the source range component, 
 			// which we don't need
 			
-			String thirdLine = output.stringUntil("\n");
+			String thirdLine = output.stringUntilNewline(0);
 			String thirdLineTrimmed = thirdLine.trim();
 			if(thirdLineTrimmed.startsWith("^") && 
 					(thirdLineTrimmed.endsWith("^") || thirdLineTrimmed.endsWith("~"))) {
-				output.consumeAhead(thirdLine);
-				output.tryConsume("\n"); /* FIXME: consume Line */
+				output.consumeLine();
 				// dont add this message, or nextLine, to actual error message.
 				break;
 			}
