@@ -22,7 +22,7 @@ import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.AbstractToolOutputParser;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
-import melnorme.lang.utils.parse.StringParserHelper;
+import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
@@ -38,9 +38,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@Override
-	protected LangCompletionResult parse(String input) throws CommonException {
-		
-		StringParserHelper lexer = new StringParserHelper(input);
+	protected LangCompletionResult parse(StringParseSource lexer) throws CommonException {
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
@@ -65,7 +63,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected void parsePrefix(String line) throws CommonException {
-		StringParserHelper lineLexer = new StringParserHelper(line);
+		StringParseSource lineLexer = new StringParseSource(line);
 		lineLexer.tryConsume("PREFIX ");
 		int prefixStart = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
 		int prefixEnd = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
@@ -73,12 +71,12 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	protected String consumeCommaDelimitedString(StringParserHelper lineLexer) {
+	protected String consumeCommaDelimitedString(StringParseSource lineLexer) {
 		return lineLexer.consumeDelimitedString(',', -1);
 	}
 	
 	public ToolCompletionProposal parseProposal(String line) throws CommonException {
-		StringParserHelper lineLexer = new StringParserHelper(line);
+		StringParseSource lineLexer = new StringParseSource(line);
 		
 		lineLexer.tryConsume("MATCH ");
 		
@@ -116,7 +114,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			moduleName, fullReplaceString, subElements);
 	}
 	
-	protected String consumeSemicolonDelimitedString(StringParserHelper lineLexer) {
+	protected String consumeSemicolonDelimitedString(StringParseSource lineLexer) {
 		return lineLexer.consumeDelimitedString(';', -1);
 	}
 	
@@ -142,7 +140,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	/* -----------------  ----------------- */
 	
 	protected ArrayList2<String> parseParametersFromRawLabel(String rawLabel) {
-		StringParserHelper lexer = new StringParserHelper(rawLabel);
+		StringParseSource lexer = new StringParseSource(rawLabel);
 		
 		lexer.consumeUntil("(");
 		if(!lexer.tryConsume("(")) {
@@ -164,7 +162,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		return args;
 	}
 	
-	protected String parseRawLabelArg(StringParserHelper lexer) {
+	protected String parseRawLabelArg(StringParseSource lexer) {
 		lexer.consumeUntil(":", true);
 		return lexer.consumeUntil("}", true);
 	}
@@ -215,7 +213,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected FindDefinitionResult doParseResolvedMatch(String lineInput) throws CommonException {
-		StringParserHelper lineLexer = new StringParserHelper(lineInput);
+		StringParseSource lineLexer = new StringParseSource(lineInput);
 		
 		if(lineLexer.tryConsume("MATCH ") == false) {
 			return new FindDefinitionResult(ToolingMessages.FIND_DEFINITION_NoTargetFound);

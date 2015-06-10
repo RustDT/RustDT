@@ -54,11 +54,6 @@ public class RustBuilder extends LangProjectBuilderExt {
 				throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
-				protected void handleUnknownLineSyntax(String line) {
-					// Ignore, don't log error, since lot's of Rust line fall into this category.
-				};
-				
-				@Override
 				protected void handleLineParseError(CommonException ce) {
 					 LangCore.logStatus(LangCore.createCoreException(ce));
 				}

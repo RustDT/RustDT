@@ -40,6 +40,11 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 		return msg;
 	}
 	
+	protected static String MULTILINE_MESSAGE = 
+			"mismatched types:\n" +
+			"		 expected `u32`,\n" +
+			"		    found `core::option::Option<_>`";
+	
 	@Test
 	public void test() throws Exception { test$(); }
 	public void test$() throws Exception {
@@ -56,33 +61,33 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 		};
 
 		
-		testParseError(buildParser, "", listFrom());  // Empty
+		testParseMessages(buildParser, "", listFrom());  // Empty
 		
 		// Test that this line is ignored without reporting a syntax error.
-		testParseError(buildParser, "asdfsdaf/asdfsd", listFrom());
+		testParseMessages(buildParser, "asdfsdaf/asdfsd", listFrom());
 		
 		{
 			
-			testParseError(buildParser_allowParseErrors, "libbar/blah.rs:", listFrom());
-			testParseError(buildParser_allowParseErrors, "libbar/blah.rs:1:2: info: BLAH BLAH", listFrom());
+			testParseMessages(buildParser_allowParseErrors, "libbar/blah.rs:", listFrom());
+			testParseMessages(buildParser_allowParseErrors, "libbar/blah.rs:1:2: info: BLAH BLAH", listFrom());
 			
-			testParseError(buildParser_allowParseErrors, "libbar/blah.rs:1:2: 3:16 info: BLAH BLAH", listFrom());
+			testParseMessages(buildParser_allowParseErrors, "libbar/blah.rs:1:2: 3:16 info: BLAH BLAH", listFrom());
 		}
 		
-		testParseError(buildParser, 
+		testParseMessages(buildParser, 
 			"src/main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n", 
 			listFrom(msg(path("src/main.rs"), 1, 2, 3, 17, WARNING, "BLAH BLAH BLAH")));
 		
-		testParseError(buildParser, 
+		testParseMessages(buildParser, 
 			"src/main.rs:1:2: warning: BLAH BLAH BLAH\n", 
 			listFrom(msg(path("src/main.rs"), 1, 2, -1, -1, WARNING, "BLAH BLAH BLAH")));
 
-		testParseError(buildParser, 
+		testParseMessages(buildParser, 
 			"src/main.rs:1: warning: BLAH BLAH BLAH\n", 
 			listFrom(msg(path("src/main.rs"), 1, -1, -1, -1, WARNING, "BLAH BLAH BLAH")));
 		
 		
-		testParseError(buildParser_allowParseErrors, 
+		testParseMessages(buildParser_allowParseErrors, 
 			"src/main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n" +
 			"src/main.rs:1:2: 3: warning: INVALID\n" +
 			"src/main.rs:1:2: :17 warning: INVALID\n" +
@@ -96,9 +101,34 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 			)
 		);
 		
+		// test Rust message source text component
+		testParseMessages(buildParser, 
+			"src/main.rs:1:2: 3:17 warning: BLAH BLAH BLAH\n"+
+			"src/main.rs:1 const STRING2 : str  = xxx;" +"\n"+
+			"                                     ^~~" +"\n"+
+			"src/main.rs:2:2: 3:10 error: XXX\n"+
+			"src/main.rs:1 const STRING2 : str  = ;" +"\n"+
+			"                                     ^"
+			, 
+			listFrom(
+				msg(path("src/main.rs"), 1, 2, 3, 17, WARNING, "BLAH BLAH BLAH"),
+				msg(path("src/main.rs"), 2, 2, 3, 10, ERROR, "XXX")
+			)
+		);
+		
+		// Test actual multiline message
+		testParseMessages(buildParser, 
+			"src/main.rs:1:2: 3:17 error: " + MULTILINE_MESSAGE + "\n" +
+			"src/main.rs:1: warning: xxx" + MULTILINE_MESSAGE,
+			listFrom(
+				msg(path("src/main.rs"), 1, 2, 3, 17, ERROR, MULTILINE_MESSAGE),
+				msg(path("src/main.rs"), 1, -1, -1, -1, WARNING, "xxx" + MULTILINE_MESSAGE)
+			)
+		);
+		
 	}
 	
-	protected void testParseError(RustBuildOutputParser buildProcessor, String stderr, List<?> expected) 
+	protected void testParseMessages(RustBuildOutputParser buildProcessor, String stderr, List<?> expected) 
 			throws CommonException {
 		ArrayList<ToolSourceMessage> buildMessages = buildProcessor.parseMessages(stderr);
 		assertEquals(buildMessages, expected);
