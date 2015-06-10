@@ -152,9 +152,8 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 			listFrom(
 				msg(path("src/main.rs"), 52, 18, 52, 28, ERROR, "unresolved name `abc`" 
 						+NL+ MACRO_MSG_2 +NL+ MACRO_MSG_3)
-				, msg(path("src/main.rs"), 60, 1, 60, 23, ERROR, "expansion site"
-//						+NL+ MACRO_MSG_2 +NL+ MACRO_MSG_1
-						)
+				, msg(path("src/main.rs"), 60, 1, 60, 23, ERROR, "[macro expansion error]"
+						+NL+ MACRO_MSG_2 +NL+ MACRO_MSG_1)
 			)
 		);
 	}

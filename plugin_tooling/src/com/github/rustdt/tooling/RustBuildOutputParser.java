@@ -122,6 +122,8 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 			throws CommonException {
 		String lineAhead = output.stringUntilNewline();
 		
+		msg.simpleMessageText = msg.messageText;
+		
 		CompositeToolMessageData nextMessage = parseSimpleMessage(lineAhead);
 		if(nextMessage != null) {
 			
@@ -137,7 +139,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 	public static class CompositeToolMessageData extends ToolMessageData {
 		
 		public CompositeToolMessageData nextMessage;
-		public CompositeToolMessageData extendedMessageText;
+		public String simpleMessageText;
 		
 		public String getFullMessageSource() {
 			assertNotNull(sourceBeforeMessageText);
@@ -177,10 +179,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 				CompositeToolMessageData topError = linkedErrors.get(0);
 				if(topError.messageText.equals("expansion site")) {
 					
-//					CompositeToolMessageData expansionErrorMsg = new CompositeToolMessageData();
-					// TODO link errors expansionErrorMsg
-					topError.messageTypeString = "error";
-					super.addBuildMessage(topError);
+					super.addBuildMessage(createExpansionSiteErrorMessage(linkedErrors, topError));
 				}
 			}
 		}
@@ -194,6 +193,22 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		}
 		
 		buildChain(msg.nextMessage, errorsChain);
+	}
+	
+	protected ToolMessageData createExpansionSiteErrorMessage(ArrayList2<CompositeToolMessageData> linkedErrors, 
+			CompositeToolMessageData topError) {
+		
+		// Note: it's ok to mutate topError, since it is otherwise no longer used
+		topError.messageTypeString = "error";
+		
+		topError.messageText = "[macro expansion error]";
+		
+		for (int ix = 1; ix < linkedErrors.size(); ix++) {
+			CompositeToolMessageData linkedError = linkedErrors.get(ix);
+			topError.messageText += "\n" + linkedError.sourceBeforeMessageText + linkedError.simpleMessageText;
+		}
+		
+		return topError;
 	}
 
 }
