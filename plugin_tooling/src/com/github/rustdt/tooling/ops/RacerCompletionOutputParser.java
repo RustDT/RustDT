@@ -93,7 +93,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		String description = consumeSemicolonDelimitedString(lineLexer);
 		
-		if(source.hasCharAhead() && !source.lookaheadMatches("MATCH ")) {
+		while(source.hasCharAhead() && !source.lookaheadMatches("MATCH ")) {
 			// This is a multiline description.
 			description += "\n" + assertNotNull(source.consumeLine());
 		}

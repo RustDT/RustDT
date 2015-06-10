@@ -146,6 +146,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH xxx;xxx(;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {"+NL+
 			DESC_LINE2 +NL+
 			"MATCH xxx2;xxx2(${;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn xxx2() -> Stdin {"+NL+
+			DESC_LINE2 +NL+
 			DESC_LINE2
 			, 
 			listFrom(
@@ -153,7 +154,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 					"pub fn stdin() -> Stdin {" +NL+ DESC_LINE2,
 					"xxx()", new ArrayList2<SourceRange>()),
 				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), "stdio.rs",
-					"pub fn xxx2() -> Stdin {" +NL+ DESC_LINE2,
+					"pub fn xxx2() -> Stdin {" +NL+ DESC_LINE2 +NL+ DESC_LINE2,
 					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
 			)
 		);
