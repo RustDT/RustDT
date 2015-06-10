@@ -31,7 +31,7 @@ public class RustEngineClient extends EngineClient {
 			@Override
 			protected SourceFileStructure createSourceFileStructure() {
 				SourceRange sr = new SourceRange(0, source.length());
-				StructureElement element = new StructureElement("Outline_Not_Implemented", sr, sr, 
+				StructureElement element = new StructureElement("Outline_Not_Supported", sr, sr, 
 					StructureElementKind.MODULEDEC, new ElementAttributes(null), null, null);
 				return new SourceFileStructure(fileLocation, new ArrayList2<StructureElement>(element), null);
 			}
