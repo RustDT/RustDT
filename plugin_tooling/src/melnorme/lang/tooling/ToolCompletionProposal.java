@@ -10,15 +10,12 @@
  *******************************************************************************/
 package melnorme.lang.tooling;
 
-import static melnorme.utilbox.core.CoreUtil.areEqual;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.completion.LangToolCompletionProposal;
 import melnorme.utilbox.collections.Indexable;
 
 @LANG_SPECIFIC
 public class ToolCompletionProposal extends LangToolCompletionProposal {
-	
-	protected String description;
 	
 	public ToolCompletionProposal(int replaceOffset, int replaceLength, String replaceString, String label,
 			CompletionProposalKind kind, ElementAttributes attributes, String moduleName, String description) {
@@ -29,15 +26,14 @@ public class ToolCompletionProposal extends LangToolCompletionProposal {
 	public ToolCompletionProposal(int replaceOffset, int replaceLength, String replaceString, String label,
 			CompletionProposalKind kind, ElementAttributes attributes, String moduleName, String description, 
 			String fullReplaceString, Indexable<SourceRange> sourceSubElements) {
-		super(replaceOffset, replaceLength, replaceString, label, kind, attributes, moduleName, fullReplaceString, 
-			sourceSubElements);
-		this.description = description;
+		super(replaceOffset, replaceLength, replaceString, label, kind, attributes, moduleName,
+			description,
+			fullReplaceString, sourceSubElements);
 	}
 	
 	@Override
 	protected boolean subclassEquals(LangToolCompletionProposal other) {
-		/* FIXME: add this to ToolProposal */
-		return areEqual(description, ((ToolCompletionProposal) other).description);
+		return true;
 	}
 	
 }

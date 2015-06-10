@@ -15,6 +15,7 @@ import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
 import melnorme.lang.ide.core.text.TextUtils;
 import melnorme.lang.ide.ui.LangImageProvider;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
+import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.ide.ui.tools.ToolManagerOperationHelper;
@@ -25,6 +26,7 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 
@@ -60,11 +62,16 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	protected ICompletionProposal adaptToolProposal(ToolCompletionProposal proposal) {
 		IContextInformation ctxInfo = null; // TODO: context information
 		
-		return new LangCompletionProposal(proposal, null, getImage(proposal), ctxInfo) {
+		return new LangCompletionProposal(proposal, getImage(proposal), ctxInfo) {
 			@Override
 			protected boolean isValidPrefix(String prefix) {
 				String rplString = getBaseReplaceString();
 				return TextUtils.isPrefix(prefix, rplString, false);
+			}
+			
+			@Override
+			public IInformationControlCreator getInformationControlCreator() {
+				return LangTemplateProposal.createTemplateInformationControlCreator();
 			}
 		};
 	}
