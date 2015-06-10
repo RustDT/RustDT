@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+
 import java.io.File;
 import java.nio.file.Path;
 
@@ -38,13 +40,13 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@Override
-	protected LangCompletionResult parse(StringParseSource lexer) throws CommonException {
+	protected LangCompletionResult parse(StringParseSource source) throws CommonException {
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
 
 		while(true) {
-			String line = lexer.consumeDelimitedString('\n', '\\');
+			String line = source.consumeDelimitedString('\n', '\\');
 			
 			if(line == null || line.isEmpty()) {
 				return new LangCompletionResult(proposals);
@@ -53,7 +55,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			if(line.startsWith("PREFIX ")) {
 				parsePrefix(line);
 			} else if(line.startsWith("MATCH ")) {
-				proposals.add(parseProposal(line));
+				proposals.add(parseProposal(line, source));
 			} else {
 				handleMessageParseError(new CommonException("Unknown line format: " + line));
 			}
@@ -75,7 +77,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		return lineLexer.consumeDelimitedString(',', -1);
 	}
 	
-	public ToolCompletionProposal parseProposal(String line) throws CommonException {
+	public ToolCompletionProposal parseProposal(String line, StringParseSource source) throws CommonException {
 		StringParseSource lineLexer = new StringParseSource(line);
 		
 		lineLexer.tryConsume("MATCH ");
@@ -88,6 +90,14 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		String rawModuleName = consumeSemicolonDelimitedString(lineLexer);
 		String rawKind = consumeSemicolonDelimitedString(lineLexer);
+		
+		String description = consumeSemicolonDelimitedString(lineLexer);
+		
+		if(source.hasCharAhead() && !source.lookaheadMatches("MATCH ")) {
+			// This is a multiline description.
+			description += "\n" + assertNotNull(source.consumeLine());
+		}
+		
 		
 		CompletionProposalKind kind = parseKind(rawKind); 
 		String moduleName = parseModuleName(rawModuleName);
@@ -110,8 +120,11 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		ElementAttributes attributes = new ElementAttributes(null); // TODO
 		
 		int completionOffset = offset - prefixLength;
-		return new ToolCompletionProposal(completionOffset, prefixLength, baseName, label, kind, attributes,
-			moduleName, fullReplaceString, subElements);
+		return new ToolCompletionProposal(
+			completionOffset, prefixLength, baseName, 
+			label, kind, attributes,
+			moduleName, description,
+			fullReplaceString, subElements);
 	}
 	
 	protected String consumeSemicolonDelimitedString(StringParseSource lineLexer) {

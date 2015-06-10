@@ -11,6 +11,7 @@
  * Fixed: `Tab policy: "Spaces Only"` preference ignored when pressing TAB.
  * Fixed #39: Unable to parse multiline rustc error messages
  * Fixed #37: No editor problem underlining for macro expansion errors
+ * Fixed #36: Autocompletion error `Unknown line format:` on std::process::Command. 
  
 
 ### 0.2.0

@@ -36,6 +36,11 @@ import org.junit.Test;
 
 public class RacerOutputParserTest extends CommonToolingTest {
 	
+	protected static final String NL = "\n";
+	
+	protected static final String DESC2 = "pub trait BufRead : Read {";
+	protected static final String DESC1 = "pub struct BufReader<R> {";
+	
 	protected RacerCompletionOutputParser createTestsParser(int offset) {
 		return new RacerCompletionOutputParser(offset) {
 			@Override
@@ -67,38 +72,41 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		
 		testParseOutput(buildParser, 
 			"PREFIX 1,1,\n" +
-			"MATCH BufReader;BufReader;32;11;/RustProject/src/xpto.rs;Struct;pub struct BufReader<R> {\n" +
-			"MATCH BufRead;BufRead;519;10;/RustProject/src/xpto2.rs;Trait;pub trait BufRead : Read {\n"
+			"MATCH BufReader;BufReader;32;11;/RustProject/src/xpto.rs;Struct;"+DESC1+NL+
+			"MATCH BufRead;BufRead;519;10;/RustProject/src/xpto2.rs;Trait;"+DESC2+NL
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "BufReader", "BufReader", Struct, att(), "xpto.rs"),
-				new ToolCompletionProposal(offset, 0, "BufRead", "BufRead", Trait, att(),  "xpto2.rs")
+				new ToolCompletionProposal(offset, 0, "BufReader", "BufReader", Struct, att(), "xpto.rs", DESC1),
+				new ToolCompletionProposal(offset, 0, "BufRead", "BufRead", Trait, att(),  "xpto2.rs", DESC2)
 			)
 		);
 		
 		testParseOutput(buildParser, 
 			"PREFIX 4,6,pr\n" +
-			"MATCH BufReader;BufReader;32;11;relativeDir/src/xpto.rs;Let;pub struct BufReader<R> {\n"
+			"MATCH BufReader;BufReader;32;11;relativeDir/src/xpto.rs;Let;"+DESC1+NL
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, att(), "xpto.rs")
+				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, att(), "xpto.rs", DESC1)
 			)
 		);
 		
 		testParseOutput(buildParser, 
 			"PREFIX 1,1,\n" +
-			"MATCH stdin;stdin();122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {\n" +
+			"MATCH stdin;stdin();122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {"+NL+
 			"MATCH repeat;repeat(${1:byte: u8});75;7;/rustc-nightly/src/libstd/io/util.rs;Function;"
-					+"pub fn repeat(byte: u8) -> Repeat { Repeat { byte: byte } }\n" +
+					+"pub fn repeat(byte: u8) -> Repeat { Repeat { byte: byte } }" +NL+
 			"MATCH copy;copy(${1:r: &mut R}, ${2:w: &mut W});31;7;/rustc-nightly/src/libstd/io/util.rs;Function;"
-					+"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {\n"
+					+"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {" +NL
 			, 
 			listFrom(
 				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, att(), "stdio.rs",
+					"pub fn stdin() -> Stdin {",
 					"stdin()", new ArrayList2<SourceRange>()),
 				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, att(), "util.rs",
+					"pub fn repeat(byte: u8) -> Repeat { Repeat { byte: byte } }",
 					"repeat(byte)", new ArrayList2<>(sr(7, 4))),
 				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, att(), "util.rs",
+					"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {",
 					"copy(r, w)", new ArrayList2<>(sr(5, 1), sr(8, 1)))
 			)
 		);
@@ -111,17 +119,44 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			, 
 			listFrom(
 				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), "stdio.rs",
+					"pub fn stdin() -> Stdin {",
 					"xxx()", new ArrayList2<SourceRange>()),
 				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), "stdio.rs",
+					"pub fn stdin() -> Stdin {",
 					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
 			)
 		);
+		
+		testMultiLineDesc(offset, buildParser);
 	}
 	
 	protected void testParseOutput(RacerCompletionOutputParser parser, String output, List<?> expected) 
 			throws CommonException, OperationSoftFailure {
 		LangCompletionResult result = parser.parse(output);
 		assertAreEqualLists((List<?>) result.getValidatedProposals(), expected);
+	}
+	
+	protected static final String DESC_LINE2 = "          where K: AsRef<OsStr>, V: AsRef<OsStr>";
+	
+	protected void testMultiLineDesc(int offset, RacerCompletionOutputParser buildParser) throws CommonException,
+			OperationSoftFailure {
+		// Test multi-line description
+		testParseOutput(buildParser, 
+			"PREFIX 1,1,\n" +
+			"MATCH xxx;xxx(;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {"+NL+
+			DESC_LINE2 +NL+
+			"MATCH xxx2;xxx2(${;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn xxx2() -> Stdin {"+NL+
+			DESC_LINE2
+			, 
+			listFrom(
+				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), "stdio.rs",
+					"pub fn stdin() -> Stdin {" +NL+ DESC_LINE2,
+					"xxx()", new ArrayList2<SourceRange>()),
+				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), "stdio.rs",
+					"pub fn xxx2() -> Stdin {" +NL+ DESC_LINE2,
+					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
+			)
+		);
 	}
 	
 	@Test
