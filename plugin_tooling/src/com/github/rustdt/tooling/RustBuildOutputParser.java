@@ -53,7 +53,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		
 		
 		while(true) {
-			String nextLine = output.stringUntilNewline(0);
+			String nextLine = output.stringUntilNewline();
 			
 			if(nextLine.isEmpty() || MESSAGE_LINE_Regex.matcher(nextLine).matches()) {
 				break;
@@ -72,7 +72,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 			// However, first try to determine if this is the source range component, 
 			// which we don't need
 			
-			String thirdLine = output.stringUntilNewline(0);
+			String thirdLine = output.stringUntilNewline();
 			String thirdLineTrimmed = thirdLine.trim();
 			if(thirdLineTrimmed.startsWith("^") && 
 					(thirdLineTrimmed.endsWith("^") || thirdLineTrimmed.endsWith("~"))) {
