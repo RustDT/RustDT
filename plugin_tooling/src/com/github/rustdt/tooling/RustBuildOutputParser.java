@@ -26,7 +26,7 @@ import melnorme.utilbox.core.CommonException;
 public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
 	protected boolean isMessageEnd(String nextLine) {
-		return nextLine.startsWith("error: aborting due to previous error");
+		return nextLine.startsWith("error: aborting due to ");
 	}
 	
 	@Override

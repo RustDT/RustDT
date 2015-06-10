@@ -126,6 +126,16 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 			)
 		);
 		
+		// Test "aborting due to "
+		testParseMessages(buildParser, 
+			"src/main.rs:1:2: warning: BLAH BLAH BLAH"+NL+
+			"error: aborting due to 3 previous errors", 
+			listFrom(msg(path("src/main.rs"), 1, 2, -1, -1, WARNING, "BLAH BLAH BLAH")));
+		
+		testParseMessages(buildParser, 
+			"error: aborting due to previous error", 
+			listFrom());
+		
 		testMacroExpansionMessages(buildParser);
 	}
 	
