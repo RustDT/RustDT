@@ -1,19 +1,24 @@
 ## RustDT release ChangeLog
 
 ### next-version
- * Added #23: Content Assist preference page, with auto-activation options.
+
+### 0.2.1
+ * Added Content Assist preference page, with auto-activation options (#23).
+ * Improved transparency/aliasing of content assist icons - this improves them for dark themes.
  * Upgraded minimum Java version to Java 8
   * Added: Show error message dialog if starting Eclipse with a Java version below the minimum.
- * Fixed: snippets Content Assist preview information hover not showing up.
- * Improved transparency/aliasing of (content assist) icons - this improves them for dark themes.
+ * Added: Content Assist proposal list now shows a popup on the right with a small description of the selected proposal.
+  * However, this is based on information provided by Racer, which at the moment is fairly limited.
+
+Fixes:
  * Fixed #31: Added workaround to fix OS X issue "Could not execute process `rustc -vV`". 
  * Fixed #27: the preference pages are now searchable in the Preferences dialog search field, by means of relevant keywords.
- * Fixed: `Tab policy: "Spaces Only"` preference ignored when pressing TAB.
  * Fixed #39: Unable to parse multiline rustc error messages
  * Fixed #37: No editor problem underlining for macro expansion errors
  * Fixed #36: Autocompletion error `Unknown line format:` on std::process::Command.
- * Added: Content Assist proposals extra info. TODO detail 
- 
+ * Fixed: snippets Content Assist preview information hover not showing up.
+ * Fixed: `Tab policy: "Spaces Only"` preference ignored when pressing TAB to indent.
+
 
 ### 0.2.0
  * Added: Open Definition functionality using Racer.
