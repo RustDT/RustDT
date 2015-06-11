@@ -18,6 +18,7 @@ import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
 import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -47,37 +48,19 @@ public class RustProjectWizard extends LangNewProjectWizard {
 		addPage(firstPage);
 	}
 	
-	@Override
-	protected ProjectCreator_ForWizard createProjectCreator() {
-		return new RustProjectCreator();
-	}
-	
-	protected static final String HelloWorld_DubJsonTemplate = getClassResourceAsString(
+	protected static final String HelloWorld_ManifestContents = getClassResourceAsString(
 		RustProjectWizard.class, "hello_world.Cargo.toml");
 	protected static final String HelloWorld_ModuleContents = getClassResourceAsString(
 		RustProjectWizard.class, "hello_world.rs");
 	
-	public class RustProjectCreator extends ProjectCreator_ForWizard {
+	@Override
+	protected void configureCreatedProject(ProjectCreator_ForWizard projectCreator, IProgressMonitor monitor)
+			throws CoreException {
+		projectCreator.createFile(getProject().getFile(CargoModelManager.BUNDLE_MANIFEST_FILE.toOSString()), 
+			HelloWorld_ManifestContents, false, monitor);
 		
-		public RustProjectCreator() {
-			super(RustProjectWizard.this);
-		}
-		
-		@Override
-		protected void configureCreatedProject(IProgressMonitor monitor) throws CoreException {
-			createSampleHelloWorldBundle(CargoModelManager.BUNDLE_MANIFEST_FILE.toOSString(), "src", "main.rs");
-		}
-		
-		@Override
-		protected String getDefaultManifestFileContents() {
-			return HelloWorld_DubJsonTemplate;
-		}
-		
-		@Override
-		protected String getHelloWorldContents() {
-			return HelloWorld_ModuleContents;
-		}
-		
+		IFile mainModule = getProject().getFolder("src").getFile("main.rs");
+		projectCreator.createFile(mainModule, HelloWorld_ModuleContents, true, monitor);
 	}
 	
 }
