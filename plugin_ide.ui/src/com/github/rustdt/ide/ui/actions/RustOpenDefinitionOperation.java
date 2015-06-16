@@ -36,7 +36,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	}
 	
 	@Override
-	protected void prepareOperation() throws CoreException {
+	protected void prepareOperation() throws CoreException, CommonException {
 		super.prepareOperation();
 		
 		getContext().getEditor_nonNull().doSave(new NullProgressMonitor());
