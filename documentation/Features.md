@@ -3,7 +3,7 @@
 ### Features:
 
  * Rust source code editor, with:
-   * Syntax highlighting. 
+   * Syntax highlighting (configurable). 
    * Automatic indent/de-indent and brace completion on certain keypresses (Enter, Backspace).
  * Rust/Cargo Project wizard.
  * Rust/Cargo project builder.
@@ -13,6 +13,7 @@
 |----|
 
  * Content Assist and Find Definition using Racer.
+ * Content Assist code snippets (configurable).
 
 | [![sample_basic](screenshots/Feature_ContentAssist.thumb.png)](screenshots/Feature_ContentAssist.png?raw=true)<br/>`Content Assist screenshot` |
 |----| 
