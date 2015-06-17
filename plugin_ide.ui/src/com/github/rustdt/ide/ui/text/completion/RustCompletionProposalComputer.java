@@ -13,7 +13,6 @@ package com.github.rustdt.ide.ui.text.completion;
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
 import melnorme.lang.ide.core.text.TextUtils;
-import melnorme.lang.ide.ui.LangImageProvider;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
@@ -51,11 +50,6 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(new ToolManagerOperationHelper(pm), 
 			racerPath, sdkSrcPath, offset, line_0, col_0, fileLocation);
 		return racerCompletionOp.executeAndProcessOutput();
-	}
-	
-	@Override
-	protected LangImageProvider getImageProvider() {
-		return new LangImageProvider();
 	}
 	
 	@Override
