@@ -13,7 +13,7 @@
 	<extension point="org.eclipse.ui.perspectives">
 		<perspective
 			class="com.github.rustdt.ide.ui.RustPerspective"
-			icon="icons/views/Perspective.16.png"
+			icon="icons/views/Perspective.png"
 			id="com.github.rustdt.ide.ui.Perspective"
 			name="%LangPerspective.name">
 		</perspective>
@@ -284,6 +284,63 @@
 			preferredPerspectives="com.github.rustdt.ide.ui.Perspective"
 			project="true">
 		</wizard>
+	</extension>
+	
+	
+	<!-- ============ Navigator extensions ============= -->
+	
+	<extension point="org.eclipse.ui.navigator.navigatorContent">
+		<navigatorContent
+			activeByDefault="true"
+			icon="icons/views/Perspective.png"
+			id="com.github.rustdt.ide.ui.NavigatorContent"
+			contentProvider="com.github.rustdt.ide.ui.navigator.RustNavigatorContentProvider"
+			labelProvider="com.github.rustdt.ide.ui.navigator.RustNavigatorLabelProvider"
+			name="Rust Elements"
+			priority="highest">
+			
+			<!-- 
+			 Priority needs to be highest, because we could be competing with other plugins like JDT or CDT,
+			 which have triggerPoints for any IResource regardless of project nature:
+			 While that doesn't affect the content providers, it affects the common sorter, since we want to sort IResource's.
+			 Also, triggerPoints has to match the children we want to sort, not just the parent of the children, 
+			 so we can't use just expressions.isDeeProject 
+			-->
+			<triggerPoints>
+				<or><reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject"/></or>
+			</triggerPoints>
+			
+			<!-- 
+			 Despite what the documentation currently says, possibleChildren is queried by Navigator service 
+			 to find out whether to use label provider or not, regardless of trigger points. 
+			 Therefore we should ensure possible children only aplies to our IDE projects. 
+			 See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=429572
+			 -->
+			<possibleChildren>
+				<or>
+					<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject" />
+					<instanceof value="melnorme.lang.ide.core.navigator.INavigatorElement" />
+				</or>
+			</possibleChildren>
+			
+			<commonSorter class="com.github.rustdt.ide.ui.navigator.RustNavigatorSorter">
+				<parentExpression>
+					<or>
+						<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject"/>
+						<instanceof value="melnorme.lang.ide.core.navigator.INavigatorElement" />
+					</or>
+				</parentExpression>
+			</commonSorter>
+			
+			<actionProvider class="com.github.rustdt.ide.ui.navigator.RustNavigatorActionProvider"/>
+			
+		</navigatorContent>
+	</extension>
+	
+	<extension point="org.eclipse.ui.navigator.viewer">
+		<viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+			<includes><contentExtension pattern="com.github.rustdt.ide.ui.NavigatorContent"/></includes>
+		</viewerContentBinding>
 	</extension>
 	
 	
