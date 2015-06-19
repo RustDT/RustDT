@@ -2,49 +2,41 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-   <extension
-         id="nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run class="com.github.rustdt.ide.core.RustNature"/>
-      </runtime>
+	<extension point="org.eclipse.core.resources.natures"
+		id="nature">
+		<runtime>
+			<run class="com.github.rustdt.ide.core.RustNature"/>
+		</runtime>
 		<builder id="com.github.rustdt.ide.core.Builder" />
-   </extension>
-   
-   <extension point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="com.github.rustdt.ide.core.expressions.isLangProject">
-         <adapt
-               type="org.eclipse.core.resources.IProject">
-            <test
-                  property="org.eclipse.core.resources.projectNature"
-                  value="com.github.rustdt.ide.core.nature">
-            </test>
-         </adapt>
-      </definition>
-      <definition
-            id="com.github.rustdt.ide.core.expressions.isLangNatureContainer">
-         <adapt
-               type="org.eclipse.core.resources.IContainer">
-            <test
-                  property="org.eclipse.core.resources.projectNature"
-                  value="com.github.rustdt.ide.core.nature">
-            </test>
-         </adapt>
-      </definition>
-      <definition
-            id="com.github.rustdt.ide.core.expressions.isResourceInLangProject">
-         <and>
-            <instanceof
-                  value="org.eclipse.core.resources.IResource">
-            </instanceof>
-            <test
-                  property="org.eclipse.core.resources.projectNature"
-                  value="com.github.rustdt.ide.core.nature">
-            </test>
-         </and>
-      </definition>
-   </extension>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="com.github.rustdt.ide.core.expressions.isLangProject">
+			<adapt type="org.eclipse.core.resources.IProject">
+				<test
+					property="org.eclipse.core.resources.projectNature"
+					value="com.github.rustdt.ide.core.nature">
+				</test>
+			</adapt>
+		</definition>
+		<definition id="com.github.rustdt.ide.core.expressions.isLangNatureContainer">
+			<adapt type="org.eclipse.core.resources.IContainer">
+				<test
+					property="org.eclipse.core.resources.projectNature"
+					value="com.github.rustdt.ide.core.nature">
+				</test>
+			</adapt>
+		</definition>
+		<definition id="com.github.rustdt.ide.core.expressions.isResourceInLangProject">
+			<and>
+			<instanceof value="org.eclipse.core.resources.IResource" />
+				<test
+					property="org.eclipse.core.resources.projectNature"
+					value="com.github.rustdt.ide.core.nature">
+				</test>
+			</and>
+		</definition>
+	</extension>
 	
 	<!-- ============ TEXT ============= -->
 	
@@ -75,10 +67,7 @@
 	<extension point="org.eclipse.core.resources.builders"
 		id="Builder"
 		name="%Builder_Name">
-		<builder
-			callOnEmptyDelta="true"	
-			hasNature="true"
-			isConfigurable="true">
+		<builder callOnEmptyDelta="true">
 		<run class="com.github.rustdt.ide.core.operations.RustBuilder" />
 	</builder>
 	</extension>
