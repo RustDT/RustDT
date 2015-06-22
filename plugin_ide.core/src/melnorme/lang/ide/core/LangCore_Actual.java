@@ -22,4 +22,6 @@ public class LangCore_Actual {
 		return new RustEngineClient();
 	}
 	
+	public static final String LANGUAGE_NAME = "Rust";
+	
 }

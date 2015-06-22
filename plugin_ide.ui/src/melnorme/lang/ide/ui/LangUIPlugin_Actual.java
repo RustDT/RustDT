@@ -45,7 +45,6 @@ public final class LangUIPlugin_Actual {
 	
 	/* ----------------- UI messages:  ----------------- */
 	
-	public static final String LANGUAGE_NAME = "Rust";
 	public static final String DAEMON_TOOL_Name = "Racer";
 	public static final String DAEMON_TOOL_ConsoleName = "RustDT Racer log";
 	
