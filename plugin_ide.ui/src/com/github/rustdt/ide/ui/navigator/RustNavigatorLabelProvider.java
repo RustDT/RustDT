@@ -18,13 +18,23 @@ import org.eclipse.swt.graphics.Image;
 public class RustNavigatorLabelProvider extends AbstractLangNavigatorLabelProvider implements IStyledLabelProvider {
 	
 	@Override
-	public StyledString getStyledText(Object element) {
-		return null;
+	protected DefaultGetStyledTextSwitcher getStyledText_switcher() {
+		return new DefaultGetStyledTextSwitcher() {
+			@Override
+			public StyledString visitOther(Object element) {
+				return null;
+			}
+		};
 	}
 	
 	@Override
-	protected Image getImageForCustomElements(Object element) {
-		return null;
+	protected DefaultGetImageSwitcher getBaseImage_switcher() {
+		return new DefaultGetImageSwitcher() {
+			@Override
+			public Image visitOther(Object element) {
+				return null;
+			}
+		};
 	}
 	
 }
