@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import melnorme.lang.ide.core.bundlemodel.SDKPreferences;
+import melnorme.lang.ide.core.operations.SDKPreferences;
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;

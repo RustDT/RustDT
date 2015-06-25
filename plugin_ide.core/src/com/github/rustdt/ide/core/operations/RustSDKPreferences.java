@@ -1,6 +1,6 @@
 package com.github.rustdt.ide.core.operations;
 
-import melnorme.lang.ide.core.bundlemodel.SDKPreferences;
+import melnorme.lang.ide.core.operations.SDKPreferences;
 import melnorme.lang.ide.core.utils.prefs.StringPreference;
 import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 import melnorme.lang.tooling.data.LocationValidator;

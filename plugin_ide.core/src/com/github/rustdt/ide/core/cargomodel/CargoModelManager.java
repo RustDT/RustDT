@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.bundlemodel.BundleModelManager;
+import melnorme.lang.ide.core.project_model.BundleModelManager;
 import melnorme.lang.tooling.IBundleInfo;
 import melnorme.utilbox.misc.SimpleLogger;
 

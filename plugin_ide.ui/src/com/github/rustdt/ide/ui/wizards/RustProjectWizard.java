@@ -12,7 +12,7 @@ package com.github.rustdt.ide.ui.wizards;
 
 
 import static melnorme.utilbox.misc.MiscUtil.getClassResourceAsString;
-import melnorme.lang.ide.core.bundlemodel.SDKPreferences;
+import melnorme.lang.ide.core.operations.SDKPreferences;
 import melnorme.lang.ide.ui.WizardMessages_Actual;
 import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
