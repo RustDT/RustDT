@@ -12,23 +12,23 @@ package com.github.rustdt.ide.core.operations;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.CoreException;
+
+import com.github.rustdt.tooling.RustBuildOutputParser;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
+
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.LangProjectBuilderExt;
+import melnorme.lang.ide.core.operations.LangProjectBuilder;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.PathValidator;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-import org.eclipse.core.runtime.CoreException;
-
-import com.github.rustdt.tooling.RustBuildOutputParser;
-import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
-
 /**
  * Rust builder, using Cargo.
  */
-public class RustBuilder extends LangProjectBuilderExt {
+public class RustBuilder extends LangProjectBuilder {
 	
 	public RustBuilder() {
 	}

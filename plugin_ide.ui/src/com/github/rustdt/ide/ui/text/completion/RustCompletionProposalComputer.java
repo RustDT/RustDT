@@ -11,7 +11,7 @@
 package com.github.rustdt.ide.ui.text.completion;
 
 import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
-import melnorme.lang.ide.core.operations.TimeoutProgressMonitor;
+import melnorme.lang.ide.core.utils.TimeoutProgressMonitor;
 import melnorme.lang.ide.core.text.TextUtils;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
