@@ -10,9 +10,17 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.text.completion;
 
-import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
-import melnorme.lang.ide.core.utils.TimeoutProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.IContextInformation;
+
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
+import com.github.rustdt.tooling.ops.RacerCompletionOperation;
+
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.text.TextUtils;
+import melnorme.lang.ide.core.utils.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
@@ -24,14 +32,6 @@ import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContextInformation;
-
-import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-import com.github.rustdt.tooling.ops.RacerCompletionOperation;
-
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
@@ -40,7 +40,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		
 		context.getEditor_nonNull().doSave(pm);
 		
-		String racerPath = DaemonEnginePreferences.DAEMON_PATH.get();
+		String racerPath = ToolchainPreferences.DAEMON_PATH.get();
 		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH.get();
 		
 		int line_0 = context.getInvocationLine_0();

@@ -10,15 +10,14 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import melnorme.lang.ide.core.operations.SDKPreferences;
-import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
+import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
+
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
-
-import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
-import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
-import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 
 /**
@@ -38,13 +37,13 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	protected LangSDKConfigBlock createLangSDKConfigBlock() {
 		RustToolsConfigBlock langToolsBlock = new RustToolsConfigBlock();
 		
-		connectStringField(SDKPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
+		connectStringField(ToolchainPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
 			getSDKValidator());
 		
 		connectStringField(RustSDKPreferences.SDK_SRC_PATH.key, langToolsBlock.sdkSrcLocation, 
 			new RustSDKSrcLocationValidator());
 		
-		connectStringField(DaemonEnginePreferences.DAEMON_PATH.key, langToolsBlock.racerLocation, 
+		connectStringField(ToolchainPreferences.DAEMON_PATH.key, langToolsBlock.racerLocation, 
 			new RustRacerLocationValidator());
 		
 		return langToolsBlock;

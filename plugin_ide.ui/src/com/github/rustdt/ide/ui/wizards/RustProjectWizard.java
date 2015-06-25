@@ -12,11 +12,6 @@ package com.github.rustdt.ide.ui.wizards;
 
 
 import static melnorme.utilbox.misc.MiscUtil.getClassResourceAsString;
-import melnorme.lang.ide.core.operations.SDKPreferences;
-import melnorme.lang.ide.ui.WizardMessages_Actual;
-import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
-import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
-import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +20,12 @@ import org.eclipse.jface.wizard.WizardPage;
 
 import com.github.rustdt.ide.core.cargomodel.CargoModelManager;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
+
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
+import melnorme.lang.ide.ui.WizardMessages_Actual;
+import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
+import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
+import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 
 /**
  * Rust New Project Wizard.
@@ -74,7 +75,7 @@ class RustProjectWizardFirstPage extends LangProjectWizardFirstPage {
 	
 	@Override
 	protected void validatePreferences() throws ValidationException {
-		 new RustSDKLocationValidator().getValidatedField(SDKPreferences.SDK_PATH.get());
+		 new RustSDKLocationValidator().getValidatedField(ToolchainPreferences.SDK_PATH.get());
 	}
 	
 }

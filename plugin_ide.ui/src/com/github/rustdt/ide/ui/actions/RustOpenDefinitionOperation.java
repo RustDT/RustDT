@@ -10,7 +10,15 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.actions;
 
-import melnorme.lang.ide.core.operations.DaemonEnginePreferences;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.ui.texteditor.ITextEditor;
+
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
+import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
+
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
@@ -19,14 +27,6 @@ import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.texteditor.ITextEditor;
-
-import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
 
 public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
@@ -46,7 +46,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
 			throws CoreException, OperationCancellation, CommonException {
 		
-		String racerPath = DaemonEnginePreferences.DAEMON_PATH.get();
+		String racerPath = ToolchainPreferences.DAEMON_PATH.get();
 		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH.get();
 		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(new ToolManagerOperationHelper(monitor), 

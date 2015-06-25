@@ -1,12 +1,12 @@
 package com.github.rustdt.ide.core.operations;
 
-import melnorme.lang.ide.core.operations.SDKPreferences;
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.prefs.StringPreference;
 import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 import melnorme.lang.tooling.data.LocationValidator;
 import melnorme.utilbox.misc.Location;
 
-public interface RustSDKPreferences extends SDKPreferences {
+public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static class RustSDKAcessor {
 		public Location getSDKLocation() throws ValidationException {
