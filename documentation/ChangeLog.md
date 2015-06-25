@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
-### next-version
+### (NextVersion)
+ * Fixed #43: PATH of external tools bungled if original PATH not set (Windows) 
 
 ### 0.2.1
  * Added Content Assist preference page, with auto-activation options (#23).
