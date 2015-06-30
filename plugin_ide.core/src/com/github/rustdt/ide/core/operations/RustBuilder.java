@@ -11,9 +11,11 @@
 package com.github.rustdt.ide.core.operations;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
@@ -23,9 +25,12 @@ import melnorme.lang.ide.core.operations.BuildTarget;
 import melnorme.lang.ide.core.operations.IBuildTargetOperation;
 import melnorme.lang.ide.core.operations.LangBuildManagerProjectBuilder;
 import melnorme.lang.ide.core.operations.LangProjectBuilder;
+import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.PathValidator;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
+import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
@@ -50,18 +55,42 @@ public class RustBuilder extends LangBuildManagerProjectBuilder {
 	/* ----------------- Build ----------------- */
 	
 	@Override
-	protected IBuildTargetOperation newBuildOperation(IProject project, LangProjectBuilder projectBuilder,
-			BuildTarget buildConfig) {
-		return new RustRunBuildOperationExtension();
+	protected IBuildTargetOperation newBuildOperation(OperationInfo parentOpInfo, IProject project,
+			LangProjectBuilder projectBuilder, BuildTarget buildConfig) {
+		return new RustRunBuildOperationExtension(parentOpInfo, buildConfig);
 	}
 	
-	protected class RustRunBuildOperationExtension extends AbstractRunBuildOperation {
-		@Override
-		protected ProcessBuilder createBuildPB() throws CoreException, CommonException {
-			return createSDKProcessBuilder("build");
+	protected class RustRunBuildOperationExtension implements IBuildTargetOperation {
+		
+		protected final OperationInfo parentOpInfo;
+		protected BuildTarget buildConfig;
+		
+		public RustRunBuildOperationExtension(OperationInfo parentOpInfo, BuildTarget buildConfig) {
+			this.parentOpInfo = parentOpInfo;
+			this.buildConfig = buildConfig;
 		}
 		
 		@Override
+		public IProject[] execute(IProject project, int kind, Map<String, String> args, IProgressMonitor monitor)
+				throws CoreException, CommonException, OperationCancellation {
+			
+			ArrayList2<String> buildCommands = new ArrayList2<>();
+			
+			if(buildConfig.getTargetName() == null) {
+				buildCommands.add("build");
+			} else {
+				// TODO: properly implement other test targets
+				buildCommands.addElements("test", "--no-run");
+			}
+			
+			ProcessBuilder pb = createSDKProcessBuilder(buildCommands.toArray(String.class));
+			
+			ExternalProcessResult buildAllResult = runBuildTool_2(monitor, pb);
+			doBuild_processBuildResult(buildAllResult);
+			
+			return null;
+		}
+		
 		protected void doBuild_processBuildResult(ExternalProcessResult buildAllResult) 
 				throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
