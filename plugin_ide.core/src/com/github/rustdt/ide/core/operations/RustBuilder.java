@@ -22,9 +22,7 @@ import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.BuildTarget;
-import melnorme.lang.ide.core.operations.IBuildTargetOperation;
 import melnorme.lang.ide.core.operations.LangBuildManagerProjectBuilder;
-import melnorme.lang.ide.core.operations.LangProjectBuilder;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.PathValidator;
@@ -55,19 +53,15 @@ public class RustBuilder extends LangBuildManagerProjectBuilder {
 	/* ----------------- Build ----------------- */
 	
 	@Override
-	protected IBuildTargetOperation newBuildOperation(OperationInfo parentOpInfo, IProject project,
-			LangProjectBuilder projectBuilder, BuildTarget buildConfig) {
-		return new RustRunBuildOperationExtension(parentOpInfo, buildConfig);
+	protected CommonBuildTargetOperation newBuildTargetOperation(OperationInfo parentOpInfo, IProject project,
+			BuildTarget buildTarget) {
+		return new RustRunBuildOperationExtension(parentOpInfo, buildTarget);
 	}
 	
-	protected class RustRunBuildOperationExtension implements IBuildTargetOperation {
+	protected class RustRunBuildOperationExtension extends CommonBuildTargetOperation {
 		
-		protected final OperationInfo parentOpInfo;
-		protected BuildTarget buildConfig;
-		
-		public RustRunBuildOperationExtension(OperationInfo parentOpInfo, BuildTarget buildConfig) {
-			this.parentOpInfo = parentOpInfo;
-			this.buildConfig = buildConfig;
+		public RustRunBuildOperationExtension(OperationInfo parentOpInfo, BuildTarget buildTarget) {
+			super(parentOpInfo, buildTarget);
 		}
 		
 		@Override
@@ -76,7 +70,7 @@ public class RustBuilder extends LangBuildManagerProjectBuilder {
 			
 			ArrayList2<String> buildCommands = new ArrayList2<>();
 			
-			if(buildConfig.getTargetName() == null) {
+			if(getBuildTargetName() == null) {
 				buildCommands.add("build");
 			} else {
 				// TODO: properly implement other test targets
