@@ -1,11 +1,13 @@
 package melnorme.lang.ide.core;
 
+import org.eclipse.core.runtime.Path;
+
 import com.github.rustdt.ide.core.engine.RustEngineClient;
 
 import melnorme.lang.ide.core.engine.EngineClient;
 import melnorme.lang.ide.core.operations.AbstractToolsManager;
-import melnorme.lang.ide.core.operations.BuildManager;
-import melnorme.utilbox.collections.ArrayList2;
+import melnorme.lang.ide.core.project_model.BuildManager;
+import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 
 public class LangCore_Actual {
 	
@@ -27,7 +29,12 @@ public class LangCore_Actual {
 	}
 	
 	public static BuildManager createBuildManager() {
-		return new BuildManager(new ArrayList2<>()); // TODO BuildManager
+		return new BuildManager() {
+			@Override
+			protected BundleManifestResourceListener init_createResourceListener() {
+				return new ManagerResourceListener(new Path("Cargo.toml"));
+			}
+		};
 	}
 	
 }

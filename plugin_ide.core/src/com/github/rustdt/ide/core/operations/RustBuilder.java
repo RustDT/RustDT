@@ -12,12 +12,16 @@ package com.github.rustdt.ide.core.operations;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.operations.BuildTarget;
+import melnorme.lang.ide.core.operations.IBuildTargetOperation;
+import melnorme.lang.ide.core.operations.LangBuildManagerProjectBuilder;
 import melnorme.lang.ide.core.operations.LangProjectBuilder;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.PathValidator;
@@ -28,7 +32,7 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 /**
  * Rust builder, using Cargo.
  */
-public class RustBuilder extends LangProjectBuilder {
+public class RustBuilder extends LangBuildManagerProjectBuilder {
 	
 	public RustBuilder() {
 	}
@@ -39,7 +43,15 @@ public class RustBuilder extends LangProjectBuilder {
 	}
 	
 	@Override
-	protected AbstractRunBuildOperation createBuildOp() {
+	protected ProcessBuilder createCleanPB() throws CoreException, CommonException {
+		return createSDKProcessBuilder("clean");
+	}
+	
+	/* ----------------- Build ----------------- */
+	
+	@Override
+	protected IBuildTargetOperation newBuildOperation(IProject project, LangProjectBuilder projectBuilder,
+			BuildTarget buildConfig) {
 		return new RustRunBuildOperationExtension();
 	}
 	
@@ -61,11 +73,6 @@ public class RustBuilder extends LangProjectBuilder {
 			
 			addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(getProject()));
 		}
-	}
-	
-	@Override
-	protected ProcessBuilder createCleanPB() throws CoreException, CommonException {
-		return createSDKProcessBuilder("clean");
 	}
 	
 }

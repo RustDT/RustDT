@@ -16,52 +16,32 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.project_model.BundleModelManager;
-import melnorme.lang.tooling.IBundleInfo;
-import melnorme.utilbox.misc.SimpleLogger;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.cargomodel.CargoWorkspaceModel.ProjectInfo;
 
+import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
+import melnorme.lang.ide.core.project_model.BundleModelManager;
+import melnorme.lang.tooling.IBundleInfo;
+import melnorme.utilbox.misc.SimpleLogger;
+
 public class CargoModelManager extends BundleModelManager {
 	
 	public static final Path BUNDLE_MANIFEST_FILE = new Path("Cargo.toml");
-	
-	protected static boolean projectHasDubManifestFile(IProject project) {
-		IResource packageFile = project.findMember(BUNDLE_MANIFEST_FILE);
-		if(packageFile != null && packageFile.getType() == IResource.FILE) {
-			return true;
-		}
-		return false;
-	}
 	
 	/* -----------------  ----------------- */
 	
 	protected final CargoWorkspaceModel model = new CargoWorkspaceModel();
 	
 	@Override
-	public boolean isEligibleForBundleModelWatch(IProject project) {
-		return true;
+	protected BundleManifestResourceListener init_createResourceListener() {
+		return new ManagerResourceListener(BUNDLE_MANIFEST_FILE);
 	}
 	
 	@Override
-	public boolean projectHasBundleManifest(IProject project) {
-		return projectHasDubManifestFile(project);
-	}
-	
-	@Override
-	public boolean resourceDeltaIsBundleManifestChange(IResourceDelta resourceDelta) {
-		return resourceDelta.getResource().getType() == IResource.FILE &&
-				resourceDelta.getProjectRelativePath().equals(BUNDLE_MANIFEST_FILE);
-	}
-	
-	@Override
-	public IBundleInfo getBundleInfo(IProject project) {
+	protected IBundleInfo getProjectInfo(IProject project) {
 		return model.getProjectInfo(project);
 	}
 	
@@ -83,11 +63,7 @@ public class CargoModelManager extends BundleModelManager {
 	
 	@Override
 	protected void bundleManifestFileChanged(IProject project) {
-		if(!projectHasBundleManifest(project)) {
-			bundleProjectRemoved(project);
-		} else {
-			bundleProjectAdded(project);
-		}
+		bundleProjectAdded(project);
 	}
 	
 }
