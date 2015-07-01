@@ -22,7 +22,7 @@ import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.BuildTarget;
-import melnorme.lang.ide.core.operations.LangBuildManagerProjectBuilder;
+import melnorme.lang.ide.core.operations.BuildTargetsProjectBuilder;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.data.PathValidator;
@@ -35,7 +35,7 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 /**
  * Rust builder, using Cargo.
  */
-public class RustBuilder extends LangBuildManagerProjectBuilder {
+public class RustBuilder extends BuildTargetsProjectBuilder {
 	
 	public RustBuilder() {
 	}
