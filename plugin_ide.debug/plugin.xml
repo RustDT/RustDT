@@ -55,10 +55,8 @@
       </editorContribution>
    </extension>
 
-   <extension
-      point="org.eclipse.ui.menus">
-      <menuContribution
-             locationURI="popup:#RustRulerContext?after=debug">
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="popup:#RustRulerContext?after=debug">
          <menu 
               id="breakpointTypes.com.github.rustdt" 
               label="%BreakpointTypes.label">
