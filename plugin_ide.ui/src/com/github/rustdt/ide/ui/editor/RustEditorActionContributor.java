@@ -14,7 +14,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.ui.actions.RustOpenDefinitionOperation;
 
-import melnorme.lang.ide.ui.editor.actions.AbstractEditorOperation;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.LangEditorActionContributor;
 import melnorme.lang.tooling.ast.SourceRange;
@@ -22,7 +21,7 @@ import melnorme.lang.tooling.ast.SourceRange;
 public class RustEditorActionContributor extends LangEditorActionContributor {
 	
 	@Override
-	protected AbstractEditorOperation createOpenDefinitionOperation(ITextEditor editor, SourceRange range,
+	protected RustOpenDefinitionOperation createOpenDefinitionOperation(ITextEditor editor, SourceRange range,
 			OpenNewEditorMode newEditorMode) {
 		return new RustOpenDefinitionOperation(editor, range, newEditorMode);
 	}

@@ -40,7 +40,7 @@ public class RustHyperlinkDetector extends LangHyperlinkDetector {
 			
 			SourceRange sr = getElementRange();
 			new RustOpenDefinitionOperation(textEditor, sr, OpenNewEditorMode.TRY_REUSING_EXISTING).
-				executeAndHandleResult();
+				executeAndHandle();
 		}
 		
 	}
