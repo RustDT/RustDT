@@ -8,16 +8,18 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.lang.ide.core.operations;
+package com.github.rustdt.ide.core.operations;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
-import melnorme.utilbox.concurrency.OperationCancellation;
-import melnorme.utilbox.core.CommonException;
+import melnorme.lang.ide.core.operations.AbstractToolManager;
+import melnorme.lang.tooling.data.PathValidator;
 
-public interface IBuildTargetOperation {
+public class RustToolManager extends AbstractToolManager {
 	
-	public void execute(IProgressMonitor pm) throws CoreException, CommonException, OperationCancellation;
+	@Override
+	protected PathValidator getSDKToolPathValidator() {
+		return new RustSDKLocationValidator();
+	}
 	
 }
