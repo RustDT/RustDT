@@ -10,19 +10,13 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
-import java.nio.file.Path;
-
 import org.eclipse.core.runtime.CoreException;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.LangProjectBuilder;
-import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.Location;
 
-/**
- * Rust builder, using Cargo.
- */
+
 public class RustBuilder extends LangProjectBuilder {
 	
 	public RustBuilder() {
@@ -30,9 +24,7 @@ public class RustBuilder extends LangProjectBuilder {
 	
 	@Override
 	protected ProcessBuilder createCleanPB() throws CoreException, CommonException {
-		return createSDKProcessBuilder("clean");
+		return LangCore.getToolManager().createSDKProcessBuilder(getProject(), "clean");
 	}
-	
-
 	
 }

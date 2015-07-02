@@ -20,13 +20,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.github.rustdt.tooling.RustBuildOutputParser;
 
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.BuildOperationCreator.CommonBuildTargetOperation;
+import melnorme.lang.ide.core.operations.BuildMarkersUtil;
 import melnorme.lang.ide.core.operations.BuildTarget;
-import melnorme.lang.ide.core.operations.LangProjectBuilder;
+import melnorme.lang.ide.core.operations.CommonBuildTargetOperation;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.project_model.BuildManager;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
-import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
@@ -34,6 +33,9 @@ import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
+/**
+ * Rust builder, using Cargo.
+ */
 public class RustBuildManager extends BuildManager {
 	
 	@Override
@@ -42,29 +44,18 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	@Override
-	protected BuildTarget createBuildTarget(boolean enabled, String targetName) {
-		/* FIXME: */
-		return new BuildTarget(enabled, targetName) {
-			@Override
-			public CommonBuildTargetOperation newBuildTargetOperation(OperationInfo parentOpInfo, IProject project,
-					boolean fullBuild) throws CommonException {
-				Path buildToolPath = getSDKToolPath();
-				return new RustRunBuildOperationExtension(parentOpInfo, project, buildToolPath, this, fullBuild);
-			}
-		};
+	public CommonBuildTargetOperation createBuildTargetOperation(OperationInfo parentOpInfo, IProject project,
+			Path buildToolPath, BuildTarget buildTarget, boolean fullBuild) {
+		return new RustBuildTargetOperation(parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
 	}
 	
 	/* ----------------- Build ----------------- */
 	
-	protected class RustRunBuildOperationExtension extends CommonBuildTargetOperation {
+	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		protected final IProject project;
-		
-		public RustRunBuildOperationExtension(OperationInfo parentOpInfo, IProject project,
+		public RustBuildTargetOperation(OperationInfo parentOpInfo, IProject project,
 				Path buildToolPath, BuildTarget buildTarget, boolean fullBuild) {
-			super(parentOpInfo, buildToolPath, buildTarget);
-			this.project = project;
-			/* FIXME: */
+			super(parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
 		}
 		
 		@Override
@@ -79,9 +70,10 @@ public class RustBuildManager extends BuildManager {
 				buildCommands.addElements("test", "--no-run");
 			}
 			
-			ProcessBuilder pb = createSDKProcessBuilder(buildCommands.toArray(String.class));
+			ProcessBuilder pb = getToolManager().createSDKProcessBuilder(getProject(), 
+				buildCommands.toArray(String.class));
 			
-			ExternalProcessResult buildAllResult = runBuildTool_2(pm, pb);
+			ExternalProcessResult buildAllResult = runBuildTool(pm, pb);
 			doBuild_processBuildResult(buildAllResult);
 		}
 		
@@ -94,7 +86,7 @@ public class RustBuildManager extends BuildManager {
 				}
 			}.parseOutput(buildAllResult);
 			
-			addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
+			BuildMarkersUtil.addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
 		}
 	}
 	
