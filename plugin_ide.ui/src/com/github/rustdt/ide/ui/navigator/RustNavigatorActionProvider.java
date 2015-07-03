@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.navigator;
 
-import org.eclipse.ui.navigator.CommonActionProvider;
+import melnorme.lang.ide.ui.navigator.LangNavigatorActionProvider;
 
-public class RustNavigatorActionProvider extends CommonActionProvider {
+public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 	
 }
