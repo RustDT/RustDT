@@ -9,13 +9,14 @@
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
 package com.github.rustdt.ide.ui.navigator;
-import melnorme.lang.ide.ui.views.AbstractLangNavigatorLabelProvider;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.Image;
 
-public class RustNavigatorLabelProvider extends AbstractLangNavigatorLabelProvider implements IStyledLabelProvider {
+import melnorme.lang.ide.ui.views.LangNavigatorLabelProvider;
+
+public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider implements IStyledLabelProvider {
 	
 	@Override
 	protected DefaultGetStyledTextSwitcher getStyledText_switcher() {
@@ -31,7 +32,7 @@ public class RustNavigatorLabelProvider extends AbstractLangNavigatorLabelProvid
 	protected DefaultGetImageSwitcher getBaseImage_switcher() {
 		return new DefaultGetImageSwitcher() {
 			@Override
-			public Image visitOther(Object element) {
+			public ImageDescriptor visitOther(Object element) {
 				return null;
 			}
 		};
