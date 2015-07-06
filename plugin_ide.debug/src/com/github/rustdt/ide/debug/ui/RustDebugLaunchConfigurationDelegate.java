@@ -20,14 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
-import melnorme.lang.ide.debug.core.services.DebugServicesExtensions;
-import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
-import melnorme.utilbox.misc.ArrayUtil;
-import melnorme.utilbox.misc.Location;
-
 import org.eclipse.cdt.core.parser.util.StringUtil;
+import org.eclipse.cdt.dsf.debug.service.IDsfDebugServicesFactory;
 import org.eclipse.cdt.dsf.gdb.internal.GdbPlugin;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
 import org.eclipse.cdt.dsf.gdb.launching.LaunchUtils;
@@ -41,6 +35,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ISourceLocator;
 
+import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
+import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
+import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
+import melnorme.utilbox.misc.ArrayUtil;
+import melnorme.utilbox.misc.Location;
+
 public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunchConfigurationDelegate {
 	
 	@Override
@@ -49,8 +50,8 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 	}
 	
 	@Override
-	protected DebugServicesExtensions doCreateServicesExtensions() {
-		return new DebugServicesExtensions() {
+	protected LangDebugServicesExtensions doCreateServicesExtensions(IDsfDebugServicesFactory parentServiceFactory) {
+		return new LangDebugServicesExtensions(parentServiceFactory) {
 			@Override
 			public IMIBackend createBackendGDBService(DsfSession session, ILaunchConfiguration lc) {
 				return new GDBBackend_Rust(session, lc);
