@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+  ▶ Recommended/tested CDT version is now 8.7.0
  * Fixed #43: PATH of external tools bungled if original PATH not set (Windows) 
 
 ### 0.2.1
