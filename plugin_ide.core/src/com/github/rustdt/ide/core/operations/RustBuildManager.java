@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.github.rustdt.tooling.RustBuildOutputParser;
 
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.BuildMarkersUtil;
-import melnorme.lang.ide.core.operations.BuildTarget;
-import melnorme.lang.ide.core.operations.CommonBuildTargetOperation;
 import melnorme.lang.ide.core.operations.OperationInfo;
-import melnorme.lang.ide.core.project_model.BuildManager;
+import melnorme.lang.ide.core.operations.ToolMarkersUtil;
+import melnorme.lang.ide.core.operations.build.BuildManager;
+import melnorme.lang.ide.core.operations.build.BuildTarget;
+import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
@@ -86,7 +86,7 @@ public class RustBuildManager extends BuildManager {
 				}
 			}.parseOutput(buildAllResult);
 			
-			BuildMarkersUtil.addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
+			ToolMarkersUtil.addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
 		}
 	}
 	

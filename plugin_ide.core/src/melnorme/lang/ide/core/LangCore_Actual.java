@@ -6,7 +6,7 @@ import com.github.rustdt.ide.core.operations.RustToolManager;
 
 import melnorme.lang.ide.core.engine.EngineClient;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
-import melnorme.lang.ide.core.project_model.BuildManager;
+import melnorme.lang.ide.core.operations.build.BuildManager;
 
 public class LangCore_Actual {
 	
