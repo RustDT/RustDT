@@ -20,7 +20,7 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.text.TextUtils;
-import melnorme.lang.ide.core.utils.TimeoutProgressMonitor;
+import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
