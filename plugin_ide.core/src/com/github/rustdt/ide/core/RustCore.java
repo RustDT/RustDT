@@ -4,13 +4,13 @@ import melnorme.lang.ide.core.LangCore;
 
 import org.osgi.framework.BundleContext;
 
-import com.github.rustdt.ide.core.cargomodel.CargoModelManager;
+import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
 
 public class RustCore extends LangCore {
 	
-	protected static final CargoModelManager bundleModelManager = new CargoModelManager();
+	protected static final RustBundleModelManager bundleModelManager = new RustBundleModelManager();
 	
-	public static CargoModelManager getBundleModelManager() {
+	public static RustBundleModelManager getBundleModelManager() {
 		return bundleModelManager;
 	}
 	

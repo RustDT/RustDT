@@ -25,7 +25,8 @@ import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
-import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
+import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
+import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
@@ -38,9 +39,8 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
  */
 public class RustBuildManager extends BuildManager {
 	
-	@Override
-	protected BundleManifestResourceListener init_createResourceListener() {
-		return new ManagerResourceListener(new org.eclipse.core.runtime.Path("Cargo.toml"));
+	public RustBuildManager(LangBundleModel<? extends AbstractBundleInfo> bundleModel) {
+		super(bundleModel);
 	}
 	
 	@Override

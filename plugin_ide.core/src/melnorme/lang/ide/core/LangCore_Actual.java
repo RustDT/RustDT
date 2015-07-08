@@ -1,5 +1,7 @@
 package melnorme.lang.ide.core;
 
+import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
+import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
 import com.github.rustdt.ide.core.engine.RustEngineClient;
 import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
@@ -7,6 +9,7 @@ import com.github.rustdt.ide.core.operations.RustToolManager;
 import melnorme.lang.ide.core.engine.EngineClient;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
 import melnorme.lang.ide.core.operations.build.BuildManager;
+import melnorme.lang.ide.core.project_model.BundleModelManager;
 
 public class LangCore_Actual {
 	
@@ -27,8 +30,14 @@ public class LangCore_Actual {
 		return new RustEngineClient();
 	}
 	
+	public static BundleModelManager createBundleModelManager() {
+		return new RustBundleModelManager();
+	}
+	public static RustBundleModel getBundleModel() {
+		return (RustBundleModel) LangCore.getBundleModel();
+	}
 	public static BuildManager createBuildManager() {
-		return new RustBuildManager();
+		return new RustBuildManager(getBundleModel());
 	}
 	
 }
