@@ -13,25 +13,22 @@ package com.github.rustdt.ide.core.cargomodel;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 
-import melnorme.lang.ide.core.LangCore;
+import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
+
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
-import melnorme.utilbox.misc.SimpleLogger;
 
 /**
  * In Rust, the bundles are the Cargo crates. 
  */
-public class RustBundleModelManager extends BundleModelManager {
+public class RustBundleModelManager extends BundleModelManager<RustBundleModel> {
 	
-	public static final class RustBundleModel extends LangBundleModel<AbstractBundleInfo> {
-		@Override
-		protected SimpleLogger getLog() {
-			return BundleModelManager.log;
-		}
+	public static class RustBundleModel extends LangBundleModel<AbstractBundleInfo> {
+		
 	}
 	
 	/* -----------------  ----------------- */
@@ -52,11 +49,6 @@ public class RustBundleModelManager extends BundleModelManager {
 	@Override
 	protected BundleManifestResourceListener init_createResourceListener() {
 		return new ManagerResourceListener(BUNDLE_MANIFEST_FILE);
-	}
-	
-	@Override
-	protected AbstractBundleInfo getProjectInfo(IProject project) {
-		return getModel().getProjectInfo(project);
 	}
 	
 	@Override
@@ -82,12 +74,7 @@ public class RustBundleModelManager extends BundleModelManager {
 	
 	@Override
 	protected void bundleProjectRemoved(final IProject project) {
-		if(model.getProjectInfo(project) != null) {
-			model.removeProjectInfo(project);
-		} else {
-			LangCore.logWarning("Unexpected: model.getProjectInfo(project) != null");
-		}
-		
+		model.removeProjectInfo(project);
 	}
 	
 	@Override

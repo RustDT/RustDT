@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Bruno Medeiros - initial API and implementation
+ *******************************************************************************/
 package melnorme.lang.ide.core;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
@@ -9,7 +19,6 @@ import com.github.rustdt.ide.core.operations.RustToolManager;
 import melnorme.lang.ide.core.engine.EngineClient;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
 import melnorme.lang.ide.core.operations.build.BuildManager;
-import melnorme.lang.ide.core.project_model.BundleModelManager;
 
 public class LangCore_Actual {
 	
@@ -30,7 +39,7 @@ public class LangCore_Actual {
 		return new RustEngineClient();
 	}
 	
-	public static BundleModelManager createBundleModelManager() {
+	public static RustBundleModelManager createBundleModelManager() {
 		return new RustBundleModelManager();
 	}
 	public static RustBundleModel getBundleModel() {
