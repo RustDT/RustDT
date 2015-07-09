@@ -8,9 +8,8 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.lang.ide.core.navigator;
+package com.github.rustdt.ide.ui.navigator;
 
+public interface IRustNavigatorElement {
 
-public interface INavigatorElement {
-	
 }

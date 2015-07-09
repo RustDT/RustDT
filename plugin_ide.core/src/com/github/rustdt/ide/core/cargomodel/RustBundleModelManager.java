@@ -25,7 +25,7 @@ import melnorme.utilbox.collections.Indexable;
 /**
  * In Rust, the bundles are the Cargo crates. 
  */
-public class RustBundleModelManager extends BundleModelManager<RustBundleModel> {
+public class RustBundleModelManager extends BundleModelManager<AbstractBundleInfo, RustBundleModel> {
 	
 	public static class RustBundleModel extends LangBundleModel<AbstractBundleInfo> {
 		
@@ -42,18 +42,13 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleModel> 
 	/* -----------------  ----------------- */
 	
 	@Override
-	public RustBundleModel getModel() {
-		return (RustBundleModel) super.getModel();
-	}
-	
-	@Override
 	protected BundleManifestResourceListener init_createResourceListener() {
 		return new ManagerResourceListener(BUNDLE_MANIFEST_FILE);
 	}
 	
 	@Override
-	protected void bundleProjectAdded(final IProject project) {
-		getModel().setProjectInfo(project, new AbstractBundleInfo() {
+	protected AbstractBundleInfo createNewInfo(IProject project) {
+		return new AbstractBundleInfo() {
 			
 			protected final ArrayList2<BuildConfiguration> DEFAULT_BUILD_CONFIGs = ArrayList2.create(
 				new BuildConfiguration(null, null)
@@ -69,17 +64,7 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleModel> 
 				return DEFAULT_BUILD_CONFIGs;
 			}
 			
-		});
-	}
-	
-	@Override
-	protected void bundleProjectRemoved(final IProject project) {
-		model.removeProjectInfo(project);
-	}
-	
-	@Override
-	protected void bundleManifestFileChanged(IProject project) {
-		bundleProjectAdded(project);
+		};
 	}
 	
 }

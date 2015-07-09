@@ -319,7 +319,7 @@
 			<possibleChildren>
 				<or>
 					<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject" />
-					<instanceof value="melnorme.lang.ide.core.navigator.INavigatorElement" />
+					<instanceof value="com.github.rustdt.ide.ui.navigator.IRustNavigatorElement" />
 				</or>
 			</possibleChildren>
 			
@@ -327,7 +327,7 @@
 				<parentExpression>
 					<or>
 						<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject"/>
-						<instanceof value="melnorme.lang.ide.core.navigator.INavigatorElement" />
+						<instanceof value="com.github.rustdt.ide.ui.navigator.IRustNavigatorElement" />
 					</or>
 				</parentExpression>
 			</commonSorter>
