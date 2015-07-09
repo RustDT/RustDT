@@ -3,11 +3,11 @@
 <plugin>
 	
 	<extension point="org.eclipse.ui.ide.projectNatureImages">
-      <image
-            icon="icons/project-nature.ovr.png"
-            id="com.github.rustdt.ide.ui.NatureImage"
-            natureId="com.github.rustdt.ide.core.nature">
-      </image>
+		<image
+			icon="icons/project-nature.ovr.png"
+			id="com.github.rustdt.ide.ui.NatureImage"
+			natureId="com.github.rustdt.ide.core.nature">
+		</image>
 	</extension>
 	
 	<extension point="org.eclipse.ui.perspectives">
@@ -357,9 +357,9 @@
 	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
 		<launchConfigurationTabGroup
 			class="com.github.rustdt.ide.ui.launch.RustTabGroup"
-			description="%LangTabGroup.description"
 			id="com.github.rustdt.ide.ui.RustLaunchTabGroup"
-			type="com.github.rustdt.ide.core.LaunchConfigurationType">
+			type="com.github.rustdt.ide.core.LaunchConfigurationType"
+			description="%LangTabGroup.description">
 		</launchConfigurationTabGroup>
 	</extension>
 	
