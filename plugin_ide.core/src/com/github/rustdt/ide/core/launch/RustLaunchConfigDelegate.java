@@ -1,14 +1,14 @@
 package com.github.rustdt.ide.core.launch;
 
 
-import melnorme.lang.ide.launching.AbstractLangLaunchConfigurationDelegate;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.Launch;
 
-public class RustLaunchConfigDelegate extends AbstractLangLaunchConfigurationDelegate {
+import melnorme.lang.ide.launching.LangLaunchConfigurationDelegate;
+
+public class RustLaunchConfigDelegate extends LangLaunchConfigurationDelegate {
 	
 	@Override
 	protected ILaunch getLaunchForRunMode(ILaunchConfiguration configuration, String mode) throws CoreException {
