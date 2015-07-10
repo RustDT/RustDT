@@ -2,6 +2,7 @@
 
 ### (NextVersion)
   ▶ Recommended/tested CDT version is now 8.7.0
+ * Fixed #44: Debugging not working on Eclipse 4.5 Mars (CDT 8.7)
  * Fixed #43: PATH of external tools bungled if original PATH not set (Windows) 
 
 ### 0.2.1

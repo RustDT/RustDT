@@ -58,5 +58,7 @@ GDB debugger integration is achieved by using the CDT plugins. To configure glob
 
 **Note that for debugging to work**, the program must be compiled with debug symbols information, and those debug symbols must be on a format that GDB understands. Otherwise you will get GDB error messages such "(no debugging symbols found)" or "file format not recognized".
 
+**Windows note:** Using Cygwin GDB doesn't work very well, if at all. The recommended way to debug in Windows is to use the GDB of [mingw-w64](http://mingw-w64.org/), or the one of [TDM-GCC](http://tdm-gcc.tdragon.net/)
+
 ##### GDB Pretty printers
 RustDT will try to automatically set up the rust-gdb pretty printing scripts when launching in debug mode. GDB will be configured to load them from the `${RUST_ROOT}/lib/rustlib/etc` location, where `${RUST_ROOT}` is the directory of the Rust installation, as configured in the RustDT preferences.
