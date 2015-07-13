@@ -63,7 +63,7 @@ public class RustBuildManager extends BuildManager {
 			
 			ArrayList2<String> buildCommands = new ArrayList2<>();
 			
-			if(getBuildTargetName() == null) {
+			if(getBuildTargetName().isEmpty()) {
 				buildCommands.add("build");
 			} else {
 				// TODO: properly implement other test targets
