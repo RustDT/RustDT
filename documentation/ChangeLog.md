@@ -6,7 +6,7 @@
   ▶ Recommended/tested CDT version is now 8.7
  * Fixed #44: Debugging not working on Eclipse 4.5 Mars (CDT 8.7)
  * Fixed #43: PATH of external tools bungled if original PATH not set (Windows)
- * Doc: added note about Cygwin GDB not being recommnended for debugging. 
+ * Doc: added note about Cygwin GDB not being recommended for debugging. 
 
 ### 0.2.1
  * Added Content Assist preference page, with auto-activation options (#23).
