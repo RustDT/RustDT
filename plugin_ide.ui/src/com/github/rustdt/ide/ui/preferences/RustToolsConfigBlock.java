@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.widgets.Composite;
+
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.util.swt.SWTFactoryUtil;
-import melnorme.util.swt.components.AbstractComponentExt;
+import melnorme.util.swt.components.AbstractComponent;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
 import melnorme.util.swt.components.fields.FileTextField;
-
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.swt.widgets.Composite;
 
 public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
@@ -51,7 +51,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		};
 	}
 	
-	public class RacerLocationGroup extends AbstractComponentExt {
+	public class RacerLocationGroup extends AbstractComponent {
 		
 		
 		@Override
