@@ -11,16 +11,8 @@
 	</extension>
 	
 	<extension point="org.eclipse.core.expressions.definitions">
-		<definition id="com.github.rustdt.ide.core.expressions.isLangProject">
+		<definition id="com.github.rustdt.ide.core.expressions.isNatureProject">
 			<adapt type="org.eclipse.core.resources.IProject">
-				<test
-					property="org.eclipse.core.resources.projectNature"
-					value="com.github.rustdt.ide.core.nature">
-				</test>
-			</adapt>
-		</definition>
-		<definition id="com.github.rustdt.ide.core.expressions.isLangNatureContainer">
-			<adapt type="org.eclipse.core.resources.IContainer">
 				<test
 					property="org.eclipse.core.resources.projectNature"
 					value="com.github.rustdt.ide.core.nature">
