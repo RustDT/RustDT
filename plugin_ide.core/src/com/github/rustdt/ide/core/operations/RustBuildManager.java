@@ -25,11 +25,13 @@ import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
+import melnorme.lang.ide.core.operations.build.BuildTarget.BuildType;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
@@ -44,18 +46,42 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	@Override
+	protected Indexable<BuildType> getBuildTypes_do() {
+		return ArrayList2.create(
+			new RustBuildType("<default>"),
+			new RustBuildType("test")
+		);
+	}
+	
+	protected class RustBuildType extends BuildType {
+		public RustBuildType(String name) {
+			super(name);
+		}
+		
+		@Override
+		public String getDefaultBuildOptions(BuildTarget buildTarget, IProject project) throws CommonException {
+			return "";
+		}
+		
+		@Override
+		public Path getArtifactPath(BuildTarget buildTarget, IProject project) throws CommonException {
+			throw new CommonException("No default program path available");
+		}
+	}
+	
+	@Override
 	public CommonBuildTargetOperation createBuildTargetSubOperation(OperationInfo parentOpInfo, IProject project,
 			Path buildToolPath, BuildTarget buildTarget, boolean fullBuild) {
-		return new RustBuildTargetOperation(parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
+		return new RustBuildTargetOperation(this, parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
 	}
 	
 	/* ----------------- Build ----------------- */
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(OperationInfo parentOpInfo, IProject project,
+		public RustBuildTargetOperation(BuildManager buildManager, OperationInfo parentOpInfo, IProject project,
 				Path buildToolPath, BuildTarget buildTarget, boolean fullBuild) {
-			super(parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
+			super(buildManager, parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
 		}
 		
 		@Override
@@ -63,7 +89,7 @@ public class RustBuildManager extends BuildManager {
 			
 			ArrayList2<String> buildCommands = new ArrayList2<>();
 			
-			if(getBuildTargetName().isEmpty()) {
+			if(buildTarget.getBuildConfiguration().isEmpty()) {
 				buildCommands.add("build");
 			} else {
 				// TODO: properly implement other test targets

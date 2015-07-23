@@ -12,15 +12,15 @@ package com.github.rustdt.ide.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 
-import melnorme.lang.ide.ui.dialogs.AbstractProjectPropertyPage;
-import melnorme.lang.ide.ui.preferences.LangProjectOptionsBlock;
+import melnorme.lang.ide.ui.dialogs.LangBuildConfigurationPropertyPage;
+import melnorme.lang.ide.ui.preferences.LangProjectBuildConfigurationComponent;
 
 
-public class RustBuildConfigurationPropertyPage extends AbstractProjectPropertyPage {
+public class RustBuildConfigurationPropertyPage extends LangBuildConfigurationPropertyPage {
 	
 	@Override
-	protected LangProjectOptionsBlock createProjectOptionsComponent(IProject project) {
-		return new LangProjectOptionsBlock(project) {
+	protected LangProjectBuildConfigurationComponent createProjectBuildConfigComponent(IProject project) {
+		return new LangProjectBuildConfigurationComponent(project) {
 			@Override
 			protected String init_getArgumentsField_Label() {
 				return "Build Target options:";
