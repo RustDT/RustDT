@@ -11,13 +11,6 @@ If you are new to Eclipse, you can learn some of the basics of the Eclipse IDE w
 
 Also, to improve Eclipse performance and startup time, it is recommended you tweak the JVM parameters. There is a tool called Eclipse Optimizer that can do that automatically, it is recommended you use it. Read more about it [here](http://www.infoq.com/news/2015/03/eclipse-optimizer). (Installing/enabling the JRebel optimization is not necessary as that only applies to Java developers)
 
-### IDE configuration
-
-A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`.
-
-Additionally, for functionality such as code completion, you will need:
- * The [Racer](https://github.com/phildawes/racer) tool. The Racer preferences field can be configured with just the executable name, in which case, the executable will be searched in the PATH environment variable.
- * The Rust sources package. This package is not included in the Rust intallation, so it must be obtained separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
 
 ### Project setup
 
