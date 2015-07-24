@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Fixed #46 - RustDT installation documentation is confusing
 
 ### 0.2.2
   ▶ Recommended/tested CDT version is now 8.7

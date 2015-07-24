@@ -12,7 +12,7 @@
  1. Select the recently added update site in the `Work with:` dropdown. Type `RustDT` in the filter box. Now the RustDT feature should appear below.
  1. Select the `RustDT` feature, and complete the wizard. 
   * RustDT dependencies such as CDT will automatically be added during installation.
- 1. Restart Eclipse. After that take a look at the setup section in the [User Guide](UserGuide.md#user-guide).
+ 1. Restart Eclipse. After that, take a look at the IDE configuration section in the [User Guide](UserGuide.md#IDE-configuration).
   
 
 #### Updating:
