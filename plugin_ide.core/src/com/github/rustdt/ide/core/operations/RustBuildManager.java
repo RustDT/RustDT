@@ -24,8 +24,10 @@ import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
+import melnorme.lang.ide.core.operations.build.BuildTargetRunner;
+import melnorme.lang.ide.core.operations.build.BuildTargetRunner.BuildConfiguration;
+import melnorme.lang.ide.core.operations.build.BuildTargetRunner.BuildType;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
-import melnorme.lang.ide.core.operations.build.BuildTarget.BuildType;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
@@ -59,58 +61,60 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public String getDefaultBuildOptions(BuildTarget buildTarget, IProject project) throws CommonException {
+		public String getDefaultBuildOptions(BuildTargetRunner buildTargetRunner) throws CommonException {
 			return "";
 		}
 		
-		@Override
-		public Path getArtifactPath(BuildTarget buildTarget, IProject project) throws CommonException {
-			throw new CommonException("No default program path available");
-		}
 	}
 	
 	@Override
-	public CommonBuildTargetOperation createBuildTargetSubOperation(OperationInfo parentOpInfo, IProject project,
-			Path buildToolPath, BuildTarget buildTarget, boolean fullBuild) {
-		return new RustBuildTargetOperation(this, parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
+	public BuildTargetRunner createBuildTargetOperation(IProject project, BuildConfiguration buildConfig,
+			String buildTypeName, BuildTarget buildSettings) {
+		return new BuildTargetRunner(project, buildConfig, buildTypeName, buildSettings.getBuildOptions()) {
+			
+			@Override
+			public CommonBuildTargetOperation getBuildOperation(OperationInfo parentOpInfo, Path buildToolPath,
+					boolean fullBuild) {
+				return new RustBuildTargetOperation(parentOpInfo, project, buildToolPath, this, fullBuild);
+			}
+		};
 	}
 	
 	/* ----------------- Build ----------------- */
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(BuildManager buildManager, OperationInfo parentOpInfo, IProject project,
-				Path buildToolPath, BuildTarget buildTarget, boolean fullBuild) {
-			super(buildManager, parentOpInfo, project, buildToolPath, buildTarget, fullBuild);
+		public RustBuildTargetOperation(OperationInfo parentOpInfo, IProject project,
+				Path buildToolPath, BuildTargetRunner buildTargetOp, boolean fullBuild) {
+			super(buildTargetOp.getBuildManager(), parentOpInfo, project, buildToolPath, buildTargetOp, fullBuild);
 		}
 		
 		@Override
-		public void execute(IProgressMonitor pm) throws CoreException, CommonException, OperationCancellation {
-			
-			ArrayList2<String> buildCommands = new ArrayList2<>();
-			
-			if(buildTarget.getBuildConfiguration().isEmpty()) {
-				buildCommands.add("build");
-			} else {
-				// TODO: properly implement other test targets
-				buildCommands.addElements("test", "--no-run");
-			}
-			
+		protected ExternalProcessResult startProcess(IProgressMonitor pm, ArrayList2<String> commands)
+				throws CommonException, OperationCancellation {
 			ProcessBuilder pb = getToolManager().createSDKProcessBuilder(getProject(), 
-				buildCommands.toArray(String.class));
-			
-			ExternalProcessResult buildAllResult = runBuildTool(pm, pb);
-			doBuild_processBuildResult(buildAllResult);
+				commands.toArray(String.class));
+			return runBuildTool(pm, pb);
 		}
 		
-		protected void doBuild_processBuildResult(ExternalProcessResult buildAllResult) 
-				throws CoreException, CommonException {
+		@Override
+		protected void addMainArguments(ArrayList2<String> commands) {
+			if(buildTarget.getBuildConfigName().isEmpty()) {
+				commands.add("build");
+			} else {
+				// TODO: properly implement other test targets
+				commands.addElements("test", "--no-run");
+			}
+		}
+		
+		@Override
+		protected void processBuildOutput(ExternalProcessResult processResult) throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
 				protected void handleMessageParseError(CommonException ce) {
 					 LangCore.logStatus(LangCore.createCoreException(ce));
 				}
-			}.parseOutput(buildAllResult);
+			}.parseOutput(processResult);
 			
 			ToolMarkersUtil.addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
 		}
