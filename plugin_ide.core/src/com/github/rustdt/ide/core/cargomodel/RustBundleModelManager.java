@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
 
+import melnorme.lang.ide.core.operations.build.BuildTargetRunner.BuildConfiguration;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
@@ -56,8 +57,8 @@ public class RustBundleModelManager extends BundleModelManager<AbstractBundleInf
 			}
 			
 			@Override
-			public Indexable<String> getBuildConfigurations() {
-				return ArrayList2.create("");
+			public Indexable<BuildConfiguration> getBuildConfigurations() {
+				return ArrayList2.create(new BuildConfiguration("", null));
 			}
 			
 		};

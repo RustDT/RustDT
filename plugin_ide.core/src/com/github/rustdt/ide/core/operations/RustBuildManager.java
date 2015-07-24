@@ -10,12 +10,13 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
+import static melnorme.utilbox.core.CoreUtil.areEqual;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
 
@@ -36,12 +37,15 @@ import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 /**
  * Rust builder, using Cargo.
  */
 public class RustBuildManager extends BuildManager {
+	
+	public static final String BuildType_Default = "<default>";
 	
 	public RustBuildManager(LangBundleModel<? extends AbstractBundleInfo> bundleModel) {
 		super(bundleModel);
@@ -50,7 +54,7 @@ public class RustBuildManager extends BuildManager {
 	@Override
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
-			new RustBuildType("<default>"),
+			new RustBuildType(BuildType_Default),
 			new RustBuildType("test")
 		);
 	}
@@ -90,21 +94,31 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected ExternalProcessResult startProcess(IProgressMonitor pm, ArrayList2<String> commands)
-				throws CommonException, OperationCancellation {
-			ProcessBuilder pb = getToolManager().createSDKProcessBuilder(getProject(), 
-				commands.toArray(String.class));
-			return runBuildTool(pm, pb);
+		protected void addToolCommand(ArrayList2<String> commands)
+				throws CoreException, CommonException, OperationCancellation {
+			//super.addToolCommand(commands);
 		}
 		
 		@Override
-		protected void addMainArguments(ArrayList2<String> commands) {
-			if(buildTarget.getBuildConfigName().isEmpty()) {
+		protected void addMainArguments(ArrayList2<String> commands) throws CommonException {
+			String buildType = buildTarget.getBuildTypeName();
+			if(buildType.isEmpty() || areEqual(buildType, BuildType_Default)) {
 				commands.add("build");
-			} else {
+			}
+			else if(areEqual(buildType, "test")) {
 				// TODO: properly implement other test targets
 				commands.addElements("test", "--no-run");
+			} else {
+				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildType);
 			}
+		}
+		
+		@Override
+		protected ProcessBuilder getProcessBuilder(ArrayList2<String> commands)
+				throws CommonException, OperationCancellation, CoreException {
+			Location projectLocation = ResourceUtils.getProjectLocation(getProject());
+			return getToolManager().createToolProcessBuilder(getBuildToolPath(), projectLocation, 
+				commands.toArray(String.class));
 		}
 		
 		@Override
