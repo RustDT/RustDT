@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Fixed #46 - RustDT installation documentation is confusing
  * Fixed: Arguments field in launch configuration is not multi-line.
  * Added support for Build Configurations.
    * Available build targets are displayed in the Project Explorer. 

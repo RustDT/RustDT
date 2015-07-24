@@ -11,14 +11,18 @@ If you are new to Eclipse, you can learn some of the basics of the Eclipse IDE w
 
 Also, to improve Eclipse performance and startup time, it is recommended you tweak the JVM parameters. There is a tool called Eclipse Optimizer that can do that automatically, it is recommended you use it. Read more about it [here](http://www.infoq.com/news/2015/03/eclipse-optimizer). (Installing/enabling the JRebel optimization is not necessary as that only applies to Java developers)
 
+### IDE configuration
+
+A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`.
+
+Additionally, for functionality such as code completion, you will need:
+ * The [Racer](https://github.com/phildawes/racer) tool. The Racer preferences field can be configured with just the executable name, in which case, the executable will be searched in the PATH environment variable.
+ * The Rust sources package. This package is not included in the Rust intallation, so it must be obtained separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
+
 ### Project setup
 
 ##### Project Creation:
 A new Rust project can be created in the Project Explorer view. Open `New / Project...` and then `Rust / Rust Cargo Project`. This wizard can also be used to import existing Cargo projects into Eclipse.
-
-##### Project Building
-
-The [Rust installation](http://www.rust-lang.org/install.html) is required for project building. The path to the installation should be configured in `Preferences/Rust`.  
 
 ### Editor and Navigation
 
@@ -28,17 +32,15 @@ This is unlike most source editors - if instead you want to just remove one leve
 
 ##### Content Assist / Open Definition:
 Content Assist (also know as Code Completion, Auto Complete) is invoked with `Ctrl-Space`. 
-Content Assist is provided by means of the [Racer](https://github.com/phildawes/racer) tool. 
-You must install this tool, and then configure its location in the `Rust` preference page.  
 
 The Open Definition functionality is invoked by pressing F3 in the source editor. 
 Open Definition is also available in the editor context menu and by means of editor *hyper-linking* 
 (hold Ctrl and click on a reference with the mouse cursor). 
-The [Racer](https://github.com/phildawes/racer) tool is also used to provide this functionality. 
+
+Content Assist and Open Definition are provided by means of the [Racer](https://github.com/phildawes/racer) tool (see the configuration section above).
 
 > If there is a problem with these operations, and you need a diagnostics log, 
 the output of Racer can be seen in the `RustDT Racer log` console page in the Eclipse Console view.
-
 
 ### Launching:
 To run a Rust project that builds to an executable, you will need to create a launch configuration. Locate the main menu, open 'Run' / 'Run Configurations...'. Then double click 'Rust Application" to create a new Rust launch, and configure it accordingly. You can run these launches from the 'Run Configurations...', or for quicker access, from the Launch button in the Eclipse toolbar.
