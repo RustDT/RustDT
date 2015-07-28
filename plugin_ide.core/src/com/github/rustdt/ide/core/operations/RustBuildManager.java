@@ -24,7 +24,7 @@ import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
-import melnorme.lang.ide.core.operations.build.BuildTargetValidator3;
+import melnorme.lang.ide.core.operations.build.BuildTargetValidator;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
@@ -62,30 +62,30 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public String getDefaultBuildOptions(BuildTargetValidator3 buildTargetValidator) throws CommonException {
+		public String getDefaultBuildOptions(BuildTargetValidator buildTargetValidator) throws CommonException {
 			return "";
 		}
 		
 		@Override
-		public CommonBuildTargetOperation getBuildOperation(BuildTargetValidator3 buildTargetValidator,
-				OperationInfo opInfo, Path buildToolPath, boolean fullBuild) {
+		public CommonBuildTargetOperation getBuildOperation(BuildTargetValidator buildTargetValidator,
+				OperationInfo opInfo, Path buildToolPath, boolean fullBuild) throws CommonException, CoreException {
 			return new RustBuildTargetOperation(buildTargetValidator, opInfo, buildToolPath, fullBuild);
 		}
 		
 	}
 	
 	@Override
-	public BuildTargetValidator3 createBuildTargetValidator(IProject project, BuildConfiguration buildConfig,
-			String buildTypeName, String buildOptions) {
-		return new BuildTargetValidator3(project, buildConfig, buildTypeName, buildOptions);
+	public BuildTargetValidator createBuildTargetValidator(IProject project, String buildConfigName,
+			String buildTypeName, String buildOptions) throws CommonException {
+		return new BuildTargetValidator(project, buildConfigName, buildTypeName, buildOptions);
 	}
 	
 	/* ----------------- Build ----------------- */
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(BuildTargetValidator3 buildTargetValidator, OperationInfo parentOpInfo, 
-				Path buildToolPath, boolean fullBuild) {
+		public RustBuildTargetOperation(BuildTargetValidator buildTargetValidator, OperationInfo parentOpInfo, 
+				Path buildToolPath, boolean fullBuild) throws CommonException, CoreException {
 			super(buildTargetValidator.buildMgr, buildTargetValidator, parentOpInfo, buildToolPath, fullBuild);
 		}
 		
@@ -97,15 +97,15 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		protected void addMainArguments(ArrayList2<String> commands) throws CommonException {
-			String buildType = buildTargetValidator.getBuildTypeName();
-			if(buildType.isEmpty() || areEqual(buildType, BuildType_Default)) {
+			String buildTypeName = getBuildTypeName();
+			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
 				commands.add("build");
 			}
-			else if(areEqual(buildType, "test")) {
+			else if(areEqual(buildTypeName, "test")) {
 				// TODO: properly implement other test targets
 				commands.addElements("test", "--no-run");
 			} else {
-				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildType);
+				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildTypeName);
 			}
 		}
 		
