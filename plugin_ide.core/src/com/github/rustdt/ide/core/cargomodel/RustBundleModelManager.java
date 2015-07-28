@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
 
-import melnorme.lang.ide.core.operations.build.BuildTargetRunner.BuildConfiguration;
+import melnorme.lang.ide.core.operations.build.BuildManager.BuildConfiguration;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
