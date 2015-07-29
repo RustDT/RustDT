@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Fixed: Occasional AssertionFailure when creating new projects in nested locations (project would not show up in Explorer).
  * Fixed #46 - RustDT installation documentation is confusing
  * Fixed: Arguments field in launch configuration is not multi-line.
  * Added support for Build Configurations.
