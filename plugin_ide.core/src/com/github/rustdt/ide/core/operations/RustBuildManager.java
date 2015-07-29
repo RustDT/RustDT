@@ -96,7 +96,8 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void addMainArguments(ArrayList2<String> commands) throws CommonException {
+		protected String[] getMainArguments() throws CoreException, CommonException, OperationCancellation {
+			ArrayList2<String> commands = new ArrayList2<>();
 			String buildTypeName = getBuildTypeName();
 			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
 				commands.add("build");
@@ -107,6 +108,7 @@ public class RustBuildManager extends BuildManager {
 			} else {
 				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildTypeName);
 			}
+			return commands.toArray(String.class);
 		}
 		
 		@Override
