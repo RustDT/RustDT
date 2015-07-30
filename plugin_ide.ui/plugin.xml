@@ -374,4 +374,34 @@
 		</launchConfigurationTabGroup>
 	</extension>
 	
+<extension point="org.eclipse.debug.ui.launchShortcuts">
+	<shortcut
+		class="com.github.rustdt.ide.ui.launch.RustLaunchShortcut"
+		id="com.github.rustdt.ide.ui.launch.LaunchShortcut"
+		icon="icons/actions/application_launch.png"
+		label="%LangLaunchShortcut.name"
+		modes="run, debug">
+		
+		<description mode="run" description="%LangLaunchShortcut.runDescription"/>
+		<description mode="debug" description="%LangLaunchShortcut.debugDescription"/>
+		
+		<configurationType id="com.github.rustdt.ide.core.LaunchConfigurationType" />
+		
+		<contextualLaunch>
+			<enablement>
+				<with variable="selection">
+					<count value="1" />
+					<iterate>
+						<or>
+							<adapt type="org.eclipse.core.resources.IProject">
+								<reference definitionId="com.github.rustdt.ide.core.expressions.isNatureProject" />
+							</adapt>
+						</or>
+					</iterate>
+				</with>
+			</enablement>
+		</contextualLaunch>
+	</shortcut>
+</extension>
+	
 </plugin>
