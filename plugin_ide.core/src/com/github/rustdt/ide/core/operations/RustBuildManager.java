@@ -42,7 +42,7 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
  */
 public class RustBuildManager extends BuildManager {
 	
-	public static final String BuildType_Default = "<default>";
+	public static final String BuildType_Default = "(default)";
 	
 	public RustBuildManager(LangBundleModel<? extends AbstractBundleInfo> bundleModel) {
 		super(bundleModel);
@@ -98,7 +98,7 @@ public class RustBuildManager extends BuildManager {
 		@Override
 		protected String[] getMainArguments() throws CoreException, CommonException, OperationCancellation {
 			ArrayList2<String> commands = new ArrayList2<>();
-			String buildTypeName = getBuildTypeName();
+			String buildTypeName = getBuildType().getName();
 			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
 				commands.add("build");
 			}
