@@ -75,9 +75,9 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	@Override
-	public BuildTargetValidator createBuildTargetValidator(IProject project, String buildConfigName,
-			String buildTypeName, String buildOptions) throws CommonException {
-		return new BuildTargetValidator(project, buildConfigName, buildTypeName, buildOptions);
+	public BuildTargetValidator createBuildTargetValidator2(IProject project, String buildConfigName,
+			String buildTypeName, String buildArguments) throws CommonException {
+		return new BuildTargetValidator(project, buildConfigName, buildTypeName, buildArguments);
 	}
 	
 	/* ----------------- Build ----------------- */

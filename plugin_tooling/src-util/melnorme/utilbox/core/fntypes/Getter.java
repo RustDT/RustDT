@@ -8,20 +8,19 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.preferences;
+package melnorme.utilbox.core.fntypes;
 
-import org.eclipse.core.resources.IProject;
-
-import melnorme.lang.ide.ui.dialogs.LangBuildConfigurationPropertyPage;
-import melnorme.lang.ide.ui.preferences.LangProjectBuildConfigurationComponent;
-
-
-public class RustBuildConfigurationPropertyPage extends LangBuildConfigurationPropertyPage {
+/**
+ * An {@link ICallable} for simple callables, typically:
+ *  ones not having any side effects, nor performing long-waiting computation.
+ */
+public interface Getter<RET, EXC extends Exception> extends ICallable<RET, EXC> {
 	
 	@Override
-	protected LangProjectBuildConfigurationComponent createProjectBuildConfigComponent(IProject project) {
-		return new LangProjectBuildConfigurationComponent(project) {
-		};
+	default RET call() throws EXC {
+		return get();
 	}
+	
+	public RET get() throws EXC;
 	
 }

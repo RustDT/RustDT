@@ -8,20 +8,22 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.preferences;
+package melnorme.lang.ide.core.launch;
 
-import org.eclipse.core.resources.IProject;
+import melnorme.utilbox.core.CommonException;
 
-import melnorme.lang.ide.ui.dialogs.LangBuildConfigurationPropertyPage;
-import melnorme.lang.ide.ui.preferences.LangProjectBuildConfigurationComponent;
-
-
-public class RustBuildConfigurationPropertyPage extends LangBuildConfigurationPropertyPage {
+public interface LaunchExecutableSettingsInput {
 	
-	@Override
-	protected LangProjectBuildConfigurationComponent createProjectBuildConfigComponent(IProject project) {
-		return new LangProjectBuildConfigurationComponent(project) {
-		};
-	}
+	// can be null
+	String getProjectName() throws CommonException;
+	
+	// can be null
+	String getBuildTargetName();
+	
+	// can be null
+	String getBuildArguments();
+	
+	// can be null
+	String getArtifactPath();
 	
 }

@@ -8,20 +8,10 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.preferences;
+package melnorme.utilbox.core.fntypes;
 
-import org.eclipse.core.resources.IProject;
+import melnorme.utilbox.core.CommonException;
 
-import melnorme.lang.ide.ui.dialogs.LangBuildConfigurationPropertyPage;
-import melnorme.lang.ide.ui.preferences.LangProjectBuildConfigurationComponent;
-
-
-public class RustBuildConfigurationPropertyPage extends LangBuildConfigurationPropertyPage {
-	
-	@Override
-	protected LangProjectBuildConfigurationComponent createProjectBuildConfigComponent(IProject project) {
-		return new LangProjectBuildConfigurationComponent(project) {
-		};
-	}
+public interface CommonGetter<RET> extends Getter<RET, CommonException> {
 	
 }
