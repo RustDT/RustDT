@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 import melnorme.lang.tooling.data.LocationOrSinglePathValidator;
 import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.StatusLevel;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IOperationHelper;
+import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -45,7 +47,7 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		return arguments;
 	}
 	
-	public ExternalProcessResult execute() throws CommonException, OperationCancellation {
+	protected ProcessBuilder getCommandProcessBuilder() throws ValidationException {
 		String toolExePath = new RustRacerLocationValidator().getValidatedPath(racerPath).toString();
 		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedLocation(sdkSrcPath).toString();
 		
@@ -56,10 +58,18 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		ProcessBuilder pb = new ProcessBuilder(cmdLine);
 		
 		pb.environment().put("RUST_SRC_PATH", rustSrcPath);
-		
-		return operationHelper.runProcess(pb, input);
+		return pb;
 	}
 	
+	public ExternalProcessResult execute() throws CommonException, OperationCancellation, OperationSoftFailure {
+		ProcessBuilder pb = getCommandProcessBuilder();
+		return runToolProcess_validateExitValue(pb, input);
+	}
+	
+	@Override
+	protected String getToolProcessName() {
+		return "Racer";
+	}
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
 		
 		public RustRacerLocationValidator() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,15 +22,16 @@ public class RacerFindDefinitionOperation extends RacerOperation {
 	
 	protected final int offset;
 	
-	public RacerFindDefinitionOperation(IOperationHelper processRunner, String racerPath, String sdkSrcPath, int offset,
+	public RacerFindDefinitionOperation(IOperationHelper toolRunner, String racerPath, String sdkSrcPath, int offset,
 			int line_0, int col_0, Location fileLocation) {
-		super(processRunner, racerPath, sdkSrcPath, getArguments("find-definition", line_0, col_0, fileLocation));
+		super(toolRunner, racerPath, sdkSrcPath, getArguments("find-definition", line_0, col_0, fileLocation));
 		
 		this.offset = offset;
 	}
 	
 	public FindDefinitionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
-		ExternalProcessResult result = execute();
+		ProcessBuilder pb = getCommandProcessBuilder();
+		ExternalProcessResult result = runToolProcess2(pb, input);
 		
 		String output = result.getStdOutBytes().toString(StringUtil.UTF8);
 		return createRacerOutputParser(offset).parseResolvedMatch(output);
