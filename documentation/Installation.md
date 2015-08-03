@@ -12,16 +12,8 @@
  1. Select the recently added update site in the `Work with:` dropdown. Type `RustDT` in the filter box. Now the RustDT feature should appear below.
  1. Select the `RustDT` feature, and complete the wizard. 
   * RustDT dependencies such as CDT will automatically be added during installation.
- 1. Restart Eclipse. Then proceed to the Configuration section ahead, and also please read the [User Guide](UserGuide.md).
-
-## Configuration
-
-A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`.
-
-Additionally, for functionality such as code completion, you will need:
- * The [Racer](https://github.com/phildawes/racer) tool. The Racer preferences field can be configured with just the executable name, in which case, the executable will be searched in the PATH environment variable.
- * The Rust sources package. This package is not included in the Rust intallation, so it must be obtained separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
- 
+ 1. Restart Eclipse. 
+ 1. For initial setup, follow the instructions at the configuration section in the [User Guide](UserGuide.md). It is recommended you read the rest of the guide too.
  
 #### Updating:
 If you already have RustDT installed, and want to update it to a newer release, click `Help / Check for Updates...`.
