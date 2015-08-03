@@ -11,12 +11,14 @@
 package com.github.rustdt.ide.core.operations;
 
 import static melnorme.utilbox.core.CoreUtil.areEqual;
+import static melnorme.utilbox.core.CoreUtil.array;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugPlugin;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
 
@@ -63,7 +65,18 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		public String getDefaultBuildOptions(BuildTargetValidator buildTargetValidator) throws CommonException {
-			return "";
+			ArrayList2<String> commands = new ArrayList2<>();
+			String buildTypeName = buildTargetValidator.getBuildTypeName();
+			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
+				commands.add("build");
+			}
+			else if(areEqual(buildTypeName, "test")) {
+				// TODO: properly implement other test targets
+				commands.addElements("test", "--no-run");
+			} else {
+				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildTypeName);
+			}
+			return DebugPlugin.renderArguments(commands.toArray(String.class), null);
 		}
 		
 		@Override
@@ -97,18 +110,7 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		protected String[] getMainArguments() throws CoreException, CommonException, OperationCancellation {
-			ArrayList2<String> commands = new ArrayList2<>();
-			String buildTypeName = getBuildType().getName();
-			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
-				commands.add("build");
-			}
-			else if(areEqual(buildTypeName, "test")) {
-				// TODO: properly implement other test targets
-				commands.addElements("test", "--no-run");
-			} else {
-				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildTypeName);
-			}
-			return commands.toArray(String.class);
+			return array();
 		}
 		
 		@Override
