@@ -83,7 +83,8 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		
 		testParseOutput(buildParser, 
 			"PREFIX 4,6,pr\n" +
-			"MATCH BufReader;BufReader;32;11;relativeDir/src/xpto.rs;Let;"+DESC1+NL
+			"MATCH BufReader;BufReader;32;11;relativeDir/src/xpto.rs;Let;"+DESC1+NL+
+			"END\n"
 			, 
 			listFrom(
 				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, att(), "xpto.rs", DESC1)
@@ -127,7 +128,8 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			)
 		);
 		
-		testMultiLineDesc(offset, buildParser);
+		// Commented out, to be fully removed
+//		testMultiLineDesc(offset, buildParser);
 	}
 	
 	protected void testParseOutput(RacerCompletionOutputParser parser, String output, List<?> expected) 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
-
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -56,7 +54,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 				parsePrefix(line);
 			} else if(line.startsWith("MATCH ")) {
 				proposals.add(parseProposal(line, source));
-			} else if (line.startsWith("END")) {
+			} else if(line.startsWith("END")) {
                 continue;
             } else {
 				handleMessageParseError(new CommonException("Unknown line format: " + line));
@@ -79,6 +77,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		return lineLexer.consumeDelimitedString(',', -1);
 	}
 	
+	@SuppressWarnings("unused")
 	public ToolCompletionProposal parseProposal(String line, StringParseSource source) throws CommonException {
 		StringParseSource lineLexer = new StringParseSource(line);
 		
@@ -95,10 +94,11 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		String description = consumeSemicolonDelimitedString(lineLexer);
 		
-		while(source.hasCharAhead() && !source.lookaheadMatches("MATCH ")) {
-			// This is a multiline description.
-			description += "\n" + assertNotNull(source.consumeLine());
-		}
+		// Commented out - This wasn't really correct parsing
+//		while(source.hasCharAhead() && !source.lookaheadMatches("MATCH ")) {
+//			// This is a multiline description.
+//			description += "\n" + assertNotNull(source.consumeLine());
+//		}
 		
 		
 		CompletionProposalKind kind = parseKind(rawKind); 

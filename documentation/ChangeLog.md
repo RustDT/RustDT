@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Fixed: Properly parse Racer "END" line syntax, don't show error when this occurs.
  * Fixed #41: Don't show error dialog when Racer fails. Only the editor status line is updated now.
  * Fixed: Occasional AssertionFailure when creating new projects in nested locations (project would not show up in Explorer).
  * Fixed #46 - RustDT installation documentation is confusing:
