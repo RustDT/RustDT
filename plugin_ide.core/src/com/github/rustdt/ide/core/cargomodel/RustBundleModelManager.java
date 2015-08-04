@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,11 +50,6 @@ public class RustBundleModelManager extends BundleModelManager<AbstractBundleInf
 	@Override
 	protected AbstractBundleInfo createNewInfo(IProject project) {
 		return new AbstractBundleInfo() {
-			
-			@Override
-			public java.nio.file.Path getEffectiveTargetFullPath() {
-				return null;
-			}
 			
 			@Override
 			public Indexable<BuildConfiguration> getBuildConfigurations() {
