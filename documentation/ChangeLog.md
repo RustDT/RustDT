@@ -5,7 +5,7 @@
  * Fixed #41: Don't show error dialog when Racer fails. Only the editor status line is updated now.
  * Fixed: Occasional AssertionFailure when creating new projects in nested locations (project would not show up in Explorer).
  * Fixed #46 - RustDT installation documentation is confusing:
-  * Added new [Configuration](UserGuide.md#configuration) section in the User Guide.
+  * Added new [Configuration](documentation/UserGuide.md#configuration) section in the User Guide.
  * Fixed: Arguments field in launch configuration is not multi-line.
  * Added support for Build Configurations.
    * Available build targets are displayed in the Project Explorer. 
