@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
-import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
 import melnorme.lang.tooling.data.LocationOrSinglePathValidator;
 import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.StatusLevel;
+import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IOperationHelper;
 import melnorme.lang.tooling.ops.OperationSoftFailure;

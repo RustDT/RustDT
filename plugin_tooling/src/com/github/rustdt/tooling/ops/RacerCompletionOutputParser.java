@@ -11,7 +11,6 @@
 package com.github.rustdt.tooling.ops;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import melnorme.lang.tooling.CompletionProposalKind;
 import melnorme.lang.tooling.ElementAttributes;
@@ -25,6 +24,7 @@ import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;
 
 public abstract class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCompletionResult> {
@@ -232,10 +232,10 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		String elementName = consumeCommaDelimitedString(lineLexer);
 		int line_1 = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
 		int column_0 = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
-		Path path = parsePath(consumeCommaDelimitedString(lineLexer));
+		Location loc = parseLocation(consumeCommaDelimitedString(lineLexer));
 		
-		SourceLineColumnRange position = new SourceLineColumnRange(path, line_1, column_0 + 1);
-		return new FindDefinitionResult(null, position);
+		SourceLineColumnRange position = new SourceLineColumnRange(line_1, column_0 + 1);
+		return new FindDefinitionResult(loc, position, null);
 	}
 	
 }

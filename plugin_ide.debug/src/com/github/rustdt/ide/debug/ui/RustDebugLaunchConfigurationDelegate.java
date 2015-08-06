@@ -38,7 +38,7 @@ import org.eclipse.debug.core.model.ISourceLocator;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
 import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
-import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
+import melnorme.lang.tooling.data.ValidationException;
 import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.Location;
 

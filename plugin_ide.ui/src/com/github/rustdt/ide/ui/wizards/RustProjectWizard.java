@@ -25,7 +25,7 @@ import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.WizardMessages_Actual;
 import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
-import melnorme.lang.tooling.data.AbstractValidator.ValidationException;
+import melnorme.lang.tooling.data.ValidationException;
 
 /**
  * Rust New Project Wizard.

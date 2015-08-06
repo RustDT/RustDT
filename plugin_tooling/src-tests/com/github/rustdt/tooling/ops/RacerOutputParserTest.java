@@ -32,6 +32,7 @@ import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.MiscUtil;
 
 import org.junit.Test;
 
@@ -172,9 +173,11 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		
 		testParseResolvedMatch(buildParser, "", null, ToolingMessages.FIND_DEFINITION_NoTargetFound);
 		
+		String LOC_ROOT = MiscUtil.OS_IS_WINDOWS ? "C:\\" : "/";
+		
 		testParseResolvedMatch(buildParser, 
-			"MATCH other,19,3,/devel/RustProj/src/main.rs,Function,fn other(foo: i32) {", 
-			new FindDefinitionResult(null, new SourceLineColumnRange(path("/devel/RustProj/src/main.rs"), 19, 4)),
+			"MATCH other,19,3,"+LOC_ROOT+"RustProj/src/main.rs,Function,fn other(foo: i32) {", 
+			new FindDefinitionResult(loc(LOC_ROOT+"/RustProj/src/main.rs"), new SourceLineColumnRange(19, 4), null),
 			null);
 		
 		testParseResolvedMatch(buildParser, "MATCH other,as", null, "Invalid integer: `as`");

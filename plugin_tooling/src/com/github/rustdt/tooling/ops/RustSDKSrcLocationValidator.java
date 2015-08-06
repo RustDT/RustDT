@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 
 import melnorme.lang.tooling.data.LocationValidator;
 import melnorme.lang.tooling.data.StatusLevel;
+import melnorme.lang.tooling.data.ValidationException;
 import melnorme.utilbox.misc.Location;
 
 public class RustSDKSrcLocationValidator extends LocationValidator {

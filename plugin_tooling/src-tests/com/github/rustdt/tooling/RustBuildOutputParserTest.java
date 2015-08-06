@@ -36,8 +36,9 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 	protected static ToolSourceMessage msg(Path path, int line, int column, int endLine, int endColumn, 
 			StatusLevel level, String errorMessage) {
 		
-		ToolSourceMessage msg = new ToolSourceMessage(new SourceLineColumnRange(path, line, column, endLine, endColumn), 
-					level, errorMessage);
+		ToolSourceMessage msg = new ToolSourceMessage(path, 
+			new SourceLineColumnRange(line, column, endLine, endColumn), 
+			level, errorMessage);
 		msg.toString();
 		return msg;
 	}
