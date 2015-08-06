@@ -217,21 +217,15 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	
 	/* ----------------- find-definition ----------------- */
 	
-	public FindDefinitionResult parseResolvedMatch(String lineInput) {
-		
-		try {
-			return doParseResolvedMatch(lineInput);
-		} catch (CommonException e) {
-			return new FindDefinitionResult(
-				ToolingMessages.FIND_DEFINITION_ToolError + e.getMessage());
-		}
+	public FindDefinitionResult parseResolvedMatch(String lineInput) throws CommonException {
+		return doParseResolvedMatch(lineInput);
 	}
 	
 	protected FindDefinitionResult doParseResolvedMatch(String lineInput) throws CommonException {
 		StringParseSource lineLexer = new StringParseSource(lineInput);
 		
 		if(lineLexer.tryConsume("MATCH ") == false) {
-			return new FindDefinitionResult(ToolingMessages.FIND_DEFINITION_NoTargetFound);
+			throw new CommonException(ToolingMessages.FIND_DEFINITION_NoTargetFound);
 		}
 		
 		@SuppressWarnings("unused")

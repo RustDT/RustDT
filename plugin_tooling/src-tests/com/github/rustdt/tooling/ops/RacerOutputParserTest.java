@@ -15,6 +15,8 @@ import static melnorme.lang.tooling.CompletionProposalKind.Let;
 import static melnorme.lang.tooling.CompletionProposalKind.Struct;
 import static melnorme.lang.tooling.CompletionProposalKind.Trait;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 import static melnorme.utilbox.core.CoreUtil.listFrom;
 
 import java.util.List;
@@ -168,22 +170,27 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		
 		RacerCompletionOutputParser buildParser = createTestsParser(0);
 		
-		testParseResolvedMatch(buildParser, "", 
-			new FindDefinitionResult(ToolingMessages.FIND_DEFINITION_NoTargetFound));
+		testParseResolvedMatch(buildParser, "", null, ToolingMessages.FIND_DEFINITION_NoTargetFound);
 		
 		testParseResolvedMatch(buildParser, 
 			"MATCH other,19,3,/devel/RustProj/src/main.rs,Function,fn other(foo: i32) {", 
-			new FindDefinitionResult(null, new SourceLineColumnRange(path("/devel/RustProj/src/main.rs"), 19, 4)));
+			new FindDefinitionResult(null, new SourceLineColumnRange(path("/devel/RustProj/src/main.rs"), 19, 4)),
+			null);
 		
-		testParseResolvedMatch(buildParser, "MATCH other,as", 
-			new FindDefinitionResult("Error: Invalid integer: `as`"));
+		testParseResolvedMatch(buildParser, "MATCH other,as", null, "Invalid integer: `as`");
 		
 	}
 	
 	protected void testParseResolvedMatch(RacerCompletionOutputParser buildParser, String input,
-			FindDefinitionResult expected) {
-		FindDefinitionResult result = buildParser.parseResolvedMatch(input);
-		assertAreEqual(result, expected);
+			FindDefinitionResult expected, String expectedException) {
+		try {
+			FindDefinitionResult result = buildParser.parseResolvedMatch(input);
+			assertAreEqual(result, expected);
+			assertTrue(expectedException == null);
+		} catch(CommonException e) {
+			assertNotNull(expectedException);
+			assertTrue(e.getMessage().contains(expectedException));
+		}
 	}
 	
 }
