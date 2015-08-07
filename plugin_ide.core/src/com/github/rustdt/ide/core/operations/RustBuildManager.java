@@ -25,8 +25,8 @@ import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
-import melnorme.lang.ide.core.operations.build.BuildTargetValidator;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
+import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
@@ -63,9 +63,9 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public String getDefaultBuildOptions(BuildTargetValidator buildTargetValidator) throws CommonException {
+		public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
 			ArrayList2<String> commands = new ArrayList2<>();
-			String buildTypeName = buildTargetValidator.getBuildTypeName();
+			String buildTypeName = validatedBuildTarget.getBuildTypeName();
 			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
 				commands.add("build");
 			}
@@ -79,9 +79,9 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public CommonBuildTargetOperation getBuildOperation(BuildTargetValidator buildTargetValidator,
+		public CommonBuildTargetOperation getBuildOperation(ValidatedBuildTarget validatedBuildTarget,
 				OperationInfo opInfo, Path buildToolPath, boolean fullBuild) throws CommonException, CoreException {
-			return new RustBuildTargetOperation(buildTargetValidator, opInfo, buildToolPath, fullBuild);
+			return new RustBuildTargetOperation(validatedBuildTarget, opInfo, buildToolPath, fullBuild);
 		}
 		
 	}
@@ -90,9 +90,9 @@ public class RustBuildManager extends BuildManager {
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(BuildTargetValidator buildTargetValidator, OperationInfo parentOpInfo, 
+		public RustBuildTargetOperation(ValidatedBuildTarget validatedBuildTarget, OperationInfo parentOpInfo, 
 				Path buildToolPath, boolean fullBuild) throws CommonException, CoreException {
-			super(buildTargetValidator.buildMgr, buildTargetValidator, parentOpInfo, buildToolPath, fullBuild);
+			super(validatedBuildTarget.buildMgr, validatedBuildTarget, parentOpInfo, buildToolPath, fullBuild);
 		}
 		
 		@Override
