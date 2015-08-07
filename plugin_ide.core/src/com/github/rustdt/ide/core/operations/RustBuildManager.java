@@ -16,7 +16,6 @@ import static melnorme.utilbox.core.CoreUtil.array;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 
@@ -87,12 +86,6 @@ public class RustBuildManager extends BuildManager {
 		
 	}
 	
-	@Override
-	public BuildTargetValidator createBuildTargetValidator2(IProject project, String buildConfigName,
-			String buildTypeName, String buildArguments) throws CommonException {
-		return new BuildTargetValidator(project, buildConfigName, buildTypeName, buildArguments);
-	}
-	
 	/* ----------------- Build ----------------- */
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
@@ -130,7 +123,7 @@ public class RustBuildManager extends BuildManager {
 				}
 			}.parseOutput(processResult);
 			
-			ToolMarkersUtil.addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
+			new ToolMarkersUtil().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
 		}
 	}
 	
