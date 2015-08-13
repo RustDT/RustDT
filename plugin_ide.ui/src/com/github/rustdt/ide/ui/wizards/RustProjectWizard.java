@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 
-import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
+import com.github.rustdt.tooling.cargo.CargoManifestParser;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
@@ -57,7 +57,7 @@ public class RustProjectWizard extends LangNewProjectWizard {
 	@Override
 	protected void configureCreatedProject(ProjectCreator_ForWizard projectCreator, IProgressMonitor monitor)
 			throws CoreException {
-		projectCreator.createFile(getProject().getFile(RustBundleModelManager.BUNDLE_MANIFEST_FILE.toOSString()), 
+		projectCreator.createFile(getProject().getFile(CargoManifestParser.BUNDLE_MANIFEST_FILE.toString()), 
 			HelloWorld_ManifestContents, false, monitor);
 		
 		IFile mainModule = getProject().getFolder("src").getFile("main.rs");

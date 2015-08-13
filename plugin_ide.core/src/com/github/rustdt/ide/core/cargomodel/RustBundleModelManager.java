@@ -11,15 +11,16 @@
 package com.github.rustdt.ide.core.cargomodel;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
+import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
 import melnorme.lang.ide.core.operations.build.BuildManager.BuildConfiguration;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
+import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 
@@ -38,13 +39,11 @@ public class RustBundleModelManager extends BundleModelManager<AbstractBundleInf
 		super(new RustBundleModel());
 	}
 	
-	public static final Path BUNDLE_MANIFEST_FILE = new Path("Cargo.toml");
-	
 	/* -----------------  ----------------- */
 	
 	@Override
 	protected BundleManifestResourceListener init_createResourceListener() {
-		return new ManagerResourceListener(BUNDLE_MANIFEST_FILE);
+		return new ManagerResourceListener(ResourceUtils.epath(CargoManifestParser.BUNDLE_MANIFEST_FILE));
 	}
 	
 	@Override
