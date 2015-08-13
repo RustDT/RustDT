@@ -1,0 +1,15 @@
+[package]
+name = "hello_world"
+authors = ["Your Name <you@example.com>"]
+
+[[bin]]
+name = "hello_world"
+
+[dependencies]
+rand="0.3.0"
+dep_empty=""
+dep_invalid=123
+
+dep_git = { git = "https://github.com/bjz/color-rs.git" }
+
+dep_foo = { version = "1.2.0", path = "my_path", optional = true }

@@ -12,9 +12,14 @@ package com.github.rustdt.tooling.cargo;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.github.rustdt.tooling.cargo.CrateManifest.DependencyRef;
 
 import me.grison.jtoml.impl.Toml;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.core.CoreUtil;
 import melnorme.utilbox.misc.PathUtil;
 
 public class CargoManifestParser {
@@ -23,33 +28,61 @@ public class CargoManifestParser {
 
 	public static final Path BUNDLE_MANIFEST_FILE = PathUtil.createValidPath("Cargo.toml");
 	
+	protected MapHelper helper = new MapHelper();
+	
 	public CrateManifest parse(String source) throws CommonException {
 		
 		Toml toml = Toml.parse(source);
 		
-		TomlHelper helper = new TomlHelper(toml);
+		Map<String, Object> packageEntry = getTomlMap(toml, "package", FAllowNull.NO);
 		
-		Map<String, Object> packageMap = helper.getMap("package");
-		String name = getKey(packageMap, "name", String.class, FAllowNull.NO);
-		String version = getKey(packageMap, "version", String.class, FAllowNull.YES);
+		String name = helper.getString(packageEntry, "name", FAllowNull.NO);
+		String version = helper.getString(packageEntry, "version", FAllowNull.YES);
+		
+		ArrayList2<DependencyRef> deps = parseDeps(toml);
 		
 		return new CrateManifest(
 			name, 
-			version);
+			version, 
+			deps);
 	}
 	
-	public <T> T getKey(Map<String, Object> map, String key, Class<T> klass, FAllowNull allowNull) 
-			throws CommonException {
-		Object value = map.get(key);
+	protected Map<String, Object> getTomlMap(Toml toml, String key, FAllowNull allowNull) throws CommonException {
+		return helper.validateMap(toml.get(key), key, allowNull);
+	}
+	
+	protected ArrayList2<DependencyRef> parseDeps(Toml toml) throws CommonException {
 		
-		if(value == null && allowNull.isTrue()) {
-			throw CommonException.fromMsgFormat("Value for key `{0}` is null.", key);
+		ArrayList2<DependencyRef> deps = new ArrayList2<>();
+		
+		Map<String, Object> depsMap = getTomlMap(toml, "dependencies", FAllowNull.YES);
+		if(depsMap != null) {
+			for(Entry<String, Object> depsEntry : depsMap.entrySet()) {
+				String name = depsEntry.getKey();
+				Object value = depsEntry.getValue();
+				
+				if(value instanceof Map<?, ?>) {
+					Map<String, Object> map = CoreUtil.blindCast(value);
+					deps.add(parseDependencyRef(helper, name, map));
+					continue;
+				}
+				
+				String version = null;
+				if(value instanceof String) {
+					version = (String) value;
+				}
+				deps.add(new DependencyRef(name, version));
+			}
 		}
 		
-		if(value != null && !klass.isInstance(value)) {
-			throw CommonException.fromMsgFormat("Value for key `{0}` is not a `{1}`.", key);
-		}
-		return klass.cast(value);
+		return deps;
+	}
+	
+	protected DependencyRef parseDependencyRef(MapHelper helper, String name, Map<String, Object> map) {
+		String version = helper.getValue_ignoreErrors(map, "version", String.class, null);
+		boolean optional = helper.getValue_ignoreErrors(map, "optional", Boolean.class, false);
+		
+		return new DependencyRef(name, version, optional);
 	}
 	
 }
