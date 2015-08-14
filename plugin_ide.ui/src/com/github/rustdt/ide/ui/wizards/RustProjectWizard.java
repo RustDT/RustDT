@@ -57,7 +57,7 @@ public class RustProjectWizard extends LangNewProjectWizard {
 	@Override
 	protected void configureCreatedProject(ProjectCreator_ForWizard projectCreator, IProgressMonitor monitor)
 			throws CoreException {
-		projectCreator.createFile(getProject().getFile(CargoManifestParser.BUNDLE_MANIFEST_FILE.toString()), 
+		projectCreator.createFile(getProject().getFile(CargoManifestParser.MANIFEST_FILENAME.toString()), 
 			HelloWorld_ManifestContents, false, monitor);
 		
 		IFile mainModule = getProject().getFolder("src").getFile("main.rs");

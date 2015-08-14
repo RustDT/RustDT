@@ -12,6 +12,7 @@ package com.github.rustdt.tooling.cargo;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.CoreUtil.areEqual;
+import static melnorme.utilbox.core.CoreUtil.nullToEmpty;
 import static melnorme.utilbox.misc.StringUtil.nullAsEmpty;
 
 import java.text.MessageFormat;
@@ -71,7 +72,7 @@ public class CrateManifest {
 	
 	public static HashMap2<String, DependencyRef> toHashMap(Indexable<DependencyRef> deps) {
 		HashMap2<String, DependencyRef> depsMap = new HashMap2<>();
-		for(DependencyRef dependencyRef : deps) {
+		for(DependencyRef dependencyRef : nullToEmpty(deps)) {
 			depsMap.put(dependencyRef.name, dependencyRef);
 		}
 		return depsMap;

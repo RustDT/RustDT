@@ -26,7 +26,7 @@ public class CargoManifestParser {
 	
 	public static enum FAllowNull { YES, NO ; public boolean isTrue() { return this == YES; } }
 
-	public static final Path BUNDLE_MANIFEST_FILE = PathUtil.createValidPath("Cargo.toml");
+	public static final Path MANIFEST_FILENAME = PathUtil.createValidPath("Cargo.toml");
 	
 	protected MapHelper helper = new MapHelper();
 	

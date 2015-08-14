@@ -10,14 +10,12 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
-import static melnorme.utilbox.core.CoreUtil.areEqual;
 import static melnorme.utilbox.core.CoreUtil.array;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
 
@@ -43,39 +41,15 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
  */
 public class RustBuildManager extends BuildManager {
 	
-	public static final String BuildType_Default = "(default)";
+	public static final String BuildType_Default = "dev";
 	
 	public RustBuildManager(LangBundleModel<? extends AbstractBundleInfo> bundleModel) {
 		super(bundleModel);
 	}
 	
-	@Override
-	protected Indexable<BuildType> getBuildTypes_do() {
-		return ArrayList2.create(
-			new RustBuildType(BuildType_Default),
-			new RustBuildType("test")
-		);
-	}
-	
-	protected class RustBuildType extends BuildType {
+	protected abstract class RustBuildType extends BuildType {
 		public RustBuildType(String name) {
 			super(name);
-		}
-		
-		@Override
-		public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-			ArrayList2<String> commands = new ArrayList2<>();
-			String buildTypeName = validatedBuildTarget.getBuildTypeName();
-			if(buildTypeName.isEmpty() || areEqual(buildTypeName, BuildType_Default)) {
-				commands.add("build");
-			}
-			else if(areEqual(buildTypeName, "test")) {
-				// TODO: properly implement other test targets
-				commands.addElements("test", "--no-run");
-			} else {
-				throw CommonException.fromMsgFormat("Unknown build type `{0}`.", buildTypeName);
-			}
-			return DebugPlugin.renderArguments(commands.toArray(String.class), null);
 		}
 		
 		@Override
@@ -84,6 +58,45 @@ public class RustBuildManager extends BuildManager {
 			return new RustBuildTargetOperation(validatedBuildTarget, opInfo, buildToolPath);
 		}
 		
+	}
+	
+	@Override
+	protected Indexable<BuildType> getBuildTypes_do() {
+		return ArrayList2.create(
+			new RustBuildType(BuildType_Default) {
+				@Override
+				public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+					return "build";
+				}
+				
+				@Override
+				public String getArtifactPath(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+					return "target/debug/" + validatedBuildTarget.getBuildConfigName();
+				}
+			},
+			new RustBuildType("test") {
+				@Override
+				public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+					return "test --no-run";
+				}
+				
+				@Override
+				public String getArtifactPath(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+					return super.getArtifactPath(validatedBuildTarget);
+				}
+			},
+			new RustBuildType("release") {
+				@Override
+				public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+					return "build --release";
+				};
+				
+				@Override
+				public String getArtifactPath(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+					return "target/release/" + validatedBuildTarget.getBuildConfigName();
+				}
+			}
+		);
 	}
 	
 	/* ----------------- Build ----------------- */

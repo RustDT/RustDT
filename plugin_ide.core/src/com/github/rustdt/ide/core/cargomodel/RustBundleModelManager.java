@@ -10,26 +10,31 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.cargomodel;
 
+import static com.github.rustdt.tooling.cargo.CargoManifestParser.MANIFEST_FILENAME;
+
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
+import com.github.rustdt.tooling.cargo.CrateManifest;
 
-import melnorme.lang.ide.core.operations.build.BuildManager.BuildConfiguration;
-import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
-import melnorme.utilbox.collections.ArrayList2;
-import melnorme.utilbox.collections.Indexable;
+import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.FileUtil;
+import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.misc.StringUtil;
 
 /**
  * In Rust, the bundles are the Cargo crates. 
  */
-public class RustBundleModelManager extends BundleModelManager<AbstractBundleInfo, RustBundleModel> {
+public class RustBundleModelManager extends BundleModelManager<RustBundleInfo, RustBundleModel> {
 	
-	public static class RustBundleModel extends LangBundleModel<AbstractBundleInfo> {
+	public static class RustBundleModel extends LangBundleModel<RustBundleInfo> {
 		
 	}
 	
@@ -43,19 +48,24 @@ public class RustBundleModelManager extends BundleModelManager<AbstractBundleInf
 	
 	@Override
 	protected BundleManifestResourceListener init_createResourceListener() {
-		return new ManagerResourceListener(ResourceUtils.epath(CargoManifestParser.BUNDLE_MANIFEST_FILE));
+		return new ManagerResourceListener(ResourceUtils.epath(MANIFEST_FILENAME));
 	}
 	
 	@Override
-	protected AbstractBundleInfo createNewInfo(IProject project) {
-		return new AbstractBundleInfo() {
+	protected RustBundleInfo createNewInfo(IProject project) {
+		try {
+			Location loc = ResourceUtils.getProjectLocation2(project).resolve(MANIFEST_FILENAME);
 			
-			@Override
-			public Indexable<BuildConfiguration> getBuildConfigurations() {
-				return ArrayList2.create(new BuildConfiguration("", null));
-			}
+			String manifestSource = FileUtil.readStringFromFile(loc, StringUtil.UTF8, 
+				() -> MessageFormat.format("Could not read `{0}` file: ", MANIFEST_FILENAME));
 			
-		};
+			CrateManifest manifest = new CargoManifestParser().parse(manifestSource);
+			return new RustBundleInfo(manifest);
+			
+		} catch(CommonException e) {
+			return new RustBundleInfo(new CrateManifest("<cargo.toml error>", null, null));
+		}
+		
 	}
 	
 }
