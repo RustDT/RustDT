@@ -53,4 +53,20 @@ public class MapHelper extends CommonDataValidator {
 		return getValue(map, key, String.class, allowNull);
 	}
 	
+	public Boolean getBoolean(Map<String, Object> map, String key, FAllowNull allowNull) 
+			throws CommonException {
+		return getValue(map, key, Boolean.class, allowNull);
+	}
+	
+	public Float getFloat(Map<String, Object> map, String key, FAllowNull allowNull) 
+			throws CommonException {
+		return getValue(map, key, Float.class, allowNull);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getTable(Map<String, Object> map, String key, FAllowNull allowNull) 
+			throws CommonException {
+		return getValue(map, key, Map.class, allowNull);
+	}
+	
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.cargo;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.rustdt.tooling.cargo.CargoManifestParser.FAllowNull;
@@ -28,7 +29,7 @@ public class CommonDataValidator {
 		}
 		
 		if(value != null && !klass.isInstance(value)) {
-			handleInvalidValue(key);
+			handleInvalidValue(key, klass);
 		}
 		return klass.cast(value);
 	}
@@ -37,11 +38,27 @@ public class CommonDataValidator {
 		throw CommonException.fromMsgFormat("Value for key `{0}` is missing.", key);
 	}
 	
-	public void handleInvalidValue(String key) throws CommonException {
-		throw CommonException.fromMsgFormat("Value for key `{0}` is not a `{1}`.", key);
+	public void handleInvalidValue(String key, Class<?> klass) throws CommonException {
+		throw CommonException.fromMsgFormat("Value for key `{0}` is not a {1}.", key, klass.getSimpleName());
 	}
 	
 	/* -----------------  ----------------- */
+	
+	public String validateString(Object object, String key, FAllowNull allowNull) throws CommonException {
+		return validate(object, String.class, allowNull, key);
+	}
+	
+	public Boolean validateBoolean(Object object, String key, FAllowNull allowNull) throws CommonException {
+		return validate(object, Boolean.class, allowNull, key);
+	}
+	
+	public Float validateFloat(Object object, String key, FAllowNull allowNull) throws CommonException {
+		return validate(object, Float.class, allowNull, key);
+	}
+	
+	public List<?> validateList(Object object, String key, FAllowNull allowNull) throws CommonException {
+		return validate(object, List.class, allowNull, key);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> validateMap(Object object, String key, FAllowNull allowNull) throws CommonException {

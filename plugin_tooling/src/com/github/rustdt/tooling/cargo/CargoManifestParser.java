@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.github.rustdt.tooling.cargo.CrateManifest.DependencyRef;
+import com.moandjiezana.toml.Toml;
 
-import me.grison.jtoml.impl.Toml;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.CoreUtil;
@@ -32,14 +32,15 @@ public class CargoManifestParser {
 	
 	public CrateManifest parse(String source) throws CommonException {
 		
-		Toml toml = Toml.parse(source);
+		Toml toml = new Toml().read(source);
+		Map<String, Object> manifestMap = toml.getValues();
 		
-		Map<String, Object> packageEntry = getTomlMap(toml, "package", FAllowNull.NO);
+		Map<String, Object> packageEntry = helper.getTable(manifestMap, "package", FAllowNull.NO);
 		
 		String name = helper.getString(packageEntry, "name", FAllowNull.NO);
 		String version = helper.getString(packageEntry, "version", FAllowNull.YES);
 		
-		ArrayList2<DependencyRef> deps = parseDeps(toml);
+		ArrayList2<DependencyRef> deps = parseDeps(manifestMap);
 		
 		return new CrateManifest(
 			name, 
@@ -47,15 +48,11 @@ public class CargoManifestParser {
 			deps);
 	}
 	
-	protected Map<String, Object> getTomlMap(Toml toml, String key, FAllowNull allowNull) throws CommonException {
-		return helper.validateMap(toml.get(key), key, allowNull);
-	}
-	
-	protected ArrayList2<DependencyRef> parseDeps(Toml toml) throws CommonException {
+	protected ArrayList2<DependencyRef> parseDeps(Map<String, Object> manifestMap) throws CommonException {
 		
 		ArrayList2<DependencyRef> deps = new ArrayList2<>();
 		
-		Map<String, Object> depsMap = getTomlMap(toml, "dependencies", FAllowNull.YES);
+		Map<String, Object> depsMap = helper.getTable(manifestMap, "dependencies", FAllowNull.YES);
 		if(depsMap != null) {
 			for(Entry<String, Object> depsEntry : depsMap.entrySet()) {
 				String name = depsEntry.getKey();

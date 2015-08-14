@@ -16,6 +16,7 @@ import static melnorme.utilbox.misc.StringUtil.nullAsEmpty;
 
 import java.text.MessageFormat;
 
+import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.misc.HashcodeUtil;
 
@@ -63,21 +64,29 @@ public class CrateManifest {
 		
 		@Override
 		public String toString() {
-			return MessageFormat.format("{0}@{1}{2}", name, nullAsEmpty(version), optional ? "OPT" : "");
+			return MessageFormat.format("{0}@{1}{2}", name, nullAsEmpty(version), optional ? " OPT" : "");
 		}
 		
+	}
+	
+	public static HashMap2<String, DependencyRef> toHashMap(Indexable<DependencyRef> deps) {
+		HashMap2<String, DependencyRef> depsMap = new HashMap2<>();
+		for(DependencyRef dependencyRef : deps) {
+			depsMap.put(dependencyRef.name, dependencyRef);
+		}
+		return depsMap;
 	}
 	
 	/* -----------------  ----------------- */
 	
 	protected final String name;
 	protected final String version;
-	protected final Indexable<DependencyRef> deps;
+	protected final HashMap2<String, DependencyRef> depsMap;
 	
 	public CrateManifest(String name, String version, Indexable<DependencyRef> deps) {
 		this.name = assertNotNull(name);
 		this.version = version;
-		this.deps = deps;
+		this.depsMap = toHashMap(deps);
 	}
 	
 	@Override
@@ -90,7 +99,7 @@ public class CrateManifest {
 		return 
 			areEqual(name, other.name) &&
 			areEqual(version, other.version) &&
-			areEqual(deps, other.deps)
+			areEqual(depsMap, other.depsMap)
 		;
 	}
 	

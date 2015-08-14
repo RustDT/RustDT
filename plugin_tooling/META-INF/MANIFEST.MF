@@ -9,7 +9,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional
 Bundle-ClassPath: .,
- lib/jtoml-1.1.0.jar
+ lib/toml4j-0.4.0-1-SNAPSHOT.jar
 Export-Package: com.github.rustdt.tooling,
  com.github.rustdt.tooling.cargo,
  com.github.rustdt.tooling.lexer,
