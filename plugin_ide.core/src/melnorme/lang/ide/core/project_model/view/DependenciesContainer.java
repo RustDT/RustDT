@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleInfo;
-import com.github.rustdt.tooling.cargo.CrateManifest;
-import com.github.rustdt.tooling.cargo.CrateManifest.CrateDependencyRef;
+import com.github.rustdt.tooling.cargo.CargoManifest;
+import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 
 import melnorme.lang.tooling.LANG_SPECIFIC;
 import melnorme.utilbox.misc.ArrayUtil;
@@ -28,7 +28,7 @@ public class DependenciesContainer extends AbstractDependenciesContainer<RustBun
 		super(bundleInfo, project);
 	}
 	
-	protected CrateManifest getBundleDesc() {
+	protected CargoManifest getBundleDesc() {
 		return bundleInfo.getManifest();
 	}
 	

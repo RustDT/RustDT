@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.cargo;
 
 import org.junit.Test;
 
-import com.github.rustdt.tooling.cargo.CrateManifest.CrateDependencyRef;
+import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 
 import melnorme.lang.tests.CommonToolingTest;
 import melnorme.lang.tests.LangToolingTestResources;
@@ -30,7 +30,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		CargoManifestParser parser = new CargoManifestParser();
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.toml"))), 
-			new CrateManifest("hello_world", "0.1.0", new ArrayList2<>()));
+			new CargoManifest("hello_world", "0.1.0", new ArrayList2<>()));
 		
 		
 		verifyThrows(() -> parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.no_name.toml"))),
@@ -39,7 +39,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 			CommonException.class, "Value for key `name` is not a String");
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.empty_name.toml"))), 
-			new CrateManifest("", "0.1.0", new ArrayList2<>()));
+			new CargoManifest("", "0.1.0", new ArrayList2<>()));
 		
 		
 		verifyThrows(() -> parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("Crate1.no_package.toml"))),
@@ -48,7 +48,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 			CommonException.class, "Value for key `package` is not a Map");
 		
 		
-		CrateManifest CRATE_DEPS = new CrateManifest("hello_world", null,
+		CargoManifest CRATE_DEPS = new CargoManifest("hello_world", null,
 			new ArrayList2<>(
 				new CrateDependencyRef("rand", "0.3.0"),
 				new CrateDependencyRef("dep_empty", ""),

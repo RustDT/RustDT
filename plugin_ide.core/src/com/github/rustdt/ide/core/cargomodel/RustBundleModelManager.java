@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
-import com.github.rustdt.tooling.cargo.CrateManifest;
+import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
@@ -59,11 +59,11 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleInfo, R
 			String manifestSource = FileUtil.readStringFromFile(loc, StringUtil.UTF8, 
 				() -> MessageFormat.format("Could not read `{0}` file: ", MANIFEST_FILENAME));
 			
-			CrateManifest manifest = new CargoManifestParser().parse(manifestSource);
+			CargoManifest manifest = new CargoManifestParser().parse(manifestSource);
 			return new RustBundleInfo(manifest);
 			
 		} catch(CommonException e) {
-			return new RustBundleInfo(new CrateManifest("<cargo.toml error>", null, null));
+			return new RustBundleInfo(new CargoManifest("<cargo.toml error>", null, null));
 		}
 		
 	}

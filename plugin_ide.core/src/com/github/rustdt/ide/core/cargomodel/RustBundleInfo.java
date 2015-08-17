@@ -12,7 +12,7 @@ package com.github.rustdt.ide.core.cargomodel;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
-import com.github.rustdt.tooling.cargo.CrateManifest;
+import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.operations.build.BuildManager.BuildConfiguration;
 import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
@@ -21,13 +21,13 @@ import melnorme.utilbox.collections.Indexable;
 
 public class RustBundleInfo extends AbstractBundleInfo {
 	
-	protected final CrateManifest manifest;
+	protected final CargoManifest manifest;
 	
-	public RustBundleInfo(CrateManifest manifest) {
+	public RustBundleInfo(CargoManifest manifest) {
 		this.manifest = assertNotNull(manifest);
 	}
 	
-	public CrateManifest getManifest() {
+	public CargoManifest getManifest() {
 		return manifest;
 	}
 	

@@ -26,7 +26,7 @@ import melnorme.utilbox.misc.HashcodeUtil;
 /**
  * A Cargo crate manifest 
  */
-public class CrateManifest {
+public class CargoManifest {
 	
 	/* -----------------  ----------------- */
 	
@@ -56,7 +56,7 @@ public class CrateManifest {
 	protected final String version;
 	protected final HashMap2<String, CrateDependencyRef> depsMap;
 	
-	public CrateManifest(String name, String version, Indexable<CrateDependencyRef> deps) {
+	public CargoManifest(String name, String version, Indexable<CrateDependencyRef> deps) {
 		this.name = assertNotNull(name);
 		this.version = version;
 		this.depsMap = toHashMap(deps);
@@ -65,9 +65,9 @@ public class CrateManifest {
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj) return true;
-		if(!(obj instanceof CrateManifest)) return false;
+		if(!(obj instanceof CargoManifest)) return false;
 		
-		CrateManifest other = (CrateManifest) obj;
+		CargoManifest other = (CargoManifest) obj;
 		
 		return 
 			areEqual(name, other.name) &&

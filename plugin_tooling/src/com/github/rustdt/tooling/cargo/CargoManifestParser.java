@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.github.rustdt.tooling.cargo.CrateManifest.CrateDependencyRef;
+import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 import com.moandjiezana.toml.Toml;
 
 import melnorme.utilbox.collections.ArrayList2;
@@ -30,7 +30,7 @@ public class CargoManifestParser {
 	
 	protected MapHelper helper = new MapHelper();
 	
-	public CrateManifest parse(String source) throws CommonException {
+	public CargoManifest parse(String source) throws CommonException {
 		
 		Toml toml = new Toml().read(source);
 		Map<String, Object> manifestMap = toml.getValues();
@@ -42,7 +42,7 @@ public class CargoManifestParser {
 		
 		ArrayList2<CrateDependencyRef> deps = parseDeps(manifestMap);
 		
-		return new CrateManifest(
+		return new CargoManifest(
 			name, 
 			version, 
 			deps);
