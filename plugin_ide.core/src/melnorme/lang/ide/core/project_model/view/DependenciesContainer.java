@@ -18,8 +18,10 @@ import com.github.rustdt.ide.core.cargomodel.RustBundleInfo;
 import com.github.rustdt.tooling.cargo.CrateManifest;
 import com.github.rustdt.tooling.cargo.CrateManifest.CrateDependencyRef;
 
+import melnorme.lang.tooling.LANG_SPECIFIC;
 import melnorme.utilbox.misc.ArrayUtil;
 
+@LANG_SPECIFIC
 public class DependenciesContainer extends AbstractDependenciesContainer<RustBundleInfo> {
 	
 	public DependenciesContainer(RustBundleInfo bundleInfo, IProject project) {
@@ -37,6 +39,7 @@ public class DependenciesContainer extends AbstractDependenciesContainer<RustBun
 		for(CrateDependencyRef bundleRef : bundleInfo.getManifest().getDependencies()) {
 			newChildren.add(new RawDependencyElement(this, bundleRef));
 		}
+		
 		return ArrayUtil.createFrom(newChildren, IBundleModelElement.class);
 	}
 	
