@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.cargo;
 
 import org.junit.Test;
 
-import com.github.rustdt.tooling.cargo.CrateManifest.DependencyRef;
+import com.github.rustdt.tooling.cargo.CrateManifest.CrateDependencyRef;
 
 import melnorme.lang.tests.CommonToolingTest;
 import melnorme.lang.tests.LangToolingTestResources;
@@ -50,11 +50,11 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		
 		CrateManifest CRATE_DEPS = new CrateManifest("hello_world", null,
 			new ArrayList2<>(
-				new DependencyRef("rand", "0.3.0"),
-				new DependencyRef("dep_empty", ""),
-				new DependencyRef("dep_invalid", null),
-				new DependencyRef("dep_git", null, false),
-				new DependencyRef("dep_foo", "1.2.0", true)
+				new CrateDependencyRef("rand", "0.3.0"),
+				new CrateDependencyRef("dep_empty", ""),
+				new CrateDependencyRef("dep_invalid", null),
+				new CrateDependencyRef("dep_git", null, false),
+				new CrateDependencyRef("dep_foo", "1.2.0", true)
 			)
 		);
 		

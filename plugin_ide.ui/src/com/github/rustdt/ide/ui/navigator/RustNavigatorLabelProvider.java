@@ -24,6 +24,8 @@ import com.github.rustdt.ide.core.cargomodel.RustBundleInfo;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
 import melnorme.lang.ide.core.LangCore_Actual;
+import melnorme.lang.ide.core.project_model.view.BundleErrorElement;
+import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.LangImages;
 import melnorme.lang.ide.ui.navigator.NavigatorElementsSwitcher;
@@ -112,6 +114,13 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 			return null;
 		}
 		
+		@Override
+		public StyledString visitBundleElement(IBundleModelElement bundleElement) {
+			return new BundleModelGetStyledTextSwitcher() {
+				
+			}.switchBundleElement(bundleElement);
+		}
+		
 	}
 	
 	protected class RustNavigatorImageSwitchers extends DefaultGetImageSwitcher
@@ -135,6 +144,16 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		@Override
 		public ImageDescriptor visitBuildOutpuFolder(IFolder element) {
 			return LangImages.NAV_OutputFolder;
+		}
+		
+		@Override
+		public ImageDescriptor visitBundleElement(IBundleModelElement bundleElement) {
+			return new BundleModelGetImageSwitcher() {
+				@Override
+				public ImageDescriptor visitErrorElement2(BundleErrorElement element) {
+					return null;
+				}
+			}.switchBundleElement(bundleElement);
 		}
 		
 	}

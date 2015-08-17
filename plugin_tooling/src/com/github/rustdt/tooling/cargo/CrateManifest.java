@@ -17,6 +17,8 @@ import static melnorme.utilbox.misc.StringUtil.nullAsEmpty;
 
 import java.text.MessageFormat;
 
+import melnorme.lang.tooling.bundle.DependencyRef;
+import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.misc.HashcodeUtil;
@@ -28,31 +30,28 @@ public class CrateManifest {
 	
 	/* -----------------  ----------------- */
 	
-	public static class DependencyRef {
-		
-		protected final String name;
-		protected final String version;
+	public static class CrateDependencyRef extends DependencyRef {
+		/* FIXME:  refactor to Lang */
 		protected final boolean optional;
 		
-		public DependencyRef(String name, String version) {
+		public CrateDependencyRef(String name, String version) {
 			this(name, version, false);
 		}
 		
-		public DependencyRef(String name, String version, boolean optional) {
-			this.name = name;
-			this.version = version;
+		public CrateDependencyRef(String name, String version, boolean optional) {
+			super(name, version);
 			this.optional = optional;
 		}
 		
 		@Override
 		public boolean equals(Object obj) {
 			if(this == obj) return true;
-			if(!(obj instanceof DependencyRef)) return false;
+			if(!(obj instanceof CrateDependencyRef)) return false;
 			
-			DependencyRef other = (DependencyRef) obj;
+			CrateDependencyRef other = (CrateDependencyRef) obj;
 			
 			return 
-				areEqual(name, other.name) &&
+				areEqual(bundleName, other.bundleName) &&
 				areEqual(version, other.version) &&
 				areEqual(optional, other.optional)
 			;
@@ -60,20 +59,20 @@ public class CrateManifest {
 		
 		@Override
 		public int hashCode() {
-			return HashcodeUtil.combinedHashCode(name, version, optional);
+			return HashcodeUtil.combinedHashCode(bundleName, version, optional);
 		}
 		
 		@Override
 		public String toString() {
-			return MessageFormat.format("{0}@{1}{2}", name, nullAsEmpty(version), optional ? " OPT" : "");
+			return MessageFormat.format("{0}@{1}{2}", bundleName, nullAsEmpty(version), optional ? " OPT" : "");
 		}
 		
 	}
 	
-	public static HashMap2<String, DependencyRef> toHashMap(Indexable<DependencyRef> deps) {
-		HashMap2<String, DependencyRef> depsMap = new HashMap2<>();
-		for(DependencyRef dependencyRef : nullToEmpty(deps)) {
-			depsMap.put(dependencyRef.name, dependencyRef);
+	public static HashMap2<String, CrateDependencyRef> toHashMap(Indexable<CrateDependencyRef> deps) {
+		HashMap2<String, CrateDependencyRef> depsMap = new HashMap2<>();
+		for(CrateDependencyRef dependencyRef : nullToEmpty(deps)) {
+			depsMap.put(dependencyRef.getBundleName(), dependencyRef);
 		}
 		return depsMap;
 	}
@@ -82,9 +81,9 @@ public class CrateManifest {
 	
 	protected final String name;
 	protected final String version;
-	protected final HashMap2<String, DependencyRef> depsMap;
+	protected final HashMap2<String, CrateDependencyRef> depsMap;
 	
-	public CrateManifest(String name, String version, Indexable<DependencyRef> deps) {
+	public CrateManifest(String name, String version, Indexable<CrateDependencyRef> deps) {
 		this.name = assertNotNull(name);
 		this.version = version;
 		this.depsMap = toHashMap(deps);
@@ -122,6 +121,10 @@ public class CrateManifest {
 	
 	public String getVersion() {
 		return version;
+	}
+	
+	public Collection2<CrateDependencyRef> getDependencies() {
+		return depsMap.getValuesView();
 	}
 	
 }

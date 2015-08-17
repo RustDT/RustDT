@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.github.rustdt.tooling.cargo.CrateManifest.DependencyRef;
+import com.github.rustdt.tooling.cargo.CrateManifest.CrateDependencyRef;
 import com.moandjiezana.toml.Toml;
 
 import melnorme.utilbox.collections.ArrayList2;
@@ -40,7 +40,7 @@ public class CargoManifestParser {
 		String name = helper.getString(packageEntry, "name", FAllowNull.NO);
 		String version = helper.getString(packageEntry, "version", FAllowNull.YES);
 		
-		ArrayList2<DependencyRef> deps = parseDeps(manifestMap);
+		ArrayList2<CrateDependencyRef> deps = parseDeps(manifestMap);
 		
 		return new CrateManifest(
 			name, 
@@ -48,9 +48,9 @@ public class CargoManifestParser {
 			deps);
 	}
 	
-	protected ArrayList2<DependencyRef> parseDeps(Map<String, Object> manifestMap) throws CommonException {
+	protected ArrayList2<CrateDependencyRef> parseDeps(Map<String, Object> manifestMap) throws CommonException {
 		
-		ArrayList2<DependencyRef> deps = new ArrayList2<>();
+		ArrayList2<CrateDependencyRef> deps = new ArrayList2<>();
 		
 		Map<String, Object> depsMap = helper.getTable(manifestMap, "dependencies", FAllowNull.YES);
 		if(depsMap != null) {
@@ -68,18 +68,18 @@ public class CargoManifestParser {
 				if(value instanceof String) {
 					version = (String) value;
 				}
-				deps.add(new DependencyRef(name, version));
+				deps.add(new CrateDependencyRef(name, version));
 			}
 		}
 		
 		return deps;
 	}
 	
-	protected DependencyRef parseDependencyRef(MapHelper helper, String name, Map<String, Object> map) {
+	protected CrateDependencyRef parseDependencyRef(MapHelper helper, String name, Map<String, Object> map) {
 		String version = helper.getValue_ignoreErrors(map, "version", String.class, null);
 		boolean optional = helper.getValue_ignoreErrors(map, "optional", Boolean.class, false);
 		
-		return new DependencyRef(name, version, optional);
+		return new CrateDependencyRef(name, version, optional);
 	}
 	
 }
