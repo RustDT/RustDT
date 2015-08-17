@@ -31,40 +31,13 @@ public class CrateManifest {
 	/* -----------------  ----------------- */
 	
 	public static class CrateDependencyRef extends DependencyRef {
-		/* FIXME:  refactor to Lang */
-		protected final boolean optional;
 		
-		public CrateDependencyRef(String name, String version) {
-			this(name, version, false);
+		public CrateDependencyRef(String bundleName, String version) {
+			super(bundleName, version);
 		}
 		
-		public CrateDependencyRef(String name, String version, boolean optional) {
-			super(name, version);
-			this.optional = optional;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(this == obj) return true;
-			if(!(obj instanceof CrateDependencyRef)) return false;
-			
-			CrateDependencyRef other = (CrateDependencyRef) obj;
-			
-			return 
-				areEqual(bundleName, other.bundleName) &&
-				areEqual(version, other.version) &&
-				areEqual(optional, other.optional)
-			;
-		}
-		
-		@Override
-		public int hashCode() {
-			return HashcodeUtil.combinedHashCode(bundleName, version, optional);
-		}
-		
-		@Override
-		public String toString() {
-			return MessageFormat.format("{0}@{1}{2}", bundleName, nullAsEmpty(version), optional ? " OPT" : "");
+		public CrateDependencyRef(String bundleName, String version, boolean optional) {
+			super(bundleName, version, optional);
 		}
 		
 	}

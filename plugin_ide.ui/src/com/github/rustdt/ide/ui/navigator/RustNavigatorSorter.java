@@ -12,7 +12,6 @@ package com.github.rustdt.ide.ui.navigator;
 
 import java.text.Collator;
 
-import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
 import melnorme.lang.ide.ui.navigator.LangNavigatorSorter;
 
 public class RustNavigatorSorter extends LangNavigatorSorter {
@@ -27,15 +26,7 @@ public class RustNavigatorSorter extends LangNavigatorSorter {
 	
 	@Override
 	protected LangNavigatorSorter_Switcher switcher_Sorter() {
-		return new LangNavigatorSorter_Switcher() {
-			@Override
-			public Integer visitBundleElement(IBundleModelElement bundleElement) {
-				/* FIXME: */
-				return new BundleModelElementsSorterSwitcher() {
-					
-				}.switchBundleElement(bundleElement);
-			}
-		};
+		return new LangNavigatorSorter_Switcher() { };
 	}
 	
 }

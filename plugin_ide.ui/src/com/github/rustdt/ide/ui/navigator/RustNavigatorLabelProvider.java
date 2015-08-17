@@ -10,21 +10,17 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.navigator;
 
-import static melnorme.lang.ide.ui.views.StylerHelpers.fgColor;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.swt.graphics.RGB;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleInfo;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
 import melnorme.lang.ide.core.LangCore_Actual;
-import melnorme.lang.ide.core.project_model.view.BundleErrorElement;
 import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.LangImages;
@@ -71,20 +67,18 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 	}
 	
 	@Override
-	protected DefaultGetStyledTextSwitcher getStyledText_switcher() {
-		return new RustNavigatorStyledTextSwitcher();
+	protected DefaultGetStyledStringSwitcher getStyledString_switcher() {
+		return new RustNavigatorStyledStringSwitcher();
 	}
 	
 	@Override
 	protected DefaultGetImageSwitcher getBaseImage_switcher() {
-		return new RustNavigatorImageSwitchers();
+		return new RustNavigatorImageSwitcher();
 	}
 	
-	protected static final RGB ANNOTATION_FG = new RGB(120, 120, 200);
-	
-	protected class RustNavigatorStyledTextSwitcher extends DefaultGetStyledTextSwitcher
+	protected class RustNavigatorStyledStringSwitcher extends DefaultGetStyledStringSwitcher
 			implements RustNavigatorLabelElementsSwitcher<StyledString> {
-			
+		
 		@Override
 		public StyledString visitManifestFile(IFile element) {
 			RustBundleInfo bundleInfo = LangCore_Actual.getBundleModel().getProjectInfo(element.getProject());
@@ -94,9 +88,7 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 			String bundleVersion = bundleInfo.getManifest().getVersion();
 			
 			StyledString baseString = new StyledString(element.getName());
-			String versionString = bundleVersion == null ? "?" : bundleVersion;
-			String crateInfo = " [" + bundleInfo.getCrateName() + " " + versionString + "]";
-			return baseString.append(crateInfo, fgColor(ANNOTATION_FG));
+			return appendBundleRef(baseString, bundleInfo.getCrateName(), bundleVersion);
 		}
 		
 		@Override
@@ -116,14 +108,14 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		
 		@Override
 		public StyledString visitBundleElement(IBundleModelElement bundleElement) {
-			return new BundleModelGetStyledTextSwitcher() {
+			return new BundleModelGetStyledStringSwitcher() {
 				
 			}.switchBundleElement(bundleElement);
 		}
 		
 	}
 	
-	protected class RustNavigatorImageSwitchers extends DefaultGetImageSwitcher
+	protected class RustNavigatorImageSwitcher extends DefaultGetImageSwitcher
 			implements RustNavigatorLabelElementsSwitcher<ImageDescriptor> {
 			
 		@Override
@@ -149,10 +141,7 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		@Override
 		public ImageDescriptor visitBundleElement(IBundleModelElement bundleElement) {
 			return new BundleModelGetImageSwitcher() {
-				@Override
-				public ImageDescriptor visitErrorElement2(BundleErrorElement element) {
-					return null;
-				}
+				
 			}.switchBundleElement(bundleElement);
 		}
 		
