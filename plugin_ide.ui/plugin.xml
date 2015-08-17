@@ -330,7 +330,7 @@
 			<possibleChildren>
 				<or>
 					<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject" />
-					<instanceof value="com.github.rustdt.ide.ui.navigator.IRustNavigatorElement" />
+					<instanceof value="com.github.rustdt.ide.core.cargomodel.IRustNavigatorElement" />
 				</or>
 			</possibleChildren>
 			
@@ -338,7 +338,7 @@
 				<parentExpression>
 					<or>
 						<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject"/>
-						<instanceof value="com.github.rustdt.ide.ui.navigator.IRustNavigatorElement" />
+						<instanceof value="com.github.rustdt.ide.core.cargomodel.IRustNavigatorElement" />
 					</or>
 				</parentExpression>
 			</commonSorter>
