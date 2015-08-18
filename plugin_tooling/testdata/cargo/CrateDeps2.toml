@@ -2,8 +2,6 @@
 name = "hello_world"
 authors = ["Your Name <you@example.com>"]
 
-[[bin]]
-name = "hello_world"
 
 [dependencies]
 rand="0.3.0"

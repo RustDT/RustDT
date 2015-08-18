@@ -16,6 +16,7 @@ import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 
 import melnorme.lang.tests.CommonToolingTest;
 import melnorme.lang.tests.LangToolingTestResources;
+import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -30,7 +31,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		CargoManifestParser parser = new CargoManifestParser();
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.toml"))), 
-			new CargoManifest("hello_world", "0.1.0", new ArrayList2<>()));
+			new CargoManifest("hello_world", "0.1.0", null, null));
 		
 		
 		verifyThrows(() -> parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.no_name.toml"))),
@@ -39,7 +40,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 			CommonException.class, "Value for key `name` is not a String");
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.empty_name.toml"))), 
-			new CargoManifest("", "0.1.0", new ArrayList2<>()));
+			new CargoManifest("", "0.1.0", null, null));
 		
 		
 		verifyThrows(() -> parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("Crate1.no_package.toml"))),
@@ -48,23 +49,52 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 			CommonException.class, "Value for key `package` is not a Map");
 		
 		
-		CargoManifest CRATE_DEPS = new CargoManifest("hello_world", null,
-			new ArrayList2<>(
-				new CrateDependencyRef("rand", "0.3.0"),
-				new CrateDependencyRef("dep_empty", ""),
-				new CrateDependencyRef("dep_invalid", null),
-				new CrateDependencyRef("dep_git", null, false),
-				new CrateDependencyRef("dep_foo", "1.2.0", true)
-			)
-		);
-		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateDeps.toml"))),
-			CRATE_DEPS
+			new CargoManifest("hello_world", null,
+				new ArrayList2<>(
+					new CrateDependencyRef("rand", "0.3.0"),
+					new CrateDependencyRef("dep_empty", ""),
+					new CrateDependencyRef("dep_invalid", null),
+					new CrateDependencyRef("dep_git", null, false),
+					new CrateDependencyRef("dep_foo", "1.2.0", true)
+				),
+				null
+			)
 		);
 		
 		// Same contents, different toml format
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateDeps2.toml"))),
-			CRATE_DEPS
+			new CargoManifest("hello_world", null,
+				new ArrayList2<>(
+					new CrateDependencyRef("rand", "0.3.0"),
+					new CrateDependencyRef("dep_empty", ""),
+					new CrateDependencyRef("dep_invalid", null),
+					new CrateDependencyRef("dep_git", null, false),
+					new CrateDependencyRef("dep_foo", "1.2.0", true)
+				),
+				null
+			)
+		);
+		
+		// Test implicit binary
+		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateBin1.toml"))),
+			new CargoManifest("hello_world", null,
+				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
+				new ArrayList2<>(
+//					new FileRef("hello_world", null)
+				)
+			)
+		);
+		
+		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateBin2.toml"))),
+			new CargoManifest("hello_world", null,
+				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
+				new ArrayList2<>(
+					new FileRef("bin_default", null),
+					new FileRef("bin2", "src/helloWorld2.rs"),
+					new FileRef("bin3", null)
+				)
+			)
 		);
 		
 	}

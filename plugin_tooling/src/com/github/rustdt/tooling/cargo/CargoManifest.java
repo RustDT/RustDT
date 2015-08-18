@@ -18,9 +18,11 @@ import static melnorme.utilbox.misc.StringUtil.nullAsEmpty;
 import java.text.MessageFormat;
 
 import melnorme.lang.tooling.bundle.DependencyRef;
+import melnorme.lang.tooling.bundle.FileRef;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
-import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.collections.Indexable;
+import melnorme.utilbox.collections.LinkedHashMap2;
 import melnorme.utilbox.misc.HashcodeUtil;
 
 /**
@@ -42,8 +44,8 @@ public class CargoManifest {
 		
 	}
 	
-	public static HashMap2<String, CrateDependencyRef> toHashMap(Indexable<CrateDependencyRef> deps) {
-		HashMap2<String, CrateDependencyRef> depsMap = new HashMap2<>();
+	public static LinkedHashMap2<String, CrateDependencyRef> depsHashMap(Indexable<CrateDependencyRef> deps) {
+		LinkedHashMap2<String, CrateDependencyRef> depsMap = new LinkedHashMap2<>();
 		for(CrateDependencyRef dependencyRef : nullToEmpty(deps)) {
 			depsMap.put(dependencyRef.getBundleName(), dependencyRef);
 		}
@@ -52,14 +54,27 @@ public class CargoManifest {
 	
 	/* -----------------  ----------------- */
 	
+	public static LinkedHashMap2<String, FileRef> binariesHashMap(Indexable<FileRef> deps) {
+		LinkedHashMap2<String, FileRef> depsMap = new LinkedHashMap2<>();
+		for(FileRef dependencyRef : nullToEmpty(deps)) {
+			depsMap.put(dependencyRef.getBinaryPathString(), dependencyRef);
+		}
+		return depsMap;
+	}
+	
+	/* -----------------  ----------------- */
+	
 	protected final String name;
 	protected final String version;
-	protected final HashMap2<String, CrateDependencyRef> depsMap;
+	protected final LinkedHashMap2<String, CrateDependencyRef> depsMap;
+	protected final LinkedHashMap2<String, FileRef> binariesMap;
 	
-	public CargoManifest(String name, String version, Indexable<CrateDependencyRef> deps) {
+	public CargoManifest(String name, String version, Indexable<CrateDependencyRef> deps, 
+			Indexable<FileRef> binaries) {
 		this.name = assertNotNull(name);
 		this.version = version;
-		this.depsMap = toHashMap(deps);
+		this.depsMap = depsHashMap(deps);
+		this.binariesMap = binariesHashMap(binaries);
 	}
 	
 	@Override
@@ -72,7 +87,8 @@ public class CargoManifest {
 		return 
 			areEqual(name, other.name) &&
 			areEqual(version, other.version) &&
-			areEqual(depsMap, other.depsMap)
+			areEqual(depsMap, other.depsMap) &&
+			areEqual(binariesMap, other.binariesMap)
 		;
 	}
 	
@@ -98,6 +114,19 @@ public class CargoManifest {
 	
 	public Collection2<CrateDependencyRef> getDependencies() {
 		return depsMap.getValuesView();
+	}
+	
+	public Collection2<FileRef> getBinaries() {
+		return binariesMap.getValuesView();
+	}
+	
+	/* -----------------  ----------------- */
+	
+	public Collection2<FileRef> getEffectiveBinaries() {
+		if(!binariesMap.isEmpty()) {
+			return getBinaries();
+		}
+		return new ArrayList2<>(new FileRef(name, null));
 	}
 	
 }

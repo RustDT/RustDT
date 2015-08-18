@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.cargo;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.rustdt.tooling.cargo.CargoManifestParser.FAllowNull;
@@ -67,6 +68,12 @@ public class MapHelper extends CommonDataValidator {
 	public Map<String, Object> getTable(Map<String, Object> map, String key, FAllowNull allowNull) 
 			throws CommonException {
 		return getValue(map, key, Map.class, allowNull);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> getList(Map<String, Object> map, String key, FAllowNull allowNull) 
+			throws CommonException {
+		return getValue(map, key, List.class, allowNull);
 	}
 	
 }

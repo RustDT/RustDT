@@ -11,12 +11,14 @@
 package com.github.rustdt.tooling.cargo;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 import com.moandjiezana.toml.Toml;
 
+import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.CoreUtil;
@@ -42,10 +44,14 @@ public class CargoManifestParser {
 		
 		ArrayList2<CrateDependencyRef> deps = parseDeps(manifestMap);
 		
+		ArrayList2<FileRef> binaries = parseBinaries(manifestMap);
+		
 		return new CargoManifest(
 			name, 
 			version, 
-			deps);
+			deps,
+			binaries
+		);
 	}
 	
 	protected ArrayList2<CrateDependencyRef> parseDeps(Map<String, Object> manifestMap) throws CommonException {
@@ -80,6 +86,35 @@ public class CargoManifestParser {
 		boolean optional = helper.getValue_ignoreErrors(map, "optional", Boolean.class, false);
 		
 		return new CrateDependencyRef(name, version, optional);
+	}
+	
+	protected ArrayList2<FileRef> parseBinaries(Map<String, Object> manifestMap) throws CommonException {
+		
+		ArrayList2<FileRef> fileRefs = new ArrayList2<>();
+		
+		List<Object> binaries = helper.getList(manifestMap, "bin", FAllowNull.YES);
+		if(binaries != null) {
+			for(Object binary : binaries) {
+				
+				if(binary instanceof Map<?, ?>) {
+					Map<String, Object> map = CoreUtil.blindCast(binary);
+					fileRefs.add(parseFileRef(helper, map));
+					continue;
+				} else {
+					// Log error?
+				}
+				
+			}
+		}
+		
+		return fileRefs;
+	}
+	
+	protected FileRef parseFileRef(MapHelper helper, Map<String, Object> map) {
+		String name = helper.getValue_ignoreErrors(map, "name", String.class, "");
+		String path = helper.getValue_ignoreErrors(map, "path", String.class, null);
+		
+		return new FileRef(name, path);
 	}
 	
 }

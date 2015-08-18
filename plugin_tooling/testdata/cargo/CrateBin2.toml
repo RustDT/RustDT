@@ -1,0 +1,18 @@
+[package]
+name = "hello_world"
+authors = ["Your Name <you@example.com>"]
+
+[[bin]]
+name = "bin_default"
+
+[[bin]]
+name = "bin2"
+path = "src/helloWorld2.rs"
+
+[[bin]]
+name = "bin3"
+
+
+[dependencies]
+rand="0.3.0"
+
