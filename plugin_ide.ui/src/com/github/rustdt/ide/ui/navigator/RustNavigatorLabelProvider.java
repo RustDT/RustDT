@@ -17,10 +17,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 
-import com.github.rustdt.ide.core.cargomodel.RustBundleInfo;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
 import melnorme.lang.ide.core.LangCore_Actual;
+import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.LangImages;
@@ -81,7 +81,7 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		
 		@Override
 		public StyledString visitManifestFile(IFile element) {
-			RustBundleInfo bundleInfo = LangCore_Actual.getBundleModel().getProjectInfo(element.getProject());
+			BundleInfo bundleInfo = LangCore_Actual.getBundleModel().getProjectInfo(element.getProject());
 			if(bundleInfo == null) {
 				return null;
 			}

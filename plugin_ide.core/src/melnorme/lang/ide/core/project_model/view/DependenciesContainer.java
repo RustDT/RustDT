@@ -14,17 +14,17 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 
-import com.github.rustdt.ide.core.cargomodel.RustBundleInfo;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 
+import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.tooling.LANG_SPECIFIC;
 import melnorme.utilbox.misc.ArrayUtil;
 
 @LANG_SPECIFIC
-public class DependenciesContainer extends AbstractDependenciesContainer<RustBundleInfo> {
+public class DependenciesContainer extends AbstractDependenciesContainer<BundleInfo> {
 	
-	public DependenciesContainer(RustBundleInfo bundleInfo, IProject project) {
+	public DependenciesContainer(BundleInfo bundleInfo, IProject project) {
 		super(bundleInfo, project);
 	}
 	

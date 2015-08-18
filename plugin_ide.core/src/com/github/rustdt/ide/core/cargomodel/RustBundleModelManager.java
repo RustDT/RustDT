@@ -20,6 +20,7 @@ import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleMo
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
+import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
@@ -32,9 +33,9 @@ import melnorme.utilbox.misc.StringUtil;
 /**
  * In Rust, the bundles are the Cargo crates. 
  */
-public class RustBundleModelManager extends BundleModelManager<RustBundleInfo, RustBundleModel> {
+public class RustBundleModelManager extends BundleModelManager<RustBundleModel> {
 	
-	public static class RustBundleModel extends LangBundleModel<RustBundleInfo> {
+	public static class RustBundleModel extends LangBundleModel {
 		
 	}
 	
@@ -52,7 +53,7 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleInfo, R
 	}
 	
 	@Override
-	protected RustBundleInfo createNewInfo(IProject project) {
+	protected BundleInfo createNewInfo(IProject project) {
 		try {
 			Location loc = ResourceUtils.getProjectLocation2(project).resolve(MANIFEST_FILENAME);
 			
@@ -60,10 +61,10 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleInfo, R
 				() -> MessageFormat.format("Could not read `{0}` file: ", MANIFEST_FILENAME));
 			
 			CargoManifest manifest = new CargoManifestParser().parse(manifestSource);
-			return new RustBundleInfo(manifest);
+			return new BundleInfo(manifest);
 			
 		} catch(CommonException e) {
-			return new RustBundleInfo(new CargoManifest("<cargo.toml error>", null, null, null));
+			return new BundleInfo(new CargoManifest("<cargo.toml error>", null, null, null));
 		}
 		
 	}

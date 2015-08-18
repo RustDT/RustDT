@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.core.cargomodel;
+package melnorme.lang.ide.core;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
@@ -19,11 +19,11 @@ import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 
-public class RustBundleInfo extends AbstractBundleInfo {
+public class BundleInfo extends AbstractBundleInfo {
 	
 	protected final CargoManifest manifest;
 	
-	public RustBundleInfo(CargoManifest manifest) {
+	public BundleInfo(CargoManifest manifest) {
 		this.manifest = assertNotNull(manifest);
 	}
 	
@@ -37,8 +37,7 @@ public class RustBundleInfo extends AbstractBundleInfo {
 	
 	@Override
 	public Indexable<BuildConfiguration> getBuildConfigurations() {
-		/* FIXME: parse/get binaries from manifest */
-		return ArrayList2.create(new BuildConfiguration("", manifest.getName()));
+		return new ArrayList2<>();
 	}
 	
 }
