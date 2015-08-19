@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
-import static melnorme.utilbox.core.CoreUtil.array;
-import static melnorme.utilbox.misc.StringUtil.nullAsEmpty;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -22,6 +19,7 @@ import com.github.rustdt.tooling.RustBuildOutputParser;
 
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.launch.LaunchUtils;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
@@ -32,14 +30,17 @@ import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.project_model.ProjectBuildInfo;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.bundle.BuildTargetNameParser;
+import melnorme.lang.tooling.bundle.BuildTargetNameParser2;
 import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.misc.StringUtil;
+import melnorme.utilbox.misc.MiscUtil;
+import melnorme.utilbox.misc.PathUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 /**
@@ -47,7 +48,7 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
  */
 public class RustBuildManager extends BuildManager {
 	
-	public static final String BuildType_Default = "build";
+	public static final String BuildType_Default = "crate";
 	
 	public RustBuildManager(LangBundleModel bundleModel) {
 		super(bundleModel);
@@ -60,13 +61,13 @@ public class RustBuildManager extends BuildManager {
 		ArrayList2<BuildTarget> buildTargets = new ArrayList2<>();
 		
 		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
-			getBuildTargetName2("", "crate")));
+			getBuildTargetName2("", BuildType_Default)));
 		
 		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
 			getBuildTargetName2("", "tests")));
 		
 		for(FileRef fileRef : newBundleInfo.getManifest().getEffectiveBinaries()) {
-			buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
+			buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, false, 
 				getBuildTargetName2(fileRef.getBinaryPathString(), "bin")));
 		}
 		
@@ -75,35 +76,11 @@ public class RustBuildManager extends BuildManager {
 	
 	@Override
 	public BuildTargetNameParser getBuildTargetNameParser() {
-		return new BuildTargetNameParser() {
-			@Override
-			protected String getNameSeparator() {
-				return ":";
-			}
-			
-			@Override
-			public String getFullName(String buildConfig, String buildType) {
-				String name = buildType;
-				if(buildConfig != null && !buildConfig.isEmpty()) {
-					name += getNameSeparator() + buildConfig;
-				}
-				return name;
-			}
-			
-			@Override
-			public String getBuildConfigName(String targetName) {
-				return nullAsEmpty(StringUtil.segmentAfterMatch(targetName, getNameSeparator()));
-			}
-			
-			@Override
-			public String getBuildTypeName(String targetName) {
-				return StringUtil.substringUntilMatch(targetName, getNameSeparator());
-			}
-			
-		};
+		return new BuildTargetNameParser2();
 	}
 	
-	protected abstract class RustBuildType extends BuildType {
+	public abstract class RustBuildType extends BuildType {
+		
 		public RustBuildType(String name) {
 			super(name);
 		}
@@ -114,44 +91,94 @@ public class RustBuildManager extends BuildManager {
 			return new RustBuildTargetOperation(validatedBuildTarget, opInfo, buildToolPath);
 		}
 		
+		protected String getExecutablePathForCargoTarget(String cargoTargetName, 
+				ValidatedBuildTarget validatedBuildTarget) throws CommonException {
+			String profile = "debug/";
+			/* FIXME: refactor getEvaluatedAndParsedArguments */
+			String[] buildArgs = LaunchUtils.getEvaluatedAndParsedArguments(validatedBuildTarget.getEffectiveBuildArguments());
+			if(ArrayUtil.contains(buildArgs, "--release")) {
+				profile = "release/";
+			}
+			return "target/" + profile + cargoTargetName + MiscUtil.getExecutableSuffix();
+		}
+		
 	}
 	
 	@Override
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
 			new RustBuildType(BuildType_Default) {
+				
 				@Override
-				public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-					return "build";
+				protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
+						ProjectBuildInfo buildInfo) throws CommonException {
+					return new BuildConfiguration(buildConfigName, null);
 				}
 				
 				@Override
-				public String getArtifactPath(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-					throw new CommonException("No executable available.");
-				}
-			},
-			new RustBuildType("bin") {
-				@Override
-				public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-					/* FIXME: Validate getBuildConfigName*/
-					return "build --bin " + validatedBuildTarget.getBuildConfigName();
+				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+					buildArgs.add("build");
 				}
 				
 				@Override
-				public String getArtifactPath(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-					return "target/debug/" + validatedBuildTarget.getBuildConfigName();
+				public Indexable<String> getDefaultArtifactPaths(ValidatedBuildTarget validatedBuildTarget)
+						throws CommonException {
+					BundleInfo bundleInfo = validatedBuildTarget.getBundleInfo();
+					ArrayList2<String> binariesPaths = new ArrayList2<>();
+					
+					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries()) {
+						String cargoTargetName = fileRef.getBinaryPathString();
+						binariesPaths.add(getExecutablePathForCargoTarget(cargoTargetName, validatedBuildTarget));
+					}
+					
+					return binariesPaths;
 				}
 			},
 			new RustBuildType("tests") {
+				
 				@Override
-				public String getDefaultBuildOptions(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-					return "test --no-run";
+				protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
+						ProjectBuildInfo buildInfo) throws CommonException {
+					return new BuildConfiguration("", null);
 				}
 				
 				@Override
-				public String getArtifactPath(ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-					return super.getArtifactPath(validatedBuildTarget);
+				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+					buildArgs.addElements("build", "--no-run");
 				}
+				
+				@Override
+				public Indexable<String> getDefaultArtifactPaths(ValidatedBuildTarget validatedBuildTarget)
+						throws CommonException {
+					/* FIXME: todo paths for tests */
+					return super.getDefaultArtifactPaths(validatedBuildTarget);
+				}
+			},
+			new RustBuildType("bin") {
+				
+				@Override
+				protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
+						ProjectBuildInfo buildInfo) throws CommonException {
+					
+					PathUtil.createPath(buildConfigName); // Validate name
+					
+					return new BuildConfiguration(buildConfigName, null);
+				}
+				
+				@Override
+				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+					buildArgs.addElements("build", "--bin", vbt.getBuildConfigName());
+				}
+				
+				@Override
+				public Indexable<String> getDefaultArtifactPaths(ValidatedBuildTarget validatedBuildTarget) 
+						throws CommonException {
+					String cargoTargetName = validatedBuildTarget.getBuildConfigName();
+					return new ArrayList2<>(
+						getExecutablePathForCargoTarget(cargoTargetName, validatedBuildTarget)
+					);
+				}
+				
 			}
 		);
 	}
@@ -169,11 +196,6 @@ public class RustBuildManager extends BuildManager {
 		protected void addToolCommand(ArrayList2<String> commands)
 				throws CoreException, CommonException, OperationCancellation {
 			//super.addToolCommand(commands);
-		}
-		
-		@Override
-		protected String[] getMainArguments() throws CoreException, CommonException, OperationCancellation {
-			return array();
 		}
 		
 		@Override
