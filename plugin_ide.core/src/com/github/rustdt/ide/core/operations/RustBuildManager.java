@@ -68,7 +68,14 @@ public class RustBuildManager extends BuildManager {
 		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
 			getBuildTargetName2("", "tests")));
 		
-		for(FileRef fileRef : newBundleInfo.getManifest().getEffectiveBinaries()) {
+		Location projectLocation;
+		try {
+			projectLocation = ResourceUtils.getProjectLocation2(currentBuildInfo.getProject());
+		} catch(CommonException e) {
+			return buildTargets;
+		}
+		
+		for(FileRef fileRef : newBundleInfo.getManifest().getEffectiveBinaries(projectLocation)) {
 			buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, false, 
 				getBuildTargetName2(fileRef.getBinaryPathString(), "bin")));
 		}
@@ -128,7 +135,9 @@ public class RustBuildManager extends BuildManager {
 					BundleInfo bundleInfo = vbt.getBundleInfo();
 					ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
 					
-					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries()) {
+					Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
+					
+					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries(projectLoc)) {
 						String cargoTargetName = fileRef.getBinaryPathString();
 						String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
 						binariesPaths.add(new LaunchArtifact(cargoTargetName, exePath));

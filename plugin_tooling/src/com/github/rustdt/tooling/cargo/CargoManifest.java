@@ -15,7 +15,15 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 import static melnorme.utilbox.core.CoreUtil.nullToEmpty;
 import static melnorme.utilbox.misc.StringUtil.nullAsEmpty;
 
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
+import java.util.EnumSet;
 
 import melnorme.lang.tooling.bundle.DependencyRef;
 import melnorme.lang.tooling.bundle.FileRef;
@@ -24,6 +32,7 @@ import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.collections.LinkedHashMap2;
 import melnorme.utilbox.misc.HashcodeUtil;
+import melnorme.utilbox.misc.Location;
 
 /**
  * A Cargo crate manifest 
@@ -122,11 +131,53 @@ public class CargoManifest {
 	
 	/* -----------------  ----------------- */
 	
-	public Collection2<FileRef> getEffectiveBinaries() {
+	public Collection2<FileRef> getEffectiveBinaries(Location crateLocation) {
 		if(!binariesMap.isEmpty()) {
 			return getBinaries();
 		}
-		return new ArrayList2<>(new FileRef(name, null));
+		ArrayList2<FileRef> binaries = new ArrayList2<>();
+		
+		Location srcLoc = crateLocation.resolve_fromValid("src");
+		if(srcLoc.resolve_valid("main.rs").toFile().exists()) {
+			binaries.add(new FileRef(name, null));
+		}
+		
+		Location srcBinLoc = srcLoc.resolve_fromValid("bin");
+		
+		
+		try {
+			Files.walkFileTree(srcBinLoc.toPath(), EnumSet.of(FileVisitOption.FOLLOW_LINKS), 1,
+				new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+					return FileVisitResult.CONTINUE;
+				}
+				
+				@Override
+				public FileVisitResult visitFile(Path filePath, BasicFileAttributes attrs) throws IOException {
+					String fileName = filePath.getFileName().toString();
+					
+					String crateNameRef = RustNamingRules.getCrateNameRef(fileName);
+					
+					if(crateNameRef != null) {
+						Path sourcePath = crateLocation.relativize(Location.create_fromValid(filePath));
+						
+						binaries.add(new FileRef(crateNameRef, sourcePath.toString()));
+					}
+					return FileVisitResult.CONTINUE;
+				}
+				
+				@Override
+				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+					return FileVisitResult.CONTINUE;
+				}
+				
+			});
+		} catch(IOException e) {
+			// Ignore
+		}
+		
+		return binaries;
 	}
 	
 }
