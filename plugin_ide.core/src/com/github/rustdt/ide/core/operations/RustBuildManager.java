@@ -29,9 +29,11 @@ import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.project_model.ProjectBuildInfo;
 import melnorme.lang.ide.core.utils.ResourceUtils;
+import melnorme.lang.tooling.bundle.BuildConfiguration;
 import melnorme.lang.tooling.bundle.BuildTargetNameParser;
 import melnorme.lang.tooling.bundle.BuildTargetNameParser2;
 import melnorme.lang.tooling.bundle.FileRef;
+import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
@@ -121,15 +123,15 @@ public class RustBuildManager extends BuildManager {
 				}
 				
 				@Override
-				public Indexable<BuildConfiguration> getSubConfigurations_do(ValidatedBuildTarget vbt)
+				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
 						throws CommonException {
 					BundleInfo bundleInfo = vbt.getBundleInfo();
-					ArrayList2<BuildConfiguration> binariesPaths = new ArrayList2<>();
+					ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
 					
 					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries()) {
 						String cargoTargetName = fileRef.getBinaryPathString();
 						String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-						binariesPaths.add(new BuildConfiguration(cargoTargetName, exePath));
+						binariesPaths.add(new LaunchArtifact(cargoTargetName, exePath));
 					}
 					
 					return binariesPaths;
@@ -150,9 +152,9 @@ public class RustBuildManager extends BuildManager {
 				
 				/* FIXME: todo paths for tests */
 				@Override
-				public Indexable<BuildConfiguration> getSubConfigurations_do(ValidatedBuildTarget vbt)
+				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
 						throws CommonException {
-					return super.getSubConfigurations_do(vbt);
+					return super.getLaunchArtifacts_do(vbt);
 				}
 				
 			},
@@ -173,13 +175,13 @@ public class RustBuildManager extends BuildManager {
 				}
 				
 				@Override
-				public Indexable<BuildConfiguration> getSubConfigurations_do(ValidatedBuildTarget vbt)
+				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt) 
 						throws CommonException {
 					String cargoTargetName = vbt.getBuildConfigName();
 					String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
 					
-					return new ArrayList2<BuildConfiguration>(
-						new BuildConfiguration(cargoTargetName, exePath)
+					return new ArrayList2<>(
+						new LaunchArtifact(cargoTargetName, exePath)
 					);
 				}
 				
