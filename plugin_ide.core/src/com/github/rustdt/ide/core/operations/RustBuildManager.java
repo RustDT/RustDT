@@ -121,14 +121,15 @@ public class RustBuildManager extends BuildManager {
 				}
 				
 				@Override
-				public Indexable<String> getDefaultArtifactPaths(ValidatedBuildTarget validatedBuildTarget)
+				public Indexable<BuildConfiguration> getSubConfigurations_do(ValidatedBuildTarget vbt)
 						throws CommonException {
-					BundleInfo bundleInfo = validatedBuildTarget.getBundleInfo();
-					ArrayList2<String> binariesPaths = new ArrayList2<>();
+					BundleInfo bundleInfo = vbt.getBundleInfo();
+					ArrayList2<BuildConfiguration> binariesPaths = new ArrayList2<>();
 					
 					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries()) {
 						String cargoTargetName = fileRef.getBinaryPathString();
-						binariesPaths.add(getExecutablePathForCargoTarget(cargoTargetName, validatedBuildTarget));
+						String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+						binariesPaths.add(new BuildConfiguration(cargoTargetName, exePath));
 					}
 					
 					return binariesPaths;
@@ -147,12 +148,13 @@ public class RustBuildManager extends BuildManager {
 					buildArgs.addElements("build", "--no-run");
 				}
 				
+				/* FIXME: todo paths for tests */
 				@Override
-				public Indexable<String> getDefaultArtifactPaths(ValidatedBuildTarget validatedBuildTarget)
+				public Indexable<BuildConfiguration> getSubConfigurations_do(ValidatedBuildTarget vbt)
 						throws CommonException {
-					/* FIXME: todo paths for tests */
-					return super.getDefaultArtifactPaths(validatedBuildTarget);
+					return super.getSubConfigurations_do(vbt);
 				}
+				
 			},
 			new RustBuildType("bin") {
 				
@@ -171,11 +173,13 @@ public class RustBuildManager extends BuildManager {
 				}
 				
 				@Override
-				public Indexable<String> getDefaultArtifactPaths(ValidatedBuildTarget validatedBuildTarget) 
+				public Indexable<BuildConfiguration> getSubConfigurations_do(ValidatedBuildTarget vbt)
 						throws CommonException {
-					String cargoTargetName = validatedBuildTarget.getBuildConfigName();
-					return new ArrayList2<>(
-						getExecutablePathForCargoTarget(cargoTargetName, validatedBuildTarget)
+					String cargoTargetName = vbt.getBuildConfigName();
+					String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+					
+					return new ArrayList2<BuildConfiguration>(
+						new BuildConfiguration(cargoTargetName, exePath)
 					);
 				}
 				
