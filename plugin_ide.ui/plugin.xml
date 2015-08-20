@@ -271,7 +271,7 @@
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
 			class="com.github.rustdt.ide.ui.preferences.RustBuildConfigurationPropertyPage"
-			id="com.github.rustdt.ide.ui.properties.BuildConfigurationPage"
+			id="com.github.rustdt.ide.ui.propertyPages.ProjectBuildConfiguration"
 			name="%LangBuildOptionsPropertyPage.name">
 			<enabledWhen> 
 				<reference definitionId="com.github.rustdt.ide.core.expressions.isNatureProject" />
