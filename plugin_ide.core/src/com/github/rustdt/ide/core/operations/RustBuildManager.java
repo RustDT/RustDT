@@ -13,6 +13,7 @@ package com.github.rustdt.ide.core.operations;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
@@ -57,7 +58,7 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	@Override
-	protected ArrayList2<BuildTarget> createBuildTargetsForNewInfo(BundleInfo newBundleInfo,
+	protected ArrayList2<BuildTarget> createBuildTargetsForNewInfo(IProject project, BundleInfo newBundleInfo,
 			ProjectBuildInfo currentBuildInfo) {
 		
 		ArrayList2<BuildTarget> buildTargets = new ArrayList2<>();
@@ -70,7 +71,7 @@ public class RustBuildManager extends BuildManager {
 		
 		Location projectLocation;
 		try {
-			projectLocation = ResourceUtils.getProjectLocation2(currentBuildInfo.getProject());
+			projectLocation = ResourceUtils.getProjectLocation2(project);
 		} catch(CommonException e) {
 			return buildTargets;
 		}
