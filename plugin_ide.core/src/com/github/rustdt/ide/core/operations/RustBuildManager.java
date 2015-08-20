@@ -156,7 +156,7 @@ public class RustBuildManager extends BuildManager {
 				
 				@Override
 				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
-					buildArgs.addElements("build", "--no-run");
+					buildArgs.addElements("test", "--no-run");
 				}
 				
 				/* FIXME: todo paths for tests */
