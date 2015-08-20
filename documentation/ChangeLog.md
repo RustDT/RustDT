@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Added UserGuide note about using Homebrew GDB in OS X.
  * Added specific Project Explorer icons for Rust crate elements such as `src`, `test`, `target` folders, and the `Cargo.toml` file.
  * Added Project Explorer element with Cargo unresolved dependencies.
  * Fixed: Properly parse Racer "END" line syntax, don't show error when this occurs.
