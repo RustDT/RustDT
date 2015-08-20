@@ -31,7 +31,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		CargoManifestParser parser = new CargoManifestParser();
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.toml"))), 
-			new CargoManifest("hello_world", "0.1.0", null, null));
+			new CargoManifest("hello_world", "0.1.0", null, null, null));
 		
 		
 		verifyThrows(() -> parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.no_name.toml"))),
@@ -40,7 +40,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 			CommonException.class, "Value for key `name` is not a String");
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("BasicCrate.empty_name.toml"))), 
-			new CargoManifest("", "0.1.0", null, null));
+			new CargoManifest("", "0.1.0", null, null, null));
 		
 		
 		verifyThrows(() -> parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("Crate1.no_package.toml"))),
@@ -58,6 +58,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 					new CrateDependencyRef("dep_git", null, false),
 					new CrateDependencyRef("dep_foo", "1.2.0", true)
 				),
+				null,
 				null
 			)
 		);
@@ -72,6 +73,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 					new CrateDependencyRef("dep_git", null, false),
 					new CrateDependencyRef("dep_foo", "1.2.0", true)
 				),
+				null,
 				null
 			)
 		);
@@ -82,7 +84,8 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
 				new ArrayList2<>(
 //					new FileRef("hello_world", null)
-				)
+				),
+				null
 			)
 		);
 		
@@ -93,6 +96,20 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 					new FileRef("bin_default", null),
 					new FileRef("bin2", "src/helloWorld2.rs"),
 					new FileRef("bin3", null)
+				),
+				null
+			)
+		);
+		
+		// Test 'tests' targets
+		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateTests1.toml"))),
+			new CargoManifest("hello_world", null,
+				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
+				null,
+				new ArrayList2<>(
+					new FileRef("test_default", null),
+					new FileRef("test2", "tests/helloWorld2.rs"),
+					new FileRef("test3", null)
 				)
 			)
 		);

@@ -63,7 +63,7 @@ public class CargoManifest {
 	
 	/* -----------------  ----------------- */
 	
-	public static LinkedHashMap2<String, FileRef> binariesHashMap(Indexable<FileRef> deps) {
+	public static LinkedHashMap2<String, FileRef> fileRefHashMap(Indexable<FileRef> deps) {
 		LinkedHashMap2<String, FileRef> depsMap = new LinkedHashMap2<>();
 		for(FileRef dependencyRef : nullToEmpty(deps)) {
 			depsMap.put(dependencyRef.getBinaryPathString(), dependencyRef);
@@ -77,13 +77,15 @@ public class CargoManifest {
 	protected final String version;
 	protected final LinkedHashMap2<String, CrateDependencyRef> depsMap;
 	protected final LinkedHashMap2<String, FileRef> binariesMap;
+	protected final LinkedHashMap2<String, FileRef> testsMap;
 	
 	public CargoManifest(String name, String version, Indexable<CrateDependencyRef> deps, 
-			Indexable<FileRef> binaries) {
+			Indexable<FileRef> binaries, Indexable<FileRef> tests) {
 		this.name = assertNotNull(name);
 		this.version = version;
 		this.depsMap = depsHashMap(deps);
-		this.binariesMap = binariesHashMap(binaries);
+		this.binariesMap = fileRefHashMap(binaries);
+		this.testsMap = fileRefHashMap(tests);
 	}
 	
 	@Override
@@ -129,7 +131,15 @@ public class CargoManifest {
 		return binariesMap.getValuesView();
 	}
 	
+	public Collection2<FileRef> getTests() {
+		return testsMap.getValuesView();
+	}
+	
 	/* -----------------  ----------------- */
+	
+	protected Location getSrcLocation(Location crateLocation) {
+		return crateLocation.resolve_fromValid("src");
+	}
 	
 	public Collection2<FileRef> getEffectiveBinaries(Location crateLocation) {
 		if(!binariesMap.isEmpty()) {
@@ -137,16 +147,38 @@ public class CargoManifest {
 		}
 		ArrayList2<FileRef> binaries = new ArrayList2<>();
 		
-		Location srcLoc = crateLocation.resolve_fromValid("src");
+		Location srcLoc = getSrcLocation(crateLocation);
 		if(srcLoc.resolve_valid("main.rs").toFile().exists()) {
 			binaries.add(new FileRef(name, null));
 		}
 		
 		Location srcBinLoc = srcLoc.resolve_fromValid("bin");
 		
+		binaries.addAll2(new RustFileCollector().find(crateLocation, srcBinLoc));
 		
-		try {
-			Files.walkFileTree(srcBinLoc.toPath(), EnumSet.of(FileVisitOption.FOLLOW_LINKS), 1,
+		return binaries;
+	}
+	
+	public static class Foo {
+		
+	}
+	
+	public static class RustFileCollector {
+		
+		protected final ArrayList2<FileRef> fileRefs = new ArrayList2<>();
+		
+		protected ArrayList2<FileRef> find(Location rootLocation, Location loc) {
+			try {
+				find_do(rootLocation, loc);
+			} catch(IOException e) {
+				// Ignore
+			}
+			
+			return fileRefs;
+		}
+		
+		protected void find_do(Location rootLocation, Location loc) throws IOException {
+			Files.walkFileTree(loc.toPath(), EnumSet.of(FileVisitOption.FOLLOW_LINKS), 1,
 				new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -160,9 +192,9 @@ public class CargoManifest {
 					String crateNameRef = RustNamingRules.getCrateNameRef(fileName);
 					
 					if(crateNameRef != null) {
-						Path sourcePath = crateLocation.relativize(Location.create_fromValid(filePath));
+						Path sourcePath = rootLocation.relativize(Location.create_fromValid(filePath));
 						
-						binaries.add(new FileRef(crateNameRef, sourcePath.toString()));
+						fileRefs.add(new FileRef(crateNameRef, sourcePath.toString()));
 					}
 					return FileVisitResult.CONTINUE;
 				}
@@ -173,10 +205,23 @@ public class CargoManifest {
 				}
 				
 			});
-		} catch(IOException e) {
-			// Ignore
 		}
 		
+	}
+	
+	protected Location getTestsLocation(Location cargoLocaction) {
+		return cargoLocaction.resolve_fromValid("tests");
+	}
+	
+	public Collection2<FileRef> getEffectiveTestBinaries(Location cargoLocaction) {
+		if(!testsMap.isEmpty()) {
+			return getTests();
+		}
+		ArrayList2<FileRef> binaries = new ArrayList2<>();
+		
+		Location testsLoc = getTestsLocation(cargoLocaction);
+		
+		binaries.addAll2(new RustFileCollector().find(cargoLocaction, testsLoc));
 		return binaries;
 	}
 	

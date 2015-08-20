@@ -44,13 +44,15 @@ public class CargoManifestParser {
 		
 		ArrayList2<CrateDependencyRef> deps = parseDeps(manifestMap);
 		
-		ArrayList2<FileRef> binaries = parseBinaries(manifestMap);
+		ArrayList2<FileRef> binaries = parseBinaries(manifestMap, "bin");
+		ArrayList2<FileRef> tests = parseBinaries(manifestMap, "test");
 		
 		return new CargoManifest(
 			name, 
 			version, 
 			deps,
-			binaries
+			binaries,
+			tests
 		);
 	}
 	
@@ -88,11 +90,12 @@ public class CargoManifestParser {
 		return new CrateDependencyRef(name, version, optional);
 	}
 	
-	protected ArrayList2<FileRef> parseBinaries(Map<String, Object> manifestMap) throws CommonException {
+	protected ArrayList2<FileRef> parseBinaries(Map<String, Object> manifestMap, String keyName) 
+			throws CommonException {
 		
 		ArrayList2<FileRef> fileRefs = new ArrayList2<>();
 		
-		List<Object> binaries = helper.getList(manifestMap, "bin", FAllowNull.YES);
+		List<Object> binaries = helper.getList(manifestMap, keyName, FAllowNull.YES);
 		if(binaries != null) {
 			for(Object binary : binaries) {
 				

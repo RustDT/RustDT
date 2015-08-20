@@ -1,0 +1,17 @@
+[package]
+name = "hello_world"
+authors = ["Your Name <you@example.com>"]
+
+[dependencies]
+rand="0.3.0"
+
+
+[[test]]
+name = "test_default"
+
+[[test]]
+name = "test2"
+path = "tests/helloWorld2.rs"
+
+[[test]]
+name = "test3"

@@ -25,6 +25,7 @@ public class BuildTestsHelper {
 			new ArrayList2<>(
 				new FileRef("sampleConfig", null)
 			)
+			, null
 		));
 	}
 	

@@ -80,6 +80,11 @@ public class RustBuildManager extends BuildManager {
 				getBuildTargetName2(fileRef.getBinaryPathString(), "bin")));
 		}
 		
+		for(FileRef fileRef : newBundleInfo.getManifest().getEffectiveTestBinaries(projectLocation)) {
+			buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, false, 
+				getBuildTargetName2(fileRef.getBinaryPathString(), "test")));
+		}
+		
 		return buildTargets;
 	}
 	
@@ -159,11 +164,21 @@ public class RustBuildManager extends BuildManager {
 					buildArgs.addElements("test", "--no-run");
 				}
 				
-				/* FIXME: todo paths for tests */
 				@Override
 				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
 						throws CommonException {
-					return super.getLaunchArtifacts_do(vbt);
+					BundleInfo bundleInfo = vbt.getBundleInfo();
+					ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
+					
+					Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
+					
+					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveTestBinaries(projectLoc)) {
+						String cargoTargetName = fileRef.getBinaryPathString();
+						String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+						binariesPaths.add(new LaunchArtifact("test[" + cargoTargetName + "]", exePath));
+					}
+					
+					return binariesPaths;
 				}
 				
 			},

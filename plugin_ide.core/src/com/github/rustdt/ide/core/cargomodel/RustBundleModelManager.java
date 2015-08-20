@@ -64,7 +64,7 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleModel> 
 			return new BundleInfo(manifest);
 			
 		} catch(CommonException e) {
-			return new BundleInfo(new CargoManifest("<cargo.toml error>", null, null, null));
+			return new BundleInfo(new CargoManifest("<cargo.toml error>", null, null, null, null));
 		}
 		
 	}

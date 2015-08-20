@@ -22,6 +22,20 @@ import melnorme.utilbox.misc.PathUtil;
 
 public class CargoManifest_Test extends CommonToolingTest {
 	
+	@Test
+	public void testName() throws Exception { testName$(); }
+	public void testName$() throws Exception {
+		assertAreEqual(RustNamingRules.getCrateNameRef(""), null);
+		assertAreEqual(RustNamingRules.getCrateNameRef("blah"), null);
+		assertAreEqual(RustNamingRules.getCrateNameRef("blah.rs"), "blah");
+		assertAreEqual(RustNamingRules.getCrateNameRef("foo-bar_x.rs"), "foo-bar_x");
+		assertAreEqual(RustNamingRules.getCrateNameRef("123.rs"), "123");
+		
+		assertAreEqual(RustNamingRules.getCrateNameRef(".rs"), null);
+		assertAreEqual(RustNamingRules.getCrateNameRef("foo.bar.rs"), null);
+		assertAreEqual(RustNamingRules.getCrateNameRef("foo,bar.rs"), null);
+	}
+	
 	public static final Location CARGO_BUNDLES = getTestResourceLoc("cargo");
 	public static final Location LOC_CRATE_SIMPLE = getTestResourceLoc("cargo/crateSimple");
 	public static final Location LOC_CRATE_SIMPLE_LIB = getTestResourceLoc("cargo/crateSimpleLib");
@@ -57,21 +71,13 @@ public class CargoManifest_Test extends CommonToolingTest {
 		FileRef cargoBin1__hello_world = cargoBin1.getEffectiveBinaries(LOC_CRATE_A).toArrayList().get(0);
 		assertAreEqual(cargoBin1__hello_world.getBinaryPath(), PathUtil.createPath("hello_world"));
 		assertAreEqual(cargoBin1__hello_world.getSourcePath(), null);
-	}
-	
-	
-	@Test
-	public void testName() throws Exception { testName$(); }
-	public void testName$() throws Exception {
-		assertAreEqual(RustNamingRules.getCrateNameRef(""), null);
-		assertAreEqual(RustNamingRules.getCrateNameRef("blah"), null);
-		assertAreEqual(RustNamingRules.getCrateNameRef("blah.rs"), "blah");
-		assertAreEqual(RustNamingRules.getCrateNameRef("foo-bar_x.rs"), "foo-bar_x");
-		assertAreEqual(RustNamingRules.getCrateNameRef("123.rs"), "123");
 		
-		assertAreEqual(RustNamingRules.getCrateNameRef(".rs"), null);
-		assertAreEqual(RustNamingRules.getCrateNameRef("foo.bar.rs"), null);
-		assertAreEqual(RustNamingRules.getCrateNameRef("foo,bar.rs"), null);
+		assertEquals(cargoBin1.getEffectiveTestBinaries(LOC_CRATE_A),
+			new ArrayList2<>(
+				new FileRef("test1", path("tests/test1.rs").toString()),
+				new FileRef("test2", path("tests/test2.rs").toString())
+			)
+		);
 	}
 	
 }
