@@ -20,7 +20,6 @@ import com.github.rustdt.tooling.RustBuildOutputParser;
 
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.launch.LaunchUtils;
 import melnorme.lang.ide.core.operations.OperationInfo;
 import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
@@ -109,8 +108,8 @@ public class RustBuildManager extends BuildManager {
 		protected String getExecutablePathForCargoTarget(String cargoTargetName, 
 				ValidatedBuildTarget validatedBuildTarget) throws CommonException {
 			String profile = "debug/";
-			/* FIXME: refactor getEvaluatedAndParsedArguments */
-			String[] buildArgs = LaunchUtils.getEvaluatedAndParsedArguments(validatedBuildTarget.getEffectiveBuildArguments());
+			
+			String[] buildArgs = validatedBuildTarget.getEffectiveEvaluatedBuildArguments();
 			if(ArrayUtil.contains(buildArgs, "--release")) {
 				profile = "release/";
 			}
