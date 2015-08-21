@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Fixed: if build tool reports many error messages, the Eclipse project build will take too long to finish. (#26)
  * Added UserGuide note about using Homebrew GDB in OS X.
  * Added specific Project Explorer icons for Rust crate elements such as `src`, `test`, `target` folders, and the `Cargo.toml` file.
  * Added Project Explorer element with Cargo unresolved dependencies.

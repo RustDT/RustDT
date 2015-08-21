@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
 
@@ -237,7 +238,8 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void processBuildOutput(ExternalProcessResult processResult) throws CoreException, CommonException {
+		protected void processBuildOutput(ExternalProcessResult processResult, IProgressMonitor pm) 
+				throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
 				protected void handleMessageParseError(CommonException ce) {
@@ -245,7 +247,7 @@ public class RustBuildManager extends BuildManager {
 				}
 			}.parseOutput(processResult);
 			
-			new ToolMarkersUtil().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project));
+			new ToolMarkersUtil().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project), pm);
 		}
 	}
 	
