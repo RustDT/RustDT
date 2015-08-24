@@ -43,7 +43,6 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
-import melnorme.utilbox.misc.PathUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 /**
@@ -83,7 +82,7 @@ public class RustBuildManager extends BuildManager {
 		
 		for(FileRef fileRef : newBundleInfo.getManifest().getEffectiveTestBinaries(projectLocation)) {
 			buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, false, 
-				getBuildTargetName2(fileRef.getBinaryPathString(), "test")));
+				getBuildTargetName2(fileRef.getBinaryPathString(), "tests")));
 		}
 		
 		return buildTargets;
@@ -119,98 +118,104 @@ public class RustBuildManager extends BuildManager {
 		
 	}
 	
+	public class RustCrateBuildType extends RustBuildType {
+		
+		public RustCrateBuildType(String name) {
+			super(name);
+		}
+		
+		@Override
+		protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
+				ProjectBuildInfo buildInfo) throws CommonException {
+			return new BuildConfiguration(buildConfigName, null);
+		}
+		
+		@Override
+		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+			buildArgs.add("build");
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
+				throws CommonException {
+			BundleInfo bundleInfo = vbt.getBundleInfo();
+			ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
+			
+			Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
+			
+			for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries(projectLoc)) {
+				String cargoTargetName = fileRef.getBinaryPathString();
+				String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+				binariesPaths.add(new LaunchArtifact(cargoTargetName, exePath));
+			}
+			
+			return binariesPaths;
+		}
+	}
+	
+	public class RustCrateBinaryBuildType extends RustCrateBuildType {
+		
+		public RustCrateBinaryBuildType(String name) {
+			super(name);
+		}
+		
+		@Override
+		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+			buildArgs.addElements("build", "--bin", vbt.getBuildConfigName());
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt) 
+				throws CommonException {
+			String cargoTargetName = vbt.getBuildConfigName();
+			String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+			
+			return new ArrayList2<>(
+				new LaunchArtifact(cargoTargetName, exePath)
+			);
+		}
+	}
+
+	public class RustTestsBuildType extends RustCrateBuildType {
+		
+		public RustTestsBuildType(String name) {
+			super(name);
+		}
+		
+		@Override
+		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+			String testName = vbt.getBuildConfigName();
+			if(testName.isEmpty()) {
+				buildArgs.addElements("test", "--no-run");
+			} else {
+				buildArgs.addElements("build", "--test", testName);
+			}
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt) throws CommonException {
+			BundleInfo bundleInfo = vbt.getBundleInfo();
+			ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
+			
+			Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
+			
+			for(FileRef fileRef : bundleInfo.getManifest().getEffectiveTestBinaries(projectLoc)) {
+				String cargoTargetName = fileRef.getBinaryPathString();
+				String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+				binariesPaths.add(new LaunchArtifact("test[" + cargoTargetName + "]", exePath));
+			}
+			
+			return binariesPaths;
+		}
+	}
+
 	@Override
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
-			new RustBuildType(BuildType_Default) {
-				
-				@Override
-				protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
-						ProjectBuildInfo buildInfo) throws CommonException {
-					return new BuildConfiguration(buildConfigName, null);
-				}
-				
-				@Override
-				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
-					buildArgs.add("build");
-				}
-				
-				@Override
-				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
-						throws CommonException {
-					BundleInfo bundleInfo = vbt.getBundleInfo();
-					ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
-					
-					Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
-					
-					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries(projectLoc)) {
-						String cargoTargetName = fileRef.getBinaryPathString();
-						String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-						binariesPaths.add(new LaunchArtifact(cargoTargetName, exePath));
-					}
-					
-					return binariesPaths;
-				}
-			},
-			new RustBuildType("tests") {
-				
-				@Override
-				protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
-						ProjectBuildInfo buildInfo) throws CommonException {
-					return new BuildConfiguration("", null);
-				}
-				
-				@Override
-				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
-					buildArgs.addElements("test", "--no-run");
-				}
-				
-				@Override
-				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
-						throws CommonException {
-					BundleInfo bundleInfo = vbt.getBundleInfo();
-					ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
-					
-					Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
-					
-					for(FileRef fileRef : bundleInfo.getManifest().getEffectiveTestBinaries(projectLoc)) {
-						String cargoTargetName = fileRef.getBinaryPathString();
-						String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-						binariesPaths.add(new LaunchArtifact("test[" + cargoTargetName + "]", exePath));
-					}
-					
-					return binariesPaths;
-				}
-				
-			},
-			new RustBuildType("bin") {
-				
-				@Override
-				protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
-						ProjectBuildInfo buildInfo) throws CommonException {
-					
-					PathUtil.createPath(buildConfigName); // Validate name
-					
-					return new BuildConfiguration(buildConfigName, null);
-				}
-				
-				@Override
-				protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
-					buildArgs.addElements("build", "--bin", vbt.getBuildConfigName());
-				}
-				
-				@Override
-				public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt) 
-						throws CommonException {
-					String cargoTargetName = vbt.getBuildConfigName();
-					String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-					
-					return new ArrayList2<>(
-						new LaunchArtifact(cargoTargetName, exePath)
-					);
-				}
-				
-			}
+			new RustCrateBuildType(BuildType_Default),
+			new RustTestsBuildType("tests"),
+			new RustTestsBuildType("test"),
+			new RustCrateBinaryBuildType("bin")
 		);
 	}
 	
