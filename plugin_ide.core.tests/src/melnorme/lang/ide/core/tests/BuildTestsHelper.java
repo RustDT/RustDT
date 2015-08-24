@@ -22,6 +22,7 @@ public class BuildTestsHelper {
 	
 	public static BundleInfo createSampleBundleInfoA(String name, String version) {
 		return new BundleInfo(new CargoManifest(name, version, null, 
+			null, 
 			new ArrayList2<>(
 				new FileRef("sampleConfig", null)
 			)

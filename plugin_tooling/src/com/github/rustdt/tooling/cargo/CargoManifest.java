@@ -76,14 +76,16 @@ public class CargoManifest {
 	protected final String name;
 	protected final String version;
 	protected final LinkedHashMap2<String, CrateDependencyRef> depsMap;
+	protected final FileRef libTarget;
 	protected final LinkedHashMap2<String, FileRef> binariesMap;
 	protected final LinkedHashMap2<String, FileRef> testsMap;
 	
 	public CargoManifest(String name, String version, Indexable<CrateDependencyRef> deps, 
-			Indexable<FileRef> binaries, Indexable<FileRef> tests) {
+			FileRef libTarget, Indexable<FileRef> binaries, Indexable<FileRef> tests) {
 		this.name = assertNotNull(name);
 		this.version = version;
 		this.depsMap = depsHashMap(deps);
+		this.libTarget = libTarget;
 		this.binariesMap = fileRefHashMap(binaries);
 		this.testsMap = fileRefHashMap(tests);
 	}
@@ -99,7 +101,9 @@ public class CargoManifest {
 			areEqual(name, other.name) &&
 			areEqual(version, other.version) &&
 			areEqual(depsMap, other.depsMap) &&
-			areEqual(binariesMap, other.binariesMap)
+			areEqual(libTarget, other.libTarget) &&
+			areEqual(binariesMap, other.binariesMap) &&
+			areEqual(testsMap, other.testsMap)
 		;
 	}
 	
@@ -127,6 +131,10 @@ public class CargoManifest {
 		return depsMap.getValuesView();
 	}
 	
+	public FileRef getLibTarget() {
+		return libTarget;
+	}
+	
 	public Collection2<FileRef> getBinaries() {
 		return binariesMap.getValuesView();
 	}
@@ -141,27 +149,7 @@ public class CargoManifest {
 		return crateLocation.resolve_fromValid("src");
 	}
 	
-	public Collection2<FileRef> getEffectiveBinaries(Location crateLocation) {
-		if(!binariesMap.isEmpty()) {
-			return getBinaries();
-		}
-		ArrayList2<FileRef> binaries = new ArrayList2<>();
-		
-		Location srcLoc = getSrcLocation(crateLocation);
-		if(srcLoc.resolve_valid("main.rs").toFile().exists()) {
-			binaries.add(new FileRef(name, null));
-		}
-		
-		Location srcBinLoc = srcLoc.resolve_fromValid("bin");
-		
-		binaries.addAll2(new RustFileCollector().find(crateLocation, srcBinLoc));
-		
-		return binaries;
-	}
-	
-	public static class Foo {
-		
-	}
+	/* -----------------  ----------------- */
 	
 	public static class RustFileCollector {
 		
@@ -209,20 +197,74 @@ public class CargoManifest {
 		
 	}
 	
-	protected Location getTestsLocation(Location cargoLocaction) {
-		return cargoLocaction.resolve_fromValid("tests");
+	public FileRef getEffectiveLibrary(Location crateLocation) {
+		if(libTarget != null) {
+			return libTarget;
+		}
+		Location srcLoc = getSrcLocation(crateLocation);
+		
+		Location defaultLibrarySourceFile = srcLoc.resolve_valid("lib.rs");
+		if(defaultLibrarySourceFile.toFile().exists()) {
+			return new FileRef(name, null);
+		}
+		return null;
 	}
 	
-	public Collection2<FileRef> getEffectiveTestBinaries(Location cargoLocaction) {
+	public Collection2<FileRef> getEffectiveBinaries(Location crateLocation) {
+		if(!binariesMap.isEmpty()) {
+			return getBinaries();
+		}
+		ArrayList2<FileRef> binaries = new ArrayList2<>();
+		
+		Location srcLoc = getSrcLocation(crateLocation);
+		Location defaultBinarySourceFile= srcLoc.resolve_valid("main.rs");
+		if(defaultBinarySourceFile.toFile().exists()) {
+			binaries.add(new FileRef(name, null));
+		}
+		
+		Location srcBinLoc = srcLoc.resolve_fromValid("bin");
+		
+		binaries.addAll2(new RustFileCollector().find(crateLocation, srcBinLoc));
+		
+		return binaries;
+	}
+	
+	protected Location getIntegrationTestsLocation(Location crateLocaction) {
+		return crateLocaction.resolve_fromValid("tests");
+	}
+	
+	public Collection2<FileRef> getEffectiveIntegrationTests(Location crateLocation) {
 		if(!testsMap.isEmpty()) {
 			return getTests();
 		}
 		ArrayList2<FileRef> binaries = new ArrayList2<>();
 		
-		Location testsLoc = getTestsLocation(cargoLocaction);
+		Location testsLoc = getIntegrationTestsLocation(crateLocation);
 		
-		binaries.addAll2(new RustFileCollector().find(cargoLocaction, testsLoc));
+		binaries.addAll2(new RustFileCollector().find(crateLocation, testsLoc));
 		return binaries;
+	}
+	
+	public Collection2<String> getEffectiveTestTargets(Location crateLocation) {
+		ArrayList2<String> effectiveTestTargets = new ArrayList2<>();
+		
+		for(FileRef integrationTest : getEffectiveIntegrationTests(crateLocation)) {
+			effectiveTestTargets.add(integrationTest.getBinaryPathString());
+		}
+		
+		for(FileRef integrationTest : singletonIterable(getEffectiveLibrary(crateLocation))) {
+			effectiveTestTargets.add("lib." + integrationTest.getBinaryPathString());
+		}
+		
+		for(FileRef bin : getEffectiveBinaries(crateLocation)) {
+			effectiveTestTargets.add("bin." + bin.getBinaryPathString());
+		}
+		
+		return effectiveTestTargets;
+	}
+	
+	protected static <T> Iterable<T> singletonIterable(T obj) {
+		return obj == null ? new ArrayList2<>() : new ArrayList2<>(obj);
 	}
 	
 }

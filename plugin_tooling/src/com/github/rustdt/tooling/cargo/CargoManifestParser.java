@@ -44,6 +44,7 @@ public class CargoManifestParser {
 		
 		ArrayList2<CrateDependencyRef> deps = parseDeps(manifestMap);
 		
+		FileRef libraryTarget = parseLibraryTarget(manifestMap);
 		ArrayList2<FileRef> binaries = parseBinaries(manifestMap, "bin");
 		ArrayList2<FileRef> tests = parseBinaries(manifestMap, "test");
 		
@@ -51,9 +52,18 @@ public class CargoManifestParser {
 			name, 
 			version, 
 			deps,
+			libraryTarget,
 			binaries,
 			tests
 		);
+	}
+	
+	protected FileRef parseLibraryTarget(Map<String, Object> map) throws CommonException {
+		Map<String, Object> libEntry = helper.getTable(map, "lib", FAllowNull.YES);
+		if(libEntry != null) {
+			return parseFileRef(helper, libEntry);
+		}
+		return null;
 	}
 	
 	protected ArrayList2<CrateDependencyRef> parseDeps(Map<String, Object> manifestMap) throws CommonException {

@@ -1,0 +1,6 @@
+[package]
+name = "hello_world"
+authors = ["Your Name <you@example.com>"]
+
+[lib]
+name = "mylib"

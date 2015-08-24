@@ -17,6 +17,7 @@ import org.junit.Test;
 import melnorme.lang.tests.CommonToolingTest;
 import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.PathUtil;
 
@@ -39,43 +40,77 @@ public class CargoManifest_Test extends CommonToolingTest {
 	public static final Location CARGO_BUNDLES = getTestResourceLoc("cargo");
 	public static final Location LOC_CRATE_SIMPLE = getTestResourceLoc("cargo/crateSimple");
 	public static final Location LOC_CRATE_SIMPLE_LIB = getTestResourceLoc("cargo/crateSimpleLib");
-	public static final Location LOC_CRATE_A = getTestResourceLoc("cargo/crateA");
+	public static final Location LOC_CRATE_FOO = getTestResourceLoc("cargo/crateFoo");
+	
+	public static CargoManifest parseManifest(Location location) throws CommonException {
+		CargoManifestParser parser = new CargoManifestParser();
+		return parser.parse(readStringFromFile(location.resolve("Cargo.toml")));
+	}
 	
 	@Test
 	public void testEffectiveBinaries() throws Exception { testEffectiveBinaries$(); }
 	public void testEffectiveBinaries$() throws Exception {
-		CargoManifestParser parser = new CargoManifestParser();
 		
-		// Test implicit binary
-		CargoManifest cargoBin1 = parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateBin1.toml")));
-		
-		assertEquals(cargoBin1.getEffectiveBinaries(LOC_CRATE_SIMPLE),
-			new ArrayList2<>(
-				new FileRef("hello_world", null)
-			)
+		testEffectiveTargets(parseManifest(LOC_CRATE_SIMPLE_LIB), LOC_CRATE_SIMPLE_LIB, 
+			new FileRef("crate_simple_lib", null), 
+			new ArrayList2<>(),
+			new ArrayList2<>()
 		);
 		
-		assertEquals(cargoBin1.getEffectiveBinaries(LOC_CRATE_SIMPLE_LIB),
+		testEffectiveTargets(parseManifest(LOC_CRATE_SIMPLE), LOC_CRATE_SIMPLE,
+			null,
 			new ArrayList2<>(
-			)
+				new FileRef("crate_simple", null)
+			),
+			new ArrayList2<>()
 		);
 		
-		assertEquals(cargoBin1.getEffectiveBinaries(LOC_CRATE_A),
+		CargoManifest crateFooManifest = parseManifest(LOC_CRATE_FOO);
+		testEffectiveTargets(crateFooManifest, LOC_CRATE_FOO,
+			new FileRef("crate_foo", null), 
 			new ArrayList2<>(
-				new FileRef("hello_world", null),
+				new FileRef("crate_foo", null),
 				new FileRef("bin1", path("src/bin/bin1.rs").toString()),
 				new FileRef("bin2", path("src/bin/bin2.rs").toString())
-			)
-		);
-		
-		FileRef cargoBin1__hello_world = cargoBin1.getEffectiveBinaries(LOC_CRATE_A).toArrayList().get(0);
-		assertAreEqual(cargoBin1__hello_world.getBinaryPath(), PathUtil.createPath("hello_world"));
-		assertAreEqual(cargoBin1__hello_world.getSourcePath(), null);
-		
-		assertEquals(cargoBin1.getEffectiveTestBinaries(LOC_CRATE_A),
+			),
 			new ArrayList2<>(
 				new FileRef("test1", path("tests/test1.rs").toString()),
 				new FileRef("test2", path("tests/test2.rs").toString())
+			)
+		);
+		
+		FileRef cargoBin1__hello_world = crateFooManifest.getEffectiveBinaries(LOC_CRATE_FOO).toArrayList().get(0);
+		assertAreEqual(cargoBin1__hello_world.getBinaryPath(), PathUtil.createPath("crate_foo"));
+		assertAreEqual(cargoBin1__hello_world.getSourcePath(), null);
+		
+		testGetEffectiveTestTargets______________();
+	}
+	
+	protected void testEffectiveTargets(CargoManifest cargoMf, Location crateLoc, FileRef expectedLibrary, 
+			ArrayList2<FileRef> expectedBinaries, ArrayList2<FileRef> expectedIntegrationTests) {
+		
+		assertAreEqual(cargoMf.getEffectiveBinaries(crateLoc),
+			expectedBinaries
+		);
+		assertAreEqual(cargoMf.getEffectiveLibrary(crateLoc),
+			expectedLibrary
+		);
+		assertAreEqual(cargoMf.getEffectiveIntegrationTests(crateLoc),
+			expectedIntegrationTests
+		);
+	}
+	
+	protected void testGetEffectiveTestTargets______________() throws CommonException {
+		CargoManifest crateFoo = parseManifest(LOC_CRATE_FOO);
+		
+		assertEquals(crateFoo.getEffectiveTestTargets(LOC_CRATE_FOO),
+			new ArrayList2<>(
+				"test1",
+				"test2",
+				"lib.crate_foo",
+				"bin.crate_foo",
+				"bin.bin1",
+				"bin.bin2"
 			)
 		);
 	}
