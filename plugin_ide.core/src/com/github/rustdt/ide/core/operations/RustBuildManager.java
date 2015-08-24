@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -107,13 +109,18 @@ public class RustBuildManager extends BuildManager {
 		
 		protected String getExecutablePathForCargoTarget(String cargoTargetName, 
 				ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-			String profile = "debug/";
+			String exeFolder = getExecutableDirectoryForCargoTarget(validatedBuildTarget);
+			return exeFolder + "/" + cargoTargetName + MiscUtil.getExecutableSuffix();
+		}
+		
+		protected String getExecutableDirectoryForCargoTarget(ValidatedBuildTarget vbt) throws CommonException {
+			String profile = "debug";
 			
-			String[] buildArgs = validatedBuildTarget.getEffectiveEvaluatedBuildArguments();
+			String[] buildArgs = vbt.getEffectiveEvaluatedBuildArguments();
 			if(ArrayUtil.contains(buildArgs, "--release")) {
-				profile = "release/";
+				profile = "release";
 			}
-			return "target/" + profile + cargoTargetName + MiscUtil.getExecutableSuffix();
+			return "target/" + profile;
 		}
 		
 	}
@@ -201,11 +208,37 @@ public class RustBuildManager extends BuildManager {
 			
 			for(FileRef fileRef : bundleInfo.getManifest().getEffectiveTestBinaries(projectLoc)) {
 				String cargoTargetName = fileRef.getBinaryPathString();
-				String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-				binariesPaths.add(new LaunchArtifact("test[" + cargoTargetName + "]", exePath));
+				String exePath = getExecutablePathForTestTarget(vbt, projectLoc, cargoTargetName);
+				
+				/* FIXME: need to review for lib and bin test targets*/
+				String artifactName = "test." + cargoTargetName;
+				binariesPaths.add(new LaunchArtifact(artifactName, exePath));
 			}
 			
 			return binariesPaths;
+		}
+		
+		protected String getExecutablePathForTestTarget(ValidatedBuildTarget vbt, Location projectLoc, 
+				String cargoTargetName) throws CommonException {
+			String exeDirectory = getExecutableDirectoryForCargoTarget(vbt);
+			
+			String[] matchingExes = projectLoc.resolve(exeDirectory).toFile().list(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.startsWith(cargoTargetName + "-");
+				}
+			});
+			
+			String testFilename;
+			if(matchingExes == null || matchingExes.length == 0) {
+				testFilename = "<Error: could not determine executable file for test target>";
+			} else if(matchingExes.length > 1) {
+				testFilename = "<Error: found multiple executable files for test target>";
+			} else {
+				testFilename = matchingExes[0];
+			}
+			
+			return exeDirectory + "/" + testFilename;
 		}
 	}
 
