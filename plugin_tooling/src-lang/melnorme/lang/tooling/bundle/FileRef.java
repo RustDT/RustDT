@@ -51,7 +51,7 @@ public class FileRef {
 	
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}[{1}]", binaryPath, StringUtil.nullAsEmpty(sourcePath));
+		return MessageFormat.format("{0}@`{1}`", binaryPath, StringUtil.nullAsEmpty(sourcePath));
 	}
 	
 	/* -----------------  ----------------- */

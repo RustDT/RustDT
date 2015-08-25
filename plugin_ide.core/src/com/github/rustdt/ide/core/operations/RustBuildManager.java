@@ -39,10 +39,12 @@ import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.ArrayUtil;
+import melnorme.utilbox.misc.CollectionUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
@@ -69,18 +71,6 @@ public class RustBuildManager extends BuildManager {
 		
 		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
 			getBuildTargetName2("", "tests")));
-		
-		Location projectLocation;
-		try {
-			projectLocation = ResourceUtils.getProjectLocation2(project);
-		} catch(CommonException e) {
-			return buildTargets;
-		}
-		
-		for(FileRef fileRef : newBundleInfo.getManifest().getEffectiveBinaries(projectLocation)) {
-			buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, false, 
-				getBuildTargetName2(fileRef.getBinaryPathString(), "bin")));
-		}
 		
 		return buildTargets;
 	}
@@ -138,20 +128,28 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt)
-				throws CommonException {
+		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
+			return CollectionUtil.getSingleElementOrNull(getSubTargetLaunchArtifacts(vbt));
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
 			BundleInfo bundleInfo = vbt.getBundleInfo();
 			ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
 			
 			Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
 			
 			for(FileRef fileRef : bundleInfo.getManifest().getEffectiveBinaries(projectLoc)) {
-				String cargoTargetName = fileRef.getBinaryPathString();
-				String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-				binariesPaths.add(new LaunchArtifact(cargoTargetName, exePath));
+				binariesPaths.add(getLaunchArtifact(fileRef, vbt));
 			}
 			
 			return binariesPaths;
+		}
+		
+		protected LaunchArtifact getLaunchArtifact(FileRef fileRef, ValidatedBuildTarget vbt) throws CommonException {
+			String cargoTargetName = fileRef.getBinaryPathString();
+			String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+			return new LaunchArtifact(cargoTargetName, exePath);
 		}
 	}
 	
@@ -167,14 +165,15 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt) 
-				throws CommonException {
+		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
 			String cargoTargetName = vbt.getBuildConfigName();
 			String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
-			
-			return new ArrayList2<>(
-				new LaunchArtifact(cargoTargetName, exePath)
-			);
+			return new LaunchArtifact(cargoTargetName, exePath);
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
+			return null;
 		}
 	}
 
@@ -195,24 +194,46 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getLaunchArtifacts_do(ValidatedBuildTarget vbt) throws CommonException {
+		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
+			String testTargetName = vbt.getBuildConfigName();
+			if(testTargetName.isEmpty()) {
+				// Rust doesn't currently provide a way to run all crate tests in a single executable.
+				return null;
+			} else {
+				return getLaunchArtifactForTestTarget(vbt, testTargetName);
+			}
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
+			if(!vbt.getBuildConfigName().isEmpty()) {
+				return null;
+			}
+			
 			BundleInfo bundleInfo = vbt.getBundleInfo();
 			ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
 			
 			Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
+			Collection2<String> effectiveTestTargets = bundleInfo.getManifest().getEffectiveTestTargets(projectLoc);
 			
-			for(String testTargetName : bundleInfo.getManifest().getEffectiveTestTargets(projectLoc)) {
-				String exePath = getExecutablePathForTestTarget(vbt, projectLoc, testTargetName);
-				
-				String artifactName = "test." + testTargetName;
-				binariesPaths.add(new LaunchArtifact(artifactName, exePath));
+			for(String testTargetName : effectiveTestTargets) {
+				binariesPaths.add(getLaunchArtifactForTestTarget(vbt, testTargetName));
 			}
 			
 			return binariesPaths;
 		}
 		
-		protected String getExecutablePathForTestTarget(ValidatedBuildTarget vbt, Location projectLoc, 
-				String cargoTargetName) throws CommonException {
+		protected LaunchArtifact getLaunchArtifactForTestTarget(ValidatedBuildTarget vbt, String testTargetName) 
+				throws CommonException {
+			String exePath = getExecutablePathForTestTarget(vbt, testTargetName);
+			
+			String artifactName = "test." + testTargetName;
+			return new LaunchArtifact(artifactName, exePath);
+		}
+		
+		protected String getExecutablePathForTestTarget(ValidatedBuildTarget vbt, String cargoTargetName) 
+				throws CommonException {
+			Location projectLoc = ResourceUtils.getProjectLocation2(vbt.getProject());
 			String exeDirectory = getExecutableDirectoryForCargoTarget(vbt);
 			
 			String[] matchingExes = projectLoc.resolve(exeDirectory).toFile().list(new FilenameFilter() {
