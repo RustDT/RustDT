@@ -17,6 +17,8 @@ import com.github.rustdt.ide.ui.launch.RustLaunchShortcut;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
 import melnorme.lang.ide.ui.navigator.LangNavigatorActionProvider;
+import melnorme.lang.tooling.bundle.LaunchArtifact;
+import melnorme.utilbox.misc.StringUtil;
 
 public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 	
@@ -26,6 +28,15 @@ public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 			@Override
 			protected LangLaunchShortcut createLaunchShortcut() {
 				return new RustLaunchShortcut();
+			}
+			
+			@Override
+			protected String getLaunchNameFor(LaunchArtifact launchArtifact) {
+				String cargoFullTargetName = launchArtifact.getName();
+				if(cargoFullTargetName.startsWith("test.")) {
+					return "test[" + StringUtil.trimStart(cargoFullTargetName, "test.")  + "]";
+				}
+				return "[" + cargoFullTargetName + "]";
 			}
 		};
 	}
