@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -43,11 +41,8 @@ import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.CollectionUtil;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.misc.MiscUtil;
-import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 /**
@@ -94,6 +89,8 @@ public class RustBuildManager extends BuildManager {
 	
 	public abstract class RustBuildType extends BuildType {
 		
+		protected final CoreCargoTargetHelper cargoTargetHelper = new CoreCargoTargetHelper();
+		
 		public RustBuildType(String name) {
 			super(name);
 		}
@@ -108,22 +105,6 @@ public class RustBuildManager extends BuildManager {
 			return ResourceUtils.getProjectLocation2(vbt.getProject());
 		}
 		
-		protected String getExecutablePathForCargoTarget(String cargoTargetName, 
-				ValidatedBuildTarget validatedBuildTarget) throws CommonException {
-			String exeFolder = getExecutableDirectoryForCargoTarget(validatedBuildTarget);
-			return exeFolder + "/" + cargoTargetName + MiscUtil.getExecutableSuffix();
-		}
-		
-		protected String getExecutableDirectoryForCargoTarget(ValidatedBuildTarget vbt) throws CommonException {
-			String profile = "debug";
-			
-			String[] buildArgs = vbt.getEffectiveEvaluatedBuildArguments();
-			if(ArrayUtil.contains(buildArgs, "--release")) {
-				profile = "release";
-			}
-			return "target/" + profile;
-		}
-		
 		protected LaunchArtifact getLaunchArtifact(ValidatedBuildTarget vbt, FileRef fileRef) throws CommonException {
 			String cargoTargetName = fileRef.getBinaryPathString();
 			return getLaunchArtifact(vbt, cargoTargetName);
@@ -131,42 +112,8 @@ public class RustBuildManager extends BuildManager {
 		
 		protected LaunchArtifact getLaunchArtifact(ValidatedBuildTarget vbt, String cargoTargetName)
 				throws CommonException {
-			String exePath = getExecutablePathForCargoTarget(cargoTargetName, vbt);
+			String exePath = cargoTargetHelper.getExecutablePathForCargoTarget(cargoTargetName, vbt);
 			return new LaunchArtifact(cargoTargetName, exePath);
-		}
-		
-		protected LaunchArtifact getLaunchArtifactForTestTarget(ValidatedBuildTarget vbt, String testTargetName) 
-				throws CommonException {
-			String cargoTargetName = "test." + testTargetName;
-			String exePath = getExecutablePathForTestTarget(vbt, testTargetName);
-			return new LaunchArtifact(cargoTargetName, exePath);
-		}
-		
-		protected String getExecutablePathForTestTarget(ValidatedBuildTarget vbt, String cargoTargetName) 
-				throws CommonException {
-			String exeDirectory = getExecutableDirectoryForCargoTarget(vbt);
-			
-			cargoTargetName = StringUtil.trimStart(cargoTargetName, "lib.");
-			cargoTargetName = StringUtil.trimStart(cargoTargetName, "bin.");
-			String exePrefix = cargoTargetName;
-			
-			String[] matchingExes = getProjectLocation(vbt).resolve(exeDirectory).toFile().list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.startsWith(exePrefix + "-");
-				}
-			});
-			
-			String testFilename;
-			if(matchingExes == null || matchingExes.length == 0) {
-				testFilename = "<Error: could not determine executable file for test target>";
-			} else if(matchingExes.length > 1) {
-				testFilename = "<Error: found multiple executable files for test target>";
-			} else {
-				testFilename = matchingExes[0];
-			}
-			
-			return exeDirectory + "/" + testFilename;
 		}
 		
 		@Override
@@ -240,7 +187,7 @@ public class RustBuildManager extends BuildManager {
 		protected ArrayList2<LaunchArtifact> addTestsSubTargets(ValidatedBuildTarget vbt, CargoManifest manifest,
 				ArrayList2<LaunchArtifact> launchArtifacts) throws CommonException {
 			for(String testTargetName : manifest.getEffectiveTestTargets(getProjectLocation(vbt))) {
-				launchArtifacts.add(getLaunchArtifactForTestTarget(vbt, testTargetName));
+				launchArtifacts.add(cargoTargetHelper.getLaunchArtifactForTestTarget(vbt, testTargetName));
 			}
 			return launchArtifacts;
 		}
@@ -286,7 +233,7 @@ public class RustBuildManager extends BuildManager {
 		@Override
 		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
 			String testTargetName = vbt.getBuildConfigName();
-			return getLaunchArtifactForTestTarget(vbt, testTargetName);
+			return cargoTargetHelper.getLaunchArtifactForTestTarget(vbt, testTargetName);
 		}
 		
 		@Override

@@ -396,6 +396,15 @@
 							<adapt type="org.eclipse.core.resources.IProject">
 								<reference definitionId="com.github.rustdt.ide.core.expressions.isNatureProject" />
 							</adapt>
+							<and>
+								<adapt type="org.eclipse.core.resources.IResource">
+									<reference definitionId="com.github.rustdt.ide.core.expressions.isResourceInLangProject"/>
+								</adapt>
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.core.resources.name" value="*.rs" />
+									<test property="org.eclipse.core.resources.path" value="*/tests/*" />
+								</adapt>
+							</and>
 						</or>
 					</iterate>
 				</with>

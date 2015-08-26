@@ -18,7 +18,6 @@ import com.github.rustdt.ide.core.operations.RustToolManager;
 
 import melnorme.lang.ide.core.engine.EngineClient;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
-import melnorme.lang.ide.core.operations.build.BuildManager;
 
 public class LangCore_Actual {
 	
@@ -45,8 +44,14 @@ public class LangCore_Actual {
 	public static RustBundleModel getBundleModel() {
 		return (RustBundleModel) LangCore.getBundleModel();
 	}
-	public static BuildManager createBuildManager() {
+	public static RustBuildManager createBuildManager() {
 		return new RustBuildManager(getBundleModel());
+	}
+	
+	/* -----------------  ----------------- */
+	
+	public static RustBuildManager getRustBuildManager() {
+		return (RustBuildManager) LangCore.getBuildManager();
 	}
 	
 }

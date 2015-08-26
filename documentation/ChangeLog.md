@@ -19,8 +19,7 @@
    * Project Build Configuration property page update to configure build targets.
  
  * Fixed: Arguments field in launch configuration is not multi-line.
- * Fixed: Launch shortcut incorrectly matching pre-existing launch-configurations (NOT FOR RUSTDT)
- * Added: project launch shortcut.
+ * Added: project launch shortcut. Can launch integration tests.
 
 ### 0.2.2
   ▶ Recommended/tested CDT version is now 8.7
