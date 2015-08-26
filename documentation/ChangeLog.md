@@ -1,6 +1,8 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+
+### 0.3.0
  * Fixed: when invoking Rust tools like Cargo, add tool directory to beginning of PATH, not end. (#59)
  * Fixed: if build tool reports many error messages, the Eclipse project build will take too long to finish. (#26)
  * Added UserGuide note about using Homebrew GDB in OS X.
