@@ -16,12 +16,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
-import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.CoreCargoTargetHelper;
+import com.github.rustdt.ide.core.operations.RustBuildManager;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.LangCore_Actual;
-import melnorme.lang.ide.core.launch.BuildTargetLaunchSettings;
+import melnorme.lang.ide.core.launch.BuildTargetLaunchCreator;
 import melnorme.lang.ide.core.operations.build.BuildManager.BuildType;
 import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
@@ -42,7 +42,7 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 	
 	@Override
 	protected BuildTargetLaunchable getLaunchableForElement(Object element, IProject project,
-			BuildTargetLaunchSettings launchSettings, IProgressMonitor pm)
+			BuildTargetLaunchCreator launchSettings, IProgressMonitor pm)
 					throws CoreException, CommonException, OperationCancellation {
 		if(element instanceof IFile) {
 			IFile file = (IFile) element;
@@ -60,9 +60,9 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 			String launchNameSugestion = getLaunchNameForSubTarget(launchArtifact.getName());
 			
 			String buildTargetName = testsBuildType.getName();
-			BuildTargetLaunchSettings btsettings = BuildTargetsActionGroup.buildTargetSettings(
+			launchSettings = BuildTargetsActionGroup.buildTargetLaunchCreator(
 				project, buildTargetName, launchArtifact.getArtifactPath(), launchNameSugestion);
-			return new BuildTargetLaunchable(project, btsettings);
+			return new BuildTargetLaunchable(project, launchSettings);
 		}
 		
 		return super.getLaunchableForElement(element, project, launchSettings, pm);
