@@ -3,25 +3,24 @@
 ### (NextVersion)
 
 ### 0.3.0
- * Fixed: when invoking Rust tools like Cargo, add tool directory to beginning of PATH, not end. (#59)
- * Fixed: if build tool reports many error messages, the Eclipse project build will take too long to finish. (#26)
+ * Added support for Build Targets, based on Cargo build targets.
+   * Available Build Targets are displayed in the Project Explorer.  You can configure which targets are enabled or not for a workspace build. Or run/debug a specific target.
+   * Top-level Build Targets are: `crate#no-tests` and `crate#tests`. You can run/debug specific Cargo binaries or tests from the context menu of the Build Targets.
+   * Added Project Build Configuration property page to configure Build Target options.
+ * Added specific Project Explorer icons for Rust crate elements: the `src`, `test`, `target` folders; the `Cargo.toml` file.
+ * Added Project Explorer element with Cargo dependency references.
+ * Added: launch shortcut for a Rust project and Rust integration tests. This is a quick way to create a launch from the Project Explorer context-menu, by selecting either a project, or a Rust test source file in `tests/`, and selecting "Run As" or "Debug As".
+ * Added new [Configuration](documentation/UserGuide.md#configuration) section in the User Guide. (#46)
  * Added UserGuide note about using Homebrew GDB in OS X.
- * Added specific Project Explorer icons for Rust crate elements such as `src`, `test`, `target` folders, and the `Cargo.toml` file.
- * Added Project Explorer element with Cargo unresolved dependencies.
+
+Fixes:
+
+ * Fixed: if build tool reports many error messages, the Eclipse project build will take too long to finish. (#26)
  * Fixed: Properly parse Racer "END" line syntax, don't show error when this occurs. (#57)
- * Fixed #41: Don't show error dialog when Racer fails. Only the editor status line is updated now.
+ * Fixed: when invoking Rust tools like Cargo, add tool directory to beginning of PATH, not end. (#59)
+ * Fixed: Don't show error dialog when Racer fails. Only the editor status line is updated now. (#41)
  * Fixed: Occasional AssertionFailure when creating new projects in nested locations (project would not show up in Explorer).
- * Fixed #46 - RustDT installation documentation is confusing:
-  * Added new [Configuration](documentation/UserGuide.md#configuration) section in the User Guide.
  * Fixed: Arguments field in launch configuration is not multi-line.
- * Added support for Build Configurations.
-   * Available build targets are displayed in the Project Explorer. 
-   You can configure which targets are enabled for a workspace build or not. Or run/debug a specific target.
-   * Default build targets are: #TODO
-   * Project Build Configuration property page update to configure build targets.
- 
- * Fixed: Arguments field in launch configuration is not multi-line.
- * Added: project launch shortcut. Can launch integration tests.
 
 ### 0.2.2
   ▶ Recommended/tested CDT version is now 8.7
