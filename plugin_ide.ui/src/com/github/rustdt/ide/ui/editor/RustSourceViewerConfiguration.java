@@ -11,12 +11,6 @@
 package com.github.rustdt.ide.ui.editor;
 
 import static melnorme.utilbox.core.CoreUtil.array;
-import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.ui.LangUIPlugin_Actual;
-import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
-import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
-import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
-import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
@@ -24,12 +18,18 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 
-import _org.eclipse.cdt.ui.text.IColorManager;
-
 import com.github.rustdt.ide.ui.text.RustAttributeScanner;
 import com.github.rustdt.ide.ui.text.RustCodeScanner;
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
 import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
+
+import _org.eclipse.cdt.ui.text.IColorManager;
+import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
+import melnorme.lang.ide.ui.LangUIPlugin_Actual;
+import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
+import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
+import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
+import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 
 public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	
@@ -62,6 +62,8 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 			LangPartitionTypes.LIFETIME.getId());
 		addScanner(new RustAttributeScanner(getTokenStoreFactory()), 
 			LangPartitionTypes.ATTRIBUTE.getId());
+		addScanner(createSingleTokenScanner(RustColorPreferences.NUMBERS.key), 
+				LangPartitionTypes.NUMBER.getId());
 	}
 	
 	@Override
