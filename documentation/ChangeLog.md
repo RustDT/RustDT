@@ -1,6 +1,8 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Fixed: Unindent (Shift-Tab) broken, does nothing after empty lines in selection.
+ 
 
 ### 0.3.0
  * Added support for Build Targets, based on Cargo build targets.
