@@ -1,14 +1,15 @@
 package melnorme.lang.ide.core;
 
-import melnorme.lang.ide.core.text.LangDocumentPartitionerSetup;
 import java.util.function.Function;
-import melnorme.utilbox.misc.ArrayUtil;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
 import com.github.rustdt.ide.core.text.RustDocumentSetupParticipant;
 import com.github.rustdt.ide.core.text.RustPartitionScanner;
+
+import melnorme.lang.ide.core.text.LangDocumentPartitionerSetup;
+import melnorme.utilbox.misc.ArrayUtil;
 
 
 public class TextSettings_Actual {
@@ -19,7 +20,7 @@ public class TextSettings_Actual {
 		CODE, 
 		LINE_COMMENT, BLOCK_COMMENT, 
 		DOC_LINE_COMMENT, DOC_BLOCK_COMMENT, 
-		STRING, RAW_STRING, CHARACTER, LIFETIME, ATTRIBUTE;
+		STRING, RAW_STRING, CHARACTER, LIFETIME, ATTRIBUTE, NUMBER;
 		
 		public String getId() {
 			if(ordinal() == 0) {

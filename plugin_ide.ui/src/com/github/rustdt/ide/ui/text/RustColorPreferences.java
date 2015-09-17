@@ -18,7 +18,10 @@ public interface RustColorPreferences {
 	
 	String PREFIX = "editor.coloring."; 
 	
-	// Defaults mostly based from: http://static.rust-lang.org/doc/master/rust.css
+	// Defaults mostly based from "pre.rust." of http://static.rust-lang.org/doc/master/rust.css
+	
+	ColoringItemPreference DEFAULT = new ColoringItemPreference(PREFIX + "default",
+		true, new RGB(0, 0, 0), false, false, false);
 	
 	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + "COMMENT",
 		true, new RGB(0x8E, 0x90, 0x8C), false, false, false);
@@ -28,14 +31,14 @@ public interface RustColorPreferences {
 		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
 	ColoringItemPreference CHARACTER = new ColoringItemPreference(PREFIX + LangPartitionTypes.CHARACTER,
 		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+	ColoringItemPreference NUMBERS = new ColoringItemPreference(PREFIX + LangPartitionTypes.NUMBER,
+		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+	
 	ColoringItemPreference LIFETIME = new ColoringItemPreference(PREFIX + LangPartitionTypes.LIFETIME,
 		true, new RGB(0xB7, 0x65, 0x14), false, false, false);
 	ColoringItemPreference ATTRIBUTE = new ColoringItemPreference(PREFIX + LangPartitionTypes.ATTRIBUTE,
 		true, new RGB(0xC8, 0x28, 0x29), false, false, false);
 	
-	
-	ColoringItemPreference DEFAULT = new ColoringItemPreference(PREFIX + "default",
-		true, new RGB(0, 0, 0), false, false, false);
 	ColoringItemPreference KEYWORDS = new ColoringItemPreference(PREFIX + "keyword",
 		true, new RGB(0x89, 0x59, 0xA8), true, false, false);
 	ColoringItemPreference KEYWORDS_VALUES = new ColoringItemPreference(PREFIX + "keyword_literals",

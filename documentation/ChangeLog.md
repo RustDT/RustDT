@@ -1,6 +1,7 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
+ * Added editor number syntax highlighting. (#55)
  * Fixed: Unindent (Shift-Tab) broken, does nothing after empty lines in selection.
  
 

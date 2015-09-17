@@ -14,12 +14,12 @@ import static melnorme.utilbox.core.CoreUtil.array;
 
 import java.io.InputStream;
 
-import melnorme.lang.ide.ui.text.coloring.AbstractSourceColoringConfigurationBlock;
-import melnorme.util.swt.jface.LabeledTreeElement;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
+
+import melnorme.lang.ide.ui.text.coloring.AbstractSourceColoringConfigurationBlock;
+import melnorme.util.swt.jface.LabeledTreeElement;
 
 public class SourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
 	
@@ -30,6 +30,7 @@ public class SourceColoringConfigurationBlock extends AbstractSourceColoringConf
 			new SourceColoringElement("Keywords - Literals", RustColorPreferences.KEYWORDS_VALUES.key),
 			new SourceColoringElement("Strings", RustColorPreferences.STRINGS.key),
 			new SourceColoringElement("Characters", RustColorPreferences.CHARACTER.key),
+			new SourceColoringElement("Numbers", RustColorPreferences.NUMBERS.key),
 			new SourceColoringElement("Lifetime", RustColorPreferences.LIFETIME.key),
 			new SourceColoringElement("Attribute", RustColorPreferences.ATTRIBUTE.key)
 		)),

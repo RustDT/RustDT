@@ -10,11 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.text;
 
-import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.core.text.LexingRulePredicateRule;
-import melnorme.lang.ide.core.text.RuleBasedPartitionScannerExt;
-import melnorme.utilbox.collections.ArrayList2;
-
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.PatternRule;
@@ -22,6 +17,12 @@ import org.eclipse.jface.text.rules.Token;
 
 import com.github.rustdt.tooling.lexer.RustCharacterLexingRule;
 import com.github.rustdt.tooling.lexer.RustLifetimeLexingRule;
+import com.github.rustdt.tooling.lexer.RustNumberLexingRule;
+
+import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
+import melnorme.lang.ide.core.text.LexingRulePredicateRule;
+import melnorme.lang.ide.core.text.RuleBasedPartitionScannerExt;
+import melnorme.utilbox.collections.ArrayList2;
 
 public class RustPartitionScanner extends RuleBasedPartitionScannerExt {
 	
@@ -41,7 +42,7 @@ public class RustPartitionScanner extends RuleBasedPartitionScannerExt {
 		IToken tkAttribute = new Token(LangPartitionTypes.ATTRIBUTE.getId());
 		rules.add(new PatternRule("#[", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
 		rules.add(new PatternRule("#![", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
-		
+
 		rules.add(new LexingRulePredicateRule(LangPartitionTypes.CHARACTER.getId(), new RustCharacterLexingRule()));
 		
 		// Note: this rule must be after character rule
@@ -55,6 +56,7 @@ public class RustPartitionScanner extends RuleBasedPartitionScannerExt {
 		rules.add(new PatternRule("r##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
 		rules.add(new PatternRule("br##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
 		
+		rules.add(new LexingRulePredicateRule(LangPartitionTypes.NUMBER.getId(), new RustNumberLexingRule()));
 	}
 	
 }
