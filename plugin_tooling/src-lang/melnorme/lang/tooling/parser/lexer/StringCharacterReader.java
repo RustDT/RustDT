@@ -29,7 +29,7 @@ public class StringCharacterReader implements ICharacterReader {
 	
 	@Override
 	public int lookahead() {
-		if(offset >= source.length()) {
+		if(offset >= source.length() || offset < 0) {
 			return -1;
 		}
 		return source.charAt(offset);

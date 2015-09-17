@@ -23,16 +23,32 @@ public class RustNumberLexingRule extends CommonLexingRule implements ILexingRul
 			return false;
 		}
 
-		boolean hasPrefix = consumeIntPrefix(reader);
+		boolean hasOctPrefix = false;
+		boolean hasHexPrefix = false;
+		boolean hasBinPrefix = false;
+
+		hasOctPrefix = consumeOctPrefix(reader);
+		if (!hasOctPrefix) {
+			hasHexPrefix = consumeHexPrefix(reader);
+			if (!hasHexPrefix) {
+				hasBinPrefix = consumeBinPrefix(reader);
+			}
+		}
+
+		boolean hasPrefix = hasOctPrefix || hasHexPrefix || hasBinPrefix;
 		while (hasPrefix && reader.consume('_')) {
 			// JUST SKIP THEM
 		}
 
-		if (!consumeDigit(reader)) {
+		reader.consume('-');
+
+		int radix = hasHexPrefix ? 16 : (hasOctPrefix ? 8 : (hasBinPrefix ? 2 : 10));
+
+		if (!consumeDigit(reader, radix)) {
 			return false;
 		}
 
-		while (consumeDigit(reader) || reader.consume('_')) {
+		while (consumeDigit(reader, radix) || reader.consume('_')) {
 			// JUST SKIP THEM
 		}
 
@@ -41,10 +57,14 @@ public class RustNumberLexingRule extends CommonLexingRule implements ILexingRul
 				if (reader.lookahead() == '.') {
 					reader.unread();
 				} else {
-					if (!consumeDigit(reader)) {
+					if (hasPrefix) {
 						return false;
 					}
-					while (consumeDigit(reader) || reader.consume('_')) {
+					
+					if (!consumeDigit(reader, radix)) {
+						return false;
+					}
+					while (consumeDigit(reader, radix) || reader.consume('_')) {
 						// JUST SKIP THEM
 					}
 					consumeFloatSuffix(reader);
@@ -61,9 +81,9 @@ public class RustNumberLexingRule extends CommonLexingRule implements ILexingRul
 	}
 
 	private static boolean checkPrefix(ICharacterReader reader) {
-		int prefix; 
+		int prefix;
 		int behind = 0;
-		while(true) {
+		while (true) {
 			prefix = reader.lookahead();
 			if (Character.isDigit(prefix)) {
 				reader.unread();
@@ -72,30 +92,58 @@ public class RustNumberLexingRule extends CommonLexingRule implements ILexingRul
 			}
 			break;
 		}
-		
+
 		for (int i = 0; i < behind; i++) {
 			reader.read();
 		}
-		
+
 		if (Character.isAlphabetic(prefix) || '_' == prefix) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
-	private static boolean consumeDigit(ICharacterReader reader) {
+	private static boolean consumeDigit(ICharacterReader reader, int radix) {
 		int c = reader.lookahead();
-		if (c >= '0' && c <= '9') {
+
+		boolean hex = (radix == 16) && ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
+		boolean dec = (radix == 10) && (c >= '0' && c <= '9');
+		boolean oct = (radix == 8) && (c >= '0' && c <= '7');
+		boolean bin = (radix == 2) && (c >= '0' && c <= '1');
+
+		if (hex || dec || oct || bin) {
 			reader.read();
 			return true;
 		}
 		return false;
 	}
 
-	private static boolean consumeIntPrefix(ICharacterReader reader) {
+	private static boolean consumeHexPrefix(ICharacterReader reader) {
 		if (reader.consume('0')) {
-			if (reader.consume('x') || reader.consume('o') || reader.consume('b')) {
+			if (reader.consume('x')) {
+				return true;
+			} else {
+				reader.unread();
+			}
+		}
+		return false;
+	}
+
+	private static boolean consumeOctPrefix(ICharacterReader reader) {
+		if (reader.consume('0')) {
+			if (reader.consume('o')) {
+				return true;
+			} else {
+				reader.unread();
+			}
+		}
+		return false;
+	}
+
+	private static boolean consumeBinPrefix(ICharacterReader reader) {
+		if (reader.consume('0')) {
+			if (reader.consume('b')) {
 				return true;
 			} else {
 				reader.unread();
