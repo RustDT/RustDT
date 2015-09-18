@@ -8,22 +8,8 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.tooling.lexer;
+package melnorme.lang.utils.parse;
 
-import melnorme.lang.tooling.parser.lexer.CharacterLexingRule;
-import melnorme.lang.utils.parse.ICharacterReader;
-
-public class RustCharacterLexingRule extends CharacterLexingRule {
-	
-	@Override
-	protected boolean consumeStart(ICharacterReader reader) {
-		if(reader.tryConsume("'")) {
-			return true;
-		}
-		if(reader.tryConsume("b'")) {
-			return true;
-		}
-		return false;
-	}
+public interface ICharacterReader extends ICharSource<RuntimeException> {
 	
 }

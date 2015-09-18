@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import melnorme.lang.tooling.ops.BuildOutputParser;
+import melnorme.lang.tooling.parser.lexer.LexingUtils;
 import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
@@ -32,7 +33,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 	@Override
 	protected CompositeToolMessageData parseMessageData(StringParseSource output) throws CommonException {
 		
-		String outputLine = output.consumeLine();
+		String outputLine = LexingUtils.consumeLine(output);
 		
 		if(isMessageEnd(outputLine)) {
 			// We reached the end of messages, exhaust remaining tool output.
@@ -90,7 +91,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
 	protected void parseMultiLineMessageText(StringParseSource output, CompositeToolMessageData msg) {
 		while(true) {
-			String lineAhead = output.stringUntilNewline();
+			String lineAhead = LexingUtils.stringUntilNewline(output);
 			
 			if(lineAhead.isEmpty() || MESSAGE_LINE_Regex.matcher(lineAhead).matches()) {
 				break;
@@ -100,16 +101,16 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 			}
 			
 			// Then this should be a multi line message text.
-			output.consumeLine();
+			LexingUtils.consumeLine(output);
 			
 			// However, first try to determine if this is the source snippet text, 
 			// which we don't need to be part of message text
 			
-			String thirdLine = output.stringUntilNewline();
+			String thirdLine = LexingUtils.stringUntilNewline(output);
 			String thirdLineTrimmed = thirdLine.trim();
 			if(thirdLineTrimmed.startsWith("^") && 
 					(thirdLineTrimmed.endsWith("^") || thirdLineTrimmed.endsWith("~"))) {
-				output.consumeLine();
+				LexingUtils.consumeLine(output);
 				// dont add this message, or nextLine, to actual error message.
 				break;
 			}
@@ -120,7 +121,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
 	protected void parseAssociatedMessage(StringParseSource output, CompositeToolMessageData msg)
 			throws CommonException {
-		String lineAhead = output.stringUntilNewline();
+		String lineAhead = LexingUtils.stringUntilNewline(output);
 		
 		msg.simpleMessageText = msg.messageText;
 		

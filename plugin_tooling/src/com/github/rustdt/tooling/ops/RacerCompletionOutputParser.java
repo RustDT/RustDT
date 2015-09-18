@@ -21,6 +21,7 @@ import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.AbstractToolOutputParser;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
+import melnorme.lang.tooling.parser.lexer.LexingUtils;
 import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
@@ -44,7 +45,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		prefixLength = 0;
 
 		while(true) {
-			String line = source.consumeDelimitedString('\n', '\\');
+			String line = LexingUtils.consumeDelimitedString(source, '\n', '\\');
 			
 			if(line == null || line.isEmpty()) {
 				return new LangCompletionResult(proposals);
@@ -74,7 +75,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected String consumeCommaDelimitedString(StringParseSource lineLexer) {
-		return lineLexer.consumeDelimitedString(',', -1);
+		return LexingUtils.consumeDelimitedString(lineLexer, ',', -1);
 	}
 	
 	@SuppressWarnings("unused")
@@ -130,7 +131,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected String consumeSemicolonDelimitedString(StringParseSource lineLexer) {
-		return lineLexer.consumeDelimitedString(';', -1);
+		return LexingUtils.consumeDelimitedString(lineLexer, ';', -1);
 	}
 	
 	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
@@ -170,8 +171,9 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			}
 			if(lexer.tryConsume("${")) {
 				args.add(parseRawLabelArg(lexer));
+			} else {
+				lexer.consume();
 			}
-			lexer.consume();
 		}
 		
 		return args;

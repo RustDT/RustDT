@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 Bruno Medeiros and other Contributors.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,15 +10,14 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
-import melnorme.lang.tooling.parser.lexer.CommonLexingRule;
-import melnorme.lang.tooling.parser.lexer.ICharacterReader;
 import melnorme.lang.tooling.parser.lexer.ILexingRule;
+import melnorme.lang.utils.parse.ICharacterReader;
 
-public class RustLifetimeLexingRule extends CommonLexingRule implements ILexingRule {
+public class RustLifetimeLexingRule implements ILexingRule {
 	
 	@Override
-	public boolean evaluate(ICharacterReader reader) {
-		if(!reader.consume('\'')) {
+	public boolean doEvaluate(ICharacterReader reader) {
+		if(!reader.tryConsume('\'')) {
 			return false;
 		}
 		
@@ -26,12 +25,12 @@ public class RustLifetimeLexingRule extends CommonLexingRule implements ILexingR
 		if(!Character.isJavaIdentifierStart(la)) {
 			return false;
 		}
-		reader.read();
+		reader.consume();
 		
 		while(true) { 
 			la = reader.lookahead();
 			if(Character.isJavaIdentifierPart(la)) {
-				reader.read();
+				reader.consume();
 				continue;
 			}
 			break;

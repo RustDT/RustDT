@@ -15,17 +15,17 @@ import org.junit.Test;
 
 import melnorme.lang.tests.CommonToolingTest;
 import melnorme.lang.tooling.parser.lexer.ILexingRule;
-import melnorme.lang.tooling.parser.lexer.StringCharacterReader;
+import melnorme.lang.utils.parse.StringParseSource;
 
-public class LexingRulesTest extends CommonToolingTest {
+public class RustLexingRulesTest extends CommonToolingTest {
 
 	public static void testRule(ILexingRule lexRule, String source, int expectedTokenLength) {
-		StringCharacterReader reader = new StringCharacterReader(source);
-		boolean isMatch = lexRule.evaluate(reader);
+		StringParseSource reader = new StringParseSource(source);
+		boolean isMatch = lexRule.tryMatch(reader);
 
 		assertEquals(isMatch, expectedTokenLength > 0);
-		if (isMatch) {
-			assertEquals(reader.getOffset(), expectedTokenLength);
+		if(isMatch) {
+			assertEquals(reader.getReadOffset(), expectedTokenLength);
 		}
 	}
 

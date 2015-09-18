@@ -10,16 +10,13 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.text;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import melnorme.lang.ide.ui.text.coloring.AbstractLangScanner;
-
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.PatternRule;
 
 import _org.eclipse.cdt.ui.text.ITokenStoreFactory;
+import melnorme.lang.ide.ui.text.AbstractLangScanner;
+import melnorme.utilbox.collections.ArrayList2;
 
 /**
  * Scanner for Attribute partion
@@ -33,18 +30,15 @@ public class RustAttributeScanner extends AbstractLangScanner {
 	
 	public RustAttributeScanner(ITokenStoreFactory factory) {
 		super(factory.createTokenStore(tokenPrefProperties));
-		setRules(createRules());
 	}
 	
-	protected List<IRule> createRules() {
-		List<IRule> rules = new ArrayList<IRule>();
+	@Override
+	protected void initRules(ArrayList2<IRule> rules) {
+		setDefaultReturnToken(getToken(RustColorPreferences.ATTRIBUTE.key));
 		
 		IToken tkString = getToken(RustColorPreferences.STRINGS.key);
 		
 		rules.add(new PatternRule("\"", "\"", tkString, '\\', false, true));
-		
-		setDefaultReturnToken(getToken(RustColorPreferences.ATTRIBUTE.key));
-		return rules;
 	}
 	
 }

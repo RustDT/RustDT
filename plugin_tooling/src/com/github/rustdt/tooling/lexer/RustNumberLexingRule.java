@@ -10,39 +10,27 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
-import melnorme.lang.tooling.parser.lexer.CharacterReaderWrapper;
-import melnorme.lang.tooling.parser.lexer.CommonLexingRule;
-import melnorme.lang.tooling.parser.lexer.ICharacterReader;
 import melnorme.lang.tooling.parser.lexer.ILexingRule;
+import melnorme.lang.utils.parse.ICharacterReader;
 
-public class RustNumberLexingRule extends CommonLexingRule implements ILexingRule {
+public class RustNumberLexingRule implements ILexingRule {
 
-	@Override
-	public boolean evaluate(ICharacterReader reader) {
-		reader = new CharacterReaderWrapper(reader);
-		
-		boolean sucess = doEvaluate(reader);
-		if(!sucess) {
-			reader.reset();
-		}
-		return sucess;
-	}
-	
 	// See: https://doc.rust-lang.org/nightly/grammar.html#number-literals
-	protected boolean doEvaluate(ICharacterReader reader) {
+	@Override
+	public boolean doEvaluate(ICharacterReader reader) {
 		
-		reader.consume('-');
+		reader.tryConsume('-');
 		
 		int radix = 10;
 		
-		if(reader.consume('0')) {
-			if(reader.consume('b')) {
+		if(reader.tryConsume('0')) {
+			if(reader.tryConsume('b')) {
 				radix = 2;
 			} 
-			else if(reader.consume('o')) {
+			else if(reader.tryConsume('o')) {
 				radix = 8;
 			}
-			else if(reader.consume('x')) {
+			else if(reader.tryConsume('x')) {
 				radix = 16;
 			}
 		} else {
@@ -59,22 +47,18 @@ public class RustNumberLexingRule extends CommonLexingRule implements ILexingRul
 		
 		boolean hasPrefix = radix != 10;
 		
-		if (!hasPrefix && reader.consume('.')) {
-			if (reader.lookahead() == '.') {
-				reader.unread();
-			} else {
-				
-				consumeDigits(reader, radix);
-				// TODO: float exponent
-				consumeFloatSuffix(reader);
-			}
+		if(!hasPrefix && reader.lookahead() == '.' && reader.lookahead(1) != '.') {
+			reader.consume();
+			consumeDigits(reader, radix);
+			// TODO: float exponent
+			consumeFloatSuffix(reader);
 		}
 		
 		return true;
 	}
 
 	protected void consumeDigits(ICharacterReader reader, int radix) {
-		while (consumeDigit(reader, radix) || reader.consume('_')) {
+		while (consumeDigit(reader, radix) || reader.tryConsume('_')) {
 			// JUST SKIP THEM
 		}
 	}
@@ -88,65 +72,35 @@ public class RustNumberLexingRule extends CommonLexingRule implements ILexingRul
 		boolean bin = (radix == 2) && (c >= '0' && c <= '1');
 
 		if (hex || dec || oct || bin) {
-			reader.read();
+			reader.consume();
 			return true;
 		}
 		return false;
 	}
 
 	private static boolean consumeIntSuffix(ICharacterReader reader) {
-		if (reader.consume('i') || reader.consume('u')) {
-			if (reader.consume('8')) {
-				return true;
-			} else if (reader.consume('1')) {
-				if (reader.consume('6')) {
-					return true;
-				} else {
-					reader.unread();
-					reader.unread();
-				}
-			} else if (reader.consume('3')) {
-				if (reader.consume('2')) {
-					return true;
-				} else {
-					reader.unread();
-					reader.unread();
-				}
-			} else if (reader.consume('6')) {
-				if (reader.consume('4')) {
-					return true;
-				} else {
-					reader.unread();
-					reader.unread();
-				}
-			} else {
-				reader.unread();
-			}
+		if(reader.lookahead() == 'i') {
+			return 
+				reader.tryConsume("i8") ||
+				reader.tryConsume("i16") ||
+				reader.tryConsume("i32") ||
+				reader.tryConsume("i64");
+		}
+		if(reader.lookahead() == 'u') {
+			return 
+				reader.tryConsume("u8") ||
+				reader.tryConsume("u16") ||
+				reader.tryConsume("u32") ||
+				reader.tryConsume("u64");
 		}
 		return false;
 	}
 
 	private static boolean consumeFloatSuffix(ICharacterReader reader) {
-		if (reader.consume('f')) {
-			if (reader.consume('3')) {
-				if (reader.consume('2')) {
-					return true;
-				} else {
-					reader.unread();
-					reader.unread();
-				}
-			} else if (reader.consume('6')) {
-				if (reader.consume('4')) {
-					return true;
-				} else {
-					reader.unread();
-					reader.unread();
-				}
-			} else {
-				reader.unread();
-			}
+		if(reader.tryConsume("f32") || reader.tryConsume("f64")) {
+			return true;
 		}
 		return false;
 	}
-
+	
 }

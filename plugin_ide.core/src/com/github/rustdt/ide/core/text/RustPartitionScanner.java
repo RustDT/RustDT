@@ -20,17 +20,16 @@ import com.github.rustdt.tooling.lexer.RustLifetimeLexingRule;
 import com.github.rustdt.tooling.lexer.RustNumberLexingRule;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.core.text.LexingRulePredicateRule;
-import melnorme.lang.ide.core.text.RuleBasedPartitionScannerExt;
+import melnorme.lang.ide.core.text.LangPartitionScanner;
 import melnorme.utilbox.collections.ArrayList2;
 
-public class RustPartitionScanner extends RuleBasedPartitionScannerExt {
+public class RustPartitionScanner extends LangPartitionScanner {
 	
 	public RustPartitionScanner() {
 	}
 	
 	@Override
-	protected void addRules(ArrayList2<IPredicateRule> rules) {
+	protected void initPredicateRules(ArrayList2<IPredicateRule> rules) {
 		addStandardRules(rules, 
 			LangPartitionTypes.LINE_COMMENT.getId(), 
 			LangPartitionTypes.BLOCK_COMMENT.getId(),
