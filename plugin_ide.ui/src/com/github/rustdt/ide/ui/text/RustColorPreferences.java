@@ -44,4 +44,7 @@ public interface RustColorPreferences {
 	ColoringItemPreference KEYWORDS_VALUES = new ColoringItemPreference(PREFIX + "keyword_literals",
 		true, new RGB(0x89, 0x59, 0xA8), false, false, false);
 	
+	ColoringItemPreference MACRO_CALL = new ColoringItemPreference(PREFIX + "macro_call",
+		true, new RGB(0x3E, 0x99, 0x9F), false, false, false);
+	
 }

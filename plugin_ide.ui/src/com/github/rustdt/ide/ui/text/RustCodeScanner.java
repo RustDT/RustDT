@@ -29,6 +29,7 @@ public class RustCodeScanner extends AbstractLangScanner {
 		RustColorPreferences.DEFAULT.key,
 		RustColorPreferences.KEYWORDS.key,
 		RustColorPreferences.KEYWORDS_VALUES.key,
+		RustColorPreferences.MACRO_CALL.key,
 	};
 	
 	
@@ -38,17 +39,16 @@ public class RustCodeScanner extends AbstractLangScanner {
 	
 	@Override
 	protected void initRules(ArrayList2<IRule> rules) {
-		IToken tkOther = getToken(RustColorPreferences.DEFAULT.key);
-		setDefaultReturnToken(tkOther);
-		
-		IToken tkKeywords = getToken(RustColorPreferences.KEYWORDS.key);
-		IToken tkKeywordValues = getToken(RustColorPreferences.KEYWORDS_VALUES.key);
+		IToken defaultToken = getToken(RustColorPreferences.DEFAULT.key);
+		setDefaultReturnToken(defaultToken);
 		
 		RustWordLexerRule<IToken> codeLexerRule = new RustWordLexerRule<>(
 			Token.WHITESPACE, 
-			tkKeywords,
-			tkKeywordValues,
-			tkOther);
+			getToken(RustColorPreferences.KEYWORDS.key),
+			getToken(RustColorPreferences.KEYWORDS_VALUES.key),
+			defaultToken,
+			getToken(RustColorPreferences.MACRO_CALL.key)
+		);
 		
 		rules.add(new LexingRule_RuleAdapter(codeLexerRule));
 	}

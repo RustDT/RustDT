@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
+import melnorme.lang.tooling.parser.lexer.CharacterReader_SubReader;
+import melnorme.lang.tooling.parser.lexer.LexingUtils;
 import melnorme.lang.tooling.parser.lexer.WordLexerRule;
+import melnorme.lang.utils.parse.ICharacterReader;
 
 public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	
@@ -25,11 +28,34 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 			"true", "false", "self", "super", "null" // Is null actually used?
 	};
 	
-	public RustWordLexerRule(TOKEN whitespaceToken, TOKEN tkKeywords, TOKEN tkKeyword_Literals, TOKEN tkWord) {
-		super(whitespaceToken, tkWord);
+	/* -----------------  ----------------- */
+	
+	protected final TOKEN macroCall;
+	
+	public RustWordLexerRule(TOKEN whitespaceToken, TOKEN keywords, TOKEN keyword_Literals, TOKEN word,
+			TOKEN macroCall) {
+		super(whitespaceToken, word);
+		this.macroCall = macroCall;
 		
-		addKeywords(tkKeywords, keywords_control);
-		addKeywords(tkKeyword_Literals, keywords_values);
+		addKeywords(keywords, keywords_control);
+		addKeywords(keyword_Literals, keywords_values);
+	}
+	
+	@Override
+	public TOKEN doEvaluate(ICharacterReader reader) {
+		TOKEN result = super.doEvaluate(reader);
+		if(result != defaultWordToken) {
+			return result;
+		}
+		// We found a word then. Let's see if it's a macro invocation
+		
+		CharacterReader_SubReader subReader = new CharacterReader_SubReader(reader); 
+		LexingUtils.skipWhitespace(subReader);
+		if(subReader.tryConsume('!')) {
+			subReader.consumeInParentReader();
+			return macroCall;
+		}
+		return result;
 	}
 	
 }
