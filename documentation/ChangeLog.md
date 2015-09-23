@@ -1,4 +1,4 @@
-## RustDT release ChangeLog
+## release ChangeLog
 
 ### (NextVersion)
  * Fixed: AssertionFailureException pressing Enter after source with more closing braces than opening ones.
