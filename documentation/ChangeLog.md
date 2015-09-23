@@ -1,7 +1,10 @@
 ## RustDT release ChangeLog
 
 ### (NextVersion)
- * Added number literals source highlighting. (#55)
+ * Added support for Eclipse dark theme. Namely:  
+   * Syntax/source coloring now have different settings for dark theme.
+   * Fixed tools console colors, as well as content assist pop-up colors.   
+  * Added number literals source highlighting. (#55)
  * Added macro invocation source highlighting.
  * Fixed: Unindent (Shift-Tab) broken, does nothing after empty lines in selection.
  
