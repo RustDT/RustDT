@@ -33,7 +33,8 @@ public class RustLexingRulesTest extends CommonToolingTest {
 	public void testWordRule() throws Exception { testWordRule$(); }
 	public void testWordRule$() throws Exception {
 		testWordRules("", 0);
-		testWordRules("2", 0);
+		testWordRules("2", 1);
+		testWordRules("2abc", 1);
 		testWordRules("##", 0);
 		testWordRules("a", 1);
 		testWordRules("abc", 3);
