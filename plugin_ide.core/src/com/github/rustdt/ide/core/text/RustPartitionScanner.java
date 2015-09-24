@@ -17,7 +17,6 @@ import org.eclipse.jface.text.rules.Token;
 
 import com.github.rustdt.tooling.lexer.RustCharacterLexingRule;
 import com.github.rustdt.tooling.lexer.RustLifetimeLexingRule;
-import com.github.rustdt.tooling.lexer.RustNumberLexingRule;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.core.text.LangPartitionScanner;
@@ -54,8 +53,6 @@ public class RustPartitionScanner extends LangPartitionScanner {
 		IToken tkRawString = new Token(LangPartitionTypes.RAW_STRING.getId());
 		rules.add(new PatternRule("r##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
 		rules.add(new PatternRule("br##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
-		
-		rules.add(new LexingRulePredicateRule(LangPartitionTypes.NUMBER.getId(), new RustNumberLexingRule()));
 	}
 	
 }

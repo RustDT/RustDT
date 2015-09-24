@@ -28,11 +28,30 @@ public class RustLexingRulesTest extends CommonToolingTest {
 			assertEquals(reader.getReadOffset(), expectedTokenLength);
 		}
 	}
-
+	
+	@Test
+	public void testWordRule() throws Exception { testWordRule$(); }
+	public void testWordRule$() throws Exception {
+		testWordRules("", 0);
+		testWordRules("2", 0);
+		testWordRules("##", 0);
+		testWordRules("a", 1);
+		testWordRules("abc", 3);
+		testWordRules("abc123", 6);
+		testWordRules("abc12x", 6);
+		
+		testWordRules("abc##a", 3);
+	}
+	
+	public void testWordRules(String source, int expectedTokenLength) {
+		testRule(new RustWordLexerRule<String>("WS", "KW", "KW_LIT", "word", "macro", "number"), 
+			source, expectedTokenLength);
+	}
+	
 	public static void testNumberRule(String source, int expectedTokenLength) {
 		testRule(new RustNumberLexingRule(), source, expectedTokenLength);
 	}
-
+	
 	@Test
 	public void testNumberLexingRuleValid() throws Exception { testNumberLexingRuleValid$(); }
 	public void testNumberLexingRuleValid$() throws Exception {
