@@ -84,14 +84,18 @@ public class RustNumberLexingRule implements ILexingRule {
 				reader.tryConsume("i8") ||
 				reader.tryConsume("i16") ||
 				reader.tryConsume("i32") ||
-				reader.tryConsume("i64");
+				reader.tryConsume("i64") ||
+				reader.tryConsume("isize")
+				;
 		}
 		if(reader.lookahead() == 'u') {
 			return 
 				reader.tryConsume("u8") ||
 				reader.tryConsume("u16") ||
 				reader.tryConsume("u32") ||
-				reader.tryConsume("u64");
+				reader.tryConsume("u64") ||
+				reader.tryConsume("usize")
+				;
 		}
 		return false;
 	}
