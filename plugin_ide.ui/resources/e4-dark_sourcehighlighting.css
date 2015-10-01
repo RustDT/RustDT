@@ -11,20 +11,21 @@
 
 IEclipsePreferences#com-github-rustdt-ide-ui {
 	preferences:
-		'editor.coloring.comment=142,144,140'
-		'editor.coloring.doc_comment=63,95,191'
 		
-		'editor.coloring.string=113,140,0'
-		'editor.coloring.character=113,140,0'
-		'editor.coloring.number=113,140,0'
+		'editor.coloring.default=230,230,230'
 		
-		'editor.coloring.default=255,255,255'
-		'editor.coloring.keyword=137,89,168'
-		'editor.coloring.keyword_literals=137,89,168'
+		'editor.coloring.comment=144,144,144'
+		'editor.coloring.doc_comment=110,135,205'
 		
-		'editor.coloring.attribute=200,40,41'
-		'editor.coloring.lifetime=183,101,29'
-		'editor.coloring.macro_call=62,153,159'
+		'editor.coloring.keyword=140, 90, 168'
+		'editor.coloring.keyword_literals=140, 90, 168'
+		'editor.coloring.lifetime=183, 101, 20'
+		'editor.coloring.attribute=200, 40, 40'
+		'editor.coloring.macro_call=62, 153, 159'
+		
+		'editor.coloring.number=113, 140, 0'
+		'editor.coloring.character=113, 140, 0'
+		'editor.coloring.string=113, 140, 0'
 		
 		
 		'matchingBracketsColor=102,112,125'

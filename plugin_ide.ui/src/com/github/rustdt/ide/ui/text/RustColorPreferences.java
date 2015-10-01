@@ -13,6 +13,8 @@ import org.eclipse.swt.graphics.RGB;
 
 import melnorme.lang.ide.ui.text.coloring.ColoringItemPreference;
 
+// Note: the file /resources/e4-dark_sourcehighlighting.css needs to updated with changes made here, 
+// such as key name changes, or the color defaults
 public interface RustColorPreferences {
 	
 	String PREFIX = "editor.coloring."; 
@@ -29,11 +31,11 @@ public interface RustColorPreferences {
 		true, new RGB(65, 95, 185), false, false, false);
 	
 	
-	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + "string",
+	ColoringItemPreference NUMBERS = new ColoringItemPreference(PREFIX + "number",
 		true, new RGB(113, 140, 0), false, false, false);
 	ColoringItemPreference CHARACTER = new ColoringItemPreference(PREFIX + "character",
 		true, new RGB(113, 140, 0), false, false, false);
-	ColoringItemPreference NUMBERS = new ColoringItemPreference(PREFIX + "number",
+	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + "string",
 		true, new RGB(113, 140, 0), false, false, false);
 	
 	ColoringItemPreference KEYWORDS = new ColoringItemPreference(PREFIX + "keyword",
