@@ -23,26 +23,28 @@ public interface RustColorPreferences {
 		true, new RGB(0, 0, 0), false, false, false);
 	
 	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + "comment",
-		true, new RGB(0x8E, 0x90, 0x8C), false, false, false);
+		true, new RGB(144, 144, 144), false, false, false);
+	// DOC_COMMENTS uses a diff color than rust.css
 	ColoringItemPreference DOC_COMMENTS = new ColoringItemPreference(PREFIX + "doc_comment",
-		true, new RGB(63, 95, 191), false, false, false);
+		true, new RGB(65, 95, 185), false, false, false);
+	
 	
 	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + "string",
-		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+		true, new RGB(113, 140, 0), false, false, false);
 	ColoringItemPreference CHARACTER = new ColoringItemPreference(PREFIX + "character",
-		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+		true, new RGB(113, 140, 0), false, false, false);
 	ColoringItemPreference NUMBERS = new ColoringItemPreference(PREFIX + "number",
-		true, new RGB(0x71, 0x8C, 0x00), false, false, false);
+		true, new RGB(113, 140, 0), false, false, false);
 	
 	ColoringItemPreference KEYWORDS = new ColoringItemPreference(PREFIX + "keyword",
-		true, new RGB(0x89, 0x59, 0xA8), true, false, false);
+		true, new RGB(140, 90, 168), true, false, false);
 	ColoringItemPreference KEYWORDS_VALUES = new ColoringItemPreference(PREFIX + "keyword_literals",
-		true, new RGB(0x89, 0x59, 0xA8), false, false, false);
+		true, new RGB(140, 90, 168), false, false, false);
 	ColoringItemPreference LIFETIME = new ColoringItemPreference(PREFIX + "lifetime",
-		true, new RGB(0xB7, 0x65, 0x14), false, false, false);
+		true, new RGB(183, 101, 20), false, false, false);
 	ColoringItemPreference ATTRIBUTE = new ColoringItemPreference(PREFIX + "attribute",
-		true, new RGB(0xC8, 0x28, 0x29), false, false, false);
+		true, new RGB(200, 40, 40), false, false, false);
 	ColoringItemPreference MACRO_CALL = new ColoringItemPreference(PREFIX + "macro_call",
-		true, new RGB(0x3E, 0x99, 0x9F), false, false, false);
+		true, new RGB(62, 153, 159), false, false, false);
 	
 }
