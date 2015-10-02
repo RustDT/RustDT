@@ -16,7 +16,7 @@ import org.eclipse.jface.text.rules.Token;
 
 import com.github.rustdt.tooling.lexer.RustWordLexerRule;
 
-import _org.eclipse.cdt.ui.text.ITokenStoreFactory;
+import _org.eclipse.cdt.internal.ui.text.TokenStore;
 import melnorme.lang.ide.ui.text.AbstractLangScanner;
 import melnorme.utilbox.collections.ArrayList2;
 
@@ -25,31 +25,22 @@ import melnorme.utilbox.collections.ArrayList2;
  */
 public class RustCodeScanner extends AbstractLangScanner {
 	
-	private static String tokenPrefProperties[] = new String[] {
-		RustColorPreferences.DEFAULT.key,
-		RustColorPreferences.KEYWORDS.key,
-		RustColorPreferences.KEYWORDS_VALUES.key,
-		RustColorPreferences.MACRO_CALL.key,
-		RustColorPreferences.NUMBERS.key,
-	};
-	
-	
-	public RustCodeScanner(ITokenStoreFactory factory) {
-		super(factory.createTokenStore(tokenPrefProperties));
+	public RustCodeScanner(TokenStore tokenStore) {
+		super(tokenStore);
 	}
 	
 	@Override
 	protected void initRules(ArrayList2<IRule> rules) {
-		IToken defaultToken = getToken(RustColorPreferences.DEFAULT.key);
+		IToken defaultToken = getToken(RustColorPreferences.DEFAULT);
 		setDefaultReturnToken(defaultToken);
 		
 		RustWordLexerRule<IToken> codeLexerRule = new RustWordLexerRule<>(
 			Token.WHITESPACE, 
-			getToken(RustColorPreferences.KEYWORDS.key),
-			getToken(RustColorPreferences.KEYWORDS_VALUES.key),
+			getToken(RustColorPreferences.KEYWORDS),
+			getToken(RustColorPreferences.KEYWORDS_VALUES),
 			defaultToken,
-			getToken(RustColorPreferences.MACRO_CALL.key),
-			getToken(RustColorPreferences.NUMBERS.key)
+			getToken(RustColorPreferences.MACRO_CALL),
+			getToken(RustColorPreferences.NUMBERS)
 		);
 		
 		rules.add(new LexingRule_RuleAdapter(codeLexerRule));

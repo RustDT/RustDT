@@ -17,50 +17,51 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.widgets.Display;
 
 import com.github.rustdt.ide.ui.text.RustAttributeScanner;
 import com.github.rustdt.ide.ui.text.RustCodeScanner;
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
 import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 
-import _org.eclipse.cdt.ui.text.IColorManager;
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
 import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
+import melnorme.util.swt.jface.text.ColorManager2;
 
 public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	
-	public RustSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager,
+	public RustSourceViewerConfiguration(IPreferenceStore preferenceStore, ColorManager2 colorManager,
 			AbstractLangStructureEditor editor) {
 		super(preferenceStore, colorManager, editor);
 	}
 	
 	@Override
-	protected void createScanners() {
-		addScanner(new RustCodeScanner(getTokenStoreFactory()), IDocument.DEFAULT_CONTENT_TYPE);
+	protected void createScanners(Display currentDisplay) {
+		addScanner(new RustCodeScanner(getTokenStore()), IDocument.DEFAULT_CONTENT_TYPE);
 		
-		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS), 
 			LangPartitionTypes.LINE_COMMENT.getId());
-		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS), 
 			LangPartitionTypes.BLOCK_COMMENT.getId());
 		
-		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS), 
 			LangPartitionTypes.DOC_LINE_COMMENT.getId());
-		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS), 
 			LangPartitionTypes.DOC_BLOCK_COMMENT.getId());
 		
-		addScanner(createSingleTokenScanner(RustColorPreferences.STRINGS.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.STRINGS), 
 			LangPartitionTypes.STRING.getId(),
 			LangPartitionTypes.RAW_STRING.getId()
 			);
-		addScanner(createSingleTokenScanner(RustColorPreferences.CHARACTER.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.CHARACTER), 
 			LangPartitionTypes.CHARACTER.getId());
-		addScanner(createSingleTokenScanner(RustColorPreferences.LIFETIME.key), 
+		addScanner(createSingleTokenScanner(RustColorPreferences.LIFETIME), 
 			LangPartitionTypes.LIFETIME.getId());
-		addScanner(new RustAttributeScanner(getTokenStoreFactory()), 
+		addScanner(new RustAttributeScanner(getTokenStore()), 
 			LangPartitionTypes.ATTRIBUTE.getId());
 	}
 	

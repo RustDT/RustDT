@@ -20,11 +20,11 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 
-import _org.eclipse.cdt.ui.text.IColorManager;
+import melnorme.util.swt.jface.text.ColorManager2;
 
 public class RustSimpleSourceViewerConfiguration extends RustSourceViewerConfiguration {
 	
-	public RustSimpleSourceViewerConfiguration(IPreferenceStore preferenceStore, IColorManager colorManager) {
+	public RustSimpleSourceViewerConfiguration(IPreferenceStore preferenceStore, ColorManager2 colorManager) {
 		super(preferenceStore, colorManager, null);
 	}
 	

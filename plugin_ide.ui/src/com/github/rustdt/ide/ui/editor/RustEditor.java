@@ -14,7 +14,7 @@ import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
 import melnorme.lang.ide.ui.editor.text.LangPairMatcher;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
-import _org.eclipse.cdt.ui.text.IColorManager;
+import melnorme.util.swt.jface.text.ColorManager2;
 
 public class RustEditor extends AbstractLangStructureEditor {
 	
@@ -25,7 +25,7 @@ public class RustEditor extends AbstractLangStructureEditor {
 	
 	@Override
 	protected AbstractLangSourceViewerConfiguration createSourceViewerConfiguration() {
-		IColorManager colorManager = LangUIPlugin.getInstance().getColorManager();
+		ColorManager2 colorManager = LangUIPlugin.getInstance().getColorManager();
 		return new RustSourceViewerConfiguration(getPreferenceStore(), colorManager, this);
 	}
 	
