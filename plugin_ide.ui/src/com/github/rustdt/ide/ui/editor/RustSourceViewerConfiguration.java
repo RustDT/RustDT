@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.editor;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.CoreUtil.array;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -27,7 +28,10 @@ import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
+import melnorme.lang.ide.ui.text.AbstractLangScanner;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
+import melnorme.lang.ide.ui.text.coloring.SingleTokenScanner;
+import melnorme.lang.ide.ui.text.coloring.TokenRegistry;
 import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 import melnorme.util.swt.jface.text.ColorManager2;
@@ -40,29 +44,33 @@ public class RustSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 	}
 	
 	@Override
-	protected void createScanners(Display currentDisplay) {
-		addScanner(new RustCodeScanner(getTokenStore()), IDocument.DEFAULT_CONTENT_TYPE);
+	protected AbstractLangScanner createScannerFor(Display current, LangPartitionTypes partitionType,
+			TokenRegistry tokenStore) {
+		switch (partitionType) {
+		case CODE:
+			return new RustCodeScanner(tokenStore);
+			
+		case LINE_COMMENT:
+		case BLOCK_COMMENT:
+			return new SingleTokenScanner(tokenStore, RustColorPreferences.COMMENTS);
+			
+		case DOC_LINE_COMMENT:
+		case DOC_BLOCK_COMMENT:
+			return new SingleTokenScanner(tokenStore, RustColorPreferences.DOC_COMMENTS);
+			
+		case STRING:
+		case RAW_STRING:
+			return new SingleTokenScanner(tokenStore, RustColorPreferences.STRINGS);
+			
+		case CHARACTER:
+			return new SingleTokenScanner(tokenStore, RustColorPreferences.CHARACTER);
+		case LIFETIME:
+			return new SingleTokenScanner(tokenStore, RustColorPreferences.LIFETIME);
+		case ATTRIBUTE:
+			return new RustAttributeScanner(tokenStore);
+		}
 		
-		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS), 
-			LangPartitionTypes.LINE_COMMENT.getId());
-		addScanner(createSingleTokenScanner(RustColorPreferences.COMMENTS), 
-			LangPartitionTypes.BLOCK_COMMENT.getId());
-		
-		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS), 
-			LangPartitionTypes.DOC_LINE_COMMENT.getId());
-		addScanner(createSingleTokenScanner(RustColorPreferences.DOC_COMMENTS), 
-			LangPartitionTypes.DOC_BLOCK_COMMENT.getId());
-		
-		addScanner(createSingleTokenScanner(RustColorPreferences.STRINGS), 
-			LangPartitionTypes.STRING.getId(),
-			LangPartitionTypes.RAW_STRING.getId()
-			);
-		addScanner(createSingleTokenScanner(RustColorPreferences.CHARACTER), 
-			LangPartitionTypes.CHARACTER.getId());
-		addScanner(createSingleTokenScanner(RustColorPreferences.LIFETIME), 
-			LangPartitionTypes.LIFETIME.getId());
-		addScanner(new RustAttributeScanner(getTokenStore()), 
-			LangPartitionTypes.ATTRIBUTE.getId());
+		throw assertFail();
 	}
 	
 	@Override

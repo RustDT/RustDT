@@ -9,9 +9,10 @@
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
 package com.github.rustdt.ide.ui.text;
+
 import org.eclipse.swt.graphics.RGB;
 
-import melnorme.lang.ide.ui.text.coloring.ColoringItemPreference;
+import melnorme.lang.ide.ui.text.coloring.TextStylingPreference;
 
 // Note: the file /resources/e4-dark_sourcehighlighting.css needs to updated with changes made here, 
 // such as key name changes, or the color defaults
@@ -21,32 +22,32 @@ public interface RustColorPreferences {
 	
 	// Defaults mostly based from "pre.rust." of http://static.rust-lang.org/doc/master/rust.css
 	
-	ColoringItemPreference DEFAULT = new ColoringItemPreference(PREFIX + "default",
+	TextStylingPreference DEFAULT = new TextStylingPreference(PREFIX + "default",
 		new RGB(0, 0, 0), false, false);
 	
-	ColoringItemPreference COMMENTS = new ColoringItemPreference(PREFIX + "comment",
+	TextStylingPreference COMMENTS = new TextStylingPreference(PREFIX + "comment",
 		new RGB(144, 144, 144), false, false);
 	// DOC_COMMENTS uses a diff color than rust.css
-	ColoringItemPreference DOC_COMMENTS = new ColoringItemPreference(PREFIX + "doc_comment",
+	TextStylingPreference DOC_COMMENTS = new TextStylingPreference(PREFIX + "doc_comment",
 		new RGB(65, 95, 185), false, false);
 	
 	
-	ColoringItemPreference NUMBERS = new ColoringItemPreference(PREFIX + "number",
+	TextStylingPreference NUMBERS = new TextStylingPreference(PREFIX + "number",
 		new RGB(113, 140, 0), false, false);
-	ColoringItemPreference CHARACTER = new ColoringItemPreference(PREFIX + "character",
+	TextStylingPreference CHARACTER = new TextStylingPreference(PREFIX + "character",
 		new RGB(113, 140, 0), false, false);
-	ColoringItemPreference STRINGS = new ColoringItemPreference(PREFIX + "string",
+	TextStylingPreference STRINGS = new TextStylingPreference(PREFIX + "string",
 		new RGB(113, 140, 0), false, false);
 	
-	ColoringItemPreference KEYWORDS = new ColoringItemPreference(PREFIX + "keyword",
+	TextStylingPreference KEYWORDS = new TextStylingPreference(PREFIX + "keyword",
 		new RGB(140, 90, 168), true, false);
-	ColoringItemPreference KEYWORDS_VALUES = new ColoringItemPreference(PREFIX + "keyword_literals",
+	TextStylingPreference KEYWORDS_VALUES = new TextStylingPreference(PREFIX + "keyword_literals",
 		new RGB(140, 90, 168), false, false);
-	ColoringItemPreference LIFETIME = new ColoringItemPreference(PREFIX + "lifetime",
+	TextStylingPreference LIFETIME = new TextStylingPreference(PREFIX + "lifetime",
 		new RGB(183, 101, 20), false, false);
-	ColoringItemPreference ATTRIBUTE = new ColoringItemPreference(PREFIX + "attribute",
+	TextStylingPreference ATTRIBUTE = new TextStylingPreference(PREFIX + "attribute",
 		new RGB(200, 40, 40), false, false);
-	ColoringItemPreference MACRO_CALL = new ColoringItemPreference(PREFIX + "macro_call",
+	TextStylingPreference MACRO_CALL = new TextStylingPreference(PREFIX + "macro_call",
 		new RGB(62, 153, 159), false, false);
 	
 }

@@ -1,7 +1,5 @@
 package melnorme.lang.ide.core;
 
-import java.util.function.Function;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 
@@ -42,12 +40,7 @@ public class TextSettings_Actual {
 	/* ----------------- Common code ----------------- */
 	
 	public static final String[] PARTITION_TYPES = ArrayUtil.map(LangPartitionTypes.values(), 
-		new Function<LangPartitionTypes, String>() {
-			@Override
-			public String apply(LangPartitionTypes obj) {
-				return obj.getId();
-			}
-		}, String.class
+		obj -> obj.getId(), String.class
 	);
 	
 }
