@@ -16,8 +16,8 @@ import org.eclipse.jface.text.rules.Token;
 
 import com.github.rustdt.tooling.lexer.RustWordLexerRule;
 
-import _org.eclipse.cdt.internal.ui.text.TokenStore;
 import melnorme.lang.ide.ui.text.AbstractLangScanner;
+import melnorme.lang.ide.ui.text.coloring.TokenRegistry;
 import melnorme.utilbox.collections.ArrayList2;
 
 /**
@@ -25,7 +25,7 @@ import melnorme.utilbox.collections.ArrayList2;
  */
 public class RustCodeScanner extends AbstractLangScanner {
 	
-	public RustCodeScanner(TokenStore tokenStore) {
+	public RustCodeScanner(TokenRegistry tokenStore) {
 		super(tokenStore);
 	}
 	

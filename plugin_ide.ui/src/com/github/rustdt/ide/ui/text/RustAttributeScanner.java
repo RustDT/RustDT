@@ -14,8 +14,8 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.PatternRule;
 
-import _org.eclipse.cdt.internal.ui.text.TokenStore;
 import melnorme.lang.ide.ui.text.AbstractLangScanner;
+import melnorme.lang.ide.ui.text.coloring.TokenRegistry;
 import melnorme.utilbox.collections.ArrayList2;
 
 /**
@@ -23,7 +23,7 @@ import melnorme.utilbox.collections.ArrayList2;
  */
 public class RustAttributeScanner extends AbstractLangScanner {
 	
-	public RustAttributeScanner(TokenStore tokenStore) {
+	public RustAttributeScanner(TokenRegistry tokenStore) {
 		super(tokenStore);
 	}
 	
