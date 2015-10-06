@@ -14,8 +14,6 @@ import static melnorme.utilbox.core.CoreUtil.array;
 
 import java.io.InputStream;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
 import melnorme.lang.ide.ui.text.coloring.AbstractSourceColoringConfigurationBlock;
@@ -23,31 +21,29 @@ import melnorme.util.swt.jface.LabeledTreeElement;
 
 public class SourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
 	
-	protected static final LabeledTreeElement[] treeElements = array(
-		new SourceColoringCategory("Source", array(
-			new SourceColoringElement("Default", RustColorPreferences.DEFAULT),
-			new SourceColoringElement("Keywords", RustColorPreferences.KEYWORDS),
-			new SourceColoringElement("Keywords - Literals", RustColorPreferences.KEYWORDS_VALUES),
-			new SourceColoringElement("Macro Invocation", RustColorPreferences.MACRO_CALL),
-			new SourceColoringElement("Strings", RustColorPreferences.STRINGS),
-			new SourceColoringElement("Characters", RustColorPreferences.CHARACTER),
-			new SourceColoringElement("Numbers", RustColorPreferences.NUMBERS),
-			new SourceColoringElement("Lifetime", RustColorPreferences.LIFETIME),
-			new SourceColoringElement("Attribute", RustColorPreferences.ATTRIBUTE)
-		)),
-		new SourceColoringCategory("Comments", array(
-			new SourceColoringElement("Comment", RustColorPreferences.COMMENTS),
-			new SourceColoringElement("Documentation Comment", RustColorPreferences.DOC_COMMENTS)
-		))
-	);
-	
-	public SourceColoringConfigurationBlock(IPreferenceStore store) {
-		super(store);
+	public SourceColoringConfigurationBlock() {
+		super();
 	}
 	
 	@Override
 	protected LabeledTreeElement[] getTreeElements() {
-		return treeElements;
+		return array(
+			new SourceColoringCategory("Source", array(
+				new SourceColoringElement("Default", RustColorPreferences.DEFAULT),
+				new SourceColoringElement("Keywords", RustColorPreferences.KEYWORDS),
+				new SourceColoringElement("Keywords - Literals", RustColorPreferences.KEYWORDS_VALUES),
+				new SourceColoringElement("Macro Invocation", RustColorPreferences.MACRO_CALL),
+				new SourceColoringElement("Strings", RustColorPreferences.STRINGS),
+				new SourceColoringElement("Characters", RustColorPreferences.CHARACTER),
+				new SourceColoringElement("Numbers", RustColorPreferences.NUMBERS),
+				new SourceColoringElement("Lifetime", RustColorPreferences.LIFETIME),
+				new SourceColoringElement("Attribute", RustColorPreferences.ATTRIBUTE)
+			)),
+			new SourceColoringCategory("Comments", array(
+				new SourceColoringElement("Comment", RustColorPreferences.COMMENTS),
+				new SourceColoringElement("Documentation Comment", RustColorPreferences.DOC_COMMENTS)
+			))
+		);
 	}
 	
 	private static final String PREVIEW_FILE_NAME = "SourceColoringPreviewFile.lang";

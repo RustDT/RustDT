@@ -27,7 +27,7 @@ public class RustSourceColoringPreferencePage extends AbstractPreferencesBlockPr
 	
 	@Override
 	protected SourceColoringConfigurationBlock createPreferencesComponent() {
-		return new SourceColoringConfigurationBlock(getPreferenceStore());
+		return new SourceColoringConfigurationBlock();
 	}
 	
 }

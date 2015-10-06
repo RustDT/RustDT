@@ -21,12 +21,13 @@ import org.eclipse.ui.services.IServiceLocator;
 
 import com.github.rustdt.ide.ui.actions.RustEditorContextMenuContributor;
 import com.github.rustdt.ide.ui.editor.RustEditor;
-import com.github.rustdt.ide.ui.editor.RustSimpleSourceViewerConfiguration;
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.ui.editor.LangEditorContextMenuContributor;
 import melnorme.lang.ide.ui.editor.text.EditorPrefConstants_Common;
+import melnorme.lang.ide.ui.text.SimpleSourceViewerConfiguration;
+import melnorme.lang.ide.ui.text.coloring.StylingPreferences;
 import melnorme.util.swt.jface.text.ColorManager2;
 
 public class EditorSettings_Actual {
@@ -36,17 +37,31 @@ public class EditorSettings_Actual {
 	
 	public static final String EDITOR_CODE_TARGET = LangUIPlugin.PLUGIN_ID + ".Editor.HyperlinkCodeTarget";
 	
-	public static RustSimpleSourceViewerConfiguration createSimpleSourceViewerConfiguration(
-			IPreferenceStore preferenceStore, ColorManager2 colorManager) {
-		return new RustSimpleSourceViewerConfiguration(preferenceStore, colorManager);
-	}
-	
 	public static Class<RustEditor> editorKlass() {
 		return RustEditor.class;
 	}
 	
 	public static interface EditorPrefConstants extends EditorPrefConstants_Common {
 		
+	}
+	
+	public static StylingPreferences getStylingPreferences() {
+		return new StylingPreferences(
+			RustColorPreferences.DEFAULT,
+			
+			RustColorPreferences.COMMENTS,
+			RustColorPreferences.DOC_COMMENTS,
+			
+			RustColorPreferences.NUMBERS,
+			RustColorPreferences.CHARACTER,
+			RustColorPreferences.STRINGS,
+			
+			RustColorPreferences.KEYWORDS,
+			RustColorPreferences.KEYWORDS_VALUES,
+			RustColorPreferences.LIFETIME,
+			RustColorPreferences.ATTRIBUTE,
+			RustColorPreferences.MACRO_CALL
+		);
 	}
 	
 	public static final String TEMPLATE_CONTEXT_TYPE_ID = LangUIPlugin.PLUGIN_ID + ".TemplateContextType";
@@ -56,7 +71,7 @@ public class EditorSettings_Actual {
 	public static SourceViewerConfiguration createTemplateEditorSourceViewerConfiguration(
 			IPreferenceStore store, final IContentAssistProcessor templateCAP) {
 		ColorManager2 colorManager = LangUIPlugin.getInstance().getColorManager();
-		return new RustSimpleSourceViewerConfiguration(store, colorManager) {
+		return new SimpleSourceViewerConfiguration(store, colorManager) {
 			@Override
 			public ContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 				return setupSimpleContentAssistant(templateCAP, array(

@@ -15,6 +15,7 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.PatternRule;
 
 import melnorme.lang.ide.ui.text.AbstractLangScanner;
+import melnorme.lang.ide.ui.text.coloring.StylingPreferences;
 import melnorme.lang.ide.ui.text.coloring.TokenRegistry;
 import melnorme.utilbox.collections.ArrayList2;
 
@@ -23,8 +24,8 @@ import melnorme.utilbox.collections.ArrayList2;
  */
 public class RustAttributeScanner extends AbstractLangScanner {
 	
-	public RustAttributeScanner(TokenRegistry tokenStore) {
-		super(tokenStore);
+	public RustAttributeScanner(TokenRegistry tokenStore, StylingPreferences stylingPrefs) {
+		super(tokenStore, stylingPrefs);
 	}
 	
 	@Override
