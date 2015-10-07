@@ -85,8 +85,9 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
 			@Override
 			protected void handleMessageParseError(CommonException ce) throws CommonException {
-				 throw ce;
+				getOperationHelper().logStatus(ce.toStatusException(StatusLevel.WARNING));
 			}
+			
 			@Override
 			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
 				getOperationHelper().logStatus(new StatusException(StatusLevel.WARNING,

@@ -10,6 +10,7 @@
   * Added number literals source highlighting. (#55)
  * Added macro invocation source highlighting.
  * Fixed: Unindent (Shift-Tab) broken, does nothing after empty lines in selection.
+ * Fixed "Unknown line format: " when invoking autocompletion with racer. (#68)
  
 
 ### 0.3.0
