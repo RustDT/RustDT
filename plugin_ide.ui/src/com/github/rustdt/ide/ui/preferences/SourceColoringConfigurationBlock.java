@@ -26,7 +26,7 @@ public class SourceColoringConfigurationBlock extends AbstractSourceColoringConf
 	}
 	
 	@Override
-	protected LabeledTreeElement[] getTreeElements() {
+	protected LabeledTreeElement[] createTreeElements() {
 		return array(
 			new SourceColoringCategory("Source", array(
 				new SourceColoringElement("Default", RustColorPreferences.DEFAULT),

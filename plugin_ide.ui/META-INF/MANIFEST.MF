@@ -21,7 +21,9 @@ Require-Bundle: com.github.rustdt.ide.core,
  org.eclipse.search;bundle-version="3.6.0",
  org.eclipse.debug.ui;bundle-version="[3.9.0,4.0.0)";visibility:=reexport,
  org.eclipse.core.filesystem;bundle-version="1.4.0",
- org.eclipse.ui.views;bundle-version="3.6.0"
+ org.eclipse.ui.views;bundle-version="3.6.0",
+ org.eclipse.e4.ui.css.swt.theme;bundle-version="0.10.0",
+ org.eclipse.osgi.services;bundle-version="3.5.0"
 Export-Package: com.github.rustdt.ide.ui.launch,
  melnorme.lang.ide.ui;x-friends:="com.github.rustdt.ide.debug",
  melnorme.lang.ide.ui.editor;x-friends:="com.github.rustdt.ide.debug",
