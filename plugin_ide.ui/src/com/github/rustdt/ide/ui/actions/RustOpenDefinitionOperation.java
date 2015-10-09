@@ -19,7 +19,6 @@ import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
 
 import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner;
-import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
@@ -46,8 +45,8 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
 			throws CoreException, OperationCancellation, CommonException {
 		
-		String racerPath = ToolchainPreferences.DAEMON_PATH.get();
-		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH.get();
+		String racerPath = RustSDKPreferences.RACER_PATH.getEffectiveValue(project);
+		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH2.getEffectiveValue(project);
 		
 		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner(monitor, true);
 		

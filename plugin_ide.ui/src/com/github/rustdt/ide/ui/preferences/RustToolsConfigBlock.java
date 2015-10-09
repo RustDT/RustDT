@@ -15,17 +15,16 @@ import org.eclipse.swt.widgets.Composite;
 
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.util.swt.SWTFactoryUtil;
-import melnorme.util.swt.components.AbstractComponent;
+import melnorme.util.swt.components.AbstractComponentExt;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
 import melnorme.util.swt.components.fields.FileTextField;
 
 public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
-	protected final ButtonTextField racerLocation = new FileTextField("Executable:");
 	protected final ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
-	
-	protected final RustToolsConfigBlock.RacerLocationGroup racerGroup = new RacerLocationGroup(); 
+	protected final RacerLocationGroup racerGroup = new RacerLocationGroup(); 
+	protected final ButtonTextField racerLocation = racerGroup.racerLocation;
 	
 	public RustToolsConfigBlock() {
 	}
@@ -37,6 +36,12 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		racerGroup.createComponent(topControl, gdFillDefaults().grab(true, false).create());
 	}
 	
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		sdkSrcLocation.setEnabled(enabled);
+		racerGroup.setEnabled(enabled);
+	}
 	
 	@Override
 	protected LanguageSDKLocationGroup createSDKLocationGroup() {
@@ -51,8 +56,9 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		};
 	}
 	
-	public class RacerLocationGroup extends AbstractComponent {
+	public class RacerLocationGroup extends AbstractComponentExt {
 		
+		public final ButtonTextField racerLocation = new FileTextField("Executable:");
 		
 		@Override
 		protected Composite doCreateTopLevelControl(Composite parent) {
@@ -72,6 +78,11 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected void createContents(Composite topControl) {
 			racerLocation.createComponentInlined(topControl);
+		}
+		
+		@Override
+		public void setEnabled(boolean enabled) {
+			racerLocation.setEnabled(enabled);
 		}
 		
 		@Override

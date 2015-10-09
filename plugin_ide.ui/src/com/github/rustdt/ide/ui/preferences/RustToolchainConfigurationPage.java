@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
+import static com.github.rustdt.ide.core.operations.RustSDKPreferences.RACER_PATH;
+import static com.github.rustdt.ide.core.operations.RustSDKPreferences.SDK_SRC_PATH2;
+
 import org.eclipse.core.resources.IProject;
 
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
@@ -23,7 +26,19 @@ public class RustToolchainConfigurationPage extends AbstractLangPropertyPage {
 	protected IPreferencesWidgetComponent createProjectConfigComponent(IProject project) {
 		return new ProjectSDKSettingsBlock(project, 
 			ToolchainPreferences.USE_PROJECT_SETTINGS, 
-			ToolchainPreferences.SDK_PATH.getProjectPreference());
+			ToolchainPreferences.SDK_PATH.getProjectPreference()) {
+			
+			@Override
+			protected RustToolsConfigBlock init_createSDKLocationGroup() {
+				RustToolsConfigBlock rustToolsConfigBlock = new RustToolsConfigBlock();
+				
+				addFieldBinding(rustToolsConfigBlock.sdkSrcLocation, SDK_SRC_PATH2);
+				addFieldBinding(rustToolsConfigBlock.racerLocation, RACER_PATH);
+				
+				return rustToolsConfigBlock;
+			}
+			
+		};
 	}
 	
 }

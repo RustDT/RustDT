@@ -45,10 +45,10 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 		connectStringField(ToolchainPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
 			getSDKValidator());
 		
-		connectStringField(RustSDKPreferences.SDK_SRC_PATH.key, langToolsBlock.sdkSrcLocation, 
+		connectStringField(RustSDKPreferences.SDK_SRC_PATH2.getKey(), langToolsBlock.sdkSrcLocation, 
 			new RustSDKSrcLocationValidator());
 		
-		connectStringField(ToolchainPreferences.DAEMON_PATH.key, langToolsBlock.racerLocation, 
+		connectStringField(RustSDKPreferences.RACER_PATH.getKey(), langToolsBlock.racerGroup.racerLocation, 
 			new RustRacerLocationValidator());
 		
 		return langToolsBlock;

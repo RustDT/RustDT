@@ -19,7 +19,6 @@ import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner;
-import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.text.TextUtils;
 import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
@@ -42,8 +41,8 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		
 		context.getEditor_nonNull().doSave(pm);
 		
-		String racerPath = ToolchainPreferences.DAEMON_PATH.get();
-		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH.get();
+		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH2.getEffectiveValue(context.getProject());
+		String racerPath = RustSDKPreferences.RACER_PATH.getEffectiveValue(context.getProject());
 		
 		int line_0 = context.getInvocationLine_0();
 		int col_0 = context.getInvocationColumn_0();
