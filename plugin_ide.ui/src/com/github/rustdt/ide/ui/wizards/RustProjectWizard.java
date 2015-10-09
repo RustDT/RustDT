@@ -75,7 +75,7 @@ class RustProjectWizardFirstPage extends LangProjectWizardFirstPage {
 	
 	@Override
 	protected void validatePreferences() throws ValidationException {
-		 new RustSDKLocationValidator().getValidatedField(ToolchainPreferences.SDK_PATH2.get());
+		 new RustSDKLocationValidator().getValidatedField(ToolchainPreferences.SDK_PATH.get());
 	}
 	
 }

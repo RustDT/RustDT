@@ -37,7 +37,7 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	protected LangSDKConfigBlock createLangSDKConfigBlock() {
 		RustToolsConfigBlock langToolsBlock = new RustToolsConfigBlock();
 		
-		connectStringField(ToolchainPreferences.SDK_PATH2.key, langToolsBlock.getLocationField(), 
+		connectStringField(ToolchainPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
 			getSDKValidator());
 		
 		connectStringField(RustSDKPreferences.SDK_SRC_PATH.key, langToolsBlock.sdkSrcLocation, 
