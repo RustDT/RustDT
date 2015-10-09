@@ -8,20 +8,22 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.preferences;
+package melnorme.lang.ide.core.utils.prefs;
 
 import org.eclipse.core.resources.IProject;
-
-import melnorme.lang.ide.ui.dialogs.LangBuildConfigurationPropertyPage;
-import melnorme.lang.ide.ui.preferences.LangProjectBuildConfigurationComponent;
+import org.osgi.service.prefs.BackingStoreException;
 
 
-public class RustBuildConfigurationPropertyPage extends LangBuildConfigurationPropertyPage {
+public interface IProjectPreference<T> {
 	
-	@Override
-	protected LangProjectBuildConfigurationComponent createProjectConfigComponent(IProject project) {
-		return new LangProjectBuildConfigurationComponent(project) {
-		};
-	}
+	PreferenceHelper<T> getGlobalPreference();
+	
+	T getDefault();
+	
+	T getStoredValue(IProject project);
+	
+	void setValue(IProject project, T value) throws BackingStoreException;
+	
+	T getEffectiveValue(IProject project);
 	
 }

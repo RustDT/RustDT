@@ -1,5 +1,7 @@
 package com.github.rustdt.ide.core.operations;
 
+import org.eclipse.core.resources.IProject;
+
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.prefs.StringPreference;
 import melnorme.lang.tooling.data.LocationValidator;
@@ -9,8 +11,9 @@ import melnorme.utilbox.misc.Location;
 public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static class RustSDKAcessor {
-		public Location getSDKLocation() throws ValidationException {
-			return new LocationValidator("Rust installation:").getValidatedLocation(SDK_PATH.get());
+		public Location getSDKLocation(IProject project) throws ValidationException {
+			return new LocationValidator("Rust installation:").getValidatedLocation(
+				SDK_PATH2.getProjectPreference().getEffectiveValue(project));
 		}
 	}
 	

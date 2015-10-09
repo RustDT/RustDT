@@ -277,6 +277,14 @@
 				<reference definitionId="com.github.rustdt.ide.core.expressions.isNatureProject" />
 			</enabledWhen>
 		</page>
+		<page
+			class="com.github.rustdt.ide.ui.preferences.RustToolchainConfigurationPage"
+			id="com.github.rustdt.ide.ui.propertyPages.ToolchainConfiguration"
+			name="%LangToolchainPropertyPage.name">
+			<enabledWhen> 
+				<reference definitionId="com.github.rustdt.ide.core.expressions.isNatureProject" />
+			</enabledWhen>
+		</page>
 	</extension>
 	
 	<!-- ============ Wizards ============= -->

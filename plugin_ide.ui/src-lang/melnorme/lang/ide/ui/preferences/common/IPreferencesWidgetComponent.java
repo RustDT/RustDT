@@ -8,20 +8,17 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.preferences;
+package melnorme.lang.ide.ui.preferences.common;
 
-import org.eclipse.core.resources.IProject;
+import melnorme.util.swt.components.IWidgetComponent;
 
-import melnorme.lang.ide.ui.dialogs.LangBuildConfigurationPropertyPage;
-import melnorme.lang.ide.ui.preferences.LangProjectBuildConfigurationComponent;
-
-
-public class RustBuildConfigurationPropertyPage extends LangBuildConfigurationPropertyPage {
+/**
+ * Basically a widget component that knows how to save it's settings, and load the default settings. 
+ */
+public interface IPreferencesWidgetComponent extends IWidgetComponent {
 	
-	@Override
-	protected LangProjectBuildConfigurationComponent createProjectConfigComponent(IProject project) {
-		return new LangProjectBuildConfigurationComponent(project) {
-		};
-	}
+	public boolean saveSettings();
+	
+	public void loadDefaults();
 	
 }

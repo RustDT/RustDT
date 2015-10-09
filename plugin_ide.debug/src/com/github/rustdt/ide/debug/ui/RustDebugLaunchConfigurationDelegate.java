@@ -12,6 +12,7 @@ package com.github.rustdt.ide.debug.ui;
 
 
 import static com.github.rustdt.ide.core.operations.RustSDKPreferences.SDK_PATH_Acessor;
+import static melnorme.utilbox.misc.StringUtil.emptyAsNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.eclipse.cdt.core.parser.util.StringUtil;
+import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
 import org.eclipse.cdt.dsf.debug.service.IDsfDebugServicesFactory;
 import org.eclipse.cdt.dsf.gdb.internal.GdbPlugin;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
@@ -29,6 +31,7 @@ import org.eclipse.cdt.dsf.gdb.service.GDBBackend;
 import org.eclipse.cdt.dsf.mi.service.IMIBackend;
 import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.cdt.utils.spawner.ProcessFactory;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,6 +39,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ISourceLocator;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
 import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
 import melnorme.lang.tooling.data.ValidationException;
@@ -63,17 +67,30 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 		
 		protected final ILaunchConfiguration fLaunchConfiguration;
 		protected final Location prettyPrintLoc;
+		protected final IProject project;
 		
 		public GDBBackend_Rust(DsfSession session, ILaunchConfiguration lc) {
 			super(session, lc);
 			this.fLaunchConfiguration = lc;
+			this.project = getProject(lc);
 			
-			prettyPrintLoc = initGDBPrettyPrintLoc();
+			this.prettyPrintLoc = initGDBPrettyPrintLoc();
+		}
+		
+		protected IProject getProject(ILaunchConfiguration lc) {
+			try {
+				String prjName = lc.getAttribute(ICDTLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String) null);
+				if(emptyAsNull(prjName) != null) {
+					return ResourceUtils.getProject(prjName);
+				}
+			} catch(CoreException e) {
+			}
+			return null;
 		}
 		
 		protected Location initGDBPrettyPrintLoc() {
 			try {
-				return SDK_PATH_Acessor.getSDKLocation().resolve_fromValid("lib/rustlib/etc/");
+				return SDK_PATH_Acessor.getSDKLocation(project).resolve_fromValid("lib/rustlib/etc/");
 			} catch (ValidationException ve) {
 				LangCore.logWarning(ve.getMessage(), ve.getCause());
 				return null;
