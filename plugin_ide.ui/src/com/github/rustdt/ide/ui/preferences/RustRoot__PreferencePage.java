@@ -42,21 +42,14 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	protected LangSDKConfigBlock createLangSDKConfigBlock() {
 		RustToolsConfigBlock langToolsBlock = doCreateLangSDKConfigBlock();
 		
-		connectStringField(ToolchainPreferences.SDK_PATH.key, langToolsBlock.getLocationField(), 
-			getSDKValidator());
-		
-		connectStringField(RustSDKPreferences.SDK_SRC_PATH2.getKey(), langToolsBlock.sdkSrcLocation, 
+		/* FIXME: move this to RustToolsConfigBlock */
+		connectStringField(RustSDKPreferences.SDK_SRC_PATH2, langToolsBlock.sdkSrcLocation, 
 			new RustSDKSrcLocationValidator());
 		
-		connectStringField(RustSDKPreferences.RACER_PATH.getKey(), langToolsBlock.racerGroup.racerLocation, 
+		connectStringField(RustSDKPreferences.RACER_PATH, langToolsBlock.racerGroup.racerLocation, 
 			new RustRacerLocationValidator());
 		
 		return langToolsBlock;
-	}
-	
-	@Override
-	protected RustSDKLocationValidator getSDKValidator() {
-		return new RustSDKLocationValidator();
 	}
 	
 }

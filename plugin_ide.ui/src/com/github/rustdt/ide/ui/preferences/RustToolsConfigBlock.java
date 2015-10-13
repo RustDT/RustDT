@@ -13,6 +13,8 @@ package com.github.rustdt.ide.ui.preferences;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
+
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractComponentExt;
@@ -30,6 +32,11 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	}
 	
 	@Override
+	protected RustSDKLocationValidator getSDKValidator() {
+		return new RustSDKLocationValidator();
+	}
+	
+	@Override
 	protected void createContents(Composite topControl) {
 		super.createContents(topControl);
 		
@@ -44,7 +51,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	}
 	
 	@Override
-	protected LanguageSDKLocationGroup createSDKLocationGroup() {
+	protected LanguageSDKLocationGroup createSDKLocationGroup2() {
 		return new LanguageSDKLocationGroup() {
 			
 			@Override

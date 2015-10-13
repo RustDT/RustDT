@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import java.text.MessageFormat;
 
-import melnorme.lang.tooling.data.SDKLocationValidator;
+import melnorme.lang.tooling.ops.SDKLocationValidator;
 import melnorme.utilbox.misc.Location;
 
 public class RustSDKLocationValidator extends SDKLocationValidator {

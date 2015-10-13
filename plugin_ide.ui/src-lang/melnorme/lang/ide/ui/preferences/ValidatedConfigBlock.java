@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 IBM Corporation and others.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,18 +8,18 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.core.operations;
+package melnorme.lang.ide.ui.preferences;
 
-import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
-import melnorme.lang.ide.core.operations.AbstractToolManager;
-import melnorme.lang.tooling.ops.util.PathValidator;
+import melnorme.lang.tooling.data.MultipleFieldValidation;
+import melnorme.util.swt.components.AbstractComponentExt;
 
-public class RustToolManager extends AbstractToolManager {
+public abstract class ValidatedConfigBlock extends AbstractComponentExt {
 	
-	@Override
-	protected PathValidator getSDKToolPathValidator() {
-		return new RustSDKLocationValidator();
+	public final MultipleFieldValidation validation = new MultipleFieldValidation();
+	
+	public ValidatedConfigBlock() {
+		super();
 	}
 	
 }
