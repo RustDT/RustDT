@@ -11,11 +11,11 @@
 package com.github.rustdt.ide.ui.preferences;
 
 import melnorme.lang.ide.ui.preferences.LangEditorConfigurationBlock;
-import melnorme.lang.ide.ui.preferences.common.AbstractComponentsPrefPage;
+import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
 
 public class EditorConfigurationBlock extends LangEditorConfigurationBlock {
 	
-	public EditorConfigurationBlock(AbstractComponentsPrefPage mainPreferencePage) {
+	public EditorConfigurationBlock(AbstractPreferencesBlockPrefPage mainPreferencePage) {
 		super(mainPreferencePage);
 	}
 	

@@ -18,12 +18,12 @@ import org.eclipse.core.resources.IProject;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.dialogs.AbstractLangPropertyPage;
 import melnorme.lang.ide.ui.preferences.ProjectSDKSettingsBlock;
-import melnorme.lang.ide.ui.preferences.common.IPreferencesWidgetComponent;
+import melnorme.lang.ide.ui.preferences.common.IPreferencesWidget;
 
 public class RustToolchainConfigurationPage extends AbstractLangPropertyPage {
 	
 	@Override
-	protected IPreferencesWidgetComponent createProjectConfigComponent(IProject project) {
+	protected IPreferencesWidget createProjectConfigWidget(IProject project) {
 		return new ProjectSDKSettingsBlock(project, 
 			ToolchainPreferences.USE_PROJECT_SETTINGS, 
 			ToolchainPreferences.SDK_PATH.getProjectPreference()) {
@@ -31,7 +31,7 @@ public class RustToolchainConfigurationPage extends AbstractLangPropertyPage {
 			@Override
 			protected RustToolsConfigBlock init_createSDKLocationGroup() {
 				RustToolsConfigBlock rustToolsConfigBlock = new RustToolsConfigBlock();
-				
+				/* FIXME: review */
 				addFieldBinding(rustToolsConfigBlock.sdkSrcLocation, SDK_SRC_PATH2);
 				addFieldBinding(rustToolsConfigBlock.racerLocation, RACER_PATH);
 				

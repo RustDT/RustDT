@@ -11,11 +11,7 @@
 package com.github.rustdt.ide.ui.preferences;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
-import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
-import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
-import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 
@@ -39,15 +35,11 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	}
 	
 	@Override
-	protected LangSDKConfigBlock createLangSDKConfigBlock() {
+	protected LangSDKConfigBlock init_createLangSDKConfigBlock2() {
 		RustToolsConfigBlock langToolsBlock = doCreateLangSDKConfigBlock();
 		
-		/* FIXME: move this to RustToolsConfigBlock */
-		connectStringField(RustSDKPreferences.SDK_SRC_PATH2, langToolsBlock.sdkSrcLocation, 
-			new RustSDKSrcLocationValidator());
-		
-		connectStringField(RustSDKPreferences.RACER_PATH, langToolsBlock.racerGroup.racerLocation, 
-			new RustRacerLocationValidator());
+		bindToPreference(RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference(), langToolsBlock.sdkSrcLocation);
+		bindToPreference(RustSDKPreferences.RACER_PATH.getGlobalPreference(), langToolsBlock.racerLocation);
 		
 		return langToolsBlock;
 	}

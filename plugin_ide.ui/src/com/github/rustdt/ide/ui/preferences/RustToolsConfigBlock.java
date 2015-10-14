@@ -13,7 +13,9 @@ package com.github.rustdt.ide.ui.preferences;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
+import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.util.swt.SWTFactoryUtil;
@@ -29,6 +31,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	protected final ButtonTextField racerLocation = racerGroup.racerLocation;
 	
 	public RustToolsConfigBlock() {
+		validation.addValidatedField(sdkSrcLocation, new RustSDKSrcLocationValidator());
+		validation.addValidatedField(racerLocation, new RustRacerLocationValidator());
 	}
 	
 	@Override

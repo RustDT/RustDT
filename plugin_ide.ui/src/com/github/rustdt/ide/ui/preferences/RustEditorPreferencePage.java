@@ -28,7 +28,7 @@ public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
 	}
 	
 	@Override
-	protected EditorConfigurationBlock createPreferencesComponent() {
+	protected EditorConfigurationBlock createPreferencesBlock() {
 		return new EditorConfigurationBlock(this);
 	}
 	

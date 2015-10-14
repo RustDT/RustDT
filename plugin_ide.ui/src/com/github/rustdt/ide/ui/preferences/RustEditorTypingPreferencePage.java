@@ -26,7 +26,7 @@ public class RustEditorTypingPreferencePage extends AbstractPreferencesBlockPref
 	}
 	
 	@Override
-	protected LangEditorTypingConfigurationBlock createPreferencesComponent() {
+	protected LangEditorTypingConfigurationBlock createPreferencesBlock() {
 		return new LangEditorTypingConfigurationBlock(this);
 	}
 	
