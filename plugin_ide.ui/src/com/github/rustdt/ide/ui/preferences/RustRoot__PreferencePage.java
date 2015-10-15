@@ -30,16 +30,11 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	}
 	
 	@Override
-	protected RustToolsConfigBlock doCreateLangSDKConfigBlock() {
-		return new RustToolsConfigBlock();
-	}
-	
-	@Override
-	protected LangSDKConfigBlock init_createLangSDKConfigBlock2() {
-		RustToolsConfigBlock langToolsBlock = doCreateLangSDKConfigBlock();
+	protected LangSDKConfigBlock init_createLangSDKConfigBlock() {
+		RustToolsConfigBlock langToolsBlock = new RustToolsConfigBlock();
 		
-		bindToPreference(RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference(), langToolsBlock.sdkSrcLocation);
-		bindToPreference(RustSDKPreferences.RACER_PATH.getGlobalPreference(), langToolsBlock.racerLocation);
+		bindToPreference2(langToolsBlock.sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference());
+		bindToPreference2(langToolsBlock.racerLocation, RustSDKPreferences.RACER_PATH.getGlobalPreference());
 		
 		return langToolsBlock;
 	}

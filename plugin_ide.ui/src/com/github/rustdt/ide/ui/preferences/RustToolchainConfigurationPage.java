@@ -24,16 +24,14 @@ public class RustToolchainConfigurationPage extends AbstractLangPropertyPage {
 	
 	@Override
 	protected IPreferencesWidget createProjectConfigWidget(IProject project) {
-		return new ProjectSDKSettingsBlock(project, 
-			ToolchainPreferences.USE_PROJECT_SETTINGS, 
-			ToolchainPreferences.SDK_PATH.getProjectPreference()) {
+		return new ProjectSDKSettingsBlock(project, ToolchainPreferences.USE_PROJECT_SETTINGS) {
 			
 			@Override
-			protected RustToolsConfigBlock init_createSDKLocationGroup() {
+			protected RustToolsConfigBlock init_createLangSDKBlock() {
 				RustToolsConfigBlock rustToolsConfigBlock = new RustToolsConfigBlock();
-				/* FIXME: review */
-				addFieldBinding(rustToolsConfigBlock.sdkSrcLocation, SDK_SRC_PATH2);
-				addFieldBinding(rustToolsConfigBlock.racerLocation, RACER_PATH);
+				/* FIXME: test */
+				bindToProjectPref(rustToolsConfigBlock.sdkSrcLocation, SDK_SRC_PATH2);
+				bindToProjectPref(rustToolsConfigBlock.racerLocation, RACER_PATH);
 				
 				return rustToolsConfigBlock;
 			}

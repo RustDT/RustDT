@@ -45,7 +45,7 @@ public class LangSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 	
 	public LangSourceViewerConfiguration(IPreferenceStore preferenceStore, ColorManager2 colorManager,
 			AbstractLangStructureEditor editor, StylingPreferences stylingPrefs) {
-		super(preferenceStore, colorManager, editor);
+		super(preferenceStore, colorManager, stylingPrefs, editor);
 		this.stylingPrefs = stylingPrefs;
 	}
 	
@@ -54,7 +54,7 @@ public class LangSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 			TokenRegistry tokenStore) {
 		switch (partitionType) {
 		case CODE:
-			return new RustCodeScanner(tokenStore, stylingPrefs);
+			return new RustCodeScanner(tokenStore);
 			
 		case LINE_COMMENT:
 		case BLOCK_COMMENT:
@@ -73,7 +73,7 @@ public class LangSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 		case LIFETIME:
 			return new SingleTokenScanner(tokenStore, RustColorPreferences.LIFETIME);
 		case ATTRIBUTE:
-			return new RustAttributeScanner(tokenStore, stylingPrefs);
+			return new RustAttributeScanner(tokenStore);
 		}
 		
 		throw assertFail();
