@@ -302,6 +302,7 @@
 			finalPerspective="com.github.rustdt.ide.ui.Perspective"
 			preferredPerspectives="com.github.rustdt.ide.ui.Perspective"
 			project="true">
+			<description>%NewProjectWizard.description</description>
 		</wizard>
 	</extension>
 	

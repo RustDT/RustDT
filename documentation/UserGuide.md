@@ -22,8 +22,8 @@ Also, to improve Eclipse performance and startup time, it is recommended you twe
 
 ### Project setup
 
-##### Project Creation:
-A new Rust project can be created in the Project Explorer view. Open `New / Project...` and then `Rust / Rust Cargo Project`. This wizard can also be used to import existing Cargo projects into Eclipse.
+##### Project creation:
+A new Rust project is created with the New Project Wizard: from the Project Explorer context menu, select `New / Project...` and then `Rust / Rust Cargo Project`. The same wizard can be used to add a pre-existing Cargo project: simply use the location field to select a pre-existing directory.
 
 ### Editor and Navigation
 
