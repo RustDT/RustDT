@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed: Properly implemented editor highlighting of Rust attributes with strings in them.
  * Users will need to re-enter the Racer preference.
  * Added per-project Rust Installation preferences. (fixes #63)
  * Newly created launch configurations now have the debug option "Stop on startup at:" set to false by default. This way debugging won't stop on the C `main`, which is essentially useless outside of C/C++.

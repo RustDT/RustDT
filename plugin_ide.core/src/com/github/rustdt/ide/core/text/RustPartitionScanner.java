@@ -15,6 +15,7 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.PatternRule;
 import org.eclipse.jface.text.rules.Token;
 
+import com.github.rustdt.tooling.lexer.RustAttributeRule;
 import com.github.rustdt.tooling.lexer.RustCharacterLexingRule;
 import com.github.rustdt.tooling.lexer.RustLifetimeLexingRule;
 
@@ -37,10 +38,8 @@ public class RustPartitionScanner extends LangPartitionScanner {
 			null
 		);
 		
-		IToken tkAttribute = new Token(LangPartitionTypes.ATTRIBUTE.getId());
-		rules.add(new PatternRule("#[", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
-		rules.add(new PatternRule("#![", "]", tkAttribute, NO_ESCAPE_CHAR, false, true));
-
+		rules.add(new LexingRulePredicateRule(LangPartitionTypes.ATTRIBUTE.getId(), new RustAttributeRule()));
+		
 		rules.add(new LexingRulePredicateRule(LangPartitionTypes.CHARACTER.getId(), new RustCharacterLexingRule()));
 		
 		// Note: this rule must be after character rule
