@@ -18,7 +18,6 @@ import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
-import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.util.swt.SWTFactoryUtil;
@@ -44,19 +43,14 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	}
 	
 	@Override
-	protected LanguageSDKLocationGroup init_createSDKLocationGroup() {
-		LanguageSDKLocationGroup sdkLocationGroup = new LanguageSDKLocationGroup() {
+	protected LanguageSDKLocationGroup2 init_createSDKLocationGroup() {
+		return new LanguageSDKLocationGroup2() {
 			@Override
 			protected void createContents(Composite topControl) {
 				super.createContents(topControl);
 				sdkSrcLocation.createComponentInlined(topControl);
 			}
 		};
-		
-		bindToPreference(sdkLocationGroup.sdkLocationField, ToolchainPreferences.SDK_PATH);
-		validation.addFieldValidation(true, sdkLocationGroup.sdkLocationField, getSDKValidator());
-		
-		return sdkLocationGroup;
 	}
 	
 	@Override
