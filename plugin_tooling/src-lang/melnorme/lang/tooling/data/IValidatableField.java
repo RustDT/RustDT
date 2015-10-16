@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2014 IBM Corporation and others.
+ * Copyright (c) 2015 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,16 +8,10 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.preferences;
+package melnorme.lang.tooling.data;
 
-import org.eclipse.jface.preference.IPreferenceStore;
+import melnorme.utilbox.fields.IFieldView;
 
-import melnorme.lang.ide.ui.preferences.LangEditorConfigurationBlock;
-
-public class EditorConfigurationBlock extends LangEditorConfigurationBlock {
-	
-	public EditorConfigurationBlock(IPreferenceStore store) {
-		super(store);
-	}
+public interface IValidatableField<TYPE> extends IFieldView<TYPE>, IValidationSource {
 	
 }

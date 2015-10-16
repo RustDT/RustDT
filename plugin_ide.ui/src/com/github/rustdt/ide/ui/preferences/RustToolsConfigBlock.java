@@ -13,11 +13,14 @@ package com.github.rustdt.ide.ui.preferences;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractComponentExt;
 import melnorme.util.swt.components.fields.ButtonTextField;
@@ -30,9 +33,30 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	protected final RacerLocationGroup racerGroup = new RacerLocationGroup(); 
 	protected final ButtonTextField racerLocation = racerGroup.racerLocation;
 	
-	public RustToolsConfigBlock() {
-		validation.addValidatedField(sdkSrcLocation, new RustSDKSrcLocationValidator());
-		validation.addValidatedField(racerLocation, new RustRacerLocationValidator());
+	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
+		super(prefContext);
+		
+		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference());
+		bindToPreference(racerLocation, RustSDKPreferences.RACER_PATH.getGlobalPreference());
+		
+		validation.addFieldValidation(true, sdkSrcLocation, new RustSDKSrcLocationValidator());
+		validation.addFieldValidation(true, racerLocation, new RustRacerLocationValidator());
+	}
+	
+	@Override
+	protected LanguageSDKLocationGroup init_createSDKLocationGroup() {
+		LanguageSDKLocationGroup sdkLocationGroup = new LanguageSDKLocationGroup() {
+			@Override
+			protected void createContents(Composite topControl) {
+				super.createContents(topControl);
+				sdkSrcLocation.createComponentInlined(topControl);
+			}
+		};
+		
+		bindToPreference(sdkLocationGroup.sdkLocationField, ToolchainPreferences.SDK_PATH);
+		validation.addFieldValidation(true, sdkLocationGroup.sdkLocationField, getSDKValidator());
+		
+		return sdkLocationGroup;
 	}
 	
 	@Override
@@ -52,19 +76,6 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		super.setEnabled(enabled);
 		sdkSrcLocation.setEnabled(enabled);
 		racerGroup.setEnabled(enabled);
-	}
-	
-	@Override
-	protected LanguageSDKLocationGroup createSDKLocationGroup2() {
-		return new LanguageSDKLocationGroup() {
-			
-			@Override
-			protected void createContents(Composite topControl) {
-				super.createContents(topControl);
-				sdkSrcLocation.createComponentInlined(topControl);
-			}
-			
-		};
 	}
 	
 	public class RacerLocationGroup extends AbstractComponentExt {

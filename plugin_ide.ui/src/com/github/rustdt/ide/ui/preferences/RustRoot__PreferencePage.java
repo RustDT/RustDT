@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-
 import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 
@@ -31,12 +29,7 @@ public class RustRoot__PreferencePage extends LangRootPreferencePage {
 	
 	@Override
 	protected LangSDKConfigBlock init_createLangSDKConfigBlock() {
-		RustToolsConfigBlock langToolsBlock = new RustToolsConfigBlock();
-		
-		bindToPreference2(langToolsBlock.sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference());
-		bindToPreference2(langToolsBlock.racerLocation, RustSDKPreferences.RACER_PATH.getGlobalPreference());
-		
-		return langToolsBlock;
+		return new RustToolsConfigBlock(null);
 	}
 	
 }

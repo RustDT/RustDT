@@ -19,12 +19,12 @@ public class RustContentAssistPreferencePage extends AbstractPreferencesBlockPre
 	public final static String PAGE_ID = LangUIPlugin.PLUGIN_ID + ".PreferencePages.Editor.ContentAssist";
 	
 	public RustContentAssistPreferencePage() {
-		super(LangUIPlugin.getInstance().getPreferenceStore());
+		super();
 	}
 	
 	@Override
-	protected LangEditorContentAssistConfigurationBlock createPreferencesBlock() {
-		return new LangEditorContentAssistConfigurationBlock(this) {
+	protected LangEditorContentAssistConfigurationBlock init_createPreferencesBlock() {
+		return new LangEditorContentAssistConfigurationBlock() {
 			@Override
 			protected boolean createAutoActivation_DoubleColonOption() {
 				return true;

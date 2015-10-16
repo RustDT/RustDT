@@ -31,4 +31,7 @@ public interface IGlobalPreference<T> {
 	
 	void setInstanceScopeValue(T value) throws BackingStoreException;
 	
+	
+	IProjectPreference<T> getProjectPreference();
+	
 }

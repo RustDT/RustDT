@@ -19,7 +19,7 @@ import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
 public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
 	
 	public RustEditorPreferencePage() {
-		super(LangUIPlugin.getInstance().getPreferenceStore());
+		super();
 	}
 	
 	@Override
@@ -28,8 +28,8 @@ public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
 	}
 	
 	@Override
-	protected EditorConfigurationBlock createPreferencesBlock() {
-		return new EditorConfigurationBlock(this);
+	protected EditorConfigurationBlock init_createPreferencesBlock() {
+		return new EditorConfigurationBlock(LangUIPlugin.getInstance().getPreferenceStore());
 	}
 	
 }
