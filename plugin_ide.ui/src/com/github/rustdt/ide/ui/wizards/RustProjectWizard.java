@@ -11,7 +11,7 @@
 package com.github.rustdt.ide.ui.wizards;
 
 
-import static melnorme.utilbox.misc.MiscUtil.getClassResourceAsString;
+import static melnorme.utilbox.misc.MiscUtil.getClassResource;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -49,9 +49,9 @@ public class RustProjectWizard extends LangNewProjectWizard {
 		addPage(firstPage);
 	}
 	
-	protected static final String HelloWorld_ManifestContents = getClassResourceAsString(
+	protected static final String HelloWorld_ManifestContents = getClassResource(
 		RustProjectWizard.class, "hello_world.Cargo.toml");
-	protected static final String HelloWorld_ModuleContents = getClassResourceAsString(
+	protected static final String HelloWorld_ModuleContents = getClassResource(
 		RustProjectWizard.class, "hello_world.rs");
 	
 	@Override

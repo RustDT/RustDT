@@ -48,7 +48,7 @@ public class RustNumberLexingRule implements ILexingRule {
 		boolean hasPrefix = radix != 10;
 		
 		if(!hasPrefix && reader.lookahead() == '.' && reader.lookahead(1) != '.') {
-			reader.consume();
+			reader.consume2();
 			consumeDigits(reader, radix);
 			// TODO: float exponent
 			consumeFloatSuffix(reader);
@@ -72,7 +72,7 @@ public class RustNumberLexingRule implements ILexingRule {
 		boolean bin = (radix == 2) && (c >= '0' && c <= '1');
 
 		if (hex || dec || oct || bin) {
-			reader.consume();
+			reader.consume2();
 			return true;
 		}
 		return false;

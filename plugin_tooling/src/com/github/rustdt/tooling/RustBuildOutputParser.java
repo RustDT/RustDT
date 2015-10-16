@@ -37,7 +37,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		
 		if(isMessageEnd(outputLine)) {
 			// We reached the end of messages, exhaust remaining tool output.
-			while(output.consume() != -1) {
+			while(output.consumeAny()) {
 			}
 			return null;
 		}

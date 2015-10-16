@@ -45,7 +45,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		prefixLength = 0;
 
 		while(true) {
-			String line = LexingUtils.consumeDelimitedString(source, '\n', '\\');
+			String line = LexingUtils.consumeUntilDelimiter(source, '\n', '\\');
 			
 			if(line == null || line.isEmpty()) {
 				return new LangCompletionResult(proposals);
@@ -75,7 +75,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected String consumeCommaDelimitedString(StringParseSource lineLexer) {
-		return LexingUtils.consumeDelimitedString(lineLexer, ',', -1);
+		return LexingUtils.consumeUntilDelimiter(lineLexer, ',');
 	}
 	
 	@SuppressWarnings("unused")
@@ -131,7 +131,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected String consumeSemicolonDelimitedString(StringParseSource lineLexer) {
-		return LexingUtils.consumeDelimitedString(lineLexer, ';', -1);
+		return LexingUtils.consumeUntilDelimiter(lineLexer, ';');
 	}
 	
 	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
@@ -171,9 +171,9 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			}
 			if(lexer.tryConsume("${")) {
 				args.add(parseRawLabelArg(lexer));
-			} else {
-				lexer.consume();
+				continue;
 			}
+			lexer.consume2();
 		}
 		
 		return args;
