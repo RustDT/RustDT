@@ -19,7 +19,7 @@ import melnorme.lang.ide.ui.text.coloring.TokenRegistry;
 import melnorme.utilbox.collections.ArrayList2;
 
 /**
- * Scanner for Attribute partion
+ * Scanner for Attribute partition
  */
 public class RustAttributeScanner extends AbstractLangScanner {
 	
@@ -35,5 +35,12 @@ public class RustAttributeScanner extends AbstractLangScanner {
 		
 		rules.add(new PatternRule("\"", "\"", tkString, '\\', false, true));
 	}
+	
+//	@Override
+//	public IToken nextToken() {
+//		IToken nextToken = super.nextToken();
+//		System.out.println("nextToken @" + this.fTokenOffset + " - " + getOffset() + " " + nextToken.getData());
+//		return nextToken;
+//	}
 	
 }

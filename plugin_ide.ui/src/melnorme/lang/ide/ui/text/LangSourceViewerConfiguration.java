@@ -17,6 +17,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.information.IInformationProvider;
+import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Display;
 
@@ -26,6 +27,7 @@ import com.github.rustdt.ide.ui.text.RustColorPreferences;
 import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
+import melnorme.lang.ide.core.text.StrictDamagerRepairer;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
 import melnorme.lang.ide.ui.text.AbstractLangScanner;
@@ -77,6 +79,14 @@ public class LangSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 		}
 		
 		throw assertFail();
+	}
+	
+	@Override
+	protected DefaultDamagerRepairer getDamagerRepairer(AbstractLangScanner scanner, String contentType) {
+		if(contentType.equals(LangPartitionTypes.ATTRIBUTE.getId())) {
+			return new StrictDamagerRepairer(scanner);
+		}
+		return super.getDamagerRepairer(scanner, contentType);
 	}
 	
 	@Override
