@@ -21,7 +21,7 @@ import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.AbstractToolOutputParser;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
-import melnorme.lang.tooling.parser.lexer.LexingUtils;
+import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
@@ -173,7 +173,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 				args.add(parseRawLabelArg(lexer));
 				continue;
 			}
-			lexer.consume2();
+			lexer.consume();
 		}
 		
 		return args;

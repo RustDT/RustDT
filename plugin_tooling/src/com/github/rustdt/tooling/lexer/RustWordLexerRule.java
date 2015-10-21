@@ -11,9 +11,9 @@
 package com.github.rustdt.tooling.lexer;
 
 import melnorme.lang.tooling.parser.lexer.CharacterReader_SubReader;
-import melnorme.lang.tooling.parser.lexer.LexingUtils;
 import melnorme.lang.tooling.parser.lexer.WordLexerRule;
 import melnorme.lang.utils.parse.ICharacterReader;
+import melnorme.lang.utils.parse.LexingUtils;
 
 public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	

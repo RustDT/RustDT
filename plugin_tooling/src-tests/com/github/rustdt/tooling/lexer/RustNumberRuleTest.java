@@ -11,44 +11,19 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
-import org.junit.Test;
-
-import melnorme.lang.tests.CommonLexerRuleTest;
+import melnorme.lang.tests.NumberRuleTest;
 import melnorme.lang.tooling.parser.lexer.ILexingRule;
 
-public class RustNumberRuleTest extends CommonLexerRuleTest {
+public class RustNumberRuleTest extends NumberRuleTest {
 	
 	@Override
 	protected ILexingRule createLexingRule() {
 		return new RustNumberLexingRule();
 	}
-
-	@Test
-	public void testNumberLexingRuleValid() throws Exception { testNumberLexingRuleValid$(); }
-	public void testNumberLexingRuleValid$() throws Exception {
-		
-		testRule("", 0);
-		testRule("xxx", 0);
-		testRule("xxx123", 0);
-		
-		testRule("0", 1);
-		testRule("2", 1);
-		testRule("123", 3);
-		testRule("12_3_", 5);
-		testRule("_", 0);
-		
-		// parse even the illegal suffixes
-		testRule("123xxx", 3);
-		testRule("123.4xxx", 5);
-		
-		
-		testRule("0b_010", 6);
-		testRule("0o7_17", 6);
-		testRule("0xF1F_", 6);
-		
-		testRule("0b012", 4);
-		testRule("0o718", 4);
-		testRule("0xF1G", 4);
+	
+	@Override
+	protected void testInteger() {
+		super.testInteger();
 		
 		testRule("1u8", 3);
 		testRule("1i8", 3);
@@ -58,27 +33,16 @@ public class RustNumberRuleTest extends CommonLexerRuleTest {
 		testRule("0o7i32", 6);
 		testRule("0xAu64", 6);
 		testRule("0xAi64", 6);
+	}
+	
+	@Override
+	protected void testFloats() {
+		super.testFloats();
 		
-		// Floats
-		testRule("123.", 4);
-		testRule("123.0", 5);
 		testRule("123.1f32", 8);
 		testRule("123.2f64", 8);
 		
-		
-
-		testRule("123..", 3);
-		testRule("123,", 3);
-		testRule("10_20_30", 8);
-		
-		testRule("0x0.2", 3);
-		testRule("0o0.2", 3);
-		testRule("0b0.2", 3);
 		testRule("0.2u32", 3);
-		testRule("0x0xFF", 3);
-		
-		testRule("-1", 2);
-		testRule("-1.01", 5);
 	}
 	
 }

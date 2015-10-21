@@ -25,12 +25,12 @@ public class RustLifetimeLexingRule implements ILexingRule {
 		if(!Character.isJavaIdentifierStart(la)) {
 			return false;
 		}
-		reader.consume2();
+		reader.consume();
 		
 		while(true) { 
 			la = reader.lookahead();
 			if(Character.isJavaIdentifierPart(la)) {
-				reader.consume2();
+				reader.consume();
 				continue;
 			}
 			break;
