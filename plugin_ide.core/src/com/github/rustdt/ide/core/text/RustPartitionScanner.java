@@ -38,12 +38,12 @@ public class RustPartitionScanner extends LangPartitionScanner {
 			null
 		);
 		
-		rules.add(new LexingRulePredicateRule(LangPartitionTypes.ATTRIBUTE.getId(), new RustAttributeRule()));
+		rules.add(new PredicateRule_Adapter(LangPartitionTypes.ATTRIBUTE.getId(), new RustAttributeRule()));
 		
-		rules.add(new LexingRulePredicateRule(LangPartitionTypes.CHARACTER.getId(), new RustCharacterLexingRule()));
+		rules.add(new PredicateRule_Adapter(LangPartitionTypes.CHARACTER.getId(), new RustCharacterLexingRule()));
 		
 		// Note: this rule must be after character rule
-		rules.add(new LexingRulePredicateRule(LangPartitionTypes.LIFETIME.getId(), new RustLifetimeLexingRule()));
+		rules.add(new PredicateRule_Adapter(LangPartitionTypes.LIFETIME.getId(), new RustLifetimeLexingRule()));
 		
 		IToken tkString = new Token(LangPartitionTypes.STRING.getId());
 		rules.add(new PatternRule("\"", "\"", tkString, '\\', false, true));

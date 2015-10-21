@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
-import melnorme.lang.tooling.parser.lexer.ILexingRule;
+import melnorme.lang.tooling.parser.lexer.IPredicateLexingRule;
 import melnorme.lang.utils.parse.ICharacterReader;
 
-public class RustLifetimeLexingRule implements ILexingRule {
+public class RustLifetimeLexingRule implements IPredicateLexingRule {
 	
 	@Override
 	public boolean doEvaluate(ICharacterReader reader) {

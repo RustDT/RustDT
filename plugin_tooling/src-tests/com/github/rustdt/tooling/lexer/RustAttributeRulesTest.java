@@ -14,12 +14,12 @@ package com.github.rustdt.tooling.lexer;
 import org.junit.Test;
 
 import melnorme.lang.tests.CommonLexerRuleTest;
-import melnorme.lang.tooling.parser.lexer.ILexingRule;
+import melnorme.lang.tooling.parser.lexer.IPredicateLexingRule;
 
 public class RustAttributeRulesTest extends CommonLexerRuleTest {
 	
 	@Override
-	protected ILexingRule createLexingRule() {
+	protected IPredicateLexingRule createLexingRule() {
 		return new RustAttributeRule();
 	}
 	

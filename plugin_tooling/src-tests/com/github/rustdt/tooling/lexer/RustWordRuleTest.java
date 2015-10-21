@@ -14,13 +14,21 @@ package com.github.rustdt.tooling.lexer;
 import org.junit.Test;
 
 import melnorme.lang.tests.CommonLexerRuleTest;
-import melnorme.lang.tooling.parser.lexer.ILexingRule;
+import melnorme.lang.tooling.parser.lexer.IPredicateLexingRule;
+import melnorme.lang.utils.parse.ICharacterReader;
 
 public class RustWordRuleTest extends CommonLexerRuleTest {
 	
 	@Override
-	protected ILexingRule createLexingRule() {
-		return new RustWordLexerRule<String>("WS", "KW", "KW_LIT", "word", "macro", "number");
+	protected IPredicateLexingRule createLexingRule() {
+		RustWordLexerRule<String> wordLexerRule = 
+				new RustWordLexerRule<String>("WS", "KW", "KW_LIT", "word", "macro", "number");
+		return new IPredicateLexingRule() {
+			@Override
+			public boolean doEvaluate(ICharacterReader reader) {
+				return wordLexerRule.doEvaluateToken(reader) != null;
+			}
+		};
 	}
 	
 	@Test
