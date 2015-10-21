@@ -107,7 +107,7 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		}
 		
 		@Override
-		public StyledString visitBundleElement2(IBundleModelElement bundleElement) {
+		public StyledString visitBundleElement(IBundleModelElement bundleElement) {
 			return new BundleModelGetStyledStringSwitcher() {
 				
 			}.switchBundleElement(bundleElement);
@@ -139,7 +139,7 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		}
 		
 		@Override
-		public ImageDescriptor visitBundleElement2(IBundleModelElement bundleElement) {
+		public ImageDescriptor visitBundleElement(IBundleModelElement bundleElement) {
 			return new BundleModelGetImageSwitcher() {
 				
 			}.switchBundleElement(bundleElement);
