@@ -58,7 +58,8 @@ public class EditorSettings_Actual {
 			RustColorPreferences.STRINGS,
 			
 			RustColorPreferences.KEYWORDS,
-			RustColorPreferences.KEYWORDS_VALUES,
+			RustColorPreferences.KEYWORDS_BOOLEAN_LIT,
+			RustColorPreferences.KEYWORDS_SELF,
 			RustColorPreferences.LIFETIME,
 			RustColorPreferences.ATTRIBUTE,
 			RustColorPreferences.MACRO_CALL

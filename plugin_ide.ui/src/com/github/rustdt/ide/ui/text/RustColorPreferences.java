@@ -15,11 +15,12 @@ import org.eclipse.swt.graphics.RGB;
 import melnorme.lang.ide.ui.text.coloring.TextStyling;
 import melnorme.lang.ide.ui.text.coloring.ThemedTextStylingPreference;
 
+// Defaults mostly based from "pre.rust." of http://static.rust-lang.org/doc/master/rust.css
 public interface RustColorPreferences {
 	
-	String PREFIX = "editor.coloring."; 
+	String PREFIX = "editor.coloring2."; 
 	
-	// Defaults mostly based from "pre.rust." of http://static.rust-lang.org/doc/master/rust.css
+	//KW_2 = 66, 113, 175
 	
 	ThemedTextStylingPreference DEFAULT = new ThemedTextStylingPreference(PREFIX + "default",
 		new TextStyling(new RGB(  0,  0,  0), false, false),
@@ -30,26 +31,29 @@ public interface RustColorPreferences {
 		new TextStyling(new RGB(144, 144, 144), false, false));
 	// DOC_COMMENTS uses a diff color than rust.css
 	ThemedTextStylingPreference DOC_COMMENTS = new ThemedTextStylingPreference(PREFIX + "doc_comment",
-		new TextStyling(new RGB( 65, 95, 185), false, false),
-		new TextStyling(new RGB(110,135, 205), false, false));
+		new TextStyling(new RGB( 65,  95, 185), false, false),
+		new TextStyling(new RGB(110, 135, 205), false, false));
 	
 	
 	ThemedTextStylingPreference NUMBERS = new ThemedTextStylingPreference(PREFIX + "number",
 		new TextStyling(new RGB(113, 140, 0), false, false),
-		new TextStyling(new RGB(113, 140, 0), false, false));
+		new TextStyling(new RGB(150, 190, 0), false, false));
 	ThemedTextStylingPreference CHARACTER = new ThemedTextStylingPreference(PREFIX + "character",
 		new TextStyling(new RGB(113, 140, 0), false, false),
-		new TextStyling(new RGB(113, 140, 0), false, false));
+		new TextStyling(new RGB(150, 190, 0), false, false));
 	ThemedTextStylingPreference STRINGS = new ThemedTextStylingPreference(PREFIX + "string",
 		new TextStyling(new RGB(113, 140, 0), false, false),
-		new TextStyling(new RGB(113, 140, 0), false, false));
+		new TextStyling(new RGB(150, 190, 0), false, false));
 	
 	ThemedTextStylingPreference KEYWORDS = new ThemedTextStylingPreference(PREFIX + "keyword",
-		new TextStyling(new RGB(140, 90, 168), true, false),
-		new TextStyling(new RGB(140, 90, 168), true, false));
-	ThemedTextStylingPreference KEYWORDS_VALUES = new ThemedTextStylingPreference(PREFIX + "keyword_literals",
+		new TextStyling(new RGB(140,  90, 168), true, false),
+		new TextStyling(new RGB(160, 110, 180), true, false));
+	ThemedTextStylingPreference KEYWORDS_SELF = new ThemedTextStylingPreference(PREFIX + "keyword_self",
+		new TextStyling(new RGB(200, 40, 40), false, false),
+		new TextStyling(new RGB(200, 40, 40), false, false));
+	ThemedTextStylingPreference KEYWORDS_BOOLEAN_LIT = new ThemedTextStylingPreference(PREFIX + "keyword_boolean",
 		new TextStyling(new RGB(140, 90, 168), false, false),
-		new TextStyling(new RGB(140, 90, 168), false, false));
+		new TextStyling(new RGB(160, 110, 180), false, false));
 	ThemedTextStylingPreference LIFETIME = new ThemedTextStylingPreference(PREFIX + "lifetime",
 		new TextStyling(new RGB(183, 101, 20), false, false),
 		new TextStyling(new RGB(183, 101, 20), false, false));
@@ -58,6 +62,6 @@ public interface RustColorPreferences {
 		new TextStyling(new RGB(200, 40, 40), false, false));
 	ThemedTextStylingPreference MACRO_CALL = new ThemedTextStylingPreference(PREFIX + "macro_call",
 		new TextStyling(new RGB(62, 153, 159), false, false),
-		new TextStyling(new RGB(62, 153, 159), false, false));
+		new TextStyling(new RGB(70, 170, 180), false, false));
 	
 }

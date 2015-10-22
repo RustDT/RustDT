@@ -37,7 +37,8 @@ public class RustCodeScanner extends AbstractLangScanner {
 		RustWordLexerRule<IToken> codeLexerRule = new RustWordLexerRule<>(
 			Token.WHITESPACE, 
 			getToken(RustColorPreferences.KEYWORDS),
-			getToken(RustColorPreferences.KEYWORDS_VALUES),
+			getToken(RustColorPreferences.KEYWORDS_BOOLEAN_LIT),
+			getToken(RustColorPreferences.KEYWORDS_SELF),
 			defaultToken,
 			getToken(RustColorPreferences.MACRO_CALL),
 			getToken(RustColorPreferences.NUMBERS)

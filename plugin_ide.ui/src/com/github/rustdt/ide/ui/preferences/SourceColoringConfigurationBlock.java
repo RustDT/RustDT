@@ -31,7 +31,8 @@ public class SourceColoringConfigurationBlock extends AbstractSourceColoringConf
 			new SourceColoringCategory("Source", array(
 				new SourceColoringElement("Default", RustColorPreferences.DEFAULT),
 				new SourceColoringElement("Keywords", RustColorPreferences.KEYWORDS),
-				new SourceColoringElement("Keywords - Literals", RustColorPreferences.KEYWORDS_VALUES),
+				new SourceColoringElement("Keywords - true/false", RustColorPreferences.KEYWORDS_BOOLEAN_LIT),
+				new SourceColoringElement("Keywords - self", RustColorPreferences.KEYWORDS_SELF),
 				new SourceColoringElement("Macro Invocation", RustColorPreferences.MACRO_CALL),
 				new SourceColoringElement("Strings", RustColorPreferences.STRINGS),
 				new SourceColoringElement("Characters", RustColorPreferences.CHARACTER),

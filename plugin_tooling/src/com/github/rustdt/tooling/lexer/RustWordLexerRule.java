@@ -18,14 +18,17 @@ import melnorme.lang.utils.parse.LexingUtils;
 public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	
 	public static final String[] keywords_control = { 
-			"abstract", "alignof", "as", "be", "box", "break", "const", "continue", "crate", 
+			"abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", 
 			"do", "else", "enum", "extern", "final", "fn", "for", "if", "impl", "in", "let", 
 			"loop", "macro", "match", "mod", "move", "mut", "offsetof", "override", 
-			"priv", "pub", "pure", "ref", "return", "sizeof", "static", "struct", 
+			"priv", "proc", "pub", "pure", "ref", "return", "sizeof", "static", "struct", 
 			"trait", "type", "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield" 
 	};
-	public static final String[] keywords_values = { 
-			"true", "false", "self", "super", "null" // Is null actually used?
+	public static final String[] keywords_boolean_lit = { 
+			"true", "false",
+	};
+	public static final String[] keywords_self = { 
+			"self", "Self", "super"
 	};
 	
 	/* -----------------  ----------------- */
@@ -35,14 +38,22 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	protected final TOKEN macroCall;
 	protected final TOKEN numberLiteral;
 	
-	public RustWordLexerRule(TOKEN whitespaceToken, TOKEN keywords, TOKEN keyword_Literals, TOKEN word,
-			TOKEN macroCall, TOKEN numberLiteral) {
+	public RustWordLexerRule(
+			TOKEN whitespaceToken, 
+			TOKEN keywords, 
+			TOKEN keywords_booleanLiteral, 
+			TOKEN keywords_self, 
+			TOKEN word,
+			TOKEN macroCall, 
+			TOKEN numberLiteral
+			) {
 		super(whitespaceToken, word);
 		this.macroCall = macroCall;
 		this.numberLiteral = numberLiteral;
 		
-		addKeywords(keywords, keywords_control);
-		addKeywords(keyword_Literals, keywords_values);
+		addKeywords(keywords, RustWordLexerRule.keywords_control);
+		addKeywords(keywords_booleanLiteral, RustWordLexerRule.keywords_boolean_lit);
+		addKeywords(keywords_self, RustWordLexerRule.keywords_self);
 	}
 	
 	@Override

@@ -1,16 +1,15 @@
 extern crate semver;
-use semver::Version;
+use self::semver::Version;
 
 /** 
  * A documentation comment 
  */
-#[cfg(target_os="linux")]
-fn main() {
-    assert!(Version::parse("1.2.3") == Ok(Version {
-        major: 1u64, minor: 2u64, patch: 3u64, pre: vec!(), build: vec!(),
-    }));
-
-    println!("Versions compared successfully!"); // A simple line comment
+#[cfg(target_os="windows")]
+fn my_func() {
+    const MESSAGE: & 'static str = "Hello World!";
+    println!("Message is: {}", MESSAGE); // A simple line comment
+    
+    let current = Version::parse("1.2.3");
+    let x : u32 = 123;
+    let mut x = true;
 }
-
-const STRING: & 'static str = "bitstring";

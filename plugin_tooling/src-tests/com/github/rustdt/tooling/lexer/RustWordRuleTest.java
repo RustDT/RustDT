@@ -22,7 +22,7 @@ public class RustWordRuleTest extends CommonLexerRuleTest {
 	@Override
 	protected IPredicateLexingRule createLexingRule() {
 		RustWordLexerRule<String> wordLexerRule = 
-				new RustWordLexerRule<String>("WS", "KW", "KW_LIT", "word", "macro", "number");
+				new RustWordLexerRule<String>("WS", "KW", "KW_BOOL", "KW_SELF", "word", "macro", "number");
 		return new IPredicateLexingRule() {
 			@Override
 			public boolean doEvaluate(ICharacterReader reader) {
