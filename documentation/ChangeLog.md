@@ -5,7 +5,7 @@
 ### 0.4.0
  * Added support for Eclipse dark theme. Namely:  
    * Syntax/source coloring now have different settings for dark theme.
-   * Fixed tools console colors, as well as content assist pop-up colors.   
+   * Fixed Tools Console colors, as well as content assist pop-up colors. 
  * Added number literals source highlighting. (#55)
  * Added macro invocation source highlighting.
  * Syntax highlighting now works on the source compare editor/viewer.
