@@ -364,6 +364,18 @@
 	</extension>
 	
 	
+	<extension point="org.eclipse.compare.contentMergeViewers">
+		<viewer
+	        id="com.github.rustdt.ide.ui.compare.ViewerCreator"
+	        class="com.github.rustdt.ide.ui.editor.CompareViewerCreator"
+	        label="%LangSourceCompare">
+		</viewer>
+		<contentTypeBinding
+			contentMergeViewerId="com.github.rustdt.ide.ui.compare.ViewerCreator"
+			contentTypeId="com.github.rustdt.ide.core.content.source">
+		</contentTypeBinding>
+	</extension>
+	
 	<!-- ============ Launch ============= -->
 	
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">

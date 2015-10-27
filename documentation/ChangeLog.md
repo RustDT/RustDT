@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Syntax highlighting now works on the source compare editor/viewer.
  * Added: `cargo update` action to Project explorer context menu. (#17)
  * Fixed: Properly implemented editor highlighting of Rust attributes with strings in them. (#24)
  * Added per-project Rust Installation preferences. (fixes #63)
