@@ -31,7 +31,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
 	public RustOpenDefinitionOperation(ITextEditor editor, SourceRange range, 
 			OpenNewEditorMode openEditorMode) {
-		super(LangUIMessages.Op_OpenDefinition_Name, editor, range, openEditorMode);
+		super(LangUIMessages.Op_OpenDefinition_Name, editor, range, openEditorMode, null);
 	}
 	
 	@Override
