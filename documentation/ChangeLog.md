@@ -1,18 +1,22 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Syntax highlighting now works on the source compare editor/viewer.
- * Added: `cargo update` action to Project explorer context menu. (#17)
- * Fixed: Properly implemented editor highlighting of Rust attributes with strings in them. (#24)
- * Added per-project Rust Installation preferences. (fixes #63)
- * Newly created launch configurations now have the debug option "Stop on startup at:" set to false by default. This way debugging won't stop on the C `main`, which is essentially useless outside of C/C++.
- * Added Content Assist support of name-only proposal insertion by pressing `Ctrl+Enter`. (only applicable to proposals that insert arguments)
- * Fixed: AssertionFailureException pressing Enter after source with more closing braces than opening ones.
+
+### 0.4.0
  * Added support for Eclipse dark theme. Namely:  
    * Syntax/source coloring now have different settings for dark theme.
    * Fixed tools console colors, as well as content assist pop-up colors.   
-  * Added number literals source highlighting. (#55)
+ * Added number literals source highlighting. (#55)
  * Added macro invocation source highlighting.
+ * Syntax highlighting now works on the source compare editor/viewer.
+ * Added per-project Rust Installation preferences. (fixes #63)
+ * Added Content Assist support of name-only proposal insertion by pressing `Ctrl+Enter`. (only applicable to proposals that insert arguments)
+ * Changed: newly created launch configurations now have the debug option "Stop on startup at:" set to false by default. This way debugging won't stop on the C `main`, which is essentially useless outside of C/C++.
+ * Added: `cargo update` action to Project explorer context menu. (#17)
+
+--
+ * Fixed: Properly implemented editor highlighting of Rust attributes with strings in them. (#24)
+ * Fixed: AssertionFailureException pressing Enter after source with more closing braces than opening ones.
  * Fixed: Unindent (Shift-Tab) broken, does nothing after empty lines in selection.
  * Fixed "Unknown line format: " when invoking autocompletion with racer. (#68)
  
