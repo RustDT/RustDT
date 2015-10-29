@@ -214,7 +214,6 @@ public class LangContentAssistProcessor extends ContenAssistProcessorExt {
 		try {
 			proposals = cat.computeCompletionProposals(context);
 		} catch(CommonException ce) {
-			handleExceptionInUI(ce);
 			setAndDisplayErrorMessage(ce.getMessage());
 			return null;
 		}
