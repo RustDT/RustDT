@@ -10,21 +10,16 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import melnorme.lang.ide.ui.preferences.LangRootPreferencePage;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
+import melnorme.lang.ide.ui.preferences.pages.RootPreferencePage;
 
 
 /**
  * The root preference page for Rust
  */
-public class RustRoot__PreferencePage extends LangRootPreferencePage {
+public class RustRootPreferencePage extends RootPreferencePage {
 	
-	public RustRoot__PreferencePage() {
-	}
-	
-	@Override
-	protected String getHelpId() {
-		return null;
+	public RustRootPreferencePage() {
 	}
 	
 	@Override

@@ -12,7 +12,7 @@ package com.github.rustdt.ide.ui.preferences;
 
 
 
-import melnorme.lang.ide.ui.preferences.LangEditorTypingConfigurationBlock;
+import melnorme.lang.ide.ui.preferences.EditorTypingConfigurationBlock;
 import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
 
 
@@ -25,8 +25,8 @@ public class RustEditorTypingPreferencePage extends AbstractPreferencesBlockPref
 	}
 	
 	@Override
-	protected LangEditorTypingConfigurationBlock init_createPreferencesBlock() {
-		return new LangEditorTypingConfigurationBlock();
+	protected EditorTypingConfigurationBlock init_createPreferencesBlock() {
+		return new EditorTypingConfigurationBlock();
 	}
 	
 	@Override

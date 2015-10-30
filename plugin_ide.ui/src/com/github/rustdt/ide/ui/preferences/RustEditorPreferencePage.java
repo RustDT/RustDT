@@ -28,8 +28,8 @@ public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
 	}
 	
 	@Override
-	protected EditorConfigurationBlock init_createPreferencesBlock() {
-		return new EditorConfigurationBlock(LangUIPlugin.getInstance().getPreferenceStore());
+	protected RustEditorConfigurationBlock init_createPreferencesBlock() {
+		return new RustEditorConfigurationBlock(LangUIPlugin.getInstance().getPreferenceStore());
 	}
 	
 }

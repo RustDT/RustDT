@@ -207,7 +207,7 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			id="com.github.rustdt.ide.ui.PreferencePages.Root"
-			class="com.github.rustdt.ide.ui.preferences.RustRoot__PreferencePage"
+			class="com.github.rustdt.ide.ui.preferences.RustRootPreferencePage"
 			name="%RootPreferencePage.name">
 			<keywordReference id="com.github.rustdt.ide.ui.RootPreferencePage"/>
 		</page>
