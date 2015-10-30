@@ -18,11 +18,14 @@ import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
+import melnorme.lang.ide.ui.ContentAssistPreferences;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractComponentExt;
+import melnorme.util.swt.components.FieldComponent;
 import melnorme.util.swt.components.fields.ButtonTextField;
+import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
 import melnorme.util.swt.components.fields.FileTextField;
 
@@ -37,6 +40,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		
 		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference());
 		bindToPreference(racerLocation, RustSDKPreferences.RACER_PATH.getGlobalPreference());
+		bindToPreference(racerGroup.showErrorsDialog, 
+			ContentAssistPreferences.ShowDialogIfContentAssistErrors.getGlobalPreference());
 		
 		validation.addFieldValidation(true, sdkSrcLocation, new RustSDKSrcLocationValidator());
 		validation.addFieldValidation(true, racerLocation, new RustRacerLocationValidator());
@@ -75,6 +80,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	public class RacerLocationGroup extends AbstractComponentExt {
 		
 		public final ButtonTextField racerLocation = new FileTextField("Executable:");
+		public final FieldComponent<Boolean> showErrorsDialog = new CheckBoxField(
+			"Show error dialog if " + "racer" + " failures occur during Content Assist");
 		
 		@Override
 		protected Composite doCreateTopLevelControl(Composite parent) {
@@ -94,6 +101,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected void createContents(Composite topControl) {
 			racerLocation.createComponentInlined(topControl);
+			showErrorsDialog.createComponentInlined(topControl);
 		}
 		
 		@Override

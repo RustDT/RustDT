@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Added Racer preference to enable/disable showing the error dialog if failures occur during Content Assist. (#74)
 
 ### 0.4.0
  * Added support for Eclipse dark theme. Namely:  
