@@ -19,9 +19,9 @@ import com.github.rustdt.ide.ui.text.RustColorPreferences;
 import melnorme.lang.ide.ui.text.coloring.AbstractSourceColoringConfigurationBlock;
 import melnorme.util.swt.jface.LabeledTreeElement;
 
-public class SourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
+public class RustSourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
 	
-	public SourceColoringConfigurationBlock() {
+	public RustSourceColoringConfigurationBlock() {
 		super();
 	}
 	
