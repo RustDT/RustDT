@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
+import static melnorme.utilbox.core.CoreUtil.list;
+
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
@@ -23,11 +25,13 @@ import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractComponentExt;
+import melnorme.util.swt.components.AbstractCompositeComponent;
 import melnorme.util.swt.components.FieldComponent;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
 import melnorme.util.swt.components.fields.FileTextField;
+import melnorme.utilbox.collections.Indexable;
 
 public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
@@ -48,12 +52,11 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	}
 	
 	@Override
-	protected LanguageSDKLocationGroup2 init_createSDKLocationGroup() {
-		return new LanguageSDKLocationGroup2() {
+	protected LanguageSDKLocationGroup init_createSDKLocationGroup() {
+		return new LanguageSDKLocationGroup() {
 			@Override
-			protected void createContents(Composite topControl) {
-				super.createContents(topControl);
-				sdkSrcLocation.createComponentInlined(topControl);
+			protected Indexable<AbstractComponentExt> getSubComponents() {
+				return super.getSubComponents().toArrayList().addElements(sdkSrcLocation);
 			}
 		};
 	}
@@ -73,11 +76,10 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		sdkSrcLocation.setEnabled(enabled);
 		racerGroup.setEnabled(enabled);
 	}
 	
-	public class RacerLocationGroup extends AbstractComponentExt {
+	public class RacerLocationGroup extends AbstractCompositeComponent {
 		
 		public final ButtonTextField racerLocation = new FileTextField("Executable:");
 		public final FieldComponent<Boolean> showErrorsDialog = new CheckBoxField(
@@ -99,14 +101,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		}
 		
 		@Override
-		protected void createContents(Composite topControl) {
-			racerLocation.createComponentInlined(topControl);
-			showErrorsDialog.createComponentInlined(topControl);
-		}
-		
-		@Override
-		public void setEnabled(boolean enabled) {
-			racerLocation.setEnabled(enabled);
+		protected Indexable<AbstractComponentExt> getSubComponents() {
+			return list(racerLocation, showErrorsDialog);
 		}
 		
 		@Override
