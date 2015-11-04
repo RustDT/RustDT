@@ -18,6 +18,7 @@ import org.eclipse.jface.text.rules.Token;
 import com.github.rustdt.tooling.lexer.RustAttributeRule;
 import com.github.rustdt.tooling.lexer.RustCharacterLexingRule;
 import com.github.rustdt.tooling.lexer.RustLifetimeLexingRule;
+import com.github.rustdt.tooling.lexer.RustRawStringLiteralRule;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.core.text.LangPartitionScanner;
@@ -48,10 +49,9 @@ public class RustPartitionScanner extends LangPartitionScanner {
 		IToken tkString = new Token(LangPartitionTypes.STRING.getId());
 		rules.add(new PatternRule("\"", "\"", tkString, '\\', false, true));
 		rules.add(new PatternRule("b\"", "\"", tkString, '\\', false, true));
-		// Raw strings have different terminate, so they need to a different partition type.
-		IToken tkRawString = new Token(LangPartitionTypes.RAW_STRING.getId());
-		rules.add(new PatternRule("r##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
-		rules.add(new PatternRule("br##\"", "\"##", tkRawString, NO_ESCAPE_CHAR, false, true));
+		
+		// Raw strings need a different partition type.
+		rules.add(new PredicateRule_Adapter(LangPartitionTypes.RAW_STRING.getId(), new RustRawStringLiteralRule()));
 	}
 	
 }
