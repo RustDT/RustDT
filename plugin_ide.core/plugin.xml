@@ -59,7 +59,9 @@
 	<extension point="org.eclipse.core.resources.builders"
 		id="Builder"
 		name="%Builder_Name">
-		<builder callOnEmptyDelta="true">
+		<builder
+			callOnEmptyDelta="true"
+			isConfigurable="true">
 		<run class="com.github.rustdt.ide.core.operations.RustBuilder" />
 	</builder>
 	</extension>
