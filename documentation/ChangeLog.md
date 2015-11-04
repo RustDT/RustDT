@@ -2,7 +2,8 @@
 
 ### (NextVersion)
  * Added Racer preference to enable/disable showing the error dialog if failures occur during Content Assist. (#74)
-
+ * Fixed: project Build Targets settings pages shows wrong default for Program Path field
+ 
 ### 0.4.0
  * Added support for Eclipse dark theme. Namely:  
    * Syntax/source coloring now have different settings for dark theme.
