@@ -24,9 +24,9 @@ import melnorme.lang.ide.ui.ContentAssistPreferences;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.util.swt.SWTFactoryUtil;
-import melnorme.util.swt.components.AbstractCompositeComponent;
+import melnorme.util.swt.components.AbstractCompositeWidget;
 import melnorme.util.swt.components.FieldComponent;
-import melnorme.util.swt.components.IDisableableComponent;
+import melnorme.util.swt.components.IDisableableWidget;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
@@ -55,8 +55,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	protected LanguageSDKLocationGroup init_createSDKLocationGroup() {
 		return new LanguageSDKLocationGroup() {
 			@Override
-			protected Indexable<IDisableableComponent> getSubComponents() {
-				return super.getSubComponents().toArrayList().addElements(sdkSrcLocation);
+			protected Indexable<IDisableableWidget> getSubWidgets() {
+				return super.getSubWidgets().toArrayList().addElements(sdkSrcLocation);
 			}
 		};
 	}
@@ -79,7 +79,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		racerGroup.setEnabled(enabled);
 	}
 	
-	public class RacerLocationGroup extends AbstractCompositeComponent {
+	public class RacerLocationGroup extends AbstractCompositeWidget {
 		
 		public final ButtonTextField racerLocation = new FileTextField("Executable:");
 		public final FieldComponent<Boolean> showErrorsDialog = new CheckBoxField(
@@ -101,13 +101,10 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		}
 		
 		@Override
-		protected Indexable<IDisableableComponent> getSubComponents() {
+		protected Indexable<IDisableableWidget> getSubWidgets() {
 			return list(racerLocation, showErrorsDialog);
 		}
 		
-		@Override
-		public void updateComponentFromInput() {
-		}
 	}
 	
 }
