@@ -22,6 +22,7 @@ import com.github.rustdt.tooling.cargo.CargoManifestParser;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
+import melnorme.lang.ide.core.utils.prefs.PreferenceHelper;
 import melnorme.lang.ide.ui.WizardMessages_Actual;
 import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
@@ -75,7 +76,8 @@ class RustProjectWizardFirstPage extends LangProjectWizardFirstPage {
 	
 	@Override
 	protected void validatePreferences() throws ValidationException {
-		 new RustSDKLocationValidator().getValidatedField(ToolchainPreferences.SDK_PATH.get());
+		PreferenceHelper<String> globalPref = ToolchainPreferences.SDK_PATH2.getGlobalPreference();
+		new RustSDKLocationValidator().getValidatedField(globalPref.get());
 	}
 	
 }

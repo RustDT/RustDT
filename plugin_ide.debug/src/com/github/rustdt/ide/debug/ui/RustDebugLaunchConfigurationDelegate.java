@@ -180,7 +180,7 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 			return new LangSourceLookupDirector(session) {
 				@Override
 				protected void customizeDefaultSourceContainers(ArrayList2<ISourceContainer> containers) {
-					String sdk_Path = ToolchainPreferences.SDK_PATH.getProjectPreference().getEffectiveValue(project);
+					String sdk_Path = ToolchainPreferences.SDK_PATH2.getEffectiveValue(project);
 					
 					// So, this seems to be the mapping that Rust standard lib sources get in debug info.
 					// I guess this could change in the future, need to watch out for that.

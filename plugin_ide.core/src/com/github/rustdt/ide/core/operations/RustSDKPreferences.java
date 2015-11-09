@@ -25,7 +25,7 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	public static class RustSDKAcessor {
 		public Location getSDKLocation(IProject project) throws ValidationException {
 			return new LocationValidator("Rust installation:").getValidatedLocation(
-				SDK_PATH.getProjectPreference().getEffectiveValue(project));
+				SDK_PATH2.getEffectiveValue(project));
 		}
 	}
 	
