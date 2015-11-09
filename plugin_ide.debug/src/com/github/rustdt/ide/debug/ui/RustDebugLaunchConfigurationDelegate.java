@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.cdt.core.parser.util.StringUtil;
 import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
+import org.eclipse.cdt.debug.internal.core.sourcelookup.MapEntrySourceContainer;
 import org.eclipse.cdt.dsf.debug.service.IDsfDebugServicesFactory;
 import org.eclipse.cdt.dsf.gdb.internal.GdbPlugin;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
@@ -33,16 +34,23 @@ import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.cdt.utils.spawner.ProcessFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ISourceLocator;
+import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
+import melnorme.lang.ide.debug.core.GdbLaunchDelegateExtension;
+import melnorme.lang.ide.debug.core.LangSourceLookupDirector;
 import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
 import melnorme.lang.tooling.data.ValidationException;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.Location;
 
@@ -63,6 +71,22 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 		};
 	}
 	
+	@Override
+	protected GdbLaunchDelegateExtension createGdbLaunchDelegate() {
+		return new RustGdbLaunchDelegateExt();
+	}
+	
+	protected static IProject getProject(ILaunchConfiguration lc) {
+		try {
+			String prjName = lc.getAttribute(ICDTLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String) null);
+			if(emptyAsNull(prjName) != null) {
+				return ResourceUtils.getProject(prjName);
+			}
+		} catch(CoreException e) {
+		}
+		return null;
+	}
+	
 	public static class GDBBackend_Rust extends GDBBackend {
 		
 		protected final ILaunchConfiguration fLaunchConfiguration;
@@ -75,17 +99,6 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 			this.project = getProject(lc);
 			
 			this.prettyPrintLoc = initGDBPrettyPrintLoc();
-		}
-		
-		protected IProject getProject(ILaunchConfiguration lc) {
-			try {
-				String prjName = lc.getAttribute(ICDTLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String) null);
-				if(emptyAsNull(prjName) != null) {
-					return ResourceUtils.getProject(prjName);
-				}
-			} catch(CoreException e) {
-			}
-			return null;
 		}
 		
 		protected Location initGDBPrettyPrintLoc() {
@@ -146,6 +159,40 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 			envp.add(entry.getKey() + "=" + entry.getValue());
 		}
 		return ArrayUtil.createFrom(envp, String.class);
+	}
+	
+	/* -----------------  Add source lookup for Rust std lib  ----------------- */
+	
+	protected class RustGdbLaunchDelegateExt extends GdbLaunchDelegateExt {
+		
+		public RustGdbLaunchDelegateExt() {
+		}
+		
+		@Override
+		protected LangSourceLookupDirector createSourceLookupDirector(ILaunchConfiguration lc, DsfSession session) {
+			IProject project = getProject(lc); // can be null
+			
+			if(project == null || project.getLocation() == null) {
+				return super.createSourceLookupDirector(lc, session);
+			}
+			IPath projectLoc = project.getLocation();
+			
+			return new LangSourceLookupDirector(session) {
+				@Override
+				protected void customizeDefaultSourceContainers(ArrayList2<ISourceContainer> containers) {
+					String sdk_Path = ToolchainPreferences.SDK_PATH.getProjectPreference().getEffectiveValue(project);
+					
+					// So, this seems to be the mapping that Rust standard lib sources get in debug info.
+					// I guess this could change in the future, need to watch out for that.
+					
+					containers.add(new MapEntrySourceContainer(
+						projectLoc.append("../src"),
+						new Path(sdk_Path).append("/src"))
+					);
+				}
+			};
+		}
+		
 	}
 	
 }
