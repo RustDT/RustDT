@@ -52,22 +52,25 @@ Whenever a launch is requested, a build will be performed beforehand. This behav
 
 ##### Debugging
 
-| **Windows note:** _Using Cygwin GDB doesn't work very well, if at all. The recommended way to debug in Windows is to use the GDB of [mingw-w64](http://mingw-w64.org/), or the one of [TDM-GCC](http://tdm-gcc.tdragon.net/)._ |
-|----|
+You can debug a Rust program by running a launch in debug mode. You will also need GDB. 
 
 | **OS X note:** _The GDB that is included with OS X doesn't work properly. You'll need to install the latest GDB from Homebrew. See [this article](http://ntraft.com/installing-gdb-on-os-x-mavericks/) for details._ |
 |----|
 
+| **Windows note:** _Using Cygwin GDB doesn't work properly. The recommended way to debug in Windows is to use the GDB of [TDM-GCC](http://tdm-gcc.tdragon.net/), or the one of [mingw-w64](http://mingw-w64.org/)._ |
+|----|
 
-You can debug a Rust program by running a launch in debug mode. You will need a GDB debugger. To configure debug options (in particular, the path to the debugger to use), open the launch under 'Run' / 'Debug Configurations...', and then navigate to the 'Debugger' tab in the desired launch configuration:
+To configure debug options (in particular, the path to the debugger to use), open the launch under 'Run' / 'Debug Configurations...', and then navigate to the 'Debugger' tab in the desired launch configuration:
 
 <div align="center">
 <a><img src="screenshots/UserGuide_DebuggerLaunchConfiguration.png" /><a/> 
 </div>
 
-GDB debugger integration is achieved by using the CDT plugins. To configure global debugger options, go the 'C/C++'/'Debug'/'GDB' preference page.
-
 **Note that for debugging to work**, the program must be compiled with debug symbols information, and those debug symbols must be on a format that GDB understands. Otherwise you will get GDB error messages such "(no debugging symbols found)" or "file format not recognized".
 
 ##### GDB Pretty printers
-RustDT will try to automatically set up the rust-gdb pretty printing scripts when launching in debug mode. GDB will be configured to load them from the `${RUST_ROOT}/lib/rustlib/etc` location, where `${RUST_ROOT}` is the directory of the Rust installation, as configured in the RustDT preferences.
+The Rust GDB pretty-printers are extensions to GDB that enable a better display of certain Rust native types, such as enums, slices, and vectors. On the command-line, there are normally enabled by invoking the `rust-gdb` shell script included with Rust, but this approach will not work with RustDT. Instead, RustDT will try to automatically set up the GDB pretty printing extensions when launching in debug mode. GDB will be configured to load them from either the `${RUST_ROOT}/rustc/lib/rustlib/etc` or `${RUST_ROOT}/lib/rustlib/etc` location, where `${RUST_ROOT}` is the directory of the Rust installation, as configured in the RustDT preferences.
+
+** Warning: ** Having the pretty-printers enabled may sometimes cause slowdown when debugging, if the Variables view is visible, and the value of uninitialized variables is displayed.
+
+** Note for Windows: ** The Rust pretty printers are not included by default in the Windows installation of Rust. To enable them, you must obtain them separately. See this article for instructions on how to do so: http://stackoverflow.com/questions/33570021/how-to-set-up-gdb-for-debugging-rust-programs-in-windows/33570022#33570022

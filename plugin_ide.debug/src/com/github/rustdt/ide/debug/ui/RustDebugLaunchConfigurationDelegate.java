@@ -12,28 +12,29 @@ package com.github.rustdt.ide.debug.ui;
 
 
 import static com.github.rustdt.ide.core.operations.RustSDKPreferences.SDK_PATH_Acessor;
-import static melnorme.utilbox.misc.StringUtil.emptyAsNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
-import org.eclipse.cdt.core.parser.util.StringUtil;
-import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
 import org.eclipse.cdt.debug.internal.core.sourcelookup.MapEntrySourceContainer;
+import org.eclipse.cdt.dsf.concurrent.DataRequestMonitor;
+import org.eclipse.cdt.dsf.concurrent.RequestMonitor;
+import org.eclipse.cdt.dsf.concurrent.RequestMonitorWithProgress;
+import org.eclipse.cdt.dsf.concurrent.Sequence;
 import org.eclipse.cdt.dsf.debug.service.IDsfDebugServicesFactory;
 import org.eclipse.cdt.dsf.gdb.internal.GdbPlugin;
+import org.eclipse.cdt.dsf.gdb.launching.FinalLaunchSequence_7_7;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
-import org.eclipse.cdt.dsf.gdb.launching.LaunchUtils;
-import org.eclipse.cdt.dsf.gdb.service.GDBBackend;
+import org.eclipse.cdt.dsf.gdb.service.command.IGDBControl;
 import org.eclipse.cdt.dsf.mi.service.IMIBackend;
+import org.eclipse.cdt.dsf.mi.service.command.CommandFactory;
+import org.eclipse.cdt.dsf.mi.service.command.output.MIInfo;
+import org.eclipse.cdt.dsf.service.DsfServicesTracker;
 import org.eclipse.cdt.dsf.service.DsfSession;
-import org.eclipse.cdt.utils.spawner.ProcessFactory;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -44,15 +45,15 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
-import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
 import melnorme.lang.ide.debug.core.GdbLaunchDelegateExtension;
 import melnorme.lang.ide.debug.core.LangSourceLookupDirector;
 import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.utilbox.collections.ArrayList2;
-import melnorme.utilbox.misc.ArrayUtil;
+import melnorme.utilbox.misc.FileUtil;
 import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.misc.MiscUtil;
 
 public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunchConfigurationDelegate {
 	
@@ -68,6 +69,12 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 			public IMIBackend createBackendGDBService(DsfSession session, ILaunchConfiguration lc) {
 				return new GDBBackend_Rust(session, lc);
 			}
+			
+			@Override
+			protected Sequence getCompleteInitializationSequence__GDBControl_7_7__ext(DsfSession session,
+					Map<String, Object> attributes, RequestMonitorWithProgress rm) {
+				return new FinalLaunchSequence_7_7_Rust(session, attributes, rm);
+			}
 		};
 	}
 	
@@ -76,34 +83,27 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 		return new RustGdbLaunchDelegateExt();
 	}
 	
-	protected static IProject getProject(ILaunchConfiguration lc) {
-		try {
-			String prjName = lc.getAttribute(ICDTLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String) null);
-			if(emptyAsNull(prjName) != null) {
-				return ResourceUtils.getProject(prjName);
-			}
-		} catch(CoreException e) {
-		}
-		return null;
-	}
-	
-	public static class GDBBackend_Rust extends GDBBackend {
+	public static class GDBBackend_Rust extends GDBBackend_Lang {
 		
-		protected final ILaunchConfiguration fLaunchConfiguration;
 		protected final Location prettyPrintLoc;
-		protected final IProject project;
 		
 		public GDBBackend_Rust(DsfSession session, ILaunchConfiguration lc) {
 			super(session, lc);
-			this.fLaunchConfiguration = lc;
-			this.project = getProject(lc);
 			
 			this.prettyPrintLoc = initGDBPrettyPrintLoc();
 		}
 		
 		protected Location initGDBPrettyPrintLoc() {
 			try {
-				return SDK_PATH_Acessor.getSDKLocation(project).resolve_fromValid("lib/rustlib/etc/");
+				Location loc = SDK_PATH_Acessor.getSDKLocation(project).resolve_fromValid("rustc/lib/rustlib/etc/");
+				if(loc.toFile().exists()) {
+					return loc;
+				}
+				loc = SDK_PATH_Acessor.getSDKLocation(project).resolve_fromValid("bin/rustlib/etc/");
+				if(loc.toFile().exists()) {
+					return loc;
+				}
+				return null; // Maybe throw an error?
 			} catch (ValidationException ve) {
 				LangCore.logWarning(ve.getMessage(), ve.getCause());
 				return null;
@@ -112,53 +112,112 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 		
 		@Override
 		protected String[] getGDBCommandLineArray() {
-			String[] gdbCmdLine = super.getGDBCommandLineArray();
+			ArrayList2<String> gdbCmdLine = new ArrayList2<>(super.getGDBCommandLineArray());
 			
 			if(prettyPrintLoc != null) {
-				gdbCmdLine = ArrayUtil.concat(gdbCmdLine, "-d", prettyPrintLoc.toPathString());
-				gdbCmdLine = ArrayUtil.concat(gdbCmdLine, "-iex", 
-					"add-auto-load-safe-path " + prettyPrintLoc.toPathString());
+				
+				if(!MiscUtil.OS_IS_WINDOWS) {
+					gdbCmdLine.addElements("-d", prettyPrintLoc.toString());
+					gdbCmdLine.addElements("-iex", "add-auto-load-safe-path " + prettyPrintLoc.toString());
+				} else {
+					// GDB pretty printers auto-load isn't working directly in Windows, 
+					// so they will be loaded directly later, in initializtion sequence.
+				}
 			}
 			
-			return gdbCmdLine;
+			return gdbCmdLine.toArray(String.class);
 		}
 		
 		@Override
-		protected Process launchGDBProcess(String[] commandLine) throws CoreException {
-			String[] launchEnvironment = LaunchUtils.getLaunchEnvironment(fLaunchConfiguration);
-			if(prettyPrintLoc != null) {
-				// launchEnvironment should be null for non-CDT projects anyways
-				if(launchEnvironment != null) {
-					LangCore.logWarning("Ignoring previous CDT GDB launch environment");
-				}
-				launchEnvironment = getModifiedPythonEnvironment();
+		protected void customizeEnvironment(HashMap<String, String> envMap) {
+			if(prettyPrintLoc == null) {
+				return;
 			}
-			try {
-				return ProcessFactory.getFactory().exec(commandLine, launchEnvironment);
-			} catch (IOException e) {
-			    String message = "Error while launching command: " + StringUtil.join(commandLine, " "); //$NON-NLS-1$ //$NON-NLS-2$
-			    throw new CoreException(new Status(IStatus.ERROR, GdbPlugin.PLUGIN_ID, -1, message, e));
-			}
-		}
-		
-		protected String[] getModifiedPythonEnvironment() {
-			HashMap<String, String> envMap = new HashMap<>(System.getenv());
+			
 			String pythonPath = envMap.get("PYTHONPATH");
 			pythonPath = pythonPath == null ? "" : pythonPath + File.pathSeparator;
 			pythonPath += prettyPrintLoc.toPathString();
 			envMap.put("PYTHONPATH", pythonPath);
-			
-			return convertoToEnvpFormat(envMap);
 		}
 		
 	}
 	
-	protected static String[] convertoToEnvpFormat(HashMap<String, String> envMap) {
-		List<String> envp = new ArrayList<>(envMap.size());
-		for(Entry<String, String> entry : envMap.entrySet()) {
-			envp.add(entry.getKey() + "=" + entry.getValue());
+	/* -----------------  ----------------- */
+	
+	public static class FinalLaunchSequence_7_7_Rust extends FinalLaunchSequence_7_7 {
+		
+		protected IGDBControl fCommandControl;
+		protected CommandFactory fCommandFactory;
+		
+		public FinalLaunchSequence_7_7_Rust(DsfSession session, Map<String, java.lang.Object> attributes,
+				RequestMonitorWithProgress rm) {
+			super(session, attributes, rm);
 		}
-		return ArrayUtil.createFrom(envp, String.class);
+		
+		@Execute
+		@Override
+		public void stepInitializeFinalLaunchSequence_7_7(RequestMonitor rm) {
+			DsfServicesTracker tracker = new DsfServicesTracker(GdbPlugin.getBundleContext(), getSession().getId());
+			fCommandControl = tracker.getService(IGDBControl.class);
+			tracker.dispose();
+			
+			if(fCommandControl == null) {
+				rm.setStatus(new Status(IStatus.ERROR, GdbPlugin.PLUGIN_ID, -1, "Cannot obtain control service", null));
+				rm.done();
+				return;
+			}
+			
+			fCommandFactory = fCommandControl.getCommandFactory();
+			
+			super.stepInitializeFinalLaunchSequence_7_7(rm);
+		}
+		
+		@Execute
+		@Override
+		public void stepSourceGDBInitFile(RequestMonitor rm) {
+			try {
+				
+				java.nio.file.Path tempFile = WindowsGdbTempFileHelper.getTempFile();
+				
+				fCommandControl.queueCommand(
+					fCommandFactory.createCLISource(fCommandControl.getContext(), tempFile.toString()), 
+					new DataRequestMonitor<MIInfo>(getExecutor(), rm) {
+						@Override
+						protected void handleCompleted() {
+							rm.setStatus(getStatus());
+						}
+					}
+				);
+				
+				super.stepSourceGDBInitFile(rm);
+			} catch(IOException e) {
+				rm.setStatus(LangCore.createErrorStatus("Could not create GDB init temp file", e));
+				rm.done();
+			}
+		}
+	
+	}
+	
+	public static class WindowsGdbTempFileHelper { 
+		
+		private static java.nio.file.Path tempFile;
+		
+		protected static synchronized java.nio.file.Path getTempFile() throws IOException {
+			if(tempFile == null) {
+				tempFile = Files.createTempFile("rustdt_gdbinit_windows_", "");
+				
+				Runtime.getRuntime().addShutdownHook(new Thread(() -> tempFile.toFile().delete()));
+				
+				String contents = "python\n" +
+					"print \"--Registering Rust pretty-printers for Windows--\"\n" + 
+					"import gdb_rust_pretty_printing\n"+
+					"gdb_rust_pretty_printing.register_printers(gdb)\n"+
+					"print \"--DONE--\"\n" +
+					"end\n";
+				FileUtil.writeStringToFile(tempFile.toFile(), contents, melnorme.utilbox.misc.StringUtil.UTF8);
+			}
+			return tempFile;
+		}
 	}
 	
 	/* -----------------  Add source lookup for Rust std lib  ----------------- */

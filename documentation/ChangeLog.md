@@ -2,10 +2,15 @@
 
 ### (NextVersion)
  * Project builder is no longer invoked when workspace "Build Automatically" setting is enabled and a file is saved. (this was considered a misfeature anyways)
+ * Added: When debugging, the source lookup path for the Rust standard library modules is not properly configured.
+ * Added: When debugging on Windows, the Rust GDB pretty printers are automatically configured, if they are found in `$${RUST_ROOT}/bin/rustlib/etc/`.
+   * Updated the documentation for [the above changes](documentation/UserGuide.md#gdb-pretty-printers).
  * Added Racer preference to enable/disable showing the error dialog if failures occur during Content Assist. (#74)
+
+--
  * Fixed: Project Build Targets settings page shows wrong default for Program Path field.
  * Fixed: Editor syntax highlighting of raw strings.
- * Added: Rust debug launches now properly configure the source lookup path for Rust standard library modules. 
+
  
 ### 0.4.0
  * Added support for Eclipse dark theme. Namely:  
