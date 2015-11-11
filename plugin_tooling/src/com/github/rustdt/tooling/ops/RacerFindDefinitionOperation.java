@@ -31,7 +31,7 @@ public class RacerFindDefinitionOperation extends RacerOperation {
 	
 	public FindDefinitionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
 		ProcessBuilder pb = getCommandProcessBuilder();
-		ExternalProcessResult result = runToolProcess2(pb, input);
+		ExternalProcessResult result = runToolProcess(pb, input);
 		
 		String output = result.getStdOutBytes().toString(StringUtil.UTF8);
 		return createRacerOutputParser(offset).parseResolvedMatch(output);

@@ -26,6 +26,11 @@ import melnorme.utilbox.core.CommonException;
 
 public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
+	@Override
+	protected String getToolProcessName() {
+		return "Cargo";
+	}
+	
 	protected boolean isMessageEnd(String nextLine) {
 		return nextLine.startsWith("error: aborting due to ");
 	}

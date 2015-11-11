@@ -21,6 +21,8 @@ import static melnorme.utilbox.core.CoreUtil.listFrom;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import melnorme.lang.tests.CommonToolingTest;
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ToolCompletionProposal;
@@ -28,13 +30,10 @@ import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
-import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.MiscUtil;
-
-import org.junit.Test;
 
 
 public class RacerOutputParserTest extends CommonToolingTest {
@@ -136,15 +135,14 @@ public class RacerOutputParserTest extends CommonToolingTest {
 	}
 	
 	protected void testParseOutput(RacerCompletionOutputParser parser, String output, List<?> expected) 
-			throws CommonException, OperationSoftFailure {
+			throws CommonException {
 		LangCompletionResult result = parser.parse(output);
-		assertAreEqualLists((List<?>) result.getValidatedProposals(), expected);
+		assertAreEqualLists((List<?>) result.getProposals_maybeNull(), expected);
 	}
 	
 	protected static final String DESC_LINE2 = "          where K: AsRef<OsStr>, V: AsRef<OsStr>";
 	
-	protected void testMultiLineDesc(int offset, RacerCompletionOutputParser buildParser) throws CommonException,
-			OperationSoftFailure {
+	protected void testMultiLineDesc(int offset, RacerCompletionOutputParser buildParser) throws CommonException {
 		// Test multi-line description
 		testParseOutput(buildParser, 
 			"PREFIX 1,1,\n" +

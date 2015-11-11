@@ -27,7 +27,6 @@ import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -37,7 +36,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	@Override
 	protected LangCompletionResult doComputeProposals(SourceOperationContext context, int offset,
 			TimeoutProgressMonitor pm) 
-			throws CoreException, CommonException, OperationCancellation, OperationSoftFailure {
+			throws CoreException, CommonException, OperationCancellation {
 		
 		context.getEditor_nonNull().doSave(pm);
 		

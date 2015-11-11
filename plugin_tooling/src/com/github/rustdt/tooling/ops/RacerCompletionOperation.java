@@ -12,7 +12,6 @@ package com.github.rustdt.tooling.ops;
 
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.IOperationHelper;
-import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -29,8 +28,7 @@ public class RacerCompletionOperation extends RacerOperation {
 		this.offset = offset;
 	}
 	
-	public LangCompletionResult executeAndProcessOutput() 
-			throws CommonException, OperationCancellation, OperationSoftFailure {
+	public LangCompletionResult executeAndProcessOutput() throws CommonException, OperationCancellation {
 		ExternalProcessResult result = execute();
 		
 		return createRacerOutputParser(offset).parse(result);

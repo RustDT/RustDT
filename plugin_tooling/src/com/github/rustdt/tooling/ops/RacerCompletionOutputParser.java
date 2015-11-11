@@ -39,6 +39,11 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@Override
+	protected String getToolProcessName() {
+		return "Racer";
+	}
+	
+	@Override
 	protected LangCompletionResult parse(StringParseSource source) throws CommonException {
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
