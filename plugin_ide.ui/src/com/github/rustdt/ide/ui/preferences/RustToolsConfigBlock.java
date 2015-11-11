@@ -42,10 +42,9 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
 		super(prefContext);
 		
-		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2.getGlobalPreference());
-		bindToPreference(racerLocation, RustSDKPreferences.RACER_PATH.getGlobalPreference());
-		bindToPreference(racerGroup.showErrorsDialog, 
-			ContentAssistPreferences.ShowDialogIfContentAssistErrors.getGlobalPreference());
+		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2);
+		bindToPreference(racerLocation, RustSDKPreferences.RACER_PATH);
+		bindToPreference(racerGroup.showErrorsDialog, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
 		
 		validation.addFieldValidation(true, sdkSrcLocation, new RustSDKSrcLocationValidator());
 		validation.addFieldValidation(true, racerLocation, new RustRacerLocationValidator());
