@@ -53,22 +53,20 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 	public void test$() throws Exception {
 		RustBuildOutputParser buildParser = new RustBuildOutputParser() {
 			@Override
-			protected void handleMessageParseError(CommonException ce) {
+			protected void handleParseError(CommonException ce) {
 				assertFail();
 			}
 		};
 		RustBuildOutputParser buildParser_allowParseErrors = new RustBuildOutputParser() {
 			@Override
-			protected void handleMessageParseError(CommonException ce) {
+			protected void handleParseError(CommonException ce) {
 			}
 		};
-
 		
 		testParseMessages(buildParser, "", listFrom());  // Empty
 		
 		
 		{
-			
 			testParseMessages(buildParser_allowParseErrors, "libbar/blah.rs:", listFrom());
 			testParseMessages(buildParser_allowParseErrors, "libbar/blah.rs:1:2: info: BLAH BLAH", listFrom());
 			

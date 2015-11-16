@@ -79,7 +79,7 @@ public abstract class RacerOperation extends AbstractToolOperation {
 	protected RacerCompletionOutputParser createRacerOutputParser(int offset) {
 		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
 			@Override
-			protected void handleMessageParseError(CommonException ce) throws CommonException {
+			protected void handleParseError(CommonException ce) throws CommonException {
 				getOperationHelper().logStatus(ce.toStatusException(StatusLevel.WARNING));
 			}
 			

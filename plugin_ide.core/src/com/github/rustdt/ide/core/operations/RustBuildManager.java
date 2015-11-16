@@ -257,7 +257,7 @@ public class RustBuildManager extends BuildManager {
 				throws CoreException, CommonException {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
-				protected void handleMessageParseError(CommonException ce) {
+				protected void handleParseError(CommonException ce) {
 					 LangCore.logStatus(LangCore.createCoreException(ce));
 				}
 			}.parseOutput(processResult);

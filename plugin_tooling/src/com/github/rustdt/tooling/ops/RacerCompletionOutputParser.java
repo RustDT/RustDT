@@ -63,7 +63,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			} else if(line.startsWith("END")) {
                 continue;
             } else {
-				handleMessageParseError(new CommonException("Unknown line format: " + line));
+            	handleParseError(new CommonException("Unknown line format: " + line));
 			}
 			
 		}
