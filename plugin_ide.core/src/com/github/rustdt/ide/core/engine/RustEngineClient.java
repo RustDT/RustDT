@@ -29,21 +29,11 @@ public class RustEngineClient extends EngineClient {
 			Location fileLocation) {
 		return new StructureUpdateTask(structureInfo) {
 			@Override
-			protected SourceFileStructure createSourceFileStructure() {
+			protected SourceFileStructure createNewData() {
 				SourceRange sr = new SourceRange(0, source.length());
 				StructureElement element = new StructureElement("Outline_Not_Supported", sr, sr, 
 					StructureElementKind.MODULEDEC, new ElementAttributes(null), null, null);
 				return new SourceFileStructure(fileLocation, new ArrayList2<StructureElement>(element), null);
-			}
-		};
-	}
-	
-	@Override
-	protected StructureUpdateTask createDisposeTask(StructureInfo structureInfo, Location fileLocation) {
-		return new StructureUpdateTask(structureInfo) {
-			@Override
-			protected SourceFileStructure createSourceFileStructure() {
-				return null;
 			}
 		};
 	}
