@@ -8,31 +8,31 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.utilbox.ownership;
+package melnorme.utilbox.fields;
 
-public class LifecycleObject implements IDisposable {
+
+import melnorme.utilbox.collections.Indexable;
+
+public class EventSource<T> implements IEventSource<T> {
 	
-	protected final OwnedObjects owned = new OwnedObjects(); 
+	protected final ListenerListHelper<T> listeners = new ListenerListHelper<>();
 	
-	public LifecycleObject() {
+	public EventSource() {
 		super();
 	}
 	
-	public IOwner asOwner() {
-		return owned;
+	@Override
+	public void addListener(T listener) {
+		listeners.addListener(listener);
 	}
 	
 	@Override
-	public final void dispose() {
-		dispose_pre();
-		owned.disposeAll();
-		dispose_post();
+	public void removeListener(T listener) {
+		listeners.removeListener(listener);
 	}
 	
-	protected void dispose_pre() {
-	}
-	
-	protected void dispose_post() {
+	protected Indexable<T> getListeners() {
+		return listeners.getListeners();
 	}
 	
 }

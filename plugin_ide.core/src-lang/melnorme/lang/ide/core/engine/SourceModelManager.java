@@ -13,40 +13,45 @@ package melnorme.lang.ide.core.engine;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
-import java.util.concurrent.TimeUnit;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.utils.operation.OperationUtils;
 import melnorme.lang.tooling.structure.SourceFileStructure;
-import melnorme.lang.utils.EntryMapTS;
 import melnorme.lang.utils.concurrency.ConcurrentlyDerivedData;
 import melnorme.lang.utils.concurrency.ConcurrentlyDerivedData.DataUpdateTask;
+import melnorme.lang.utils.concurrency.SynchronizedEntryMap;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.fields.ListenerListHelper;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.ownership.StrictDisposable;
 
 /**
- * The purpose of Engine manager is two-fold:
+ * The SourceModelManager keeps track of text document changes, and updates derived models, such as:
  * 
- * - Keep track of document text changes and send those updates to the engine.
- * - Retrieve parsing/structural information from the client after such text updates.
+ * - Source module parse-analysis and structure-info (possibly with problem markers update).
+ * - Possible persist document changes to files in filesystem, or update a semantic engine buffers.
  *
  */
-/* FIXME: rename */
-public abstract class StructureModelManager extends AbstractModelUpdateManager<Object> {
+public abstract class SourceModelManager extends AbstractModelUpdateManager<Object> {
 	
-	public StructureModelManager() {
+	public SourceModelManager() {
+		this(new ProblemMarkerUpdater());
+	}
+	
+	public SourceModelManager(ProblemMarkerUpdater problemUpdater) {
+		if(problemUpdater != null) {
+			problemUpdater.install(this);
+		}
 	}
 	
 	/* -----------------  ----------------- */
 	
-	protected final EntryMapTS<Object, StructureInfo> infosMap = 
-			new EntryMapTS<Object, StructureInfo>() {
+	protected final SynchronizedEntryMap<Object, StructureInfo> infosMap = 
+			new SynchronizedEntryMap<Object, StructureInfo>() {
 		@Override
 		protected StructureInfo createEntry(Object key) {
 			return new StructureInfo(key);
@@ -67,7 +72,7 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 	 * 
 	 * @return non-null. The {@link StructureInfo} resulting from given connection.
 	 */
-	public SourceModelRegistration connectStructureUpdates3(Object key, IDocument document, 
+	public StructureModelRegistration connectStructureUpdates(Object key, IDocument document, 
 			IStructureModelListener structureListener) {
 		assertNotNull(key);
 		assertNotNull(document);
@@ -79,32 +84,28 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 		boolean connected = sourceInfo.connectDocument(document, structureListener);
 		
 		if(!connected) {
-			// Odd case: we tried to connect with equivalent key, but the document is other.
-			// return a unmanaged StructureInfo
+			// Special case: this key has already been connected to, but with a different document.
+			// As such, return a unmanaged StructureInfo
 			sourceInfo = new StructureInfo(key);
 			connected = sourceInfo.connectDocument(document, structureListener);
 		}
 		assertTrue(connected);
 		
-		return new SourceModelRegistration(sourceInfo, structureListener);
+		return new StructureModelRegistration(sourceInfo, structureListener);
 	}
 	
-	public class SourceModelRegistration extends StrictDisposable {
+	public class StructureModelRegistration extends StrictDisposable {
 		
 		public final StructureInfo structureInfo;
 		protected final IStructureModelListener structureListener;
 		
-		public SourceModelRegistration(StructureInfo structureInfo, IStructureModelListener structureListener) {
+		public StructureModelRegistration(StructureInfo structureInfo, IStructureModelListener structureListener) {
 			this.structureInfo = assertNotNull(structureInfo);
 			this.structureListener = assertNotNull(structureListener);
 		}
 		
 		@Override
 		protected void disposeDo() {
-			disconnectStructureUpdates();
-		}
-		
-		private void disconnectStructureUpdates() {
 			log.println("disconnectStructureUpdates: " + structureInfo.getKey());
 			structureInfo.disconnectFromDocument(structureListener);
 		}
@@ -113,10 +114,9 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 	
 	/* -----------------  ----------------- */
 	
-	public class StructureInfo extends ConcurrentlyDerivedData<SourceFileStructure> {
+	public class StructureInfo extends ConcurrentlyDerivedData<SourceFileStructure, StructureInfo> {
 		
 		protected final Object key;
-		protected final ListenerListHelper<IStructureModelListener> updateListeners = new ListenerListHelper<>();
 		protected final StructureUpdateTask disconnectTask; // Can be null
 		
 		protected IDocument document = null;
@@ -131,6 +131,9 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 			return key;
 		}
 		
+		/**
+		 * @return the file location if source is based on a file, null otherwise.
+		 */
 		public Location getLocation() {
 			if(key instanceof Location) {
 				return (Location) key;
@@ -139,20 +142,20 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 		}
 		
 		public synchronized boolean hasConnectedListeners() {
-			return updateListeners.getListeners().size() > 0;
+			return connectedListeners.getListeners().size() > 0;
 		}
 		
-		protected synchronized boolean connectDocument(IDocument newDocument, IStructureModelListener structureListener) {
+		protected synchronized boolean connectDocument(IDocument newDocument, IStructureModelListener listener) {
 			if(document == null) {
 				document = newDocument;
 				newDocument.addDocumentListener(docListener);
-				queueNewUpdateTask();
+				queueSourceUpdateTask(document.get());
 			}
 			else if(document != newDocument) {
 				return false;
 			}
 			
-			updateListeners.addListener(structureListener);
+			connectedListeners.addListener(listener);
 			return true;
 		}
 		
@@ -162,32 +165,23 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 			}
 			@Override
 			public void documentChanged(DocumentEvent event) {
-				queueNewUpdateTask();
+				queueSourceUpdateTask(document.get());
 			}
 		};
 		
 		protected synchronized void disconnectFromDocument(IStructureModelListener structureListener) {
-			updateListeners.removeListener(structureListener);
+			connectedListeners.removeListener(structureListener);
 			
 			if(!hasConnectedListeners()) {
 				document.removeDocumentListener(docListener);
 				document = null;
 				
-				if(disconnectTask != null) {
-					/* FIXME: disconnect task*/
-					queueUpdateTask(disconnectTask);
-				}
-				
-//				infosMap.removeEntry(key);
+				queueUpdateTask(disconnectTask);
 			}
 		}
 		
-		protected void queueNewUpdateTask() {
-			// Note: document should only be acessed in the same thread that fires document listeners,
-			// so retrieve the document contents now.
-			final String source = document.get();
-			Location location = getLocation();
-			StructureUpdateTask updateTask = createUpdateTask(this, source, location);
+		protected void queueSourceUpdateTask(final String source) {
+			StructureUpdateTask updateTask = createUpdateTask(this, source);
 			queueUpdateTask(updateTask);
 		}
 		
@@ -198,23 +192,26 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 		}
 		
 		@Override
+		protected void doHandleDataUpdateRequested() {
+			for(IDataUpdateRequestedListener<StructureInfo> listener : updateRequestedListeners.getListeners()) {
+				listener.dataUpdateRequested(this);
+			}
+		}
+		
+		@Override
 		protected void doHandleDataChanged() {
-			notifyStructureChanged(this, updateListeners);
-			notifyStructureChanged(this, modelListeners);
+			notifyStructureChanged(this, connectedListeners);
+			notifyStructureChanged(this, globalListeners);
+			
+			if(!hasConnectedListeners()) {
+				// TODO need to verify thread-safety, to enable this code.
+				assertTrue(getStoredData() == null);
+//				infosMap.runSynchronized(() -> infosMap.removeEntry(key));
+			}
 		}
 		
 		public SourceFileStructure awaitUpdatedData(IProgressMonitor pm) throws OperationCancellation {
-			while(true) {
-				if(pm.isCanceled()) {
-					throw new OperationCancellation();
-				}
-				
-				try {
-					return awaitUpdatedData(100, TimeUnit.MILLISECONDS);
-				} catch(InterruptedException e) {
-					continue;
-				}
-			}
+			return OperationUtils.awaitData(asFuture(), pm);
 		}
 		
 	}
@@ -224,10 +221,8 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 	/**
 	 * Create an update task for the given structureInfo, due to a document change.
 	 * @param source the new source of the document being listened to.
-	 * @param fileLocation the file location if document is based on a file, null otherwise.
 	 */
-	protected abstract StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source,
-			Location fileLocation);
+	protected abstract StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source);
 	
 	/**
 	 * Create an update task for when the last listener of given structureInfo disconnects.
@@ -283,40 +278,15 @@ public abstract class StructureModelManager extends AbstractModelUpdateManager<O
 	
 	/* ----------------- Listeners ----------------- */
 	
-	protected final ListenerListHelper<IStructureModelListener> modelListeners = new ListenerListHelper<>();
+	protected final ListenerListHelper<IStructureModelListener> globalListeners = new ListenerListHelper<>();
 	
 	public void addListener(IStructureModelListener listener) {
 		assertNotNull(listener);
-		modelListeners.addListener(listener);
+		globalListeners.addListener(listener);
 	}
 	
 	public void removeListener(IStructureModelListener listener) {
-		modelListeners.removeListener(listener);
+		globalListeners.removeListener(listener);
 	}
-	
-	protected static void notifyStructureChanged(final StructureInfo structureInfo, 
-			ListenerListHelper<IStructureModelListener> listeners) {
-		for(IStructureModelListener listener : listeners.getListeners()) {
-			try {
-				listener.structureChanged(structureInfo);
-			} catch (Exception e) {
-				LangCore.logInternalError(e);
-			}
-		}
-	}
-	
-	/* -----------------  ----------------- */
-	
-	public void awaitUpdatedWorkingCopy(Object modelKey, IProgressMonitor pm) throws OperationCancellation {
-		// TODO: this could be update to await until server responds (meaning that its working copy is updated), 
-		// no need to actually wait for structure to be parsed. 
-		StructureInfo structureInfo = getStoredStructureInfo(modelKey);
-		if(structureInfo == null) {
-			return; // No updates pending
-		}
-		structureInfo.awaitUpdatedData(pm);
-	}
-	
-	/* ----------------- util ----------------- */
 	
 }

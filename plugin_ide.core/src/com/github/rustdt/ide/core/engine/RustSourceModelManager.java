@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.engine;
 
-import melnorme.lang.ide.core.engine.EngineClient;
+import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.structure.SourceFileStructure;
@@ -19,20 +19,20 @@ import melnorme.lang.tooling.structure.StructureElementKind;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.Location;
 
-public class RustEngineClient extends EngineClient {
+public class RustSourceModelManager extends SourceModelManager {
 	
-	public RustEngineClient() {
+	public RustSourceModelManager() {
 	}
 	
 	@Override
-	protected StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source, 
-			Location fileLocation) {
+	protected StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source) {
 		return new StructureUpdateTask(structureInfo) {
 			@Override
 			protected SourceFileStructure createNewData() {
 				SourceRange sr = new SourceRange(0, source.length());
 				StructureElement element = new StructureElement("Outline_Not_Supported", sr, sr, 
 					StructureElementKind.MODULEDEC, new ElementAttributes(null), null, null);
+				Location fileLocation = structureInfo.getLocation();
 				return new SourceFileStructure(fileLocation, new ArrayList2<StructureElement>(element), null);
 			}
 		};

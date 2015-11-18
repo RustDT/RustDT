@@ -20,18 +20,17 @@ import java.util.function.Function;
 import org.eclipse.jface.text.Document;
 import org.junit.Test;
 
-import melnorme.lang.ide.core.engine.StructureModelManager.SourceModelRegistration;
-import melnorme.lang.ide.core.engine.StructureModelManager.StructureInfo;
-import melnorme.lang.ide.core.engine.StructureModelManager.StructureUpdateTask;
+import melnorme.lang.ide.core.engine.SourceModelManager.StructureModelRegistration;
+import melnorme.lang.ide.core.engine.SourceModelManager.StructureInfo;
+import melnorme.lang.ide.core.engine.SourceModelManager.StructureUpdateTask;
 import melnorme.lang.ide.core.tests.CommonCoreTest;
 import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.Assert.AssertFailedException;
-import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.ownership.StrictDisposable;
 
-public class StructureModelManagerTest extends CommonCoreTest {
+public class StructureModelTest extends CommonCoreTest {
 	
 	static {
 		assertTrue(StructureModelManager_WithActualTest.class != null); // Ensure class exists
@@ -39,29 +38,28 @@ public class StructureModelManagerTest extends CommonCoreTest {
 	
 	/* -----------------  ----------------- */
 	
-	protected EngineClient engineClient;
-	protected InstrumentedEngineClient engineClient2;
+	protected SourceModelManager manager;
+	protected InstrumentedSourceModelManager manager2;
 	
 	public int createUpdateTaskCount;
 	public int createUpdateTaskCount_EXPECTED;
 	
 	protected IStructureModelListener structureListener = new IStructureModelListener() {
 		@Override
-		public void structureChanged(StructureInfo lockedStructureInfo) {
+		public void dataChanged(StructureInfo lockedStructureInfo) {
 		}
 	};
 	
 	protected void initializeTestsEngineClient() {
 		createUpdateTaskCount = createUpdateTaskCount_EXPECTED = 0;
-		engineClient2 = new InstrumentedEngineClient();
-		engineClient = engineClient2; 
+		manager2 = new InstrumentedSourceModelManager();
+		manager = manager2; 
 	}
 	
-	public class InstrumentedEngineClient extends EngineClient {
+	public class InstrumentedSourceModelManager extends SourceModelManager {
 		
 		@Override
-		protected StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source,
-				Location fileLocation) {
+		protected StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source) {
 			createUpdateTaskCount++;
 			
 			return createUpdateTask.apply(structureInfo);
@@ -103,7 +101,7 @@ public class StructureModelManagerTest extends CommonCoreTest {
 	public void testWorkflows$() throws Exception {
 		initializeTestsEngineClient();
 		
-		assertTrue(engineClient.getStoredStructureInfo("Blah") == null);
+		assertTrue(manager.getStoredStructureInfo("Blah") == null);
 		
 		Object key = "Key1";
 		
@@ -125,7 +123,7 @@ public class StructureModelManagerTest extends CommonCoreTest {
 			checkCounts();
 		}
 		
-		SourceModelRegistration reconcileRegistration = testConnectStructureUpdates(key, doc, initialConnect);
+		StructureModelRegistration modelRegistration = testConnectUpdates(key, doc, initialConnect);
 		
 		documentSet(doc);
 		checkTaskDelta(1);
@@ -133,9 +131,9 @@ public class StructureModelManagerTest extends CommonCoreTest {
 		documentSet(doc);
 		checkTaskDelta(1);
 		
-		testBasicFlow_Cancellation(reconcileRegistration, doc);
+		testBasicFlow_Cancellation(modelRegistration, doc);
 		
-		testDisconnectUpdates(key, reconcileRegistration, initialConnect ? false : true);
+		testDisconnectUpdates(key, modelRegistration, initialConnect ? false : true);
 		
 		if(initialConnect) {
 			documentSet(doc);
@@ -143,40 +141,34 @@ public class StructureModelManagerTest extends CommonCoreTest {
 		}
 	}
 	
-	protected SourceModelRegistration testConnectStructureUpdates(Object key, Document doc, boolean initialConnect) {
+	protected StructureModelRegistration testConnectUpdates(Object key, Document doc, boolean initialConnect) {
 		if(initialConnect) {
-			StructureInfo storedStructureInfo = engineClient.getStoredStructureInfo(key);
+			StructureInfo storedStructureInfo = manager.getStoredStructureInfo(key);
 			assertTrue(storedStructureInfo == null || !storedStructureInfo.hasConnectedListeners());
 		}
 		
-		SourceModelRegistration registration = engineClient.connectStructureUpdates3(key, doc, structureListener);
+		StructureModelRegistration registration = manager.connectStructureUpdates(key, doc, structureListener);
 		checkTaskDelta(initialConnect ? 1 : 0);
 		
 		StructureInfo structureInfo = registration.structureInfo;
 		assertTrue(structureInfo.hasConnectedListeners());
-		assertTrue(engineClient.getStoredStructureInfo(key) == structureInfo);
+		assertTrue(manager.getStoredStructureInfo(key) == structureInfo);
 		
 		return registration;
 	}
 	
-	protected void testDisconnectUpdates(Object key, SourceModelRegistration registration, boolean hasOtherConnections) 
+	protected void testDisconnectUpdates(Object key, StructureModelRegistration regist, boolean hasOtherConnections) 
 			throws InterruptedException {
-		StructureInfo structureInfo = registration.structureInfo;
-		
-		if(hasOtherConnections) {
-			assertTrue(structureInfo.updateListeners.getListeners().size() > 1);
-		} else {
-			assertTrue(structureInfo.updateListeners.getListeners().size() == 1);
-		}
+		StructureInfo structureInfo = regist.structureInfo;
 		
 		TestsStructureModelListener listener = 
-				new TestsStructureModelListener(engineClient, structureInfo, hasOtherConnections ? 0 : 1);
+				new TestsStructureModelListener(manager, structureInfo, hasOtherConnections ? 0 : 1);
 		assertTrue(structureInfo.isStale() == false);
 		try {
-			registration.dispose();
+			regist.dispose();
 			
 			checkTaskDelta(0);
-			assertTrue(engineClient.getStoredStructureInfo(key) == structureInfo);
+			assertTrue(manager.getStoredStructureInfo(key) == structureInfo);
 			assertTrue(structureInfo.hasConnectedListeners() == hasOtherConnections);
 			
 			if(hasOtherConnections == false) {
@@ -186,10 +178,10 @@ public class StructureModelManagerTest extends CommonCoreTest {
 			awaitUnchecked(listener.latch);
 		} finally {
 			owned.remove(listener);
-			engineClient.removeListener(listener);
+			manager.removeListener(listener);
 		}
 		
-		verifyThrows(() -> registration.dispose(), AssertFailedException.class);
+		verifyThrows(() -> regist.dispose(), AssertFailedException.class);
 	}
 	
 	protected class TestsStructureModelListener extends StrictDisposable implements IStructureModelListener {
@@ -198,7 +190,7 @@ public class StructureModelManagerTest extends CommonCoreTest {
 		protected final StructureInfo structureInfo;
 		protected volatile int expectedChanges;
 		
-		public TestsStructureModelListener(EngineClient engineClient, StructureInfo structureInfo, int expectedChanges) 
+		public TestsStructureModelListener(SourceModelManager manager, StructureInfo structureInfo, int expectedChanges) 
 				throws InterruptedException {
 			this.structureInfo = structureInfo;
 			this.expectedChanges = expectedChanges;
@@ -206,12 +198,12 @@ public class StructureModelManagerTest extends CommonCoreTest {
 			this.latch = new CountDownLatch(expectedChanges);
 			
 			structureInfo.awaitUpdatedData();
-			engineClient.addListener(this);
+			manager.addListener(this);
 			owned.add(this);
 		}
 		
 		@Override
-		public void structureChanged(StructureInfo lockedStructureInfo) {
+		public void dataChanged(StructureInfo lockedStructureInfo) {
 			if(lockedStructureInfo == structureInfo) {
 				assertTrue(expectedChanges > 0);
 				expectedChanges--;
@@ -226,9 +218,9 @@ public class StructureModelManagerTest extends CommonCoreTest {
 		
 	}
 	
-	protected void testBasicFlow_Cancellation(SourceModelRegistration reconcileRegistration, Document doc) 
+	protected void testBasicFlow_Cancellation(StructureModelRegistration registration, Document doc) 
 			throws InterruptedException {
-		if(engineClient2 == null)
+		if(manager2 == null)
 			return;
 		
 		CountDownLatch interruptionTerminationLatch = new CountDownLatch(1);
@@ -257,7 +249,7 @@ public class StructureModelManagerTest extends CommonCoreTest {
 			doc.set("1");
 			checkTaskDelta(1);
 			awaitUnchecked(entryLatch);
-			assertTrue(reconcileRegistration.structureInfo.isStale() == true);
+			assertTrue(registration.structureInfo.isStale() == true);
 			
 		} finally {
 			createUpdateTask = _saved;
@@ -276,19 +268,19 @@ public class StructureModelManagerTest extends CommonCoreTest {
 	protected void testMultipleConnects(Object key, Document doc) throws InterruptedException {
 		initializeTestsEngineClient();
 		
-		SourceModelRegistration registration = testConnectStructureUpdates(key, doc, true);
+		StructureModelRegistration registration = testConnectUpdates(key, doc, true);
 		StructureInfo structureInfo = registration.structureInfo;
 		
 		checkCounts();
-		SourceModelRegistration registration2 = engineClient.connectStructureUpdates3(key, doc, structureListener);
+		StructureModelRegistration registration2 = manager.connectStructureUpdates(key, doc, structureListener);
 		assertTrue(registration2.structureInfo == structureInfo);
 		// Test no extra updates
 		checkCounts();
 		
 		testBasicFlow(key, doc, false);
 		
-		SourceModelRegistration registration_unmanaged = 
-				engineClient.connectStructureUpdates3(key, new Document(), structureListener);
+		StructureModelRegistration registration_unmanaged = 
+				manager.connectStructureUpdates(key, new Document(), structureListener);
 		assertTrue(structureInfo != registration_unmanaged.structureInfo);
 
 		checkTaskDelta(1);

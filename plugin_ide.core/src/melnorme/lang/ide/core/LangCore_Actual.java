@@ -12,11 +12,11 @@ package melnorme.lang.ide.core;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
-import com.github.rustdt.ide.core.engine.RustEngineClient;
+import com.github.rustdt.ide.core.engine.RustSourceModelManager;
 import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
 
-import melnorme.lang.ide.core.engine.EngineClient;
+import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
 
 public class LangCore_Actual {
@@ -34,8 +34,8 @@ public class LangCore_Actual {
 		return new RustToolManager();
 	}
 	
-	public static EngineClient createEngineClient() {
-		return new RustEngineClient();
+	public static SourceModelManager createSourceModelManager() {
+		return new RustSourceModelManager();
 	}
 	
 	public static RustBundleModelManager createBundleModelManager() {
