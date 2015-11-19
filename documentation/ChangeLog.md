@@ -1,6 +1,9 @@
 ## release ChangeLog
 
 ### (NextVersion)
+
+
+### 0.4.1
  * Project builder is no longer invoked when workspace "Build Automatically" setting is enabled and a file is saved. (this was considered a misfeature anyways)
  * Added: When debugging, the source lookup path for the Rust standard library modules is now configured properly.
  * Added: When debugging on Windows, the Rust GDB pretty printers are automatically configured, if they are found in `${RUST_ROOT}/bin/rustlib/etc/`.
