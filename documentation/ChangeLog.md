@@ -7,7 +7,9 @@
  * Minimum and recommended CDT version is now `8.8`.
  * Project builder is no longer invoked when the workspace "Build Automatically" setting is enabled and a file is saved. (this was considered a misfeature anyways)
  * When debugging, the source lookup path for the Rust standard library modules is now configured properly.
- * When debugging, fixed opening source files that are not in the workspace.
+ * When debugging, fixed toggling breakpoints on and off for files that are outside the workspace.
+ * When debugging, fixed opening source files that are are outside the workspace.
+ * Fixed line breakpoint icon.
  * When debugging on Windows, the Rust GDB pretty printers are automatically configured, if they are found in `${RUST_ROOT}/bin/rustlib/etc/`.
    * Updated the documentation for [the above changes](documentation/UserGuide.md#gdb-pretty-printers).
  * Added Racer preference to enable/disable showing the error dialog if failures occur during Content Assist. (#74)
