@@ -16,6 +16,7 @@ import com.github.rustdt.ide.core.engine.RustSourceModelManager;
 import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
 
+import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 
@@ -31,7 +32,7 @@ public class LangCore_Actual {
 	public static final String LANGUAGE_NAME = "Rust";
 	
 	
-	public static LangCore2 instance;
+	public static LangCore instance;
 	
 	/* ----------------- Owned singletons: ----------------- */
 	
@@ -41,8 +42,7 @@ public class LangCore_Actual {
 	protected final RustSourceModelManager sourceModelManager;
 	
 	public LangCore_Actual() {
-		instance = (LangCore2) this;
-		LangCore.pluginInstance.langCore = instance;
+		instance = (LangCore) this;
 		
 		toolManager = createToolManagerSingleton();
 		bundleManager = createBundleModelManager();
@@ -68,11 +68,21 @@ public class LangCore_Actual {
 	
 	/* -----------------  ----------------- */
 	
+	
+	public static AbstractToolManager getToolManager() {
+		return instance.toolManager;
+	}
 	public static RustBundleModel getBundleModel() {
 		return instance.bundleManager.getModel();
 	}
-	public static RustBuildManager getRustBuildManager() {
+	public static RustBuildManager getBuildManager() {
 		return instance.buildManager;
+	}
+	public static RustBundleModelManager getBundleModelManager() {
+		return instance.bundleManager;
+	}
+	public static SourceModelManager getSourceModelManager() {
+		return instance.sourceModelManager;
 	}
 	
 }
