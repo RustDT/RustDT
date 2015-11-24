@@ -13,13 +13,13 @@ package com.github.rustdt.ide.ui.text;
 import org.eclipse.jface.text.ITextViewer;
 
 import melnorme.lang.ide.core.TextSettings_Actual;
-import melnorme.lang.ide.core.text.format.LangAutoEditStrategyExt;
+import melnorme.lang.ide.core.text.format.ILangAutoEditsPreferencesAccess;
+import melnorme.lang.ide.core.text.format.LangAutoEditStrategy;
 
-public class RustAutoEditStrategy extends LangAutoEditStrategyExt {
+public class RustAutoEditStrategy extends LangAutoEditStrategy {
 	
-	public RustAutoEditStrategy(String contentType, ITextViewer viewer, 
-			ILangAutoEditsPreferencesAccessExt preferences) {
-		super(TextSettings_Actual.PARTITIONING_ID, contentType, viewer, preferences);
+	public RustAutoEditStrategy(String contentType, ITextViewer viewer, ILangAutoEditsPreferencesAccess preferences) {
+		super(viewer, TextSettings_Actual.PARTITIONING_ID, contentType, preferences);
 	}
 	
 }

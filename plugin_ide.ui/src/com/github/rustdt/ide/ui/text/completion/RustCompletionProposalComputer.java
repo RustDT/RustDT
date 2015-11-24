@@ -19,7 +19,7 @@ import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner;
-import melnorme.lang.ide.core.text.TextUtils;
+import melnorme.lang.ide.core.text.TextSourceUtils;
 import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
@@ -62,7 +62,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			@Override
 			protected boolean isValidPrefix(String prefix) {
 				String rplString = getBaseReplaceString();
-				return TextUtils.isPrefix(prefix, rplString, false);
+				return TextSourceUtils.isPrefix(prefix, rplString, false);
 			}
 			
 			@Override
