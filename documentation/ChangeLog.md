@@ -4,6 +4,7 @@
 
 
 ### 0.4.1
+ * Improvement to Enter auto-indent when text after cursor has a closing brace. (Fixes #76)
  * Minimum and recommended CDT version is now `8.8`.
  * Project builder is no longer invoked when the workspace "Build Automatically" setting is enabled and a file is saved. (this was considered a misfeature anyways)
  * When debugging, the source lookup path for the Rust standard library modules is now configured properly.
