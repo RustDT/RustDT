@@ -18,10 +18,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import melnorme.lang.tooling.ops.BuildOutputParser;
+import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.StringUtil;
 
 
 public abstract class RustBuildOutputParser extends BuildOutputParser {
@@ -49,7 +51,13 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		
 		CompositeToolMessageData messageData = parseSimpleMessage(outputLine);
 		if(messageData == null) {
-			throw createUnknownLineSyntaxError(outputLine);
+			Matcher matcher = CARGO_MESSAGE_Regex.matcher(outputLine);
+			
+			if(matcher.matches()) {
+				return parseFromMatcher(outputLine, matcher);
+			} else {
+				throw createUnknownLineSyntaxError(outputLine);	
+			}
 		}
 		
 		parseMultiLineMessageText(output, messageData);
@@ -58,7 +66,15 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		
 		return messageData;
 	}
-
+	
+	protected static final Pattern CARGO_MESSAGE_Regex = Pattern.compile(
+		"^([^:\\n]*):" + // file
+		"(\\d*):((\\d*))?" +// line:column
+		"(-(\\d*):(\\d*))?" + // end line:column
+		"()" + // type and sep
+		"\\s(.*)$" // error message
+	);
+	
 	protected static final Pattern MESSAGE_LINE_Regex = Pattern.compile(
 		"^([^:\\n]*):" + // file
 		"(\\d*):((\\d*):)?" +// line:column
@@ -73,6 +89,10 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 			return null;
 		}
 		
+		return parseFromMatcher(line, matcher);
+	}
+	
+	public CompositeToolMessageData parseFromMatcher(String line, Matcher matcher) {
 		CompositeToolMessageData msgData = new CompositeToolMessageData();
 		
 		msgData.pathString = matcher.group(1);
@@ -166,6 +186,14 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		return 
 			areEqual(nextMessage.messageTypeString, "info") && messageText != null &&
 			(messageText.startsWith("in expansion of") || areEqual(messageText, "expansion site"));
+	}
+	
+	@Override
+	protected ToolSourceMessage createMessage(ToolMessageData msgdata) throws CommonException {
+		if(StringUtil.nullAsEmpty(msgdata.messageTypeString).isEmpty()) {
+			msgdata.messageTypeString = "error";
+		}
+		return super.createMessage(msgdata);
 	}
 	
 	@Override

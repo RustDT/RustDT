@@ -31,6 +31,13 @@ import org.junit.Test;
 
 public class RustBuildOutputParserTest extends CommonToolingTest {
 	
+	public class TestsRustBuildOutputParser extends RustBuildOutputParser {
+		@Override
+		protected void handleParseError(CommonException ce) {
+			assertFail();
+		}
+	}
+	
 	protected static final String NL = "\n";
 	
 	protected static ToolSourceMessage msg(Path path, int line, int column, int endLine, int endColumn, 
@@ -51,12 +58,7 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 	@Test
 	public void test() throws Exception { test$(); }
 	public void test$() throws Exception {
-		RustBuildOutputParser buildParser = new RustBuildOutputParser() {
-			@Override
-			protected void handleParseError(CommonException ce) {
-				assertFail();
-			}
-		};
+		RustBuildOutputParser buildParser = new TestsRustBuildOutputParser();
 		RustBuildOutputParser buildParser_allowParseErrors = new RustBuildOutputParser() {
 			@Override
 			protected void handleParseError(CommonException ce) {
@@ -165,6 +167,17 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 						+NL+ MACRO_MSG_2 +NL+ MACRO_MSG_1)
 			)
 		);
+	}
+	
+	@Test
+	public void testCargoErrorMesages() throws Exception { testCargoErrorMesages$(); }
+	public void testCargoErrorMesages$() throws Exception {
+	
+		RustBuildOutputParser buildParser = new TestsRustBuildOutputParser();
+		
+		testParseMessages(buildParser, 
+			"Cargo.toml:17:15-18:0 expected `=`, but found `", 
+			listFrom(msg(path("Cargo.toml"), 17, 15, 18, 0, ERROR, "expected `=`, but found `")));
 	}
 	
 }

@@ -4,6 +4,7 @@
 
 
 ### 0.4.1
+ * After building, Cargo.toml syntax errors are now also displayed in editor as annotations.
  * Pressing F2 in the editor now shows information popup for problem under cursor (same as the mouse-over hover).
  * Improvement to Enter auto-indent when text after cursor has a closing brace. (Fixes #76)
  * Minimum and recommended CDT version is now `8.8`.
