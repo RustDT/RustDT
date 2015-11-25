@@ -4,6 +4,7 @@
 
 
 ### 0.4.1
+ * Pressing F2 in the editor now shows information popup for problem under cursor (same as the mouse-over hover).
  * Improvement to Enter auto-indent when text after cursor has a closing brace. (Fixes #76)
  * Minimum and recommended CDT version is now `8.8`.
  * Project builder is no longer invoked when the workspace "Build Automatically" setting is enabled and a file is saved. (this was considered a misfeature anyways)
