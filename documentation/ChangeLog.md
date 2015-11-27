@@ -2,6 +2,8 @@
 
 ### (NextVersion)
 
+### 0.4.2
+ * Fixed: In debug, value of some variables not displayed due to "N/A (child of pretty printed object)" error.
 
 ### 0.4.1
  * After building, Cargo.toml syntax errors are now also displayed in editor as annotations.
