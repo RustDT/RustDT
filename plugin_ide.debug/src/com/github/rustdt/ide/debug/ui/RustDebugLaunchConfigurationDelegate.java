@@ -184,7 +184,8 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 					new DataRequestMonitor<MIInfo>(getExecutor(), rm) {
 						@Override
 						protected void handleCompleted() {
-							rm.setStatus(getStatus());
+//							rm.setStatus(getStatus());
+							rm.done();
 						}
 					}
 				);
