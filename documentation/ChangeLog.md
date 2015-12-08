@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed regression: Console view always activates when a build is invoked.
 
 ### 0.4.2
  * Fixed: In debug, value of some variables not displayed due to "N/A (child of pretty printed object)" error.
