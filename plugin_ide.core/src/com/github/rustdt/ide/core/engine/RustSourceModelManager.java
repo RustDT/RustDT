@@ -31,7 +31,7 @@ public class RustSourceModelManager extends SourceModelManager {
 			protected SourceFileStructure createNewData() {
 				SourceRange sr = new SourceRange(0, source.length());
 				StructureElement element = new StructureElement("Outline_Not_Supported", sr, sr, 
-					StructureElementKind.MODULEDEC, new ElementAttributes(null), null, null);
+					StructureElementKind.MOD, new ElementAttributes(null), null, null);
 				Location fileLocation = structureInfo.getLocation();
 				return new SourceFileStructure(fileLocation, new ArrayList2<StructureElement>(element), null);
 			}

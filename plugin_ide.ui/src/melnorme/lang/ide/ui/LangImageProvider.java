@@ -28,16 +28,6 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	}
 	
 	@Override
-	public final IManagedImage visitTemplate() {
-		throw assertFail();
-	}
-	@Override
-	public final IManagedImage visitAlias() {
-		throw assertFail();
-	}
-	
-	
-	@Override
 	public IManagedImage visitConst() {
 		return visitVariable();
 	}
@@ -45,23 +35,25 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	public IManagedImage visitStatic() {
 		return visitVariable();
 	}
+	
 	@Override
-	public IManagedImage visitEnumVariant() {
-		return visitVariable();
-	}
-	@Override
-	public IManagedImage visitImpl() {
-		return visitOther();
-	}
-	@Override
-	public IManagedImage visitMatchArm() {
-		return visitOther();
+	public IManagedImage visitVariable() {
+		return super.visitVariable();
 	}
 	
 	@Override
-	public IManagedImage visitType() {
-		// This is an alias
-		return RustElementImages.T_TYPE;
+	public IManagedImage visitFunction() {
+		return super.visitFunction();
+	}
+	
+	@Override
+	public IManagedImage visitStruct() {
+		return super.visitStruct();
+	}
+	
+	@Override
+	public IManagedImage visitImpl() {
+		return RustElementImages.T_IMPL;
 	}
 	
 	@Override
@@ -70,13 +62,57 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	}
 	
 	@Override
-	public IManagedImage visitModule() {
-		return LangElementImages.PACKAGE;
+	public IManagedImage visitEnum() {
+		return super.visitEnum();
+	}
+	@Override
+	public IManagedImage visitEnumVariant() {
+		return RustElementImages.T_ENUM_VARIANT;
 	}
 	
 	@Override
-	public IManagedImage visitCrate() {
+	public IManagedImage visitExternCrate() {
+		return RustElementImages.PACKAGE;
+	}
+	
+	@Override
+	public IManagedImage visitModule() {
+//		return LangElementImages.PACKAGE;
+		return super.visitModule();
+	}
+	
+	@Override
+	public IManagedImage visitUse() {
+		return RustElementImages.IMPORT;
+	}
+	
+	@Override
+	public IManagedImage visitTypeAlias() {
+		return RustElementImages.T_TYPE;
+	}
+	
+	@Override
+	public IManagedImage visitAlias() {
+		throw assertFail();
+	}
+	
+	/* -----------------  ----------------- */
+	
+	@Override
+	public IManagedImage visitMatchArm() {
 		return visitOther();
+	}
+	
+	@Override
+	public IManagedImage visitType() {
+		// This is an alias
+		return visitTypeAlias();
+	}
+	
+	
+	@Override
+	public IManagedImage visitCrate() {
+		return visitExternCrate();
 	}
 	
 	@Override

@@ -18,7 +18,10 @@ public interface RustElementImages extends LangElementImages {
 	
 	String CAT = "language_elements";
 	
+	ImageHandle T_IMPL = LangImages.createManaged(CAT, "t_impl.png");
 	ImageHandle T_TRAIT = LangImages.createManaged(CAT, "t_trait.png");
 	ImageHandle T_TYPE = LangImages.createManaged(CAT, "t_type.png");
+	
+	ImageHandle T_ENUM_VARIANT = LangImages.createManaged(CAT, "t_enum_variant.png");
 	
 }

@@ -16,22 +16,24 @@ import melnorme.lang.tooling.LANG_SPECIFIC;
 
 
 @LANG_SPECIFIC
-// TODO: Need to update this to Rust code
 public enum StructureElementKind {
 	
-	VARIABLE,
-	
+	VAR,
 	FUNCTION,
-	CONSTRUCTOR,
-	
-	CLASS,
-	INTERFACE,
 	STRUCT,
+	IMPL,
+	TRAIT,
+	ENUM,
+	ENUM_VARIANT,
 	
-	MODULEDEC,
+	EXTERN_CRATE,
+	MOD,
+	USE,
 	
-	TEMPLATE,
-	ALIAS;
+	TYPE_ALIAS, 
+	
+	UNKNOWN,
+	;
 	
 	
 	public <RET> RET switchOnKind(StructureElementKindVisitor<RET> visitor) {
@@ -40,19 +42,22 @@ public enum StructureElementKind {
 	
 	public static <RET> RET switchOnKind(StructureElementKind kind, StructureElementKindVisitor<RET> visitor) {
 		switch(kind) {
-		case VARIABLE: return visitor.visitVariable();
+		case VAR: return visitor.visitVariable();
 		
 		case FUNCTION: return visitor.visitFunction();
-		case CONSTRUCTOR: return visitor.visitConstructor();
 		
-		case CLASS: return visitor.visitClass();
-		case INTERFACE: return visitor.visitInterface();
 		case STRUCT: return visitor.visitStruct();
+		case IMPL: return visitor.visitImpl();
+		case TRAIT: return visitor.visitTrait();
+		case ENUM: return visitor.visitEnum();
+		case ENUM_VARIANT: return visitor.visitEnumVariant();
 		
-		case MODULEDEC: return visitor.visitModule();
+		case EXTERN_CRATE: return visitor.visitExternCrate();
+		case MOD: return visitor.visitModule();
+		case USE: return visitor.visitUse();
 		
-		case TEMPLATE: return visitor.visitTemplate();
-		case ALIAS: return visitor.visitAlias();
+		case TYPE_ALIAS: return visitor.visitTypeAlias();
+		case UNKNOWN: return visitor.visitUnknown();
 		
 		}
 		throw assertUnreachable();
@@ -60,7 +65,15 @@ public enum StructureElementKind {
 	
 	public static interface StructureElementKindVisitor<RET> extends AbstractKindVisitor<RET> {
 		
-		public abstract RET visitTemplate();
+		public abstract RET visitImpl();
+		public abstract RET visitTrait();
+		
+		public abstract RET visitExternCrate();
+		public abstract RET visitUse();
+		
+		public abstract RET visitEnumVariant();
+		
+		public abstract RET visitTypeAlias();
 		
 	}
 	

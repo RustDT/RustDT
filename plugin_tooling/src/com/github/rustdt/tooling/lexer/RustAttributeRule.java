@@ -24,7 +24,7 @@ public class RustAttributeRule extends LexingUtils implements IPredicateLexingRu
 		
 		while(!reader.tryConsume("]")) {
 			
-			if(reader.lookaheadIsEOF()) {
+			if(reader.lookaheadIsEOS()) {
 				return true;
 			}
 			

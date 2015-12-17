@@ -50,7 +50,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		prefixLength = 0;
 
 		while(true) {
-			String line = LexingUtils.consumeUntilDelimiter(source, '\n', '\\');
+			String line = LexingUtils.consumeUntilDelimiterOrEOS(source, '\n', '\\');
 			
 			if(line == null || line.isEmpty()) {
 				return new LangCompletionResult(proposals);
@@ -73,14 +73,14 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	protected void parsePrefix(String line) throws CommonException {
 		StringParseSource lineLexer = new StringParseSource(line);
 		lineLexer.tryConsume("PREFIX ");
-		int prefixStart = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
-		int prefixEnd = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
+		int prefixStart = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
+		int prefixEnd = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
 		
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	protected String consumeCommaDelimitedString(StringParseSource lineLexer) {
-		return LexingUtils.consumeUntilDelimiter(lineLexer, ',');
+	protected String consumeCommaDelimitedText(StringParseSource lineLexer) {
+		return LexingUtils.consumeUntilDelimiterOrEOS(lineLexer, ',');
 	}
 	
 	@SuppressWarnings("unused")
@@ -89,16 +89,16 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		lineLexer.tryConsume("MATCH ");
 		
-		String baseName = consumeSemicolonDelimitedString(lineLexer);
-		String rawLabel = consumeSemicolonDelimitedString(lineLexer);
+		String baseName = consumeSemicolonDelimitedText(lineLexer);
+		String rawLabel = consumeSemicolonDelimitedText(lineLexer);
 		
-		consumeSemicolonDelimitedString(lineLexer); // Line no
-		consumeSemicolonDelimitedString(lineLexer); // Char no
+		consumeSemicolonDelimitedText(lineLexer); // Line no
+		consumeSemicolonDelimitedText(lineLexer); // Char no
 		
-		String rawModuleName = consumeSemicolonDelimitedString(lineLexer);
-		String rawKind = consumeSemicolonDelimitedString(lineLexer);
+		String rawModuleName = consumeSemicolonDelimitedText(lineLexer);
+		String rawKind = consumeSemicolonDelimitedText(lineLexer);
 		
-		String description = consumeSemicolonDelimitedString(lineLexer);
+		String description = consumeSemicolonDelimitedText(lineLexer);
 		
 		// Commented out - This wasn't really correct parsing
 //		while(source.hasCharAhead() && !source.lookaheadMatches("MATCH ")) {
@@ -135,8 +135,8 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			fullReplaceString, subElements);
 	}
 	
-	protected String consumeSemicolonDelimitedString(StringParseSource lineLexer) {
-		return LexingUtils.consumeUntilDelimiter(lineLexer, ';');
+	protected String consumeSemicolonDelimitedText(StringParseSource lineLexer) {
+		return LexingUtils.consumeUntilDelimiterOrEOS(lineLexer, ';');
 	}
 	
 	protected CompletionProposalKind parseKind(String rawKind) throws CommonException {
@@ -170,7 +170,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		
 		ArrayList2<String> args = new ArrayList2<>();
 		
-		while(!lexer.lookaheadIsEOF()){
+		while(lexer.hasCharAhead()){
 			if(lexer.tryConsume(")")) {
 				break;
 			}
@@ -236,10 +236,10 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		}
 		
 		@SuppressWarnings("unused")
-		String elementName = consumeCommaDelimitedString(lineLexer);
-		int line_1 = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
-		int column_0 = parsePositiveInt(consumeCommaDelimitedString(lineLexer));
-		Location loc = parseLocation(consumeCommaDelimitedString(lineLexer));
+		String elementName = consumeCommaDelimitedText(lineLexer);
+		int line_1 = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
+		int column_0 = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
+		Location loc = parseLocation(consumeCommaDelimitedText(lineLexer));
 		
 		SourceLineColumnRange position = new SourceLineColumnRange(line_1, column_0 + 1);
 		return new FindDefinitionResult(loc, position, null);
