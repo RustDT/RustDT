@@ -3,6 +3,7 @@
 #### Requirements: 
  * Eclipse 4.5 (Mars) or later.
  * Java VM version 8 or later.
+ * The [Racer](https://github.com/phildawes/racer) tool. 
 
 #### Instructions:
  1. Use your existing Eclipse, or download a new Eclipse package from http://www.eclipse.org/downloads/. 
