@@ -36,6 +36,6 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 			.getProjectPreference();
 	
 	public static final IProjectPreference<String> RACER_PATH = new StringPreference(LangCore.PLUGIN_ID, 
-		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
+		"racer_path", "racer", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
 	
 }
