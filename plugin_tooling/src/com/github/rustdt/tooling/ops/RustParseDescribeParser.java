@@ -16,9 +16,11 @@ import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import melnorme.lang.tooling.EProtection;
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
+import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.ops.AbstractStructureParser;
 import melnorme.lang.tooling.parser.TextBlocksReader;
+import melnorme.lang.tooling.parser.TextBlocksReader.BlockVisitorX;
 import melnorme.lang.tooling.parser.TextBlocksReader.TextBlocksSubReader;
 import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.lang.tooling.structure.StructureElement;
@@ -52,39 +54,65 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 		
 		reader.consumeText();
 		
-		ArrayList2<ParserError> parserProblems = new ArrayList2<>();
-		ArrayList2<StructureElement> children = parseStructureElementsBlock(reader);
-		
-		return new SourceFileStructure(location, children, parserProblems);
+		try(TextBlocksSubReader subReader = reader.enterBlock()) {
+			return parseSourceFileStructure_Contents(subReader);
+		}
 	}
 	
-	protected void consumeMessage(TextBlocksSubReader subReader) {
-		assertFail("TODO");
+	protected SourceFileStructure parseSourceFileStructure_Contents(TextBlocksSubReader reader)
+			throws CommonException {
+		ArrayList2<ParserError> parserProblems;
+		
+		reader.expectText("MESSAGES");
+		try(TextBlocksSubReader subReader = reader.enterBlock()) {
+			parserProblems = parseSubElements(subReader, this::parseMessage);
+		}
+		
+		ArrayList2<StructureElement> structureChildren = parseStructureElements(reader);
+		
+		return new SourceFileStructure(location, structureChildren, parserProblems);
 	}
 	
 	/* -----------------  ----------------- */
 	
-	protected ArrayList2<StructureElement> parseStructureElementsBlock(TextBlocksReader reader) 
-			throws CommonException {
-		
-		try(TextBlocksSubReader subReader = reader.enterBlock()) {
-			return parseStructureElements(subReader);
-		}
-	}
-	
 	protected ArrayList2<StructureElement> parseStructureElements(TextBlocksSubReader subReader) 
 			throws CommonException {
-		ArrayList2<StructureElement> children = new ArrayList2<>();
+		return parseSubElements(subReader, this::parseStructureElement);
+	}
+	
+	protected <RET> ArrayList2<RET> parseSubElements(TextBlocksSubReader subReader, 
+			BlockVisitorX<RET, CommonException> elementParser) throws CommonException {
+		ArrayList2<RET> children = new ArrayList2<>();
 		
 		while(!subReader.aheadIsEnd()) {
-			StructureElement element = consumeStructureElement(subReader);
+			RET element = elementParser.consumeChildren(subReader);
 			children.add(element);
 		}
 		
 		return children;
 	}
 	
-	protected StructureElement consumeStructureElement(TextBlocksSubReader reader) throws CommonException {
+	public ParserError parseMessage(TextBlocksSubReader topReader) throws CommonException {
+		try(TextBlocksSubReader reader = topReader.enterBlock()) {
+			String type = reader.consumeText();
+			ParserErrorTypes errorType = parseErrorType(type);
+			SourceRange sourceRange  = parseSourceRange(reader);
+			String messageText = reader.consumeText();
+			return new ParserError(errorType, sourceRange, messageText, null);
+		}
+	}
+	
+	public ParserErrorTypes parseErrorType(String type) throws CommonException {
+		ParserErrorTypes errorType = null;
+		if(type.equalsIgnoreCase("ERROR")) {
+			errorType = ParserErrorTypes.GENERIC_ERROR;
+		} else {
+			reportError("Unknown message type {0}", errorType);
+		}
+		return errorType;
+	}
+	
+	protected StructureElement parseStructureElement(TextBlocksSubReader reader) throws CommonException {
 		String item = reader.consumeText();
 		try(TextBlocksSubReader contentsReader = reader.enterBlock()) {
 			StructureElement element = consumeStructureElement(contentsReader, item);

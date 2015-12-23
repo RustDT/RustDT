@@ -16,6 +16,8 @@ import org.junit.Test;
 
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
+import melnorme.lang.tooling.ast.ParserErrorTypes;
+import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.ops.AbstractStructureParser_Test;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
@@ -52,19 +54,23 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		testParseStructure(describeOutput, parserProblems, expectedElements);
 	}
 	
+	protected void testParseDescribe(String describeOutputContent, StructureElement... expectedElements)
+			throws CommonException {
+		
+		testParseDescribe("MESSAGES {} " + describeOutputContent, list(), expectedElements);
+	}
+	
 	@Test
 	public void test() throws Exception { test$(); }
 	public void test$() throws Exception {
 		
 		testParseDescribe("", 
-			list(), 
 			array());
 		
 		
 		testParseDescribe(
 			"Function" + "{ func{ @0 @14 } { @0 @5 } {} {} }",
 			
-			list(), 
 			array(
 				elem("func", srAt(0, 14), srAt(0, 5), StructureElementKind.FUNCTION, null, null, list())
 			)
@@ -86,7 +92,6 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 			elemString("Mod", "mod", "{}", "{}") +
 			elemString("Use", "use", "{}", "{}"),
 			
-			list(), 
 			array(
 				elem("var"      , StructureElementKind.VAR, null, null, list()),
 				elem("function" , StructureElementKind.FUNCTION, null, null, list()),
@@ -104,7 +109,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		
 		// Test invalid element kind
 		verifyThrows(() -> {
-			testParseDescribe(elemString("XXX", "func", "{}", "{}"), list(), array());
+			testParseDescribe(elemString("XXX", "func", "{}", "{}"), array());
 		}, null, "Unknown element kind `XXX`");
 		
 		/* ----------------- test SourceRange ----------------- */
@@ -115,7 +120,6 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 			"Var { var3 { 0:0 0:0  } { 0:3 0:8 } {} {} }" +
 			"Var { var4 { 1:0 1:10 } { 1:5 3:5 } {} {} }",
 			
-			list(), 
 			array(
 				elem("var1", srAt(0, 10), srAt(1,14), VAR, null, null, list()),
 				elem("var2", srAt(5, 5) , srAt(0, 0), VAR, null, null, list()),
@@ -124,7 +128,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 			)
 		);
 		verifyThrows(() -> {
-			testParseDescribe("Var { var1 {  } { } {} {} }", list(), array());
+			testParseDescribe("Var { var1 {  } { } {} {} }", array());
 		}, null, "Missing source range");
 		
 		/* ----------------- test attrib ----------------- */
@@ -132,16 +136,15 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		testParseDescribe(
 			elemString("Function", "func", "{pub}", "{}"),
 			
-			list(), 
 			array(
 				elem("func", StructureElementKind.FUNCTION, att(), null, list())
 			)
 		);
 		verifyThrows(() -> {
-			testParseDescribe(elemString("Function", "func", "{xx zzz}", "{}"), list(), array());
+			testParseDescribe(elemString("Function", "func", "{xx zzz}", "{}"), array());
 		}, null, "Unknown protection `xx`");
 		verifyThrows(() -> {
-			testParseDescribe(elemString("Function", "func", "{pub zzz}", "{}"), list(), array());
+			testParseDescribe(elemString("Function", "func", "{pub zzz}", "{}"), array());
 		}, null, "Unknown attribute");
 		
 		
@@ -149,13 +152,12 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		testParseDescribe(
 			elemString("Function", "func", "{}", "\"(u32) -> &str\""),
 			
-			list(), 
 			array(
 				elem("func", StructureElementKind.FUNCTION, null, "(u32) -> &str", list())
 			)
 		);
 		verifyThrows(() -> {
-			testParseDescribe(elemString("Function", "func", "{}", "{blah}"), list(), array());
+			testParseDescribe(elemString("Function", "func", "{}", "{blah}"), array());
 		}, null, "Unknown element type");
 		
 		
@@ -170,7 +172,6 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 				elemString("Function", "function", "{}", "{}")
 			),
 			
-			list(), 
 			array(
 				elem("struct", StructureElementKind.STRUCT, null, null, list(
 					elem("var1", StructureElementKind.VAR, null, null, list()),
@@ -182,6 +183,53 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 			)
 		);
 		
+	}
+	
+	@Test
+	public void test_Messages() throws Exception { test_Messages$(); }
+	public void test_Messages$() throws Exception {
+		testParseDescribe(
+			"MESSAGES {  }",
+			
+			list(), 
+			array()
+		);
+		
+		testParseDescribe(
+			"MESSAGES { "
+				+ "{ ERROR { @1 @12} "+quoteString("BLAH BLAH") + "}"
+			+" }",
+			
+			list(msg(srAt(1, 12), "BLAH BLAH")), 
+			array()
+		);
+		
+		verifyThrows(() -> {
+			testParseDescribe("MESSAGES { "
+					+ "{ ERROR_XXX { @1 @12} "+quoteString("BLAH BLAH") + "}"
+					+" }", list(), array());
+		}, null, "Unknown message type");
+		
+		testParseDescribe(
+			"MESSAGES { "
+				+ "{ ERROR { @1 @12} "+quoteString("BLAH BLAH") + "}"
+				+ "{ ERROR { 0:0 1:0 } "+quoteString("This is a warning.") + "}"
+			+" }" +
+			"Function" + "{ func{ @0 @14 } { @0 @5 } {} {} }",
+			
+			list(
+				msg(srAt(1, 12), "BLAH BLAH"),
+				msg(srAt(1, pos(1, 10)), "This is a warning.")
+			), 
+			array(
+				elem("func", srAt(0, 14), srAt(0, 5), StructureElementKind.FUNCTION, null, null, list())
+			)
+		);
+		
+	}
+	
+	protected ParserError msg(SourceRange sourceRange, String errorMessage) {
+		return new ParserError(ParserErrorTypes.GENERIC_ERROR, sourceRange, errorMessage, null);
 	}
 	
 }
