@@ -23,6 +23,8 @@ import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 import melnorme.lang.ide.ui.ContentAssistPreferences;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
+import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
+import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractCompositeWidget;
 import melnorme.util.swt.components.FieldComponent;
@@ -30,7 +32,6 @@ import melnorme.util.swt.components.IDisableableWidget;
 import melnorme.util.swt.components.fields.ButtonTextField;
 import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
-import melnorme.util.swt.components.fields.FileTextField;
 import melnorme.utilbox.collections.Indexable;
 
 public class RustToolsConfigBlock extends LangSDKConfigBlock {
@@ -80,10 +81,6 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
 	public class RacerLocationGroup extends AbstractCompositeWidget {
 		
-		public final ButtonTextField racerLocation = new FileTextField("Executable:");
-		public final FieldComponent<Boolean> showErrorsDialog = new CheckBoxField(
-			"Show error dialog if " + "racer" + " failures occur during Content Assist");
-		
 		@Override
 		protected Composite doCreateTopLevelControl(Composite parent) {
 			return SWTFactoryUtil.createGroup(parent, "Racer installation: ");
@@ -96,13 +93,31 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		
 		@Override
 		public int getPreferredLayoutColumns() {
-			return 3;
+			return 4;
 		}
 		
 		@Override
 		protected Indexable<IDisableableWidget> getSubWidgets() {
 			return list(racerLocation, showErrorsDialog);
 		}
+		
+		public final ButtonTextField racerLocation = new DownloadToolTextField("Executable:", "Download...") {
+			@Override
+			public BasicUIOperation getDownloadButtonHandler() {
+				return new Start_CargoInstallJob_Operation("Download Racer", this,
+					RustSDKPreferences.RACER_CargoGitSource, RustSDKPreferences.RACER_CargoGitTag,
+					"racer") {
+					
+					@Override
+					protected String getSDKPath() {
+						return RustToolsConfigBlock.this.getLocationField().getFieldValue();
+					};
+				};
+			};
+		};
+		
+		public final FieldComponent<Boolean> showErrorsDialog = new CheckBoxField(
+			"Show error dialog if " + "racer" + " failures occur during Content Assist");
 		
 	}
 	

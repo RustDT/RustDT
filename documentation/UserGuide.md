@@ -8,8 +8,8 @@ what overall functionalities are available.
 A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`.
 
 Additionally, for functionality such as code completion, you will need:
- * The [Racer](https://github.com/phildawes/racer) tool. The Racer path can be an absolute path, or just the executable name, in which case, the executable will be searched in the PATH environment variable.
  * The Rust sources package. This package is not included in the Rust intallation, so it must be obtained separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
+ * The [Racer](https://github.com/phildawes/racer) tool. It is recommended to use the "Download" button in the preference page to have RustDT automatically download Racer (this will use `cargo install` - as such the Rust installation must already be configured).
 
 ### Eclipse basics
 
@@ -41,7 +41,7 @@ Open Definition is also available in the editor context menu and by means of edi
 Content Assist and Open Definition are provided by means of the [Racer](https://github.com/phildawes/racer) tool (see the configuration section above).
 
 > If there is a problem with these operations, and you need a diagnostics log, 
-the output of Racer can be seen in the `RustDT Racer log` console page in the Eclipse Console view.
+the output of Racer can be seen in the `Rust tools log` console page in the Eclipse Console view.
 
 ### Launching:
 To run a Rust project that builds to an executable, you will need to create a launch configuration. Locate the main menu, open 'Run' / 'Run Configurations...'. Then double click 'Rust Application" to create a new Rust launch, and configure it accordingly. You can run these launches from the 'Run Configurations...', or for quicker access, from the Launch button in the Eclipse toolbar.

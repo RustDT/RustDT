@@ -48,6 +48,6 @@ public final class LangUIPlugin_Actual {
 	public static final String TOOLS_CONSOLE_NAME = LangCore_Actual.LANGUAGE_NAME + " build";
 	
 	public static final String DAEMON_TOOL_Name = "Racer";
-	public static final String DAEMON_TOOL_ConsoleName = "RustDT Racer log";
+	public static final String DAEMON_TOOL_ConsoleName = "Rust tools log";
 	
 }

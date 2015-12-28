@@ -36,6 +36,9 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 			.getProjectPreference();
 	
 	public static final IProjectPreference<String> RACER_PATH = new StringPreference(LangCore.PLUGIN_ID, 
-		"racer_path", "racer", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
+		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
+	
+	public String RACER_CargoGitSource = "https://github.com/phildawes/racer.git";
+	public String RACER_CargoGitTag = "v1.1.0";
 	
 }
