@@ -83,7 +83,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		
 		@Override
 		protected Composite doCreateTopLevelControl(Composite parent) {
-			return SWTFactoryUtil.createGroup(parent, "Racer installation: ");
+			return SWTFactoryUtil.createGroup(parent, "Racer: ");
 		}
 		
 		@Override
