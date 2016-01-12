@@ -17,12 +17,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 
-import com.github.rustdt.tooling.cargo.CargoManifestParser;
-
-import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.BundleInfo;
+import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
-import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.LangImages;
 import melnorme.lang.ide.ui.navigator.NavigatorElementsSwitcher;
 import melnorme.lang.ide.ui.views.LangNavigatorLabelProvider;
@@ -30,32 +27,22 @@ import melnorme.lang.ide.ui.views.LangNavigatorLabelProvider;
 public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider implements IStyledLabelProvider {
 	
 	public static interface RustNavigatorLabelElementsSwitcher<RET> extends NavigatorElementsSwitcher<RET> {
+		
 		@Override
-		default RET visitOther(Object element) {
-			if(element instanceof IFile) {
-				IFile file = (IFile) element;
-				
-				if(file.getProjectRelativePath().equals(ResourceUtils.epath(CargoManifestParser.MANIFEST_FILENAME))) {
-					return visitManifestFile(file);
-				}
+		default RET visitFolder(IFolder folder) {
+			if(folder.getProjectRelativePath().equals(new Path("src"))) {
+				return visitSourceFolder(folder);
 			}
-			
-			if(element instanceof IFolder) {
-				IFolder folder = (IFolder) element;
-				if(folder.getProjectRelativePath().equals(new Path("src"))) {
-					return visitSourceFolder(folder);
-				}
-				if(folder.getProjectRelativePath().equals(new Path("tests"))) {
-					return visitTestsSourceFolder(folder);
-				}
-				if(folder.getProjectRelativePath().equals(new Path("target"))) {
-					return visitBuildOutpuFolder(folder);
-				}
+			if(folder.getProjectRelativePath().equals(new Path("tests"))) {
+				return visitTestsSourceFolder(folder);
 			}
-			
-			return null;
+			if(folder.getProjectRelativePath().equals(new Path("target"))) {
+				return visitBuildOutpuFolder(folder);
+			}
+			return visitOther2(folder);
 		}
 		
+		@Override
 		public abstract RET visitManifestFile(IFile element);
 		
 		public abstract RET visitSourceFolder(IFolder element);

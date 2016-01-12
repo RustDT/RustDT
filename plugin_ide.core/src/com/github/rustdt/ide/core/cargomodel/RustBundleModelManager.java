@@ -15,11 +15,10 @@ import static com.github.rustdt.tooling.cargo.CargoManifestParser.MANIFEST_FILEN
 import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
-import com.github.rustdt.tooling.cargo.CargoManifestParser;
 import com.github.rustdt.tooling.cargo.CargoManifest;
+import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
@@ -50,12 +49,7 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleModel> 
 	
 	@Override
 	protected BundleManifestResourceListener init_createResourceListener() {
-		return new ManagerResourceListener(getDefaultBundleManifestPath());
-	}
-	
-	@Override
-	protected Path getDefaultBundleManifestPath() {
-		return ResourceUtils.epath(MANIFEST_FILENAME);
+		return new ManagerResourceListener();
 	}
 	
 	@Override
