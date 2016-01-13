@@ -12,6 +12,6 @@ package com.github.rustdt.ide.ui;
 
 import melnorme.lang.ide.ui.tools.console.LangOperationsConsoleUIHandler;
 
-public class RustOperationsConsoleListener extends LangOperationsConsoleUIHandler {
+public class RustOperationsConsoleUIHandler extends LangOperationsConsoleUIHandler {
 	
 }

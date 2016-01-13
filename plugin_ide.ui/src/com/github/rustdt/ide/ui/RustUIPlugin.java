@@ -7,8 +7,8 @@ import org.osgi.framework.BundleContext;
 public class RustUIPlugin extends LangUIPlugin {
 	
 	@Override
-	protected RustOperationsConsoleListener createOperationsConsoleListener() {
-		return new RustOperationsConsoleListener();
+	protected RustOperationsConsoleUIHandler createOperationsConsoleListener() {
+		return new RustOperationsConsoleUIHandler();
 	}
 	
 	@Override
