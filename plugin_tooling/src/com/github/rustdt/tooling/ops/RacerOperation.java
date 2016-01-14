@@ -14,7 +14,7 @@ import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.StatusLevel;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
-import melnorme.lang.tooling.ops.IOperationHelper;
+import melnorme.lang.tooling.ops.IOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
@@ -30,7 +30,7 @@ public abstract class RacerOperation extends AbstractToolOperation {
 	
 	protected String input = "";
 	
-	public RacerOperation(IOperationHelper opHelper, String racerPath, String sdkSrcPath, 
+	public RacerOperation(IOperationService opHelper, String racerPath, String sdkSrcPath, 
 			ArrayList2<String> arguments) {
 		super(opHelper);
 		this.racerPath = racerPath;
