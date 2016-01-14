@@ -41,7 +41,7 @@ Open Definition is also available in the editor context menu and by means of edi
 Content Assist and Open Definition are provided by means of the [Racer](https://github.com/phildawes/racer) tool (see the configuration section above).
 
 > If there is a problem with these operations, and you need a diagnostics log, 
-the output of Racer can be seen in the `Rust tools log` console page in the Eclipse Console view.
+the output of Racer can be seen in the `Rust Tools Log` console page in the Eclipse Console view.
 
 ### Launching:
 To run a Rust project that builds to an executable, you will need to create a launch configuration. Locate the main menu, open 'Run' / 'Run Configurations...'. Then double click 'Rust Application" to create a new Rust launch, and configure it accordingly. You can run these launches from the 'Run Configurations...', or for quicker access, from the Launch button in the Eclipse toolbar.
