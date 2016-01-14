@@ -22,7 +22,7 @@ import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.OperationInfo;
+import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperationConsoleHandler;
 import melnorme.lang.ide.core.operations.ToolMarkersUtil;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
@@ -118,8 +118,8 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		public CommonBuildTargetOperation getBuildOperation(ValidatedBuildTarget validatedBuildTarget,
-				OperationInfo opInfo, Path buildToolPath) throws CommonException, CoreException {
-			return new RustBuildTargetOperation(validatedBuildTarget, opInfo, buildToolPath);
+				IOperationConsoleHandler opHandler, Path buildToolPath) throws CommonException, CoreException {
+			return new RustBuildTargetOperation(validatedBuildTarget, opHandler, buildToolPath);
 		}
 		
 	}
@@ -247,9 +247,9 @@ public class RustBuildManager extends BuildManager {
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(ValidatedBuildTarget validatedBuildTarget, OperationInfo parentOpInfo, 
+		public RustBuildTargetOperation(ValidatedBuildTarget validatedBuildTarget, IOperationConsoleHandler opHandler, 
 				Path buildToolPath) throws CommonException, CoreException {
-			super(validatedBuildTarget.buildMgr, validatedBuildTarget, parentOpInfo, buildToolPath);
+			super(validatedBuildTarget.buildMgr, validatedBuildTarget, opHandler, buildToolPath);
 		}
 		
 		@Override
