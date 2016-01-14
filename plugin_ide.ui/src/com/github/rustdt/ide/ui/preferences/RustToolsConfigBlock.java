@@ -104,7 +104,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public final ButtonTextField racerLocation = new DownloadToolTextField("Executable:", "Download...") {
 			@Override
 			public BasicUIOperation getDownloadButtonHandler() {
-				return new Start_CargoInstallJob_Operation("Download Racer", this,
+				return new Start_CargoInstallJob_Operation("Racer", this,
 					RustSDKPreferences.RACER_CargoGitSource, RustSDKPreferences.RACER_CargoGitTag,
 					"racer") {
 					

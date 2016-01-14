@@ -27,10 +27,13 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 	
 	protected final String gitTag;
 
-	public Start_CargoInstallJob_Operation(String operationName, 
+	public Start_CargoInstallJob_Operation(String crateName, 
 			DownloadToolTextField downloadToolTextField,
 			String gitSource, String gitTag, String exeName) {
-		super(operationName, downloadToolTextField, gitSource, exeName);
+		super(
+			"Download " + crateName, 
+			"Downloading " + crateName + "...", 
+			downloadToolTextField, gitSource, exeName);
 		this.gitTag = assertNotNull(gitTag);
 	}
 	
