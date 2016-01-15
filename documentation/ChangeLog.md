@@ -1,7 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Added "match" code snippet.
+ * Added "match", "apl", and "main" code snippets.
  * Added Download operation to Racer preferences field (uses `cargo install`). FIXME: Guide, Source 
  * Fixed regression: Console view always activates when a build is invoked.
 
