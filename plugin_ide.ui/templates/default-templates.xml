@@ -8,4 +8,12 @@
 }</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="pl" description="println variable" enabled="true" name="pl">println!("{}", ${var});</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="pld" description="println debug variable" enabled="true" name="pld">println!("{:?}", ${var});</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="match" description="match expression" enabled="true" name="match">match ${value} {&#13;
+	${opt} =&gt; ${alt},&#13;
+	_ =&gt; ${altDefault},&#13;
+}</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="matchb" description="match expression with blocks" enabled="true" name="matchb">match ${value} {&#13;
+	${opt} =&gt; { ${alt} }&#13;
+	_ =&gt; { ${altDefault} }&#13;
+}</template>
 </templates>
