@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.CoreUtil.array;
 
 import java.nio.file.Path;
@@ -34,7 +33,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 			"Download " + crateName, 
 			"Downloading " + crateName + "...", 
 			downloadToolTextField, gitSource, exeName);
-		this.gitTag = assertNotNull(gitTag);
+		this.gitTag = gitTag;
 	}
 	
 	protected String getSDKPath() {

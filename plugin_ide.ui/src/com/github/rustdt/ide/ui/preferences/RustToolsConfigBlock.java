@@ -25,6 +25,7 @@ import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
 import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
+import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractCompositeWidget;
 import melnorme.util.swt.components.FieldComponent;
@@ -38,17 +39,16 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
 	protected final ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
 	protected final RacerLocationGroup racerGroup = new RacerLocationGroup(); 
-	protected final ButtonTextField racerLocation = racerGroup.racerLocation;
+	protected final RainicornLocationGroup rainicornGroup = new RainicornLocationGroup();
 	
 	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
 		super(prefContext);
 		
-		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2);
-		bindToPreference(racerLocation, RustSDKPreferences.RACER_PATH);
-		bindToPreference(racerGroup.showErrorsDialog, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
-		
 		validation.addFieldValidation(true, sdkSrcLocation, new RustSDKSrcLocationValidator());
-		validation.addFieldValidation(true, racerLocation, new RustRacerLocationValidator());
+		validation.addValidatableField(true, racerGroup.getStatusField());
+		validation.addValidatableField(true, rainicornGroup.getStatusField());
+		
+		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2);
 	}
 	
 	@Override
@@ -71,6 +71,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		super.createContents(topControl);
 		
 		racerGroup.createComponent(topControl, gdFillDefaults().grab(true, false).create());
+		rainicornGroup.createComponent(topControl, gdFillDefaults().grab(true, false).create());
 	}
 	
 	@Override
@@ -79,11 +80,28 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		racerGroup.setEnabled(enabled);
 	}
 	
-	public class RacerLocationGroup extends AbstractCompositeWidget {
+	public abstract class AbstractToolLocationGroup extends AbstractCompositeWidget {
+		
+		public final ButtonTextField toolLocation = new DownloadToolTextField("Executable:", "Download...") {
+			@Override
+			public BasicUIOperation getDownloadButtonHandler() {
+				return do_getDownloadButtonHandler(this);
+			}
+		};
+		
+		public final FieldComponent<Boolean> showErrorsDialogOption;
+		
+		protected final String toolName;
+		
+		public AbstractToolLocationGroup(String toolName) {
+			this.toolName = toolName;
+			this.showErrorsDialogOption = new CheckBoxField(
+				"Show error dialog if " + toolName + " failures occur.");
+		}
 		
 		@Override
 		protected Composite doCreateTopLevelControl(Composite parent) {
-			return SWTFactoryUtil.createGroup(parent, "Racer: ");
+			return SWTFactoryUtil.createGroup(parent, toolName + ": ");
 		}
 		
 		@Override
@@ -98,26 +116,67 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		
 		@Override
 		protected Indexable<IDisableableWidget> getSubWidgets() {
-			return list(racerLocation, showErrorsDialog);
+			return list(toolLocation, showErrorsDialogOption);
 		}
 		
-		public final ButtonTextField racerLocation = new DownloadToolTextField("Executable:", "Download...") {
-			@Override
-			public BasicUIOperation getDownloadButtonHandler() {
-				return new Start_CargoInstallJob_Operation("Racer", this,
-					RustSDKPreferences.RACER_CargoGitSource, RustSDKPreferences.RACER_CargoGitTag,
-					"racer") {
-					
-					@Override
-					protected String getSDKPath() {
-						return RustToolsConfigBlock.this.getLocationField().getFieldValue();
-					};
+		protected abstract BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField);
+		
+	}
+	
+	public class RacerLocationGroup extends AbstractToolLocationGroup {
+		
+		public RacerLocationGroup() {
+			super("Racer");
+			
+			validation.addFieldValidation(true, this.toolLocation, new RustRacerLocationValidator());
+			
+			bindToPreference(this.toolLocation, RustSDKPreferences.RACER_PATH);
+			bindToPreference(this.showErrorsDialogOption, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
+		}
+		
+		@Override
+		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
+			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
+				RustSDKPreferences.RACER_CargoGitSource, RustSDKPreferences.RACER_CargoGitTag,
+				"racer") {
+				
+				@Override
+				protected String getSDKPath() {
+					return RustToolsConfigBlock.this.getLocationField().getFieldValue();
 				};
 			};
 		};
 		
-		public final FieldComponent<Boolean> showErrorsDialog = new CheckBoxField(
-			"Show error dialog if " + "racer" + " failures occur during Content Assist");
+	}
+	
+	public class RainicornLocationGroup extends AbstractToolLocationGroup {
+		
+		public RainicornLocationGroup() {
+			super("parse-describe");
+			
+			validation.addFieldValidation(true, this.toolLocation, new LocationOrSinglePathValidator(
+					"rust-parse-describe"));
+			
+			bindToPreference(this.toolLocation, RustSDKPreferences.RAINICORN_PATH);
+		}
+		
+		@Override
+		protected Indexable<IDisableableWidget> getSubWidgets() {
+			return list(toolLocation);
+		}
+		
+		@Override
+		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
+			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
+				RustSDKPreferences.RAINICORN_CargoGitSource, RustSDKPreferences.RAINICORN_CargoGitTag,
+				"rust_parse_describe") {
+				
+				@Override
+				protected String getSDKPath() {
+					return RustToolsConfigBlock.this.getLocationField().getFieldValue();
+				};
+			};
+		};
 		
 	}
 	

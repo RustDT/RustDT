@@ -47,8 +47,8 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 	}
 	
 	@Override
-	public SourceFileStructure parse(String outputParseSource) throws CommonException {
-		TextBlocksReader reader = new TextBlocksReader(new StringParseSource(outputParseSource));
+	public SourceFileStructure parse(String describeOutput) throws CommonException {
+		TextBlocksReader reader = new TextBlocksReader(new StringParseSource(describeOutput));
 		
 		reader.expectText("RUST_PARSE_DESCRIBE");
 		

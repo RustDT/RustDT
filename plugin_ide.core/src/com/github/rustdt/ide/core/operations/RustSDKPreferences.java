@@ -41,4 +41,9 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	public String RACER_CargoGitSource = "https://github.com/phildawes/racer.git";
 	public String RACER_CargoGitTag = "v1.1.0";
 	
+	public static final IProjectPreference<String> RAINICORN_PATH = new StringPreference(LangCore.PLUGIN_ID, 
+		"rainicorn_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
+	public String RAINICORN_CargoGitSource = "https://github.com/RustDT/rust_parse_describe";
+	public String RAINICORN_CargoGitTag = null;
+	
 }
