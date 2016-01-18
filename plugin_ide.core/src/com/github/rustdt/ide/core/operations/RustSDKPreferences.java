@@ -10,13 +10,19 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
+import java.nio.file.Path;
+
 import org.eclipse.core.resources.IProject;
+
+import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
+import melnorme.lang.ide.core.utils.prefs.DerivedValuePreference;
 import melnorme.lang.ide.core.utils.prefs.IProjectPreference;
 import melnorme.lang.ide.core.utils.prefs.StringPreference;
 import melnorme.lang.tooling.data.ValidationException;
+import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.lang.tooling.ops.util.LocationValidator;
 import melnorme.utilbox.misc.Location;
 
@@ -35,14 +41,17 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 		"sdk_src_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS)
 			.getProjectPreference();
 	
-	public static final IProjectPreference<String> RACER_PATH = new StringPreference(LangCore.PLUGIN_ID, 
-		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
+	public static final DerivedValuePreference<Path> RACER_PATH = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
+		new RustRacerLocationValidator());
 	
 	public String RACER_CargoGitSource = "https://github.com/phildawes/racer.git";
 	public String RACER_CargoGitTag = "v1.1.0";
 	
-	public static final IProjectPreference<String> RAINICORN_PATH = new StringPreference(LangCore.PLUGIN_ID, 
-		"rainicorn_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS).getProjectPreference();
+	public static final DerivedValuePreference<Path> RAINICORN_PATH2 = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+		"rainicorn_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
+		new LocationOrSinglePathValidator("rust-parse-describe:"));
+	
 	public String RAINICORN_CargoGitSource = "https://github.com/RustDT/rust_parse_describe";
 	public String RAINICORN_CargoGitTag = null;
 	

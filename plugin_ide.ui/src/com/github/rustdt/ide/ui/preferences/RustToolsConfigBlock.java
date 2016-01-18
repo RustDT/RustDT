@@ -16,7 +16,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
@@ -25,7 +24,6 @@ import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
 import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
-import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.util.swt.SWTFactoryUtil;
 import melnorme.util.swt.components.AbstractCompositeWidget;
 import melnorme.util.swt.components.FieldComponent;
@@ -128,9 +126,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RacerLocationGroup() {
 			super("Racer");
 			
-			validation.addFieldValidation(true, this.toolLocation, new RustRacerLocationValidator());
-			
-			bindToPreference(this.toolLocation, RustSDKPreferences.RACER_PATH);
+			bindToDerivedPreference(this.toolLocation, RustSDKPreferences.RACER_PATH);
 			bindToPreference(this.showErrorsDialogOption, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
 		}
 		
@@ -154,10 +150,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RainicornLocationGroup() {
 			super("parse-describe");
 			
-			validation.addFieldValidation(true, this.toolLocation, new LocationOrSinglePathValidator(
-					"rust-parse-describe"));
-			
-			bindToPreference(this.toolLocation, RustSDKPreferences.RAINICORN_PATH);
+			bindToDerivedPreference(this.toolLocation, RustSDKPreferences.RAINICORN_PATH2);
 		}
 		
 		@Override

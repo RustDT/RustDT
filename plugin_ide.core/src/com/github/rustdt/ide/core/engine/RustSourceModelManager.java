@@ -25,7 +25,6 @@ import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.misc.PathUtil;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
@@ -47,8 +46,7 @@ public class RustSourceModelManager extends SourceModelManager {
 				Location location = structureInfo.getLocation();
 				IProject project = location == null ? null : ResourceUtils.getProject(location);
 				try {
-					/* FIXME: derived value pref */
-					Path path = PathUtil.createPath(RustSDKPreferences.RAINICORN_PATH.getEffectiveValue(project));
+					Path path = RustSDKPreferences.RAINICORN_PATH2.getDerivedValue(project);
 					
 					ProcessBuilder pb = toolManager.createToolProcessBuilder(project, path);
 					describeResult = toolManager.runEngineTool(pb, source, cm);
