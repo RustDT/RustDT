@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import java.text.MessageFormat;
 
-import melnorme.lang.tooling.data.StatusLevel;
+import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.util.LocationValidator;
 import melnorme.utilbox.misc.Location;
@@ -28,7 +28,7 @@ public class RustSDKSrcLocationValidator extends LocationValidator {
 	protected Location getValidatedField_rest(Location location) throws ValidationException {
 		
 		if(!location.resolve_fromValid("libcore").toFile().exists()) {
-			throw createException(StatusLevel.WARNING, 
+			throw createException(Severity.WARNING, 
 					MessageFormat.format("Path `{0}` does not contain {1}' directory.", location, "'libcore'"));
 		}
 		

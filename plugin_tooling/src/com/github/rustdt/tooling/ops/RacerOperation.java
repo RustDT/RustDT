@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
-import melnorme.lang.tooling.data.StatusLevel;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IOperationService;
@@ -80,12 +80,12 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
 			@Override
 			protected void handleParseError(CommonException ce) throws CommonException {
-				getOperationHelper().logStatus(ce.toStatusException(StatusLevel.WARNING));
+				getOperationHelper().logStatus(ce.toStatusException(Severity.WARNING));
 			}
 			
 			@Override
 			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
-				getOperationHelper().logStatus(new StatusException(StatusLevel.WARNING,
+				getOperationHelper().logStatus(new StatusException(Severity.WARNING,
 					"Unknown Match Kind: " + matchKindString));
 			}
 		};
