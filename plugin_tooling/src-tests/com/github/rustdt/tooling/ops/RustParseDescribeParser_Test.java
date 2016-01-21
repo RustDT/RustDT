@@ -18,6 +18,7 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
+import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.ops.AbstractStructureParser_Test;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
@@ -229,7 +230,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 	}
 	
 	protected ParserError msg(SourceRange sourceRange, String errorMessage) {
-		return new ParserError(ParserErrorTypes.GENERIC_ERROR, sourceRange, errorMessage, null);
+		return new ParserError(ParserErrorTypes.GENERIC_ERROR, Severity.ERROR, sourceRange, errorMessage, null);
 	}
 	
 }

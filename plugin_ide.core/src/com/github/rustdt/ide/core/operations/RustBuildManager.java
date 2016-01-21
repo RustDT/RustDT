@@ -23,7 +23,7 @@ import com.github.rustdt.tooling.cargo.CargoManifest;
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperationConsoleHandler;
-import melnorme.lang.ide.core.operations.ToolMarkersUtil;
+import melnorme.lang.ide.core.operations.ToolMarkersHelper;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
@@ -262,7 +262,7 @@ public class RustBuildManager extends BuildManager {
 				}
 			}.parseOutput(processResult);
 			
-			new ToolMarkersUtil().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project), pm);
+			new ToolMarkersHelper().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation(project), pm);
 		}
 	}
 	

@@ -11,8 +11,8 @@
 package com.github.rustdt.tooling;
 
 
-import static melnorme.lang.tooling.data.StatusLevel.ERROR;
-import static melnorme.lang.tooling.data.StatusLevel.WARNING;
+import static melnorme.lang.tooling.data.Severity.ERROR;
+import static melnorme.lang.tooling.data.Severity.WARNING;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.CoreUtil.listFrom;
 
@@ -20,13 +20,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+
 import melnorme.lang.tests.CommonToolingTest;
-import melnorme.lang.tooling.data.StatusLevel;
+import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
-
-import org.junit.Test;
 
 
 public class RustBuildOutputParserTest extends CommonToolingTest {
@@ -41,11 +41,11 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 	protected static final String NL = "\n";
 	
 	protected static ToolSourceMessage msg(Path path, int line, int column, int endLine, int endColumn, 
-			StatusLevel level, String errorMessage) {
+			Severity severity, String errorMessage) {
 		
 		ToolSourceMessage msg = new ToolSourceMessage(path, 
 			new SourceLineColumnRange(line, column, endLine, endColumn), 
-			level, errorMessage);
+			severity, errorMessage);
 		msg.toString();
 		return msg;
 	}

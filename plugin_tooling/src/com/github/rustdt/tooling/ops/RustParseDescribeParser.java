@@ -18,6 +18,7 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
+import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.ops.AbstractStructureParser;
 import melnorme.lang.tooling.parser.TextBlocksReader;
 import melnorme.lang.tooling.parser.TextBlocksReader.BlockVisitorX;
@@ -98,13 +99,14 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 			ParserErrorTypes errorType = parseErrorType(type);
 			SourceRange sourceRange  = parseSourceRange(reader);
 			String messageText = reader.consumeText();
-			return new ParserError(errorType, sourceRange, messageText, null);
+			return new ParserError(errorType, Severity.ERROR, sourceRange, messageText, null);
 		}
 	}
 	
 	public ParserErrorTypes parseErrorType(String type) throws CommonException {
 		ParserErrorTypes errorType = null;
 		if(type.equalsIgnoreCase("ERROR")) {
+			/* FIXME: */
 			errorType = ParserErrorTypes.GENERIC_ERROR;
 		} else {
 			reportError("Unknown message type {0}", errorType);
@@ -127,6 +129,10 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 		
 		String name = reader.consumeText();
 		SourceRange sourceRange  = parseSourceRange(reader);
+		if(sourceRange == null) {
+			reportError("Empty source range.");
+			sourceRange = SourceRange.srStartToEnd(0, 0);
+		}
 		SourceRange nameSourceRange = parseSourceRange(reader);
 		if(nameSourceRange == null) {
 			int start = sourceRange.getStartPos();
@@ -143,20 +149,23 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 	}
 	
 	public SourceRange parseSourceRange(TextBlocksReader reader) throws CommonException {
+		if(reader.aheadIsEnd()) {
+			reportError("Missing source range.");
+			return SourceRange.srStartToEnd(0, 0);
+		}
 		if(!reader.aheadIsBlockStart()) {
 			reportError("Invalid source range.");
 			return SourceRange.srStartToEnd(0, 0);
 		}
 		
 		return reader.consumeBlock((subReader) -> {
-			return parseSourceRangeElements(subReader);
+			return parseSourceRangeContents(subReader);
 		});
 	}
 	
-	public SourceRange parseSourceRangeElements(TextBlocksSubReader subReader) throws CommonException {
+	public SourceRange parseSourceRangeContents(TextBlocksSubReader subReader) throws CommonException {
 		if(subReader.aheadIsEnd()) {
-			reportError("Missing source range.");
-			return SourceRange.srStartToEnd(0, 0);
+			return null;
 		}
 		int start = parseSourceLocation(subReader.consumeText());
 		int end = !subReader.aheadIsEnd() ?
