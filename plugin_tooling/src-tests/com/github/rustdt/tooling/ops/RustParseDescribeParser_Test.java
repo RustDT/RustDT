@@ -114,23 +114,23 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		}, null, "Unknown element kind `XXX`");
 		
 		/* ----------------- test SourceRange ----------------- */
-		
+		defaultSource = "aaaaa\n0123456789\nxxx\nabcdefghijkl\n";
 		testParseDescribe(
 			"Var { var1 { @0 @10 } { @1 @14} {} {} }" +
 			"Var { var2 { @5     } { @0    } {} {} }" +
-			"Var { var3 { 0:0 0:0  } { 0:3 0:8 } {} {} }" +
+			"Var { var3 { 0:0 0:0  } { 0:3 0:5 } {} {} }" +
 			"Var { var4 { 1:0 1:10 } { 1:5 3:5 } {} {} }",
 			
 			array(
 				elem("var1", srAt(0, 10), srAt(1,14), VAR, null, null, list()),
 				elem("var2", srAt(5, 5) , srAt(0, 0), VAR, null, null, list()),
-				elem("var3", srAt(pos(0, 0), pos(0, 0)), srAt(pos(0, 3), pos(0, 8)), VAR, null, null, list()),
+				elem("var3", srAt(pos(0, 0), pos(0, 0)), srAt(pos(0, 3), pos(0, 5)), VAR, null, null, list()),
 				elem("var4", srAt(pos(1, 0), pos(1, 10)), srAt(pos(1, 5), pos(3, 5)), VAR, null, null, list())
 			)
 		);
 		verifyThrows(() -> {
 			testParseDescribe("Var { var1 {  } { } {} {} }", array());
-		}, null, "Missing source range");
+		}, null, "Empty source range");
 		
 		/* ----------------- test attrib ----------------- */
 		
