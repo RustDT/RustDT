@@ -95,23 +95,21 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 	
 	public ParserError parseMessage(TextBlocksSubReader topReader) throws CommonException {
 		try(TextBlocksSubReader reader = topReader.enterBlock()) {
-			String type = reader.consumeText();
-			ParserErrorTypes errorType = parseErrorType(type);
+			String messageSeverity = reader.consumeText();
+			Severity severity = parseSeverity(messageSeverity);
 			SourceRange sourceRange  = parseSourceRange(reader);
 			String messageText = reader.consumeText();
-			return new ParserError(errorType, Severity.ERROR, sourceRange, messageText, null);
+			return new ParserError(ParserErrorTypes.GENERIC_ERROR, severity, sourceRange, messageText, null);
 		}
 	}
 	
-	public ParserErrorTypes parseErrorType(String type) throws CommonException {
-		ParserErrorTypes errorType = null;
-		if(type.equalsIgnoreCase("ERROR")) {
-			/* FIXME: */
-			errorType = ParserErrorTypes.GENERIC_ERROR;
-		} else {
-			reportError("Unknown message type {0}", errorType);
+	public Severity parseSeverity(String severity) throws CommonException {
+		try {
+			return Severity.fromString(severity);
+		} catch(CommonException e) {
+			reportError("Invalid message severity `{0}`.", severity);
+			return Severity.ERROR;
 		}
-		return errorType;
 	}
 	
 	protected StructureElement parseStructureElement(TextBlocksSubReader reader) throws CommonException {

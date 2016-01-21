@@ -201,36 +201,36 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 				+ "{ ERROR { @1 @12} "+quoteString("BLAH BLAH") + "}"
 			+" }",
 			
-			list(msg(srAt(1, 12), "BLAH BLAH")), 
+			list(msg(Severity.ERROR, srAt(1, 12), "BLAH BLAH")), 
 			array()
 		);
 		
-		verifyThrows(() -> {
-			testParseDescribe("MESSAGES { "
-					+ "{ ERROR_XXX { @1 @12} "+quoteString("BLAH BLAH") + "}"
-					+" }", list(), array());
-		}, null, "Unknown message type");
-		
 		testParseDescribe(
 			"MESSAGES { "
-				+ "{ ERROR { @1 @12} "+quoteString("BLAH BLAH") + "}"
-				+ "{ ERROR { 0:0 1:0 } "+quoteString("This is a warning.") + "}"
+				+ "{ WARNING { @1 @12} "+quoteString("BLAH BLAH") + "}"
+				+ "{ INFO { 0:0 1:0 } "+quoteString("This is a warning.") + "}"
 			+" }" +
 			"Function" + "{ func{ @0 @14 } { @0 @5 } {} {} }",
 			
 			list(
-				msg(srAt(1, 12), "BLAH BLAH"),
-				msg(srAt(1, pos(1, 10)), "This is a warning.")
+				msg(Severity.WARNING, srAt(1, 12), "BLAH BLAH"),
+				msg(Severity.INFO, srAt(1, pos(1, 10)), "This is a warning.")
 			), 
 			array(
 				elem("func", srAt(0, 14), srAt(0, 5), StructureElementKind.FUNCTION, null, null, list())
 			)
 		);
 		
+		verifyThrows(() -> {
+			testParseDescribe("MESSAGES { "
+					+ "{ ERROR_XXX { @1 @12} "+quoteString("BLAH BLAH") + "}"
+					+" }", list(), array());
+		}, null, "Invalid message severity `ERROR_XXX`");
+		
 	}
 	
-	protected ParserError msg(SourceRange sourceRange, String errorMessage) {
-		return new ParserError(ParserErrorTypes.GENERIC_ERROR, Severity.ERROR, sourceRange, errorMessage, null);
+	protected ParserError msg(Severity severity, SourceRange sourceRange, String errorMessage) {
+		return new ParserError(ParserErrorTypes.GENERIC_ERROR, severity, sourceRange, errorMessage, null);
 	}
 	
 }
