@@ -87,6 +87,11 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	}
 	
 	@Override
+	public IManagedImage visitUseGroup() {
+		return RustElementImages.IMPORTS;
+	}
+	
+	@Override
 	public IManagedImage visitTypeAlias() {
 		return RustElementImages.T_TYPE;
 	}

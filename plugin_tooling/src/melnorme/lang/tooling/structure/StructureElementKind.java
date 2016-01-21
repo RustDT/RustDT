@@ -29,6 +29,7 @@ public enum StructureElementKind {
 	EXTERN_CRATE,
 	MOD,
 	USE,
+	USE_GROUP,
 	
 	TYPE_ALIAS, 
 	
@@ -55,6 +56,7 @@ public enum StructureElementKind {
 		case EXTERN_CRATE: return visitor.visitExternCrate();
 		case MOD: return visitor.visitModule();
 		case USE: return visitor.visitUse();
+		case USE_GROUP: return visitor.visitUseGroup();
 		
 		case TYPE_ALIAS: return visitor.visitTypeAlias();
 		case UNKNOWN: return visitor.visitUnknown();
@@ -70,6 +72,7 @@ public enum StructureElementKind {
 		
 		public abstract RET visitExternCrate();
 		public abstract RET visitUse();
+		public abstract RET visitUseGroup();
 		
 		public abstract RET visitEnumVariant();
 		

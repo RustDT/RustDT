@@ -24,6 +24,7 @@ import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.core.DevelopmentCodeMarkers;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
@@ -40,6 +41,10 @@ public class RustSourceModelManager extends SourceModelManager {
 		return new StructureUpdateTask(structureInfo) {
 			@Override
 			protected SourceFileStructure createNewData() {
+				
+				if(DevelopmentCodeMarkers.TESTS_MODE) {
+					return null;
+				}
 				
 				ExternalProcessResult describeResult;
 				

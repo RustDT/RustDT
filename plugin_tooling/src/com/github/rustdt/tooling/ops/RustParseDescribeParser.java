@@ -13,6 +13,8 @@ package com.github.rustdt.tooling.ops;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
+import java.util.Iterator;
+
 import melnorme.lang.tooling.EProtection;
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
@@ -78,7 +80,11 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 	
 	protected ArrayList2<StructureElement> parseStructureElements(TextBlocksSubReader subReader) 
 			throws CommonException {
-		return parseSubElements(subReader, this::parseStructureElement);
+		ArrayList2<StructureElement> elements = parseSubElements(subReader, this::parseStructureElement);
+		
+		ArrayList2<StructureElement> reorganizedChildren = new ArrayList2<>();
+		reorganizeChildren(reorganizedChildren, elements.iterator());
+		return reorganizedChildren;
 	}
 	
 	protected <RET> ArrayList2<RET> parseSubElements(TextBlocksSubReader subReader, 
@@ -91,6 +97,39 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 		}
 		
 		return children;
+	}
+	
+	protected void reorganizeChildren(ArrayList2<StructureElement> reorganizedElems, Iterator<StructureElement> iter) {
+		
+		ArrayList2<StructureElement> useElements = null;
+		
+		while(iter.hasNext()) {
+			StructureElement child = iter.next();
+			if(child.getKind() == StructureElementKind.USE) {
+				if(useElements == null) {
+					useElements = new ArrayList2<>();
+				}
+				useElements.add(child);
+			}
+			
+			if(child.getKind() != StructureElementKind.USE || !iter.hasNext()) {
+				if(useElements != null) {
+					int startPos = useElements.get(0).getSourceRange().getStartPos();
+					int endPos = useElements.get(useElements.size()-1).getSourceRange().getEndPos();
+					SourceRange sr = SourceRange.srStartToEnd(startPos, endPos);
+					StructureElement aggregatedUses = new StructureElement("use declarations", 
+						SourceRange.srStartToEnd(startPos, startPos), sr, 
+						StructureElementKind.USE_GROUP, null, null, useElements);
+					useElements = null;
+					
+					reorganizedElems.add(aggregatedUses);
+				}
+			}
+			
+			if(child.getKind() != StructureElementKind.USE) {
+				reorganizedElems.add(child);
+			}
+		}
 	}
 	
 	public ParserError parseMessage(TextBlocksSubReader topReader) throws CommonException {

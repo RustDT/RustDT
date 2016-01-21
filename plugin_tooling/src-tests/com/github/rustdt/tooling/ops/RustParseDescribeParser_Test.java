@@ -78,6 +78,34 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		);
 		
 		
+		/* ----------------- test use aggregation ----------------- */
+		
+		testParseDescribe(
+			"Use" + "{" + quoteString("foo::blah") + "{ @1 @10 } { @0 @5 } {} {} }" +
+			"Use" + "{" + quoteString("use") + "{ @10 @20 } { @11 @14 } {} {} }",
+			
+			array(
+				elem("use declarations", srAt(1, 20), srAt(1, 1), StructureElementKind.USE_GROUP, null, null, list(
+					elem("foo::blah", srAt(1, 10), srAt(0, 5), StructureElementKind.USE, null, null, list()),
+					elem("use", srAt(10, 20), srAt(11, 14), StructureElementKind.USE, null, null, list())
+				))
+			)
+		);
+		
+		testParseDescribe(
+			"Use" + "{" + quoteString("foo::blah") + "{ @1 @10 } { @0 @5 } {} {} }" +
+			"Use" + "{" + quoteString("use") + "{ @10 @20 } { @11 @14 } {} {} }" +
+			elemString("Var", "var", "{}", "{}"),
+			
+			array(
+				elem("use declarations", srAt(1, 20), srAt(1, 1), StructureElementKind.USE_GROUP, null, null, list(
+					elem("foo::blah", srAt(1, 10), srAt(0, 5), StructureElementKind.USE, null, null, list()),
+					elem("use", srAt(10, 20), srAt(11, 14), StructureElementKind.USE, null, null, list())
+				)),
+				elem("var"      , StructureElementKind.VAR, null, null, list())
+			)
+		);
+		
 		/* ----------------- test kinds ----------------- */
 		
 		testParseDescribe(
@@ -104,7 +132,9 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 				elem("ty_alias" , StructureElementKind.TYPE_ALIAS, null, null, list()),
 				elem("ec"       , StructureElementKind.EXTERN_CRATE, null, null, list()),
 				elem("mod"      , StructureElementKind.MOD, null, null, list()),
-				elem("use"      , StructureElementKind.USE, null, null, list())
+				elem("use declarations", srAt(0, 14), srAt(0, 0), StructureElementKind.USE_GROUP, null, null, list(
+					elem("use", StructureElementKind.USE, null, null, list())
+				))
 			)
 		);
 		
