@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.editor;
 
+import org.eclipse.ui.IEditorInput;
+
 import melnorme.lang.ide.ui.EditorSettings_Actual;
 import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
@@ -24,6 +26,21 @@ import melnorme.lang.tooling.structure.StructureElementKind;
 import melnorme.util.swt.jface.text.ColorManager2;
 
 public class RustEditor extends AbstractLangStructureEditor {
+	
+	public RustEditor() {
+	}
+	
+	@Override
+	protected void internalDoSetInput(IEditorInput input) {
+		super.internalDoSetInput(input);
+		
+		if(editorLocation != null) {
+			if(editorLocation.getFileName().equals("mod.rs")) {
+				setPartName("[" + editorLocation.getParent().getFileName() + "].rs" );
+			}
+		}
+		
+	}
 	
 	@Override
 	protected LangPairMatcher init_createBracketMatcher() {

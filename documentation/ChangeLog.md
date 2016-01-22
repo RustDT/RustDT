@@ -3,7 +3,8 @@
 ### (NextVersion)
  * Added RAINICORN. #TODO document
  * Added "match", "apl", and "main" code snippets.
- * Added Download operation to Racer preferences field (uses `cargo install`). FIXME: Guide, Source 
+ * Added Download operation to Racer preferences field (uses `cargo install`). FIXME: Guide, Source
+ * Added: The title of a Rust editor for "mod.rs" files is now "[foo]", where foo is the name of the parent directory (this should be the same as the module name). The objective is obviously to disambiguate when you have several "mod.rs" files open.
  * Fixed regression: Console view always activates when a build is invoked.
 
 ### 0.4.2
