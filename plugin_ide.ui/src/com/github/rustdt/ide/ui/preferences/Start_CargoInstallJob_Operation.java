@@ -10,30 +10,40 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import static melnorme.utilbox.core.CoreUtil.array;
-
 import java.nio.file.Path;
 
 import melnorme.lang.ide.ui.operations.StartToolDownload_FromField;
 import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
 import melnorme.lang.utils.EnvUtils;
+import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
 
 public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField {
 	
-	protected final String gitTag;
+	public static Indexable<String> dlArgs(String dlSource, String gitTag) {
+		ArrayList2<String> args = new ArrayList2<>();
+		args.addElements("--git", dlSource);
+		if(gitTag != null) {
+			args.addElements("--tag", gitTag);
+		}
+		return args;
+	}
+	
+	/* -----------------  ----------------- */
+	
+	protected final ArrayList2<String> sourceArgs = new ArrayList2<>();
 
-	public Start_CargoInstallJob_Operation(String crateName, 
-			DownloadToolTextField downloadToolTextField,
-			String gitSource, String gitTag, String exeName) {
+	public Start_CargoInstallJob_Operation(String crateName, DownloadToolTextField downloadToolTextField,
+			Indexable<String> sourceArgs, String exeName) {
 		super(
 			"Download " + crateName, 
 			"Downloading " + crateName + "...", 
-			downloadToolTextField, gitSource, exeName);
-		this.gitTag = gitTag;
+			downloadToolTextField, "", exeName);
+		
+		this.sourceArgs.addAll2(sourceArgs);
 	}
 	
 	protected String getSDKPath() {
@@ -49,11 +59,11 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		
 		toolBinPath = dest.resolve("bin").resolve(exeName).toPathString() + MiscUtil.getExecutableSuffix();
 		
-		String[] args = array("install", "--root", dest.toPathString(), "--git", dlSource);
-		if(gitTag != null) {
-			args = ArrayUtil.concat(args, "--tag", gitTag);
-		}
-		return toolMgr.createToolProcessBuilder(sdkToolPath, null, args);
+		ArrayList2<String> args = new ArrayList2<>("install");
+		args.addAll(sourceArgs);
+		args.addElements("--root", dest.toPathString());
+		
+		return toolMgr.createToolProcessBuilder(sdkToolPath, null, args.toArray(String.class));
 	}
 	
 }

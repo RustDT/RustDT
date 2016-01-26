@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
+import static com.github.rustdt.ide.ui.preferences.Start_CargoInstallJob_Operation.dlArgs;
 import static melnorme.utilbox.core.CoreUtil.list;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -133,7 +134,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
 			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
-				RustSDKPreferences.RACER_CargoGitSource, RustSDKPreferences.RACER_CargoGitTag,
+				list("racer"),
 				"racer") {
 				
 				@Override
@@ -161,7 +162,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
 			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
-				RustSDKPreferences.RAINICORN_CargoGitSource, RustSDKPreferences.RAINICORN_CargoGitTag,
+				dlArgs(RustSDKPreferences.RAINICORN_CargoGitSource, null),
 				"rust_parse_describe") {
 				
 				@Override
