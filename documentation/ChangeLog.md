@@ -1,6 +1,8 @@
 ## release ChangeLog
 
 ### (NextVersion)
+
+### 0.5.0
  * Added support for Outline, Quick-Outline, and on-the-fly parser errors, using the [Rainicorn](https://github.com/RustDT/Rainicorn) tool.
  * Added Download operation to the Racer preferences (uses `cargo install`), as well as the Rainicorn preferences.
  * Added "match", "matchb", "apl", and "main" code snippets.
