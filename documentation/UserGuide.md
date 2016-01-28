@@ -1,6 +1,6 @@
 ## User Guide
 
-*Note:* For an overview of RustDT features, see [Features](Features.md#ddt-features). This also serves to document 
+*Note:* For an overview of RustDT features, see [Features](Features.md#features). This also serves to document 
 what overall functionalities are available.
 
 ## Configuration
