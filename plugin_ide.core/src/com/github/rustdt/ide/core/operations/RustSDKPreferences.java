@@ -53,6 +53,6 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 		new LocationOrSinglePathValidator("rust-parse-describe:"));
 	
 	public String RAINICORN_CargoGitSource = "https://github.com/RustDT/rust_parse_describe";
-	public String RAINICORN_CargoGitTag = null;
+	public String RAINICORN_CargoGitTag = "version_1.x";
 	
 }

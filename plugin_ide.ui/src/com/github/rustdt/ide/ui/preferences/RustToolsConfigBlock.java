@@ -162,7 +162,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
 			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
-				dlArgs(RustSDKPreferences.RAINICORN_CargoGitSource, null),
+				dlArgs(RustSDKPreferences.RAINICORN_CargoGitSource, RustSDKPreferences.RAINICORN_CargoGitTag),
 				"rust_parse_describe") {
 				
 				@Override

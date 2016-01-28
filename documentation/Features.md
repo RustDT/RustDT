@@ -4,6 +4,8 @@
 
  * Source code editor, with:
    * Syntax highlighting, configurable. Dark theme support.
+   * On-the-fly parser errors reporting.
+   * Outline/Quick-Outline support.
    * Automatic indent/de-indent and brace completion on certain keypresses (Enter, Backspace, Delete).
  * Project builder, using Cargo.
    * Build errors reported inline in the editor (as squiggly lines) and Project Explorer.

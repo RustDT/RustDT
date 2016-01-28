@@ -1,10 +1,10 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Added RAINICORN. #TODO document
- * Added "match", "apl", and "main" code snippets.
- * Added Download operation to Racer preferences field (uses `cargo install`). FIXME: Guide, Source
- * Added: The title of a Rust editor for "mod.rs" files is now "[foo]", where foo is the name of the parent directory (this should be the same as the module name). The objective is obviously to disambiguate when you have several "mod.rs" files open.
+ * Added support for Outline, Quick-Outline, and on-the-fly parser errors, using the [Rainicorn](https://github.com/RustDT/Rainicorn) tool.
+ * Added Download operation to the Racer preferences (uses `cargo install`), as well as the Rainicorn preferences.
+ * Added "match", "matchb", "apl", and "main" code snippets.
+ * Added: The title of a Rust editor for "mod.rs" files is now "[foo]", where foo is the name of the parent directory (this should be the same as the module name). The objective is obviously to disambiguate editors when you have several "mod.rs" files open.
  * Fixed regression: Console view always activates when a build is invoked.
 
 ### 0.4.2
