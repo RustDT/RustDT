@@ -21,8 +21,8 @@ import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
 import melnorme.lang.ide.ui.LangImages;
+import melnorme.lang.ide.ui.navigator.LangNavigatorLabelProvider;
 import melnorme.lang.ide.ui.navigator.NavigatorElementsSwitcher;
-import melnorme.lang.ide.ui.views.LangNavigatorLabelProvider;
 
 public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider implements IStyledLabelProvider {
 	
