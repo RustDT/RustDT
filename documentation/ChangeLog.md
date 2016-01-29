@@ -1,6 +1,8 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Dirty editors are now automatically saved if a build is invoked directly from a Build Target in the Project Explorer. (if the workspace "Save automatically before build" option is enabled).
+ * Fixed workspace resource locking when a build is invoked directly from a Build Target in the Project Explorer.
 
 ### 0.5.0
  * Added support for Outline, Quick-Outline, and on-the-fly parser errors, using the [Rainicorn](https://github.com/RustDT/Rainicorn) tool.
