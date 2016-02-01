@@ -22,6 +22,8 @@ import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.ide.core.operations.AbstractToolManager;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.structure.SourceFileStructure;
+import melnorme.lang.tooling.structure.StructureElement;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.DevelopmentCodeMarkers;
@@ -42,34 +44,54 @@ public class RustSourceModelManager extends SourceModelManager {
 			@Override
 			protected SourceFileStructure createNewData() {
 				
+				Location fileLocation = structureInfo.getLocation();
+				
+				String describeOutput = getDescribeOutput(source, fileLocation);
+				if(describeOutput == null) {
+					return null;
+				}
+				
+				try {
+					RustParseDescribeParser parseDescribe = new RustParseDescribeParser(fileLocation, source);
+					SourceFileStructure newStructure = parseDescribe.parse(describeOutput);
+					if(newStructure.getParserProblems().size() > 0 && newStructure.getChildren().isEmpty()) {
+						
+						SourceFileStructure previousStructure = structureInfo.getStoredData();
+						if(previousStructure != null) {
+							// Use elements from previous structure:
+							Indexable<StructureElement> previousElements = 
+									StructureElement.cloneSubTree(previousStructure.getChildren());
+							
+							newStructure = new SourceFileStructure(fileLocation, previousElements, 
+								newStructure.getParserProblems());
+						}
+					}
+					return newStructure;
+				} catch(CommonException ce) {
+					toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusError());
+					return null;
+				}
+				
+			}
+			
+			protected String getDescribeOutput(String source, Location fileLocation) {
 				if(DevelopmentCodeMarkers.TESTS_MODE) {
 					return null;
 				}
 				
-				ExternalProcessResult describeResult;
-				
-				Location location = structureInfo.getLocation();
-				IProject project = location == null ? null : ResourceUtils.getProject(location);
+				IProject project = fileLocation == null ? null : ResourceUtils.getProject(fileLocation);
 				try {
 					Path path = RustSDKPreferences.RAINICORN_PATH2.getDerivedValue(project);
 					
 					ProcessBuilder pb = toolManager.createToolProcessBuilder(project, path);
-					describeResult = toolManager.runEngineTool(pb, source, cm);
+
+					ExternalProcessResult describeResult = toolManager.runEngineTool(pb, source, cm);
+					return describeResult.getStdOutBytes().toString(StringUtil.UTF8);
+					
 				} catch(OperationCancellation e) {
 					return null;
 				} catch(CommonException ce) {
 					toolManager.logAndNotifyError("Error running parse-describe process:", ce.toStatusError());
-					return null;
-				}
-				
-				Location fileLocation = location;
-				
-				String describeOutput = describeResult.getStdOutBytes().toString(StringUtil.UTF8);
-				
-				try {
-					return new RustParseDescribeParser(fileLocation, source).parse(describeOutput);
-				} catch(CommonException ce) {
-					toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusError());
 					return null;
 				}
 				
