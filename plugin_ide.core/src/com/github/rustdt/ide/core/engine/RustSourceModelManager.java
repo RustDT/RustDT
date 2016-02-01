@@ -40,63 +40,73 @@ public class RustSourceModelManager extends SourceModelManager {
 	
 	@Override
 	protected StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source) {
-		return new StructureUpdateTask(structureInfo) {
-			@Override
-			protected SourceFileStructure createNewData() {
-				
-				Location fileLocation = structureInfo.getLocation();
-				
-				String describeOutput = getDescribeOutput(source, fileLocation);
-				if(describeOutput == null) {
-					return null;
-				}
-				
-				try {
-					RustParseDescribeParser parseDescribe = new RustParseDescribeParser(fileLocation, source);
-					SourceFileStructure newStructure = parseDescribe.parse(describeOutput);
-					if(newStructure.getParserProblems().size() > 0 && newStructure.getChildren().isEmpty()) {
-						
-						SourceFileStructure previousStructure = structureInfo.getStoredData();
-						if(previousStructure != null) {
-							// Use elements from previous structure:
-							Indexable<StructureElement> previousElements = 
-									StructureElement.cloneSubTree(previousStructure.getChildren());
-							
-							newStructure = new SourceFileStructure(fileLocation, previousElements, 
-								newStructure.getParserProblems());
-						}
-					}
-					return newStructure;
-				} catch(CommonException ce) {
-					toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusError());
-					return null;
-				}
-				
+		return new RustStructureUpdateTask(structureInfo, source);
+	}
+	
+	public class RustStructureUpdateTask extends StructureUpdateTask {
+		
+		protected final String source;
+		
+		public RustStructureUpdateTask(StructureInfo structureInfo, String source) {
+			super(structureInfo);
+			this.source = source;
+		}
+		
+		@Override
+		protected SourceFileStructure createNewData() {
+			
+			Location fileLocation = structureInfo.getLocation();
+			
+			String describeOutput = getDescribeOutput(source, fileLocation);
+			if(describeOutput == null) {
+				return null;
 			}
 			
-			protected String getDescribeOutput(String source, Location fileLocation) {
-				if(DevelopmentCodeMarkers.TESTS_MODE) {
-					return null;
-				}
-				
-				IProject project = fileLocation == null ? null : ResourceUtils.getProject(fileLocation);
-				try {
-					Path path = RustSDKPreferences.RAINICORN_PATH2.getDerivedValue(project);
+			try {
+				RustParseDescribeParser parseDescribe = new RustParseDescribeParser(fileLocation, source);
+				SourceFileStructure newStructure = parseDescribe.parse(describeOutput);
+				if(newStructure.getParserProblems().size() > 0 && newStructure.getChildren().isEmpty()) {
 					
-					ProcessBuilder pb = toolManager.createToolProcessBuilder(project, path);
-
-					ExternalProcessResult describeResult = toolManager.runEngineTool(pb, source, cm);
-					return describeResult.getStdOutBytes().toString(StringUtil.UTF8);
-					
-				} catch(OperationCancellation e) {
-					return null;
-				} catch(CommonException ce) {
-					toolManager.logAndNotifyError("Error running parse-describe process:", ce.toStatusError());
-					return null;
+					SourceFileStructure previousStructure = structureInfo.getStoredData();
+					if(previousStructure != null) {
+						// Use elements from previous structure:
+						Indexable<StructureElement> previousElements = 
+								StructureElement.cloneSubTree(previousStructure.getChildren());
+						
+						newStructure = new SourceFileStructure(fileLocation, previousElements, 
+							newStructure.getParserProblems());
+					}
 				}
-				
+				return newStructure;
+			} catch(CommonException ce) {
+				toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusError());
+				return null;
 			}
-		};
+			
+		}
+		
+		protected String getDescribeOutput(String source, Location fileLocation) {
+			if(DevelopmentCodeMarkers.TESTS_MODE) {
+				return null;
+			}
+			
+			IProject project = fileLocation == null ? null : ResourceUtils.getProject(fileLocation);
+			try {
+				Path path = RustSDKPreferences.RAINICORN_PATH2.getDerivedValue(project);
+				
+				ProcessBuilder pb = toolManager.createToolProcessBuilder(project, path);
+				
+				ExternalProcessResult describeResult = toolManager.runEngineTool(pb, source, cm);
+				return describeResult.getStdOutBytes().toString(StringUtil.UTF8);
+				
+			} catch(OperationCancellation e) {
+				return null;
+			} catch(CommonException ce) {
+				toolManager.logAndNotifyError("Error running parse-describe process:", ce.toStatusError());
+				return null;
+			}
+			
+		}
 	}
 	
 }
