@@ -29,6 +29,8 @@ import melnorme.utilbox.misc.StringUtil;
 
 public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 	
+	public static String NO_TYPE = "\"\" ";
+	
 	@Override
 	protected RustParseDescribeParser createStructureParser() {
 		return new RustParseDescribeParser(null, defaultSource);
@@ -165,17 +167,17 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		/* ----------------- test attrib ----------------- */
 		
 		testParseDescribe(
-			elemString("Function", "func", "{pub}", "{}"),
+			elemString("Function", "func", "{pub}", NO_TYPE),
 			
 			array(
 				elem("func", StructureElementKind.FUNCTION, att(), null, list())
 			)
 		);
 		verifyThrows(() -> {
-			testParseDescribe(elemString("Function", "func", "{xx zzz}", "{}"), array());
+			testParseDescribe(elemString("Function", "func", "{xx zzz}", NO_TYPE), array());
 		}, null, "Unknown protection `xx`");
 		verifyThrows(() -> {
-			testParseDescribe(elemString("Function", "func", "{pub zzz}", "{}"), array());
+			testParseDescribe(elemString("Function", "func", "{pub zzz}", NO_TYPE), array());
 		}, null, "Unknown attribute");
 		
 		
@@ -195,12 +197,12 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		/* ----------------- test children ----------------- */
 		
 		testParseDescribe(
-			elemString("Struct", "struct", "{}", "{}",
-				elemString("Var", "var1", "{}", "{}"),
-				elemString("Var", "var2", "{}", "{}")
+			elemString("Struct", "struct", "{}", NO_TYPE,
+				elemString("Var", "var1", "{}", NO_TYPE),
+				elemString("Var", "var2", "{}", NO_TYPE)
 			) +
 			elemString("Impl", "impl", "{}", "{}",
-				elemString("Function", "function", "{}", "{}")
+				elemString("Function", "function", "{}", NO_TYPE)
 			),
 			
 			array(

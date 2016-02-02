@@ -32,6 +32,7 @@ import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.misc.StringUtil;
 
 public class RustParseDescribeParser extends AbstractStructureParser {
 	
@@ -273,7 +274,8 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 	
 	public String parseElementType(TextBlocksSubReader reader) throws CommonException {
 		if(reader.aheadIsText()) {
-			return reader.consumeText();
+			String type = reader.consumeText();
+			return StringUtil.emptyAsNull(type);
 		}
 		if(reader.aheadIsBlockStart()) {
 			reader.consumeBlock((subReader) -> {
