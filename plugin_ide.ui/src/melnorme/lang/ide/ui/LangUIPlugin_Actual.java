@@ -11,6 +11,8 @@ import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.ui.editor.hover.ILangEditorTextHover;
 import melnorme.lang.ide.ui.editor.text.LangAutoEditsPreferencesAccess;
 import melnorme.lang.ide.ui.views.StructureElementLabelProvider;
+import melnorme.lang.tooling.structure.StructureElement;
+import melnorme.lang.tooling.structure.StructureElementKind;
 
 /**
  * Actual/concrete IDE constants and other bindings, for Lang UI code. 
@@ -40,6 +42,13 @@ public final class LangUIPlugin_Actual {
 	
 	public static StructureElementLabelProvider getStructureElementLabelProvider() {
 		return new StructureElementLabelProvider() {
+			@Override
+			protected String getTypeDescriptionPrefix(StructureElement structureElement) {
+				if(structureElement.getKind() == StructureElementKind.FUNCTION) {
+					return " ";
+				}
+				return super.getTypeDescriptionPrefix(structureElement);
+			}
 		};
 	}
 	
