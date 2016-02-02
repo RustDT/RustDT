@@ -38,7 +38,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 	
 	public static String elemString(String kind, String name, String attribs, String type, String... children) {
 		return 
-			kind + "{" + quoteString(name) + "{ @0 @14 } { @0 @5 }" + attribs + type + 
+			kind + "{" + quoteString(name) + "{ @0 @14 } { @0 @5 }" + type + attribs + 
 			StringUtil.collToString(children, "\n")
 			+ "}"
 		;

@@ -177,8 +177,8 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 			nameSourceRange = SourceRange.srStartToEnd(start, start);
 		}
 		
-		ElementAttributes elementAttributes = parseElementAttributes(reader);
 		String type = parseElementType(reader);
+		ElementAttributes elementAttributes = parseElementAttributes(reader);
 		
 		ArrayList2<StructureElement> children = parseStructureElements(reader);
 		
