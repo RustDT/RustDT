@@ -150,7 +150,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	public class RainicornLocationGroup extends AbstractToolLocationGroup {
 		
 		public RainicornLocationGroup() {
-			super("parse-describe");
+			super("Rainicorn parse_describe");
 			
 			bindToDerivedPreference(this.toolLocation, RustSDKPreferences.RAINICORN_PATH2);
 		}
@@ -164,7 +164,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
 			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
 				dlArgs(RustSDKPreferences.RAINICORN_CargoGitSource, RustSDKPreferences.RAINICORN_CargoGitTag),
-				"rust_parse_describe") {
+				"parse_describe") {
 				
 				@Override
 				protected String getSDKPath() {

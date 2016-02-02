@@ -50,9 +50,9 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static final DerivedValuePreference<Path> RAINICORN_PATH2 = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
 		"rainicorn_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
-		new LocationOrSinglePathValidator("rust-parse-describe:"));
+		new LocationOrSinglePathValidator("Rainicorn parse_describe:"));
 	
-	public String RAINICORN_CargoGitSource = "https://github.com/RustDT/rust_parse_describe";
+	public String RAINICORN_CargoGitSource = "https://github.com/RustDT/Rainicorn";
 	public String RAINICORN_CargoGitTag = "version_1.x";
 	
 }
