@@ -77,6 +77,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		racerGroup.setEnabled(enabled);
+		rainicornGroup.setEnabled(enabled);
 	}
 	
 	public abstract class AbstractToolLocationGroup extends AbstractCompositeWidget {
