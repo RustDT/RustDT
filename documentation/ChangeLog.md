@@ -10,6 +10,7 @@
  * Added: Dirty editors are now automatically saved if a build is invoked directly from a Build Target in the Project Explorer. (if the workspace "Save automatically before build" option is enabled).
  * Fixed workspace resource locking when a build is invoked directly from a Build Target in the Project Explorer.
  * Fixed regression: Console view always activates when a build is invoked.
+ * Fixed bug with Content Assist snippets using the `${word_selection}` variable.
 
 ### 0.4.2
  * Fixed: In debug, value of some variables not displayed due to "N/A (child of pretty printed object)" error.
