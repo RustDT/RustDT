@@ -79,7 +79,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser {
 		"^([^:\\n]*):" + // file
 		"(\\d*):((\\d*):)?" +// line:column
 		"( (\\d*):(\\d*))?" + // end line:column
-		" (warning|error|note):" + // column-end
+		" (warning|error|note):" + // type
 		"\\s(.*)$" // error message
 	);
 	
