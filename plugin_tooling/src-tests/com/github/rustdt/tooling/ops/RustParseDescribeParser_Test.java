@@ -33,7 +33,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 	
 	@Override
 	protected RustParseDescribeParser createStructureParser() {
-		return new RustParseDescribeParser(null, defaultSource);
+		return new RustParseDescribeParser(null, source);
 	}
 	
 	public static String elemString(String kind, String name, String attribs, String type, String... children) {
@@ -146,7 +146,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 		}, null, "Unknown element kind `XXX`");
 		
 		/* ----------------- test SourceRange ----------------- */
-		defaultSource = "aaaaa\n0123456789\nxxx\nabcdefghijkl\n";
+		source = DEFAULT_SOURCE;
 		testParseDescribe(
 			"Var { var1 { @0 @10 } { @1 @14} {} {} }" +
 			"Var { var2 { @5     } { @0    } {} {} }" +
