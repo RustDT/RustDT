@@ -13,18 +13,25 @@ package melnorme.lang.ide.core.engine;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.IFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.ISynchronizable;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.utils.DefaultBufferListener;
 import melnorme.lang.ide.core.utils.operation.OperationUtils;
 import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.lang.utils.concurrency.ConcurrentlyDerivedData;
 import melnorme.lang.utils.concurrency.ConcurrentlyDerivedData.DataUpdateTask;
 import melnorme.lang.utils.concurrency.SynchronizedEntryMap;
 import melnorme.utilbox.concurrency.OperationCancellation;
+import melnorme.utilbox.core.fntypes.CallableX;
 import melnorme.utilbox.fields.ListenerListHelper;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.ownership.StrictDisposable;
@@ -79,19 +86,19 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 		assertNotNull(structureListener);
 		log.println("connectStructureUpdates: " + key);
 		
-		StructureInfo sourceInfo = infosMap.getEntry(key);
+		StructureInfo structureInfo = infosMap.getEntry(key);
 		
-		boolean connected = sourceInfo.connectDocument(document, structureListener);
+		boolean connected = structureInfo.connectDocument(document, structureListener);
 		
 		if(!connected) {
 			// Special case: this key has already been connected to, but with a different document.
 			// As such, return a unmanaged StructureInfo
-			sourceInfo = new StructureInfo(key);
-			connected = sourceInfo.connectDocument(document, structureListener);
+			structureInfo = new StructureInfo(key);
+			connected = structureInfo.connectDocument(document, structureListener);
 		}
 		assertTrue(connected);
 		
-		return new StructureModelRegistration(sourceInfo, structureListener);
+		return new StructureModelRegistration(structureInfo, structureListener);
 	}
 	
 	public class StructureModelRegistration extends StrictDisposable {
@@ -116,10 +123,14 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 	
 	public class StructureInfo extends ConcurrentlyDerivedData<SourceFileStructure, StructureInfo> {
 		
+		protected final ITextFileBufferManager fbm = FileBuffers.getTextFileBufferManager();
+		
 		protected final Object key;
 		protected final StructureUpdateTask disconnectTask; // Can be null
 		
 		protected IDocument document = null;
+		protected DefaultBufferListener fbListener = null;
+		
 		
 		public StructureInfo(Object key) {
 			this.key = assertNotNull(key);
@@ -131,9 +142,7 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 			return key;
 		}
 		
-		/**
-		 * @return the file location if source is based on a file, null otherwise.
-		 */
+		/** @return the file location if source is based on a file, null otherwise. */
 		public Location getLocation() {
 			if(key instanceof Location) {
 				return (Location) key;
@@ -148,8 +157,14 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 		protected synchronized boolean connectDocument(IDocument newDocument, IStructureModelListener listener) {
 			if(document == null) {
 				document = newDocument;
-				newDocument.addDocumentListener(docListener);
 				queueSourceUpdateTask(document.get());
+				newDocument.addDocumentListener(docListener);
+				
+				ITextFileBuffer textFileBuffer = fbm.getTextFileBuffer(document);
+				if(textFileBuffer != null) {
+					fbListener = new DirtyBufferListener(document, textFileBuffer, this);
+					fbm.addFileBufferListener(fbListener);
+				}
 			}
 			else if(document != newDocument) {
 				return false;
@@ -159,16 +174,6 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 			return true;
 		}
 		
-		protected final IDocumentListener docListener = new IDocumentListener() {
-			@Override
-			public void documentAboutToBeChanged(DocumentEvent event) {
-			}
-			@Override
-			public void documentChanged(DocumentEvent event) {
-				queueSourceUpdateTask(document.get());
-			}
-		};
-		
 		protected synchronized void disconnectFromDocument(IStructureModelListener structureListener) {
 			connectedListeners.removeListener(structureListener);
 			
@@ -177,12 +182,36 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 				document = null;
 				
 				queueUpdateTask(disconnectTask);
+				fbm.removeFileBufferListener(fbListener);
+				fbListener = null;
 			}
 		}
+		
+		protected final IDocumentListener docListener = new IDocumentListener() {
+			@Override
+			public void documentAboutToBeChanged(DocumentEvent event) {
+			}
+			@Override
+			public void documentChanged(DocumentEvent event) {
+				queueSourceUpdateTask(event.fDocument.get());
+			}
+		};
 		
 		protected void queueSourceUpdateTask(final String source) {
 			StructureUpdateTask updateTask = createUpdateTask(this, source);
 			queueUpdateTask(updateTask);
+		}
+		
+		@SuppressWarnings("unused")
+		public synchronized void documentSaved(IDocument document, ITextFileBuffer textFileBuffer) {
+			// need to recheck, the underlying document might have changed
+			if(document != this.document) {
+				return;
+			}
+			StructureUpdateTask updateTask = createUpdateTask_forFileSave(this, document.get());
+			if(updateTask != null) {
+				queueUpdateTask(updateTask);
+			}
 		}
 		
 		protected synchronized void queueUpdateTask(StructureUpdateTask updateTask) {
@@ -223,6 +252,15 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 	 * @param source the new source of the document being listened to.
 	 */
 	protected abstract StructureUpdateTask createUpdateTask(StructureInfo structureInfo, String source);
+	
+	/**
+	 * Similar to {@link #createUpdateTask(StructureInfo, String)} but only for when the file buffer 
+	 * is saved to disk. Default is to return null, which ignores this event.
+	 */
+	@SuppressWarnings("unused")
+	protected StructureUpdateTask createUpdateTask_forFileSave(StructureInfo structureInfo, String source) {
+		return null;
+	}
 	
 	/**
 	 * Create an update task for when the last listener of given structureInfo disconnects.
@@ -287,6 +325,57 @@ public abstract class SourceModelManager extends AbstractModelUpdateManager<Obje
 	
 	public void removeListener(IStructureModelListener listener) {
 		globalListeners.removeListener(listener);
+	}
+	
+	/* -----------------  ----------------- */
+	
+	public static class DirtyBufferListener extends DefaultBufferListener {
+		
+		protected final IDocument document;
+		protected final ITextFileBuffer textFileBuffer;
+		protected final StructureInfo structureInfo;
+		
+		public DirtyBufferListener(IDocument document, ITextFileBuffer textFileBuffer,
+				StructureInfo structureInfo) {
+			this.document = assertNotNull(document);
+			this.textFileBuffer = assertNotNull(textFileBuffer);
+			this.structureInfo = assertNotNull(structureInfo);
+		}
+		
+		@Override
+		public void dirtyStateChanged(IFileBuffer buffer, boolean isDirty) {
+			
+			if(buffer == textFileBuffer) {
+				if(!isDirty) {
+					
+					// At the moment this only gets called from UI thread, however
+					// we try to make it work if called from a different thread than the one firing document changes.
+					
+					runUnderDocumentLock(document, () -> {
+						
+						// We need to recheck isDirty under the document lock to get an accurate reading 
+						if(!textFileBuffer.isDirty()) {
+							structureInfo.documentSaved(document, textFileBuffer);
+						}
+						
+						return null;
+					});
+				}
+			}
+		}
+		
+	}
+	
+	public static <R> R runUnderDocumentLock(IDocument doc, CallableX<R, RuntimeException> runnable) {
+		if(doc instanceof ISynchronizable) {
+			ISynchronizable synchronizable = (ISynchronizable) doc;
+			
+			synchronized(synchronizable.getLockObject()) {
+				return runnable.call();
+			}
+		} else {
+			return runnable.call();
+		}
 	}
 	
 }
