@@ -13,28 +13,21 @@ package com.github.rustdt.tooling.ops;
 import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.ValidationException;
-import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
+import melnorme.lang.utils.ProcessUtils;
 import melnorme.utilbox.collections.ArrayList2;
-import melnorme.utilbox.concurrency.ICancelMonitor;
-import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-public abstract class RacerOperation extends AbstractToolOperation {
+public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	
-	protected final String racerPath;
 	protected final String sdkSrcPath;
 	protected final ArrayList2<String> arguments;
 	
-	protected String input = "";
-	
 	public RacerOperation(IOperationService opHelper, String racerPath, String sdkSrcPath, 
 			ArrayList2<String> arguments) {
-		super(opHelper);
-		this.racerPath = racerPath;
+		super(opHelper, racerPath);
 		this.sdkSrcPath = sdkSrcPath;
 		this.arguments = arguments;
 	}
@@ -47,8 +40,9 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		return arguments;
 	}
 	
-	protected ProcessBuilder getCommandProcessBuilder() throws ValidationException {
-		String toolExePath = new RustRacerLocationValidator().getValidatedPath(racerPath).toString();
+	@Override
+	protected ProcessBuilder createProcessBuilder() throws ValidationException {
+		String toolExePath = new RustRacerLocationValidator().getValidatedPath(toolPath).toString();
 		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedLocation(sdkSrcPath).toString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
@@ -61,9 +55,9 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		return pb;
 	}
 	
-	public ExternalProcessResult execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
-		ProcessBuilder pb = getCommandProcessBuilder();
-		return runToolProcess(pb, input, cm);
+	@Override
+	protected void handleNonZeroExitCode(int exitValue) throws CommonException {
+		ProcessUtils.validateNonZeroExitValue(exitValue);
 	}
 	
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
@@ -81,12 +75,12 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
 			@Override
 			protected void handleParseError(CommonException ce) throws CommonException {
-				getOperationHelper().logStatus(ce.toStatusException(Severity.WARNING));
+				opHelper.logStatus(ce.toStatusException(Severity.WARNING));
 			}
 			
 			@Override
 			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
-				getOperationHelper().logStatus(new StatusException(Severity.WARNING,
+				opHelper.logStatus(new StatusException(Severity.WARNING,
 					"Unknown Match Kind: " + matchKindString));
 			}
 		};

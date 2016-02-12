@@ -12,15 +12,10 @@ package com.github.rustdt.tooling.ops;
 
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.IOperationService;
-import melnorme.lang.utils.ProcessUtils;
-import melnorme.utilbox.concurrency.ICancelMonitor;
-import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.misc.StringUtil;
-import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-public class RacerFindDefinitionOperation extends RacerOperation {
+public class RacerFindDefinitionOperation extends RacerOperation<FindDefinitionResult> {
 	
 	protected final int offset;
 	
@@ -31,14 +26,8 @@ public class RacerFindDefinitionOperation extends RacerOperation {
 		this.offset = offset;
 	}
 	
-	public FindDefinitionResult executeAndProcessOutput(ICancelMonitor cm) 
-			throws CommonException, OperationCancellation {
-		ProcessBuilder pb = getCommandProcessBuilder();
-		ExternalProcessResult result = runToolProcess(pb, input, cm);
-		
-		ProcessUtils.validateNonZeroExitValue(result.exitValue);
-		
-		String output = result.getStdOutBytes().toString(StringUtil.UTF8);
+	@Override
+	protected FindDefinitionResult handleProcessOutput(String output) throws CommonException {
 		return createRacerOutputParser(offset).parseResolvedMatch(output);
 	}
 	

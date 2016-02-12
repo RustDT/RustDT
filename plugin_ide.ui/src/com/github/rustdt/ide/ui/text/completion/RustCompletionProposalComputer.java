@@ -52,7 +52,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(toolRunner, 
 			racerPath, sdkSrcPath, offset, line_0, col_0, fileLocation);
-		return racerCompletionOp.executeAndProcessOutput(new EclipseCancelMonitor(pm));
+		return racerCompletionOp.execute(new EclipseCancelMonitor(pm));
 	}
 	
 	@Override

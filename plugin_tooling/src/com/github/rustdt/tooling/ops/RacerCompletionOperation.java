@@ -12,13 +12,10 @@ package com.github.rustdt.tooling.ops;
 
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.IOperationService;
-import melnorme.utilbox.concurrency.ICancelMonitor;
-import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
-public class RacerCompletionOperation extends RacerOperation {
+public class RacerCompletionOperation extends RacerOperation<LangCompletionResult> {
 	
 	protected final int offset;
 	
@@ -29,11 +26,9 @@ public class RacerCompletionOperation extends RacerOperation {
 		this.offset = offset;
 	}
 	
-	public LangCompletionResult executeAndProcessOutput(ICancelMonitor cm) 
-			throws CommonException, OperationCancellation {
-		ExternalProcessResult result = execute(cm);
-		
-		return createRacerOutputParser(offset).parse(result);
+	@Override
+	protected LangCompletionResult handleProcessOutput(String output) throws CommonException {
+		return createRacerOutputParser(offset).parse(output);
 	}
 	
 }

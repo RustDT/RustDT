@@ -52,7 +52,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			racerPath, sdkSrcPath, range.getOffset(), line_0, col_0, inputLoc);
-		return op.executeAndProcessOutput(cm(monitor));
+		return op.execute(cm(monitor));
 	}
 	
 }
