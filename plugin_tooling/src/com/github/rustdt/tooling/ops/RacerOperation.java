@@ -16,11 +16,9 @@ import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
-import melnorme.lang.utils.ProcessUtils;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	
@@ -29,9 +27,14 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	
 	public RacerOperation(IOperationService opHelper, String racerPath, String sdkSrcPath, 
 			ArrayList2<String> arguments) {
-		super(opHelper, racerPath);
+		super(opHelper, racerPath, true);
 		this.sdkSrcPath = sdkSrcPath;
 		this.arguments = arguments;
+	}
+	
+	@Override
+	protected String getToolName() {
+		return "Racer";
 	}
 	
 	protected static ArrayList2<String> getArguments(String opName, int line_0, int col_0, Location fileLocation) {
@@ -55,11 +58,6 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 		
 		pb.environment().put("RUST_SRC_PATH", rustSrcPath);
 		return pb;
-	}
-	
-	@Override
-	protected void handleNonZeroExitCode(ExternalProcessResult result) throws CommonException {
-		ProcessUtils.validateNonZeroExitValue(result.exitValue);
 	}
 	
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
