@@ -13,12 +13,14 @@ package com.github.rustdt.tooling.ops;
 import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.ValidationException;
+import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.lang.utils.ProcessUtils;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	
@@ -56,8 +58,8 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	}
 	
 	@Override
-	protected void handleNonZeroExitCode(int exitValue) throws CommonException {
-		ProcessUtils.validateNonZeroExitValue(exitValue);
+	protected void handleNonZeroExitCode(ExternalProcessResult result) throws CommonException {
+		ProcessUtils.validateNonZeroExitValue(result.exitValue);
 	}
 	
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {

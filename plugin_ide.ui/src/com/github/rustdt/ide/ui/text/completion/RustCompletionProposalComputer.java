@@ -28,6 +28,7 @@ import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
+import melnorme.lang.tooling.data.InfoResult;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -52,7 +53,11 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(toolRunner, 
 			racerPath, sdkSrcPath, offset, line_0, col_0, fileLocation);
-		return racerCompletionOp.execute(new EclipseCancelMonitor(pm));
+		try {
+			return racerCompletionOp.execute(new EclipseCancelMonitor(pm));
+		} catch(InfoResult e) {
+			throw e.toCommonException();
+		}
 	}
 	
 	@Override

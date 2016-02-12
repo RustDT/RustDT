@@ -40,6 +40,7 @@ import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
+import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.CollectionUtil;
 import melnorme.utilbox.misc.Location;
@@ -254,7 +255,7 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IProgressMonitor pm) 
-				throws CoreException, CommonException {
+				throws CoreException, CommonException, OperationCancellation {
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
 				protected void handleParseError(CommonException ce) {
