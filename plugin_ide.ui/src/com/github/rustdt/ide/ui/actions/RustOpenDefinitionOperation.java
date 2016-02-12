@@ -18,7 +18,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
 
-import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner;
+import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner2;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
@@ -48,11 +48,11 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 		String racerPath = RustSDKPreferences.RACER_PATH.getEffectiveValue(project);
 		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH2.getEffectiveValue(project);
 		
-		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner(monitor, true);
+		ToolManagerEngineToolRunner2 toolRunner = getToolManager().new ToolManagerEngineToolRunner2();
 		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			racerPath, sdkSrcPath, range.getOffset(), line_0, col_0, inputLoc);
-		return op.executeAndProcessOutput();
+		return op.executeAndProcessOutput(cm(monitor));
 	}
 	
 }

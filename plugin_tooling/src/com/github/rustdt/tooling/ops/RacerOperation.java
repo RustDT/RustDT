@@ -17,6 +17,7 @@ import melnorme.lang.tooling.ops.AbstractToolOperation;
 import melnorme.lang.tooling.ops.IOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -60,9 +61,9 @@ public abstract class RacerOperation extends AbstractToolOperation {
 		return pb;
 	}
 	
-	public ExternalProcessResult execute() throws CommonException, OperationCancellation {
+	public ExternalProcessResult execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
 		ProcessBuilder pb = getCommandProcessBuilder();
-		return runToolProcess(pb, input);
+		return runToolProcess(pb, input, cm);
 	}
 	
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
