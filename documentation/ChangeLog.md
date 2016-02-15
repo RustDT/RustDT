@@ -1,6 +1,9 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed incorrect icon for errors and warnings in preference page status.
+ * Fixed: can't save preference pages with empty fields.
+ 
 
 ### 0.5.0
  * Added support for Outline, Quick-Outline, and on-the-fly parser errors, using the [Rainicorn](https://github.com/RustDT/Rainicorn) tool.
