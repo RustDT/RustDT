@@ -45,14 +45,13 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
 		new RustRacerLocationValidator());
 	
-	public String RACER_CargoGitSource = "https://github.com/phildawes/racer.git";
-	public String RACER_CargoGitTag = "v1.1.0";
-	
 	public static final DerivedValuePreference<Path> RAINICORN_PATH2 = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
 		"rainicorn_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
 		new LocationOrSinglePathValidator("Rainicorn parse_describe:"));
 	
-	public String RAINICORN_CargoGitSource = "https://github.com/RustDT/Rainicorn";
-	public String RAINICORN_CargoGitTag = "version_1.x";
 	
+	public static final DerivedValuePreference<Path> RUSTFMT_PATH = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+			"rustfmt_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
+			new LocationOrSinglePathValidator("rustfmt:"));
+
 }

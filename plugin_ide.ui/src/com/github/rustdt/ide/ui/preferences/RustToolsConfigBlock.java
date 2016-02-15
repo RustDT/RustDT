@@ -10,10 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.preferences;
 
-import static com.github.rustdt.ide.ui.preferences.Start_CargoInstallJob_Operation.dlArgs;
 import static melnorme.utilbox.core.CoreUtil.list;
-
-import org.eclipse.swt.widgets.Composite;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
@@ -36,15 +33,17 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	protected final ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
 	protected final RacerLocationGroup racerGroup = new RacerLocationGroup(); 
 	protected final RainicornLocationGroup rainicornGroup = new RainicornLocationGroup();
+	protected final RustFmtLocationGroup rustfmtGroup = new RustFmtLocationGroup();
 	
 	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
 		super(prefContext);
 		
 		validation.addFieldValidation(true, sdkSrcLocation, new RustSDKSrcLocationValidator());
-		validation.addValidatableField(true, racerGroup.getStatusField());
-		validation.addValidatableField(true, rainicornGroup.getStatusField());
-		
 		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2);
+		
+		addSubComponent(racerGroup);
+		addSubComponent(rainicornGroup);
+		addSubComponent(rustfmtGroup);
 	}
 	
 	@Override
@@ -62,20 +61,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		return new RustSDKLocationValidator();
 	}
 	
-	@Override
-	protected void createContents(Composite topControl) {
-		super.createContents(topControl);
-		
-		racerGroup.createComponent(topControl, gdFillDefaults().grab(true, false).create());
-		rainicornGroup.createComponent(topControl, gdFillDefaults().grab(true, false).create());
-	}
-	
-	@Override
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		racerGroup.setEnabled(enabled);
-		rainicornGroup.setEnabled(enabled);
-	}
+	public static final Indexable<String> RACER_CargoInstallArgs = list("racer");
 	
 	public class RacerLocationGroup extends AbstractToolLocationGroup {
 		
@@ -92,7 +78,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
 			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
-				list("racer"),
+				RACER_CargoInstallArgs,
 				"racer") {
 				
 				@Override
@@ -103,6 +89,9 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		};
 		
 	}
+	
+	public static final Indexable<String> RAINICORN_CargoInstallArgs = list(
+		"--git", "https://github.com/RustDT/Rainicorn", "--tag", "version_1.x");
 	
 	public class RainicornLocationGroup extends AbstractToolLocationGroup {
 		
@@ -120,8 +109,39 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		@Override
 		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
 			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
-				dlArgs(RustSDKPreferences.RAINICORN_CargoGitSource, RustSDKPreferences.RAINICORN_CargoGitTag),
+				RAINICORN_CargoInstallArgs,
 				"parse_describe") {
+				
+				@Override
+				protected String getSDKPath() {
+					return RustToolsConfigBlock.this.getLocationField().getFieldValue();
+				};
+			};
+		};
+		
+	}
+	
+	public static final Indexable<String> RUSTFMT_CargoGitSource = list("rustfmt");
+	
+	public class RustFmtLocationGroup extends AbstractToolLocationGroup {
+		
+		public RustFmtLocationGroup() {
+			super("rustfmt");
+			
+			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RUSTFMT_PATH);
+		}
+		
+		@Override
+		protected Indexable<IDisableableWidget> getSubWidgets() {
+			return list(toolLocationField);
+		}
+		
+		@Override
+		protected BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField) {
+			
+			return new Start_CargoInstallJob_Operation(toolName, downloadToolTextField,
+				RUSTFMT_CargoGitSource,
+				"rustfmt") {
 				
 				@Override
 				protected String getSDKPath() {
