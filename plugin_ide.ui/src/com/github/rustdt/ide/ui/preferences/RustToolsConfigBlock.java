@@ -13,7 +13,6 @@ package com.github.rustdt.ide.ui.preferences;
 import static com.github.rustdt.ide.ui.preferences.Start_CargoInstallJob_Operation.dlArgs;
 import static melnorme.utilbox.core.CoreUtil.list;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Composite;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
@@ -21,16 +20,13 @@ import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 import melnorme.lang.ide.ui.ContentAssistPreferences;
+import melnorme.lang.ide.ui.preferences.AbstractToolLocationGroup;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
 import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
-import melnorme.util.swt.SWTFactoryUtil;
-import melnorme.util.swt.components.AbstractCompositeWidget;
-import melnorme.util.swt.components.FieldComponent;
 import melnorme.util.swt.components.IDisableableWidget;
 import melnorme.util.swt.components.fields.ButtonTextField;
-import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
 import melnorme.utilbox.collections.Indexable;
 
@@ -78,49 +74,6 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		super.setEnabled(enabled);
 		racerGroup.setEnabled(enabled);
 		rainicornGroup.setEnabled(enabled);
-	}
-	
-	public abstract class AbstractToolLocationGroup extends AbstractCompositeWidget {
-		
-		public final ButtonTextField toolLocation = new DownloadToolTextField("Executable:", "Download...") {
-			@Override
-			public BasicUIOperation getDownloadButtonHandler() {
-				return do_getDownloadButtonHandler(this);
-			}
-		};
-		
-		public final FieldComponent<Boolean> showErrorsDialogOption;
-		
-		protected final String toolName;
-		
-		public AbstractToolLocationGroup(String toolName) {
-			this.toolName = toolName;
-			this.showErrorsDialogOption = new CheckBoxField(
-				"Show error dialog if " + toolName + " failures occur.");
-		}
-		
-		@Override
-		protected Composite doCreateTopLevelControl(Composite parent) {
-			return SWTFactoryUtil.createGroup(parent, toolName + ": ");
-		}
-		
-		@Override
-		protected GridLayoutFactory createTopLevelLayout() {
-			return GridLayoutFactory.swtDefaults().numColumns(getPreferredLayoutColumns());
-		}
-		
-		@Override
-		public int getPreferredLayoutColumns() {
-			return 4;
-		}
-		
-		@Override
-		protected Indexable<IDisableableWidget> getSubWidgets() {
-			return list(toolLocation, showErrorsDialogOption);
-		}
-		
-		protected abstract BasicUIOperation do_getDownloadButtonHandler(DownloadToolTextField downloadToolTextField);
-		
 	}
 	
 	public class RacerLocationGroup extends AbstractToolLocationGroup {
