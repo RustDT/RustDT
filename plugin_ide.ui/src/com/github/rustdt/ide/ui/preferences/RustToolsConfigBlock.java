@@ -27,6 +27,7 @@ import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
 import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
 import melnorme.util.swt.components.IDisableableWidget;
 import melnorme.util.swt.components.fields.ButtonTextField;
+import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.DirectoryTextField;
 import melnorme.utilbox.collections.Indexable;
 
@@ -81,8 +82,11 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RacerLocationGroup() {
 			super("Racer");
 			
-			bindToDerivedPreference(this.toolLocation, RustSDKPreferences.RACER_PATH);
-			bindToPreference(this.showErrorsDialogOption, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
+			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RACER_PATH);
+			CheckBoxField showErrorsDialogOption = new CheckBoxField(
+				"Show error dialog if " + toolName + " failures occur.");
+			subwidgets.add(showErrorsDialogOption);
+			bindToPreference(showErrorsDialogOption, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
 		}
 		
 		@Override
@@ -105,12 +109,12 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RainicornLocationGroup() {
 			super("Rainicorn parse_describe");
 			
-			bindToDerivedPreference(this.toolLocation, RustSDKPreferences.RAINICORN_PATH2);
+			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RAINICORN_PATH2);
 		}
 		
 		@Override
 		protected Indexable<IDisableableWidget> getSubWidgets() {
-			return list(toolLocation);
+			return list(toolLocationField);
 		}
 		
 		@Override
