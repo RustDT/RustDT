@@ -10,13 +10,17 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.editor;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.ui.actions.RustOpenDefinitionOperation;
 
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
+import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
 import melnorme.lang.ide.ui.editor.LangEditorActionContributor;
 import melnorme.lang.tooling.ast.SourceRange;
+import melnorme.utilbox.concurrency.OperationCancellation;
+import melnorme.utilbox.core.CommonException;
 
 public class RustEditorActionContributor extends LangEditorActionContributor {
 	
@@ -28,6 +32,16 @@ public class RustEditorActionContributor extends LangEditorActionContributor {
 	
 	@Override
 	protected void registerOtherEditorHandlers() {
+	}
+	
+	@Override
+	protected IEditorOperationCreator getOpCreator_Format() {
+		return editor -> new BasicUIOperation("Format") {
+			@Override
+			protected void doOperation() throws CoreException, CommonException, OperationCancellation {
+				throw new CommonException("Not implemented");
+			}
+		};
 	}
 	
 }
