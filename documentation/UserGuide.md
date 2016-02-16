@@ -5,13 +5,17 @@ what overall functionalities are available.
 
 ## Configuration
 
-A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`.
+A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`. Additionally:
 
-Additionally, for functionality such as code completion, you will need:
- * The [Rust sources package](https://www.rust-lang.org/downloads.html) (click "Source"). This package is not included in the Rust intallation, so it must be obtained separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
- * The [Racer](https://github.com/phildawes/racer) tool. It is recommended to use the "Download" button in the preference page to have RustDT automatically download Racer (this will use `cargo install` - as such the Rust installation must already be configured).
+ * For code completion, you will need the [Racer](https://github.com/phildawes/racer) tool. You will also need the [Rust sources package](https://www.rust-lang.org/downloads.html). This package is not included in the Rust intallation, it must be downloaded separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
  
-For functionality such as Outline/Quick-Outline and on-the-fly parsing errors, you will need the [Rainicorn](https://github.com/RustDT/Rainicorn) tool. Same as with Racer, you can use the "Download" button to install it.
+ * For Outline/Quick-Outline and on-the-fly parsing errors, you will need the [Rainicorn](https://github.com/RustDT/Rainicorn) tool. 
+
+ * For the source format operation, you will need [rustfmt](https://github.com/rust-lang-nursery/rustfmt).
+
+It is recommended to use the "Download" button in the preference page to have RustDT automatically download the corresponding tool. 
+This will use `cargo install`, and as such the Rust installation must already be configured. 
+
 
 ### Eclipse basics
 

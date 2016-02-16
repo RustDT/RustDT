@@ -10,6 +10,7 @@
  * Project builder, using Cargo.
    * Build errors reported inline in the editor (as squiggly lines) and Project Explorer.
    * Can automatically create launch configurations from Cargo binary or test targets.
+ * Format using `rustfmt`.
 
 | [![sample_basic](screenshots/sample_basic.thumb.png)](screenshots/sample_basic.png?raw=true)<br/>`Editor and workbench screenshot` |
 |----|
