@@ -20,6 +20,7 @@ import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
+import melnorme.utilbox.misc.PathUtil;
 
 public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField {
 	
@@ -55,15 +56,38 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		Path sdkToolPath = toolMgr.getSDKToolPathValidator().getValidatedPath(getSDKPath());
 		
 		// Determine install destination path
-		Location dest = EnvUtils.getLocationFromEnvVar("HOME").resolve_fromValid(".cargo/rustdt");
+		Location dest = getCargoRootDestinationPath();
 		
-		toolBinPath = dest.resolve("bin").resolve(exeName).toPathString() + MiscUtil.getExecutableSuffix();
+		toolBinPath = dest.resolve(getBinExeSuffix()).toPathString();
 		
 		ArrayList2<String> args = new ArrayList2<>("install");
 		args.addAll(sourceArgs);
 		args.addElements("--root", dest.toPathString());
 		
 		return toolMgr.createToolProcessBuilder(sdkToolPath, null, args.toArray(String.class));
+	}
+	
+	protected Path getBinExeSuffix() {
+		return PathUtil.createValidPath("bin").resolve(exeName + MiscUtil.getExecutableSuffix());
+	}
+	
+	protected Location getCargoRootDestinationPath() throws CommonException {
+		Path currentPath = PathUtil.createPath(toolField.getValue());
+		if(
+			currentPath.isAbsolute() &&
+			currentPath.endsWith(getBinExeSuffix())
+		) {
+			// Reuse path from prefs field 
+			return Location.create(currentPath).getParent().getParent();
+		}
+		return getHomeDir().resolve_fromValid(".cargo/RustDT");
+	}
+	
+	protected Location getHomeDir() throws CommonException {
+		if(MiscUtil.OS_IS_WINDOWS) {
+			return EnvUtils.getLocationFromEnvVar("UserProfile");
+		}
+		return EnvUtils.getLocationFromEnvVar("HOME");
 	}
 	
 }
