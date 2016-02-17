@@ -51,6 +51,7 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 		
 		ProcessBuilder pb = new ProcessBuilder(cmdLine);
 		// set directory, workaround for bug: https://github.com/rust-lang-nursery/rustfmt/issues/562
+		// Also, it make rustfmt look for the rustfmt.toml config file in folders parent chain
 		pb.directory(inputLoc.getParent().toFile());
 		
 		String input = doc.get();

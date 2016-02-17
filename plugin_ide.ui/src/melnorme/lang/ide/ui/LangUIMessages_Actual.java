@@ -13,6 +13,9 @@ public abstract class LangUIMessages_Actual implements LangUIMessages_Default {
 	
 	
 	public static final String CargoUpdate_OpName 
-		= "cargo update";
+		= "Update Dependencies (cargo update)";
 
+	public static final String CargoFormat_OpName 
+		= "Format Crate (cargo fmt)";
+	
 }

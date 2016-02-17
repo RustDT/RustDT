@@ -4,6 +4,7 @@
  * Fixed incorrect icon for errors and warnings in preference page status.
  * Fixed: can't save preference pages with empty fields.
  * Added support for source formatting using rustfmt (`Ctrl+Shift+F`).
+  * Added `Format Crate (cargo fmt)` command to Project context menu.
  
 
 ### 0.5.0
