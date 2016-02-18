@@ -4,9 +4,9 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.dsource</groupId>
+	<groupId>com.github.rustdt</groupId>
 	<artifactId>ide-aggregator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -93,7 +93,7 @@
 						<artifact>
 							<groupId>${project.groupId}</groupId>
 							<artifactId>ide-aggregator</artifactId>
-							<version>0.0.1-SNAPSHOT</version>
+							<version>1-SNAPSHOT</version>
 							<classifier>${ide.targetPlatform}</classifier>
 						</artifact>
 					</target>
