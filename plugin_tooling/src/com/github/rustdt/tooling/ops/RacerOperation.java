@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import java.nio.file.Path;
+
+import melnorme.lang.tooling.data.IValidatableValue;
 import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
-import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
@@ -22,13 +24,16 @@ import melnorme.utilbox.misc.Location;
 
 public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	
-	protected final String sdkSrcPath;
+	protected final IValidatableValue<Path> racerPath;
+	protected final IValidatableValue<Location> sdkSrcLocation;
 	protected final ArrayList2<String> arguments;
 	
-	public RacerOperation(IOperationService opHelper, String racerPath, String sdkSrcPath, 
+	public RacerOperation(IOperationService opHelper,
+			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation,
 			ArrayList2<String> arguments) {
-		super(opHelper, racerPath, true);
-		this.sdkSrcPath = sdkSrcPath;
+		super(opHelper, "NOT_USED", true);
+		this.racerPath = racerPath;
+		this.sdkSrcLocation = sdkSrcLocation;
 		this.arguments = arguments;
 	}
 	
@@ -46,9 +51,9 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	}
 	
 	@Override
-	protected ProcessBuilder createProcessBuilder() throws ValidationException {
-		String toolExePath = new RustRacerLocationValidator().getValidatedPath(toolPath).toString();
-		String rustSrcPath = new RustSDKSrcLocationValidator().getValidatedLocation(sdkSrcPath).toString();
+	protected ProcessBuilder createProcessBuilder() throws StatusException {
+		String toolExePath = racerPath.getValidatedValue().toString();
+		String rustSrcPath = sdkSrcLocation.getValidatedValue().toString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
 		

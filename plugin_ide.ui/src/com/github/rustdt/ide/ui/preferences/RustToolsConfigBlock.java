@@ -14,7 +14,6 @@ import static melnorme.utilbox.core.CoreUtil.list;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
-import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 import melnorme.lang.ide.ui.ContentAssistPreferences;
 import melnorme.lang.ide.ui.preferences.AbstractToolLocationGroup;
@@ -38,8 +37,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
 		super(prefContext);
 		
-		validation.addFieldValidation(true, sdkSrcLocation, new RustSDKSrcLocationValidator());
-		bindToPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH2);
+		bindToDerivedPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH3);
 		
 		addSubComponent(racerGroup);
 		addSubComponent(rainicornGroup);

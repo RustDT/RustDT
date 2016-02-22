@@ -15,12 +15,11 @@ import java.nio.file.Path;
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.prefs.DerivedValuePreference;
-import melnorme.lang.ide.core.utils.prefs.IProjectPreference;
-import melnorme.lang.ide.core.utils.prefs.StringPreference;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.lang.tooling.ops.util.LocationValidator;
@@ -37,9 +36,9 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static final RustSDKAcessor SDK_PATH_Acessor = new RustSDKAcessor();
 	
-	public static final IProjectPreference<String> SDK_SRC_PATH2 = new StringPreference(LangCore.PLUGIN_ID, 
-		"sdk_src_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS)
-			.getProjectPreference();
+	public static final DerivedValuePreference<Location> SDK_SRC_PATH3 = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+			"sdk_src_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
+		new RustSDKSrcLocationValidator().asLocationValidator());
 	
 	public static final DerivedValuePreference<Path> RACER_PATH = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
 		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
@@ -52,6 +51,6 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static final DerivedValuePreference<Path> RUSTFMT_PATH = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
 			"rustfmt_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
-			new LocationOrSinglePathValidator("rustfmt:"));
+		new LocationOrSinglePathValidator("rustfmt:"));
 
 }

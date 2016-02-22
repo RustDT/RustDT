@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.text.completion;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -42,8 +43,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		
 		context.getEditor_nonNull().doSave(pm);
 		
-		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH2.getEffectiveValue(context.getProject());
-		String racerPath = RustSDKPreferences.RACER_PATH.getEffectiveValue(context.getProject());
+		IProject project = context.getProject();
 		
 		int line_0 = context.getInvocationLine_0();
 		int col_0 = context.getInvocationColumn_0();
@@ -52,7 +52,9 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		ToolManagerEngineToolRunner2 toolRunner = getEngineToolRunner();
 		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(toolRunner, 
-			racerPath, sdkSrcPath, offset, line_0, col_0, fileLocation);
+			RustSDKPreferences.RACER_PATH.getValidatableValue(project),
+			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
+			offset, line_0, col_0, fileLocation);
 		try {
 			return racerCompletionOp.execute(new EclipseCancelMonitor(pm));
 		} catch(OperationSoftFailure e) {

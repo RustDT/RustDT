@@ -45,13 +45,12 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
 			throws CoreException, OperationCancellation, CommonException {
 		
-		String racerPath = RustSDKPreferences.RACER_PATH.getEffectiveValue(project);
-		String sdkSrcPath = RustSDKPreferences.SDK_SRC_PATH2.getEffectiveValue(project);
-		
 		ToolManagerEngineToolRunner2 toolRunner = getToolManager().new ToolManagerEngineToolRunner2();
 		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
-			racerPath, sdkSrcPath, range.getOffset(), line_0, col_0, inputLoc);
+			RustSDKPreferences.RACER_PATH.getValidatableValue(project) , 
+			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project), 
+			range.getOffset(), line_0, col_0, inputLoc);
 		
 		try {
 			return op.execute(cm(monitor));
