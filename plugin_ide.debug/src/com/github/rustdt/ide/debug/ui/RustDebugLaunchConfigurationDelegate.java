@@ -37,18 +37,20 @@ import org.eclipse.cdt.dsf.service.DsfSession;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 
+import com.github.rustdt.ide.core.operations.RustSDKPreferences;
+
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.ToolchainPreferences;
+import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
 import melnorme.lang.ide.debug.core.GdbLaunchDelegateExtension;
 import melnorme.lang.ide.debug.core.LangSourceLookupDirector;
 import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
+import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.FileUtil;
@@ -240,15 +242,22 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 			return new LangSourceLookupDirector(session) {
 				@Override
 				protected void customizeDefaultSourceContainers(ArrayList2<ISourceContainer> containers) {
-					String sdk_Path = ToolchainPreferences.SDK_PATH2.getEffectiveValue(project);
+					
+					Location sdkSrcLocation;
+					try {
+						sdkSrcLocation = RustSDKPreferences.SDK_SRC_PATH3.getDerivedValue(project);
+					} catch(StatusException e) {
+						LangCore.logWarning("Error setting up source mapping for Rust `src` path.", e);
+						return;
+					}
 					
 					// So, this seems to be the mapping that Rust standard lib sources get in debug info.
 					// I guess this could change in the future, need to watch out for that.
 					
 					containers.add(new MapEntrySourceContainer(
 						projectLoc.append("../src"),
-						new Path(sdk_Path).append("/src"))
-					);
+						ResourceUtils.epath(sdkSrcLocation)
+					));
 				}
 			};
 		}

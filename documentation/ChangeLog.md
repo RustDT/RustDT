@@ -8,6 +8,7 @@
   * Added `Format Crate (cargo fmt)` command to Project context menu.
  * Fixed: Preferences "Download..." button not working in Windows if HOME env-var not set (now uses `%UserProfile%` instead).
   * Also, "Download..." button now tries to download to the existing location in the preferences field, if it's a valid one.
+ * Fixed: debugging won't find the Rust installation sources (the standard library), if the configured `src` path is any other than `$SDK_PATH/src`.
  
 
 ### 0.5.0
