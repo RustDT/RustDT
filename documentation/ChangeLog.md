@@ -4,8 +4,9 @@
  * Added signing to releases.
  * Fixed incorrect icon for errors and warnings in preference page status.
  * Fixed: can't save preference pages with empty fields.
- * Added support for source formatting using rustfmt (`Ctrl+Shift+F`).
+ * Added support for source formatting using `rustfmt` (`Ctrl+Shift+F`).
   * Added `Format Crate (cargo fmt)` command to Project context menu.
+  * Added "Format automatically on editor save." option.
  * Fixed: Preferences "Download..." button not working in Windows if HOME env-var not set (now uses `%UserProfile%` instead).
   * Also, "Download..." button now tries to download to the existing location in the preferences field, if it's a valid one.
  * Fixed: debugging won't find the Rust installation sources (the standard library), if the configured `src` path is any other than `$SDK_PATH/src`.

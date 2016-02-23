@@ -123,15 +123,19 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
 	public class RustFmtLocationGroup extends AbstractToolLocationGroup {
 		
+		public final CheckBoxField formatOnSaveField = new CheckBoxField(
+			"Format automatically on editor save.");
+		
 		public RustFmtLocationGroup() {
 			super("rustfmt");
 			
 			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RUSTFMT_PATH);
+			bindToPreference(this.formatOnSaveField, RustSDKPreferences.FORMAT_ON_SAVE);
 		}
 		
 		@Override
 		protected Indexable<IDisableableWidget> getSubWidgets() {
-			return list(toolLocationField);
+			return list(toolLocationField, formatOnSaveField);
 		}
 		
 		@Override
