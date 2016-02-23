@@ -70,7 +70,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 			CheckBoxField showErrorsDialogOption = new CheckBoxField(
 				"Show error dialog if " + toolName + " failures occur.");
 			subwidgets.add(showErrorsDialogOption);
-			bindToPreference(showErrorsDialogOption, ContentAssistPreferences.ShowDialogIfContentAssistErrors);
+			prefContext.bindToPreference(showErrorsDialogOption, 
+				ContentAssistPreferences.ShowDialogIfContentAssistErrors);
 		}
 		
 		@Override
@@ -130,7 +131,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 			super("rustfmt");
 			
 			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RUSTFMT_PATH);
-			bindToPreference(this.formatOnSaveField, RustSDKPreferences.FORMAT_ON_SAVE);
+			prefContext.bindToPreference(this.formatOnSaveField, RustSDKPreferences.FORMAT_ON_SAVE);
 		}
 		
 		@Override

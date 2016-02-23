@@ -11,6 +11,7 @@
 package com.github.rustdt.ide.ui.preferences;
 
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.lang.ide.ui.preferences.pages.RootPreferencePage;
 
 
@@ -23,8 +24,8 @@ public class RustRootPreferencePage extends RootPreferencePage {
 	}
 	
 	@Override
-	protected LangSDKConfigBlock init_createLangSDKConfigBlock() {
-		return new RustToolsConfigBlock(null);
+	protected LangSDKConfigBlock init_createPreferencesBlock(PreferencesPageContext prefContext) {
+		return new RustToolsConfigBlock(prefContext);
 	}
 	
 }

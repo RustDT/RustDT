@@ -13,11 +13,12 @@ package com.github.rustdt.ide.ui.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import melnorme.lang.ide.ui.preferences.EditorConfigurationBlock;
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 
 public class RustEditorConfigurationBlock extends EditorConfigurationBlock {
 	
-	public RustEditorConfigurationBlock(IPreferenceStore store) {
-		super(store);
+	public RustEditorConfigurationBlock(PreferencesPageContext prefContext, IPreferenceStore store) {
+		super(prefContext, store);
 	}
 	
 }

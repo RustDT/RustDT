@@ -12,6 +12,7 @@ package com.github.rustdt.ide.ui.preferences;
 
 
 import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 
 public class RustSourceColoringPreferencePage extends AbstractPreferencesBlockPrefPage {
 	
@@ -25,8 +26,8 @@ public class RustSourceColoringPreferencePage extends AbstractPreferencesBlockPr
 	}
 	
 	@Override
-	protected RustSourceColoringConfigurationBlock init_createPreferencesBlock() {
-		return new RustSourceColoringConfigurationBlock();
+	protected RustSourceColoringConfigurationBlock init_createPreferencesBlock(PreferencesPageContext prefContext) {
+		return new RustSourceColoringConfigurationBlock(prefContext);
 	}
 	
 }

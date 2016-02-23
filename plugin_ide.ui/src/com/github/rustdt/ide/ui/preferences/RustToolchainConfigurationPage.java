@@ -13,18 +13,16 @@ package com.github.rustdt.ide.ui.preferences;
 import org.eclipse.core.resources.IProject;
 
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
-import melnorme.lang.ide.ui.dialogs.AbstractLangPropertyPage;
 import melnorme.lang.ide.ui.preferences.ProjectSDKSettingsBlock;
-import melnorme.lang.ide.ui.preferences.common.IPreferencesWidget;
 
-public class RustToolchainConfigurationPage extends AbstractLangPropertyPage {
+public class RustToolchainConfigurationPage extends AbstractProjectToolchainSettingsPage {
 	
 	@Override
-	protected IPreferencesWidget createProjectConfigWidget(IProject project) {
+	protected ProjectSDKSettingsBlock createProjectConfigWidget(IProject project) {
 		return new ProjectSDKSettingsBlock(project, ToolchainPreferences.USE_PROJECT_SETTINGS) {
 			
 			@Override
-			protected RustToolsConfigBlock init_createLangSDKBlock() {
+			protected RustToolsConfigBlock init_createProjectSettingsBlock2() {
 				return new RustToolsConfigBlock(prefContext);
 			}
 			

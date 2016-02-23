@@ -13,6 +13,7 @@ package com.github.rustdt.ide.ui.preferences;
 import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.preferences.EditorContentAssistConfigurationBlock;
 import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 
 public class RustContentAssistPreferencePage extends AbstractPreferencesBlockPrefPage {
 	
@@ -23,8 +24,8 @@ public class RustContentAssistPreferencePage extends AbstractPreferencesBlockPre
 	}
 	
 	@Override
-	protected EditorContentAssistConfigurationBlock init_createPreferencesBlock() {
-		return new EditorContentAssistConfigurationBlock() {
+	protected EditorContentAssistConfigurationBlock init_createPreferencesBlock(PreferencesPageContext prefContext) {
+		return new EditorContentAssistConfigurationBlock(prefContext) {
 			@Override
 			protected boolean createAutoActivation_DoubleColonOption() {
 				return true;

@@ -16,13 +16,14 @@ import java.io.InputStream;
 
 import com.github.rustdt.ide.ui.text.RustColorPreferences;
 
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 import melnorme.lang.ide.ui.text.coloring.AbstractSourceColoringConfigurationBlock;
 import melnorme.util.swt.jface.LabeledTreeElement;
 
 public class RustSourceColoringConfigurationBlock extends AbstractSourceColoringConfigurationBlock {
 	
-	public RustSourceColoringConfigurationBlock() {
-		super();
+	public RustSourceColoringConfigurationBlock(PreferencesPageContext prefContext) {
+		super(prefContext);
 	}
 	
 	@Override

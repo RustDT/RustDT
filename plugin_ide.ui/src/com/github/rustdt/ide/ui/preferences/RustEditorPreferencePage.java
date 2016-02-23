@@ -14,6 +14,7 @@ package com.github.rustdt.ide.ui.preferences;
 
 import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.preferences.common.AbstractPreferencesBlockPrefPage;
+import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
 
 
 public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
@@ -28,8 +29,8 @@ public class RustEditorPreferencePage extends AbstractPreferencesBlockPrefPage {
 	}
 	
 	@Override
-	protected RustEditorConfigurationBlock init_createPreferencesBlock() {
-		return new RustEditorConfigurationBlock(LangUIPlugin.getInstance().getPreferenceStore());
+	protected RustEditorConfigurationBlock init_createPreferencesBlock(PreferencesPageContext prefContext) {
+		return new RustEditorConfigurationBlock(prefContext, LangUIPlugin.getInstance().getPreferenceStore());
 	}
 	
 }
