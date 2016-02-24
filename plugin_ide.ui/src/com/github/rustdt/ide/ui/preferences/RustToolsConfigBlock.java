@@ -32,6 +32,8 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	protected final RainicornLocationGroup rainicornGroup = new RainicornLocationGroup();
 	protected final RustFmtLocationGroup rustfmtGroup = new RustFmtLocationGroup();
 	
+	protected ButtonTextField sdkLocationField;
+	
 	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
 		super(prefContext);
 		
@@ -42,15 +44,15 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	
 	@Override
 	protected LanguageSDKLocationGroup init_createSDKLocationGroup() {
-		return new LanguageSDKLocationGroup() {
-			
-			protected final ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
-			
+		LanguageSDKLocationGroup languageSDKLocationGroup = new LanguageSDKLocationGroup() {
 			{
+				ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
 				addSubComponent(sdkSrcLocation);
 				bindToDerivedPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH3);
 			}
 		};
+		sdkLocationField = languageSDKLocationGroup.sdkLocationField;
+		return languageSDKLocationGroup;
 	}
 	
 	@Override
@@ -82,7 +84,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 				
 				@Override
 				protected String getSDKPath() {
-					return RustToolsConfigBlock.this.getLocationField().getFieldValue();
+					return RustToolsConfigBlock.this.sdkLocationField.getFieldValue();
 				};
 			};
 		};
@@ -108,7 +110,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 				
 				@Override
 				protected String getSDKPath() {
-					return RustToolsConfigBlock.this.getLocationField().getFieldValue();
+					return RustToolsConfigBlock.this.sdkLocationField.getFieldValue();
 				};
 			};
 		};
@@ -140,7 +142,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 				
 				@Override
 				protected String getSDKPath() {
-					return RustToolsConfigBlock.this.getLocationField().getFieldValue();
+					return RustToolsConfigBlock.this.sdkLocationField.getFieldValue();
 				};
 			};
 		};
