@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-Vendor: %pluginProvider
 Bundle-SymbolicName: com.github.rustdt.ide.ui;singleton:=true
-Bundle-Version: 0.5.0.qualifier
+Bundle-Version: 0.5.1.qualifier
 Bundle-Activator: com.github.rustdt.ide.ui.RustUIPlugin
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
