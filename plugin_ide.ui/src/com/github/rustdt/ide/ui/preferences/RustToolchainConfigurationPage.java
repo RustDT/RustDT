@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IProject;
 
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.ui.preferences.ProjectSDKSettingsBlock;
+import melnorme.lang.ide.ui.preferences.common.AbstractProjectToolchainSettingsPage;
 
 public class RustToolchainConfigurationPage extends AbstractProjectToolchainSettingsPage {
 	

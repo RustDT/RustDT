@@ -30,9 +30,4 @@ public class RustEditorActionContributor extends LangEditorActionContributor {
 	protected void registerOtherEditorHandlers() {
 	}
 	
-	@Override
-	protected IEditorOperationCreator getOpCreator_Format() {
-		return editor -> new RustFmtOperation(editor);
-	}
-	
 }
