@@ -29,7 +29,9 @@ public class LangCore_Actual {
 	public static final String BUILD_PROBLEM_ID = PLUGIN_ID + ".build_problem";
 	public static final String SOURCE_PROBLEM_ID = PLUGIN_ID + ".source_problem";
 	
-	public static final String LANGUAGE_NAME = "Rust";
+	// Note: the variable shoudl not be named with a prefix of LANGUAGE_, 
+	// or it will interfere with MelnormeEclipse templating
+	public static final String NAME_OF_LANGUAGE = "Rust";
 	
 	
 	public static LangCore instance;
