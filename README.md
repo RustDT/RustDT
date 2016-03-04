@@ -3,6 +3,8 @@ See project page ( http://rustdt.github.io/ ) for user information.
 Developers Guide
 ================
 
+[![Join the chat at https://gitter.im/RustDT/RustDT](https://badges.gitter.im/RustDT/RustDT.svg)](https://gitter.im/RustDT/RustDT?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/RustDT/RustDT.svg?branch=latest)](https://travis-ci.org/RustDT/RustDT)
 
 #### Setting up the development environment:
