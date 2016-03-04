@@ -1,7 +1,8 @@
+[![Build Status](https://travis-ci.org/RustDT/RustDT.svg?branch=latest)](https://travis-ci.org/RustDT/RustDT)
+[![Gitter](https://badges.gitter.im/RustDT/RustDT.svg)](https://gitter.im/RustDT/RustDT?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 Developers Guide
 ================
-
-[![Build Status](https://travis-ci.org/RustDT/RustDT.svg?branch=latest)](https://travis-ci.org/RustDT/RustDT)
 
 #### Setting up the development environment:
  * You need [Eclipse PDE](https://eclipse.org/pde/) to develop Eclipse plugins. Download and start it.
