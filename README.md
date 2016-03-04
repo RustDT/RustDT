@@ -1,5 +1,3 @@
-See project page ( http://rustdt.github.io/ ) for user information.
-
 Developers Guide
 ================
 
