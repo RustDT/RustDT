@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed "IllegalStateException: The service has been unregistered" on Mars.2 when Eclipse is closed.
 
 ### 0.5.1
  * Added support for source formatting using `rustfmt` (`Ctrl+Shift+F`).
