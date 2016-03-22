@@ -63,7 +63,8 @@ public class CargoTargetHelper {
 		String[] matchingExes = crateLocation.resolve(exeDirectory).toFile().list(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.startsWith(exePrefix + "-");
+				File path = new File(dir, name);
+				return name.startsWith(exePrefix + "-") && !path.isDirectory();
 			}
 		});
 		
