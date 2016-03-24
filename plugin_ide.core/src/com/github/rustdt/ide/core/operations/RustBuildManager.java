@@ -26,6 +26,7 @@ import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperat
 import melnorme.lang.ide.core.operations.ToolMarkersHelper;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
+import melnorme.lang.ide.core.operations.build.BuildTargetData;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
 import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
@@ -69,10 +70,10 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	@Override
-	protected ArrayList2<BuildTarget> createBuildTargetsForNewInfo(IProject project, BundleInfo newBundleInfo,
+	protected ArrayList2<BuildTargetData> createBuildTargetsForNewBundleInfo(IProject project, BundleInfo newBundleInfo,
 			ProjectBuildInfo currentBuildInfo) {
 		
-		ArrayList2<BuildTarget> buildTargets = new ArrayList2<>();
+		ArrayList2<BuildTargetData> buildTargets = new ArrayList2<>();
 		
 		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
 			getBuildTargetName2("", BuildType_Default)));
@@ -81,6 +82,19 @@ public class RustBuildManager extends BuildManager {
 			getBuildTargetName2("", BuildType_CrateTests)));
 		
 		return buildTargets;
+	}
+	
+	/* FIXME: review */
+	protected BuildTargetData createBuildTargetFromConfig(ProjectBuildInfo currentBuildInfo, boolean isFirstConfig, String targetName) {
+		// Get the old build target, of the same name
+		BuildTarget oldBuildTarget = currentBuildInfo == null ? null : 
+				currentBuildInfo.getDefinedBuildTarget(targetName);
+		
+		// Reuse the settings
+		BuildTargetData newBuildTargetData = oldBuildTarget != null ? 
+				oldBuildTarget.getDataCopy() : 
+				new BuildTargetData(targetName, isFirstConfig, null, null, null);
+		return newBuildTargetData;
 	}
 	
 	@Override
