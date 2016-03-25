@@ -12,24 +12,23 @@ package com.github.rustdt.ide.core.operations;
 
 import com.github.rustdt.tooling.cargo.CargoTargetHelper;
 
-import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
+import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.utilbox.core.CommonException;
 
 public class CoreCargoTargetHelper extends CargoTargetHelper {
 	
-	public DebugMode getBuildMode(ValidatedBuildTarget vbt) throws CommonException {
-		return getBuildMode(vbt.getEffectiveEvaluatedBuildArguments());
+	public DebugMode getBuildMode(BuildTarget bt) throws CommonException {
+		return getBuildMode(bt.getEffectiveEvaluatedBuildArguments());
 	}
 	
-	public String getExecutablePathForCargoTarget(String cargoTargetName, 
-			ValidatedBuildTarget vbt) throws CommonException {
-		return getExecutablePathForCargoTarget(cargoTargetName, getBuildMode(vbt));
+	public String getExecutablePathForCargoTarget(String cargoTargetName, BuildTarget bt) throws CommonException {
+		return getExecutablePathForCargoTarget(cargoTargetName, getBuildMode(bt));
 	}
 	
-	public LaunchArtifact getLaunchArtifactForTestTarget(ValidatedBuildTarget vbt, String testTargetName) 
+	public LaunchArtifact getLaunchArtifactForTestTarget(BuildTarget bt, String testTargetName) 
 			throws CommonException {
-		return getLaunchArtifactForTestTarget(vbt.getProjectLocation(), testTargetName, getBuildMode(vbt));
+		return getLaunchArtifactForTestTarget(bt.getProjectLocation(), testTargetName, getBuildMode(bt));
 	}
 	
 }

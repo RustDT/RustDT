@@ -68,7 +68,7 @@ public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider imple
 		
 		@Override
 		public StyledString visitManifestFile(IFile element) {
-			BundleInfo bundleInfo = LangCore_Actual.getBundleModel().getProjectInfo(element.getProject());
+			BundleInfo bundleInfo = LangCore_Actual.getBundleModel().getBundleInfo(element.getProject());
 			if(bundleInfo == null) {
 				return null;
 			}

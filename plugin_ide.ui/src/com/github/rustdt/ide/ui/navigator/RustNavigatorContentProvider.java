@@ -31,7 +31,7 @@ public class RustNavigatorContentProvider extends AbstractNavigatorContentProvid
 		return new LangNavigatorSwitcher_GetChildren() {
 			@Override
 			public void addFirstProjectChildren(IProject project, ArrayList2<Object> projectChildren) {
-				BundleInfo projectInfo = LangCore_Actual.getBundleModel().getProjectInfo(project);
+				BundleInfo projectInfo = LangCore_Actual.getBundleModel().getBundleInfo(project);
 				if(projectInfo != null) {
 					projectChildren.add(new DependenciesContainer(projectInfo, project));
 				}

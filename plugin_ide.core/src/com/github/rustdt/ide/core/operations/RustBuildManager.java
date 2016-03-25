@@ -28,9 +28,7 @@ import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.BuildTargetData;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
-import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
-import melnorme.lang.ide.core.project_model.ProjectBuildInfo;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.bundle.BuildConfiguration;
 import melnorme.lang.tooling.bundle.BuildTargetNameParser;
@@ -55,6 +53,11 @@ public class RustBuildManager extends BuildManager {
 	public static final String BuildType_Default = "crate#no-tests";
 	public static final String BuildType_CrateTests = "crate#tests";
 	
+	public final RustCrateNoTestsBuildType BUILD_TYPE_Default = 
+			new RustCrateNoTestsBuildType(BuildType_Default);
+	public final RustCrateTestsBuildType BUILD_TYPE_Tests = 
+			new RustCrateTestsBuildType(BuildType_CrateTests);
+	
 	public RustBuildManager(LangBundleModel bundleModel) {
 		super(bundleModel);
 	}
@@ -62,39 +65,31 @@ public class RustBuildManager extends BuildManager {
 	@Override
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
-			new RustCrateNoTestsBuildType(BuildType_Default),
-			new RustCrateTestsBuildType(BuildType_CrateTests),
+			BUILD_TYPE_Default,
+			BUILD_TYPE_Tests,
 			new RustCrateBinaryBuildType("bin"),
 			new RustCrateSingleTestBuildType("test")
 		);
 	}
 	
 	@Override
-	protected ArrayList2<BuildTargetData> createBuildTargetsForNewBundleInfo(IProject project, BundleInfo newBundleInfo,
-			ProjectBuildInfo currentBuildInfo) {
+	protected ArrayList2<BuildTarget> getDefaultBuildTargets(IProject project, BundleInfo newBundleInfo) {
+		ArrayList2<BuildTarget> buildTargets = new ArrayList2<>();
 		
-		ArrayList2<BuildTargetData> buildTargets = new ArrayList2<>();
-		
-		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
-			getBuildTargetName2("", BuildType_Default)));
-		
-		buildTargets.add(createBuildTargetFromConfig(currentBuildInfo, true, 
-			getBuildTargetName2("", BuildType_CrateTests)));
+		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Default, new BuildConfiguration("", null)));
+		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Tests, new BuildConfiguration("", null)));
 		
 		return buildTargets;
 	}
 	
-	/* FIXME: review */
-	protected BuildTargetData createBuildTargetFromConfig(ProjectBuildInfo currentBuildInfo, boolean isFirstConfig, String targetName) {
-		// Get the old build target, of the same name
-		BuildTarget oldBuildTarget = currentBuildInfo == null ? null : 
-				currentBuildInfo.getDefinedBuildTarget(targetName);
+	protected BuildTarget createBuildTarget(IProject project, BundleInfo newBundleInfo, BuildType buildType,
+			BuildConfiguration buildConfig) {
+		String targetName = getBuildTargetName2(buildConfig.getName(), buildType.getName());
 		
-		// Reuse the settings
-		BuildTargetData newBuildTargetData = oldBuildTarget != null ? 
-				oldBuildTarget.getDataCopy() : 
-				new BuildTargetData(targetName, isFirstConfig, null, null, null);
-		return newBuildTargetData;
+		BuildTargetData newBuildTargetData = new BuildTargetData(targetName, true); 
+		
+		BuildTarget buildTarget = new BuildTarget(project, newBundleInfo, newBuildTargetData, buildType, buildConfig);
+		return buildTarget;
 	}
 	
 	@Override
@@ -111,30 +106,30 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected BuildConfiguration getValidBuildconfiguration(String buildConfigName,
-				ProjectBuildInfo buildInfo) throws CommonException {
+		protected BuildConfiguration getValidBuildconfiguration(String buildConfigName, BundleInfo bundleInfo)
+				throws CommonException {
 			return new BuildConfiguration(buildConfigName, null);
 		}
 		
-		protected Location getProjectLocation(ValidatedBuildTarget vbt) throws CommonException {
-			return ResourceUtils.getProjectLocation2(vbt.getProject());
+		protected Location getProjectLocation(BuildTarget bt) throws CommonException {
+			return ResourceUtils.getProjectLocation2(bt.getProject());
 		}
 		
-		protected LaunchArtifact getLaunchArtifact(ValidatedBuildTarget vbt, FileRef fileRef) throws CommonException {
+		protected LaunchArtifact getLaunchArtifact(BuildTarget bt, FileRef fileRef) throws CommonException {
 			String cargoTargetName = fileRef.getBinaryPathString();
-			return getLaunchArtifact(vbt, cargoTargetName);
+			return getLaunchArtifact(bt, cargoTargetName);
 		}
 		
-		protected LaunchArtifact getLaunchArtifact(ValidatedBuildTarget vbt, String cargoTargetName)
+		protected LaunchArtifact getLaunchArtifact(BuildTarget bt, String cargoTargetName)
 				throws CommonException {
-			String exePath = cargoTargetHelper.getExecutablePathForCargoTarget(cargoTargetName, vbt);
+			String exePath = cargoTargetHelper.getExecutablePathForCargoTarget(cargoTargetName, bt);
 			return new LaunchArtifact(cargoTargetName, exePath);
 		}
 		
 		@Override
-		public CommonBuildTargetOperation getBuildOperation(ValidatedBuildTarget validatedBuildTarget,
+		public CommonBuildTargetOperation getBuildOperation(BuildTarget buildTarget,
 				IOperationConsoleHandler opHandler, Path buildToolPath) throws CommonException, CoreException {
-			return new RustBuildTargetOperation(validatedBuildTarget, opHandler, buildToolPath);
+			return new RustBuildTargetOperation(buildTarget, opHandler, buildToolPath);
 		}
 		
 	}
@@ -146,29 +141,29 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
 			buildArgs.add("build");
 		}
 		
 		@Override
-		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
-			CargoManifest manifest = vbt.getBundleInfo().getManifest();
+		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
+			CargoManifest manifest = bt.getBundleInfo().getManifest();
 			
-			Collection2<FileRef> effectiveBinaries = manifest.getEffectiveBinaries(getProjectLocation(vbt));
+			Collection2<FileRef> effectiveBinaries = manifest.getEffectiveBinaries(getProjectLocation(bt));
 			if(effectiveBinaries.size() == 1) {
-				return getLaunchArtifact(vbt, CollectionUtil.getSingleElementOrNull(effectiveBinaries));
+				return getLaunchArtifact(bt, CollectionUtil.getSingleElementOrNull(effectiveBinaries));
 			}
 			return null;
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
-			CargoManifest manifest = vbt.getBundleInfo().getManifest();
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
+			CargoManifest manifest = bt.getBundleInfo().getManifest();
 			
 			ArrayList2<LaunchArtifact> binariesPaths = new ArrayList2<>();
 			
-			for(FileRef binTargetName : manifest.getEffectiveBinaries(getProjectLocation(vbt))) {
-				binariesPaths.add(getLaunchArtifact(vbt, binTargetName.getBinaryPathString()));
+			for(FileRef binTargetName : manifest.getEffectiveBinaries(getProjectLocation(bt))) {
+				binariesPaths.add(getLaunchArtifact(bt, binTargetName.getBinaryPathString()));
 			}
 			
 			return binariesPaths;
@@ -183,26 +178,26 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
+		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
 			buildArgs.addElements("test", "--no-run");
 		}
 		
 		@Override
-		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
+		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
 			return null;
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
-			CargoManifest manifest = vbt.getBundleInfo().getManifest();
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
+			CargoManifest manifest = bt.getBundleInfo().getManifest();
 			
-			return addTestsSubTargets(vbt, manifest, new ArrayList2<>());
+			return addTestsSubTargets(bt, manifest, new ArrayList2<>());
 		}
 		
-		protected ArrayList2<LaunchArtifact> addTestsSubTargets(ValidatedBuildTarget vbt, CargoManifest manifest,
+		protected ArrayList2<LaunchArtifact> addTestsSubTargets(BuildTarget bt, CargoManifest manifest,
 				ArrayList2<LaunchArtifact> launchArtifacts) throws CommonException {
-			for(String testTargetName : manifest.getEffectiveTestTargets(getProjectLocation(vbt))) {
-				launchArtifacts.add(cargoTargetHelper.getLaunchArtifactForTestTarget(vbt, testTargetName));
+			for(String testTargetName : manifest.getEffectiveTestTargets(getProjectLocation(bt))) {
+				launchArtifacts.add(cargoTargetHelper.getLaunchArtifactForTestTarget(bt, testTargetName));
 			}
 			return launchArtifacts;
 		}
@@ -217,17 +212,17 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
-			buildArgs.addElements("build", "--bin", vbt.getBuildConfigName());
+		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
+			buildArgs.addElements("build", "--bin", bt.getBuildConfigName());
 		}
 		
 		@Override
-		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
-			return getLaunchArtifact(vbt, vbt.getBuildConfigName());
+		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
+			return getLaunchArtifact(bt, bt.getBuildConfigName());
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
 			return null;
 		}
 	}
@@ -240,19 +235,19 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void getDefaultBuildOptions(ValidatedBuildTarget vbt, ArrayList2<String> buildArgs) {
-			String testName = vbt.getBuildConfigName();
+		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
+			String testName = bt.getBuildConfigName();
 			buildArgs.addElements("build", "--test", testName);
 		}
 		
 		@Override
-		public LaunchArtifact getMainLaunchArtifact(ValidatedBuildTarget vbt) throws CommonException {
-			String testTargetName = vbt.getBuildConfigName();
-			return cargoTargetHelper.getLaunchArtifactForTestTarget(vbt, testTargetName);
+		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
+			String testTargetName = bt.getBuildConfigName();
+			return cargoTargetHelper.getLaunchArtifactForTestTarget(bt, testTargetName);
 		}
 		
 		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(ValidatedBuildTarget vbt) throws CommonException {
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
 			return null;
 		}
 		
@@ -262,9 +257,9 @@ public class RustBuildManager extends BuildManager {
 	
 	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(ValidatedBuildTarget validatedBuildTarget, IOperationConsoleHandler opHandler, 
+		public RustBuildTargetOperation(BuildTarget buildTarget, IOperationConsoleHandler opHandler, 
 				Path buildToolPath) throws CommonException, CoreException {
-			super(validatedBuildTarget.buildMgr, validatedBuildTarget, opHandler, buildToolPath);
+			super(buildTarget.buildMgr, buildTarget, opHandler, buildToolPath);
 		}
 		
 		@Override

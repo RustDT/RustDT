@@ -22,7 +22,7 @@ import com.github.rustdt.ide.core.operations.RustBuildManager;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.launch.BuildTargetLaunchCreator;
 import melnorme.lang.ide.core.operations.build.BuildManager.BuildType;
-import melnorme.lang.ide.core.operations.build.ValidatedBuildTarget;
+import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
@@ -53,9 +53,9 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 			String testName = StringUtil.trimEnd(file.getName(), ".rs");
 			
 			BuildType testsBuildType = buildMgr.getBuildType_NonNull(RustBuildManager.BuildType_CrateTests);
-			ValidatedBuildTarget vbt = buildMgr.getValidatedBuildTarget(project, testsBuildType.getName(), "");
+			BuildTarget bt = buildMgr.getValidDefinedBuildTarget(project, testsBuildType.getName(), "");
 			
-			LaunchArtifact launchArtifact = new CoreCargoTargetHelper().getLaunchArtifactForTestTarget(vbt, testName);
+			LaunchArtifact launchArtifact = new CoreCargoTargetHelper().getLaunchArtifactForTestTarget(bt, testName);
 			String launchNameSugestion = getLaunchNameForSubTarget(launchArtifact.getName());
 			
 			String buildTargetName = testsBuildType.getName();
