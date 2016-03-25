@@ -53,9 +53,9 @@ public class RustBuildManager extends BuildManager {
 	public static final String BuildType_Default = "crate#no-tests";
 	public static final String BuildType_CrateTests = "crate#tests";
 	
-	public final RustCrateNoTestsBuildType BUILD_TYPE_Default = 
+	public static final RustCrateNoTestsBuildType BUILD_TYPE_Default = 
 			new RustCrateNoTestsBuildType(BuildType_Default);
-	public final RustCrateTestsBuildType BUILD_TYPE_Tests = 
+	public static final RustCrateTestsBuildType BUILD_TYPE_Tests = 
 			new RustCrateTestsBuildType(BuildType_CrateTests);
 	
 	public RustBuildManager(LangBundleModel bundleModel) {
@@ -97,7 +97,7 @@ public class RustBuildManager extends BuildManager {
 		return new BuildTargetNameParser2();
 	}
 	
-	public abstract class RustBuildType extends BuildType {
+	public static abstract class RustBuildType extends BuildType {
 		
 		protected final CoreCargoTargetHelper cargoTargetHelper = new CoreCargoTargetHelper();
 		
@@ -134,7 +134,7 @@ public class RustBuildManager extends BuildManager {
 		
 	}
 	
-	public class RustCrateNoTestsBuildType extends RustBuildType {
+	public static class RustCrateNoTestsBuildType extends RustBuildType {
 		
 		public RustCrateNoTestsBuildType(String name) {
 			super(name);
@@ -171,7 +171,7 @@ public class RustBuildManager extends BuildManager {
 		
 	}
 	
-	public class RustCrateTestsBuildType extends RustBuildType {
+	public static class RustCrateTestsBuildType extends RustBuildType {
 		
 		public RustCrateTestsBuildType(String name) {
 			super(name);
@@ -205,7 +205,7 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	// Not used a the moment
-	public class RustCrateBinaryBuildType extends RustBuildType {
+	public static class RustCrateBinaryBuildType extends RustBuildType {
 		
 		public RustCrateBinaryBuildType(String name) {
 			super(name);
@@ -228,7 +228,7 @@ public class RustBuildManager extends BuildManager {
 	}
 	
 	// Not used a the moment
-	public class RustCrateSingleTestBuildType extends RustBuildType {
+	public static class RustCrateSingleTestBuildType extends RustBuildType {
 		
 		public RustCrateSingleTestBuildType(String name) {
 			super(name);
@@ -255,7 +255,7 @@ public class RustBuildManager extends BuildManager {
 
 	/* ----------------- Build ----------------- */
 	
-	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
+	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
 		public RustBuildTargetOperation(BuildTarget buildTarget, IOperationConsoleHandler opHandler, 
 				Path buildToolPath) throws CommonException, CoreException {
