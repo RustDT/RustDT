@@ -53,12 +53,12 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 			String testName = StringUtil.trimEnd(file.getName(), ".rs");
 			
 			BuildType testsBuildType = buildMgr.getBuildType_NonNull(RustBuildManager.BuildType_CrateTests);
-			BuildTarget bt = buildMgr.getValidDefinedBuildTarget(project, testsBuildType.getName(), "");
+			String buildTargetName = testsBuildType.getName();
+			BuildTarget bt = buildMgr.getDefinedBuildTarget(project, buildTargetName);
 			
 			LaunchArtifact launchArtifact = new CoreCargoTargetHelper().getLaunchArtifactForTestTarget(bt, testName);
 			String launchNameSugestion = getLaunchNameForSubTarget(launchArtifact.getName());
 			
-			String buildTargetName = testsBuildType.getName();
 			launchSettings = BuildTargetsActionGroup.buildTargetLaunchCreator(
 				project, buildTargetName, launchArtifact.getArtifactPath(), launchNameSugestion);
 			return new BuildTargetLaunchable(project, launchSettings);

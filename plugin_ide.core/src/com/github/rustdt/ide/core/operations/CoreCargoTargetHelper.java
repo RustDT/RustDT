@@ -12,6 +12,7 @@ package com.github.rustdt.ide.core.operations;
 
 import com.github.rustdt.tooling.cargo.CargoTargetHelper;
 
+import melnorme.lang.ide.core.launch.LaunchUtils;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.utilbox.core.CommonException;
@@ -19,7 +20,7 @@ import melnorme.utilbox.core.CommonException;
 public class CoreCargoTargetHelper extends CargoTargetHelper {
 	
 	public DebugMode getBuildMode(BuildTarget bt) throws CommonException {
-		return getBuildMode(bt.getEffectiveEvaluatedBuildArguments());
+		return getBuildMode(LaunchUtils.getEvaluatedArguments(bt.getEffectiveBuildArguments()));
 	}
 	
 	public String getExecutablePathForCargoTarget(String cargoTargetName, BuildTarget bt) throws CommonException {

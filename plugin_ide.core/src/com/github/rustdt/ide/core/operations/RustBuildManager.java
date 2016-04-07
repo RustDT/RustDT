@@ -66,9 +66,7 @@ public class RustBuildManager extends BuildManager {
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
 			BUILD_TYPE_Default,
-			BUILD_TYPE_Tests,
-			new RustCrateBinaryBuildType("bin"),
-			new RustCrateSingleTestBuildType("test")
+			BUILD_TYPE_Tests
 		);
 	}
 	
@@ -128,8 +126,8 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		public CommonBuildTargetOperation getBuildOperation(BuildTarget buildTarget,
-				IOperationConsoleHandler opHandler, Path buildToolPath) throws CommonException, CoreException {
-			return new RustBuildTargetOperation(buildTarget, opHandler, buildToolPath);
+				IOperationConsoleHandler opHandler, Path buildToolPath, String buildArguments) throws CommonException {
+			return new RustBuildTargetOperation(buildTarget, opHandler, buildToolPath, buildArguments);
 		}
 		
 	}
@@ -141,8 +139,13 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
-			buildArgs.add("build");
+		public String getDefaultBuildArguments(BuildTarget bt) throws CommonException {
+			return "build";
+		}
+		
+		@Override
+		public String getDefaultCheckArguments(BuildTarget bt) throws CommonException {
+			return "check";
 		}
 		
 		@Override
@@ -178,8 +181,13 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
-			buildArgs.addElements("test", "--no-run");
+		public String getDefaultBuildArguments(BuildTarget bt) throws CommonException {
+			return "test --no-run";
+		}
+		
+		@Override
+		public String getDefaultCheckArguments(BuildTarget bt) throws CommonException {
+			return getDefaultBuildArguments(bt);
 		}
 		
 		@Override
@@ -204,62 +212,13 @@ public class RustBuildManager extends BuildManager {
 		
 	}
 	
-	// Not used a the moment
-	public static class RustCrateBinaryBuildType extends RustBuildType {
-		
-		public RustCrateBinaryBuildType(String name) {
-			super(name);
-		}
-		
-		@Override
-		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
-			buildArgs.addElements("build", "--bin", bt.getBuildConfigName());
-		}
-		
-		@Override
-		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
-			return getLaunchArtifact(bt, bt.getBuildConfigName());
-		}
-		
-		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
-			return null;
-		}
-	}
-	
-	// Not used a the moment
-	public static class RustCrateSingleTestBuildType extends RustBuildType {
-		
-		public RustCrateSingleTestBuildType(String name) {
-			super(name);
-		}
-		
-		@Override
-		protected void getDefaultBuildOptions(BuildTarget bt, ArrayList2<String> buildArgs) {
-			String testName = bt.getBuildConfigName();
-			buildArgs.addElements("build", "--test", testName);
-		}
-		
-		@Override
-		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
-			String testTargetName = bt.getBuildConfigName();
-			return cargoTargetHelper.getLaunchArtifactForTestTarget(bt, testTargetName);
-		}
-		
-		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
-			return null;
-		}
-		
-	}
-
 	/* ----------------- Build ----------------- */
 	
 	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
 		public RustBuildTargetOperation(BuildTarget buildTarget, IOperationConsoleHandler opHandler, 
-				Path buildToolPath) throws CommonException, CoreException {
-			super(buildTarget.buildMgr, buildTarget, opHandler, buildToolPath);
+				Path buildToolPath, String buildArguments) throws CommonException {
+			super(buildTarget.buildMgr, buildTarget, opHandler, buildToolPath, buildArguments);
 		}
 		
 		@Override
