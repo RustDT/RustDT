@@ -19,7 +19,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
-import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner2;
+import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner2;
 import melnorme.lang.ide.core.text.TextSourceUtils;
 import melnorme.lang.ide.core.utils.operation.EclipseCancelMonitor;
 import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;

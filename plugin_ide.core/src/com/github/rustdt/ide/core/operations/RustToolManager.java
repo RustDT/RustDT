@@ -12,10 +12,10 @@ package com.github.rustdt.ide.core.operations;
 
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
-import melnorme.lang.ide.core.operations.AbstractToolManager;
+import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.tooling.ops.util.PathValidator;
 
-public class RustToolManager extends AbstractToolManager {
+public class RustToolManager extends ToolManager {
 	
 	@Override
 	public PathValidator getSDKToolPathValidator() {

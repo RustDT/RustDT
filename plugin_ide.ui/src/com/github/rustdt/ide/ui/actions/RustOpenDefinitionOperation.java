@@ -18,7 +18,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
 
-import melnorme.lang.ide.core.operations.AbstractToolManager.ToolManagerEngineToolRunner2;
+import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner2;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;

@@ -19,7 +19,7 @@ import com.github.rustdt.tooling.ops.RustParseDescribeParser;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.engine.SourceModelManager;
-import melnorme.lang.ide.core.operations.AbstractToolManager;
+import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.lang.tooling.structure.StructureElement;
@@ -33,7 +33,7 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public class RustSourceModelManager extends SourceModelManager {
 	
-	protected final AbstractToolManager toolManager = LangCore.getToolManager();
+	protected final ToolManager toolManager = LangCore.getToolManager();
 	
 	public RustSourceModelManager() {
 	}

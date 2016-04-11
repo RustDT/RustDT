@@ -17,7 +17,7 @@ import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
 
 import melnorme.lang.ide.core.engine.SourceModelManager;
-import melnorme.lang.ide.core.operations.AbstractToolManager;
+import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 
 public class LangCore_Actual {
@@ -38,7 +38,7 @@ public class LangCore_Actual {
 	
 	/* ----------------- Owned singletons: ----------------- */
 	
-	protected final AbstractToolManager toolManager;
+	protected final ToolManager toolManager;
 	protected final RustBundleModelManager bundleManager;
 	protected final RustBuildManager buildManager;
 	protected final RustSourceModelManager sourceModelManager;
@@ -52,7 +52,7 @@ public class LangCore_Actual {
 		sourceModelManager = createSourceModelManager();
 	}
 	
-	public static AbstractToolManager createToolManagerSingleton() {
+	public static ToolManager createToolManagerSingleton() {
 		return new RustToolManager();
 	}
 	
@@ -71,7 +71,7 @@ public class LangCore_Actual {
 	/* -----------------  ----------------- */
 	
 	
-	public static AbstractToolManager getToolManager() {
+	public static ToolManager getToolManager() {
 		return instance.toolManager;
 	}
 	public static RustBundleModel getBundleModel() {
