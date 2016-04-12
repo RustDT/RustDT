@@ -83,10 +83,9 @@ public class RustBuildManager extends BuildManager {
 			BuildConfiguration buildConfig) {
 		String targetName = getBuildTargetName2(buildConfig.getName(), buildType.getName());
 		
-		BuildTargetData newBuildTargetData = new BuildTargetData(targetName, true); 
+		BuildTargetData newBuildTargetData = new BuildTargetData(targetName, true, false); 
 		
-		BuildTarget buildTarget = new BuildTarget(project, newBundleInfo, newBuildTargetData, buildType, buildConfig);
-		return buildTarget;
+		return new BuildTarget(project, newBundleInfo, newBuildTargetData, buildType, buildConfig);
 	}
 	
 	@Override
@@ -143,11 +142,6 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public String getDefaultCheckArguments(BuildTarget bt) throws CommonException {
-			return "check";
-		}
-		
-		@Override
 		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
 			CargoManifest manifest = bt.getBundleInfo().getManifest();
 			
@@ -182,11 +176,6 @@ public class RustBuildManager extends BuildManager {
 		@Override
 		public String getDefaultBuildArguments(BuildTarget bt) throws CommonException {
 			return "test --no-run";
-		}
-		
-		@Override
-		public String getDefaultCheckArguments(BuildTarget bt) throws CommonException {
-			return getDefaultBuildArguments(bt);
 		}
 		
 		@Override
