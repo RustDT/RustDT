@@ -18,7 +18,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerFindDefinitionOperation;
 
-import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner2;
+import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
@@ -45,7 +45,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
 			throws CoreException, OperationCancellation, CommonException {
 		
-		ToolManagerEngineToolRunner2 toolRunner = getToolManager().new ToolManagerEngineToolRunner2();
+		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner();
 		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project) , 

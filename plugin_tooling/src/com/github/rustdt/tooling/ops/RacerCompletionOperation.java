@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.data.IValidatableValue;
-import melnorme.lang.tooling.ops.IOperationService;
+import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 
@@ -22,7 +22,7 @@ public class RacerCompletionOperation extends RacerOperation<LangCompletionResul
 	
 	protected final int offset;
 	
-	public RacerCompletionOperation(IOperationService opHelper, 
+	public RacerCompletionOperation(IToolOperationService opHelper, 
 			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation, 
 			int offset, int line_0, int col_0, Location fileLocation) {
 		super(opHelper, racerPath, sdkSrcLocation, getArguments("complete-with-snippet", line_0, col_0, fileLocation));

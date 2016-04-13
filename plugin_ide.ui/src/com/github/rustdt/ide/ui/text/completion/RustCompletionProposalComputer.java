@@ -19,7 +19,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
-import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner2;
+import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.core.text.TextSourceUtils;
 import melnorme.lang.ide.core.utils.operation.EclipseCancelMonitor;
 import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;
@@ -49,7 +49,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		int col_0 = context.getInvocationColumn_0();
 		Location fileLocation = context.getEditorInputLocation();
 		
-		ToolManagerEngineToolRunner2 toolRunner = getEngineToolRunner();
+		ToolManagerEngineToolRunner toolRunner = getEngineToolRunner();
 		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project),

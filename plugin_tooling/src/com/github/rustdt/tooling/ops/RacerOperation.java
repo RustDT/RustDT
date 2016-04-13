@@ -16,7 +16,7 @@ import melnorme.lang.tooling.data.IValidatableValue;
 import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
-import melnorme.lang.tooling.ops.IOperationService;
+import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
@@ -28,7 +28,7 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	protected final IValidatableValue<Location> sdkSrcLocation;
 	protected final ArrayList2<String> arguments;
 	
-	public RacerOperation(IOperationService opHelper,
+	public RacerOperation(IToolOperationService opHelper,
 			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation,
 			ArrayList2<String> arguments) {
 		super(opHelper, "NOT_USED", true);

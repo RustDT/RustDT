@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
@@ -22,6 +21,7 @@ import com.github.rustdt.tooling.cargo.CargoManifest;
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperationConsoleHandler;
+import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.ToolMarkersHelper;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
@@ -57,8 +57,8 @@ public class RustBuildManager extends BuildManager {
 	public static final RustCrateTestsBuildType BUILD_TYPE_Tests = 
 			new RustCrateTestsBuildType(BuildType_CrateTests);
 	
-	public RustBuildManager(LangBundleModel bundleModel) {
-		super(bundleModel);
+	public RustBuildManager(LangBundleModel bundleModel, ToolManager toolManager) {
+		super(bundleModel, toolManager);
 	}
 	
 	@Override
@@ -124,8 +124,8 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		public CommonBuildTargetOperation getBuildOperation(BuildTarget buildTarget,
-				IOperationConsoleHandler opHandler, Path buildToolPath, String buildArguments) throws CommonException {
-			return new RustBuildTargetOperation(buildTarget, opHandler, buildToolPath, buildArguments);
+				IOperationConsoleHandler opHandler, String buildArguments) {
+			return new RustBuildTargetOperation(buildTarget, opHandler, buildArguments);
 		}
 		
 	}
@@ -137,7 +137,7 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public String getDefaultBuildArguments(BuildTarget bt) throws CommonException {
+		public String getDefaultCommandArguments(BuildTarget bt) throws CommonException {
 			return "build";
 		}
 		
@@ -174,7 +174,7 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public String getDefaultBuildArguments(BuildTarget bt) throws CommonException {
+		public String getDefaultCommandArguments(BuildTarget bt) throws CommonException {
 			return "test --no-run";
 		}
 		
@@ -202,11 +202,11 @@ public class RustBuildManager extends BuildManager {
 	
 	/* ----------------- Build ----------------- */
 	
-	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
+	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
 		public RustBuildTargetOperation(BuildTarget buildTarget, IOperationConsoleHandler opHandler, 
-				Path buildToolPath, String buildArguments) throws CommonException {
-			super(buildTarget.buildMgr, buildTarget, opHandler, buildToolPath, buildArguments);
+				String buildArguments) {
+			super(RustBuildManager.this.toolManager, buildTarget, opHandler, buildArguments);
 		}
 		
 		@Override

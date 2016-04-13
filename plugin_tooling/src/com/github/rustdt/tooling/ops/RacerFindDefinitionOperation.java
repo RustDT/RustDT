@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 import melnorme.lang.tooling.data.IValidatableValue;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
-import melnorme.lang.tooling.ops.IOperationService;
+import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 
@@ -22,7 +22,7 @@ public class RacerFindDefinitionOperation extends RacerOperation<FindDefinitionR
 	
 	protected final int offset;
 	
-	public RacerFindDefinitionOperation(IOperationService toolRunner, 
+	public RacerFindDefinitionOperation(IToolOperationService toolRunner, 
 			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation, int offset,
 			int line_0, int col_0, Location fileLocation) {
 		super(toolRunner, racerPath, sdkSrcLocation, getArguments("find-definition", line_0, col_0, fileLocation));

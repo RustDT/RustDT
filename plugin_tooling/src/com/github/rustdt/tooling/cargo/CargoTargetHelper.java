@@ -14,8 +14,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import melnorme.lang.tooling.bundle.LaunchArtifact;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.ArrayUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
 import melnorme.utilbox.misc.StringUtil;
@@ -25,8 +25,8 @@ public class CargoTargetHelper {
 	
 	public static enum DebugMode { YES, NO ; public boolean isTrue() { return this == YES; } }
 	
-	public static DebugMode getBuildMode(String[] buildArgs) {
-		if(ArrayUtil.contains(buildArgs, "--release")) {
+	public static DebugMode getBuildMode(Indexable<String> buildArgs) {
+		if(buildArgs.contains("--release")) {
 			return DebugMode.NO;
 		}
 		return DebugMode.YES;

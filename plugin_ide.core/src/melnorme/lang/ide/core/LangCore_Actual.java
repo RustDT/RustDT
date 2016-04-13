@@ -33,6 +33,8 @@ public class LangCore_Actual {
 	// or it will interfere with MelnormeEclipse templating
 	public static final String NAME_OF_LANGUAGE = "Rust";
 	
+	public static final String VAR_NAME_SdkToolPath = "CARGO_TOOL_PATH";
+	public static final String VAR_NAME_SdkToolPath_DESCRIPTION = "The path of the Cargo tool";
 	
 	public static LangCore instance;
 	
@@ -64,7 +66,7 @@ public class LangCore_Actual {
 		return new RustBundleModelManager();
 	}
 	public static RustBuildManager createBuildManager(LangBundleModel bundleModel) {
-		return new RustBuildManager(bundleModel);
+		return new RustBuildManager(bundleModel, getToolManager());
 	}
 	
 	

@@ -12,15 +12,18 @@ package com.github.rustdt.ide.core.operations;
 
 import com.github.rustdt.tooling.cargo.CargoTargetHelper;
 
-import melnorme.lang.ide.core.launch.LaunchUtils;
+import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.NoopOperationConsoleHandler;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
+import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.utilbox.core.CommonException;
 
 public class CoreCargoTargetHelper extends CargoTargetHelper {
 	
 	public DebugMode getBuildMode(BuildTarget bt) throws CommonException {
-		return getBuildMode(LaunchUtils.getEvaluatedArguments(bt.getEffectiveBuildArguments()));
+		/* FIXME: re-test this*/
+		CommonBuildTargetOperation buildOp = bt.getBuildOperation(new NoopOperationConsoleHandler());
+		return getBuildMode(buildOp.getEffectiveProccessCommandLine());
 	}
 	
 	public String getExecutablePathForCargoTarget(String cargoTargetName, BuildTarget bt) throws CommonException {
