@@ -12,7 +12,9 @@ package com.github.rustdt.ide.core.operations;
 
 import com.github.rustdt.tooling.cargo.CargoTargetHelper;
 
+import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.NoopOperationConsoleHandler;
+import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
@@ -22,7 +24,10 @@ public class CoreCargoTargetHelper extends CargoTargetHelper {
 	
 	public DebugMode getBuildMode(BuildTarget bt) throws CommonException {
 		/* FIXME: re-test this*/
-		CommonBuildTargetOperation buildOp = bt.getBuildOperation(new NoopOperationConsoleHandler());
+		/* FIXME: dont use toolManager */
+		ToolManager toolManager = LangCore.getToolManager();
+		CommonBuildTargetOperation buildOp = bt.getBuildOperation(toolManager, 
+			new NoopOperationConsoleHandler());
 		return getBuildMode(buildOp.getEffectiveProccessCommandLine());
 	}
 	

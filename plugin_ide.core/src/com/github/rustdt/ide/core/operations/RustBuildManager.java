@@ -123,9 +123,10 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public CommonBuildTargetOperation getBuildOperation(BuildTarget buildTarget,
-				IOperationConsoleHandler opHandler, String buildArguments) {
-			return new RustBuildTargetOperation(buildTarget, opHandler, buildArguments);
+		public CommonBuildTargetOperation getBuildOperation(
+				ToolManager toolManager, BuildTarget buildTarget, IOperationConsoleHandler opHandler
+		) throws CommonException {
+			return new RustBuildTargetOperation(toolManager, buildTarget, opHandler);
 		}
 		
 	}
@@ -202,11 +203,12 @@ public class RustBuildManager extends BuildManager {
 	
 	/* ----------------- Build ----------------- */
 	
-	protected class RustBuildTargetOperation extends CommonBuildTargetOperation {
+	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(BuildTarget buildTarget, IOperationConsoleHandler opHandler, 
-				String buildArguments) {
-			super(RustBuildManager.this.toolManager, buildTarget, opHandler, buildArguments);
+		public RustBuildTargetOperation(
+				ToolManager toolManager, BuildTarget buildTarget, IOperationConsoleHandler opHandler
+		) throws CommonException {
+			super(toolManager, buildTarget, opHandler);
 		}
 		
 		@Override
