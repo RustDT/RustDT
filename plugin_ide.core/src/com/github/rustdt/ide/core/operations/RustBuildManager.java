@@ -28,6 +28,7 @@ import melnorme.lang.ide.core.operations.ToolMarkersHelper;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.BuildTargetData;
+import melnorme.lang.ide.core.operations.build.CommandInvocation;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
@@ -123,10 +124,10 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public CommonBuildTargetOperation getBuildOperation(
-				ToolManager toolManager, BuildTarget buildTarget, IOperationMonitor opMonitor
+		public CommonBuildTargetOperation getBuildOperation(IOperationMonitor opMonitor,
+				ToolManager toolMgr, BuildTarget bt, CommandInvocation buildCommand
 		) throws CommonException {
-			return new RustBuildTargetOperation(toolManager, buildTarget, opMonitor);
+			return new RustBuildTargetOperation(opMonitor, toolMgr, bt.getBuildTargetName(), buildCommand);
 		}
 		
 	}
@@ -185,10 +186,9 @@ public class RustBuildManager extends BuildManager {
 	
 	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
-		public RustBuildTargetOperation(
-				ToolManager toolManager, BuildTarget buildTarget, IOperationMonitor opMonitor
-		) throws CommonException {
-			super(toolManager, buildTarget, opMonitor);
+		public RustBuildTargetOperation(IOperationMonitor opMonitor, ToolManager toolManager, String buildTargetName,
+				CommandInvocation buildCommand) {
+			super(opMonitor, toolManager, buildTargetName, buildCommand);
 		}
 		
 		@Override
