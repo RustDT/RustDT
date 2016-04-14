@@ -73,7 +73,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 	}
 	
 	protected Location getCargoRootDestinationPath() throws CommonException {
-		Path currentPath = PathUtil.createPath(toolField.getValue());
+		Path currentPath = PathUtil.createPath(toolField.get());
 		if(
 			currentPath.isAbsolute() &&
 			currentPath.endsWith(getBinExeSuffix())
