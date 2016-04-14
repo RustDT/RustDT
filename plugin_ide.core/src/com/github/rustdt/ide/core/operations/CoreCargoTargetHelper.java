@@ -13,7 +13,7 @@ package com.github.rustdt.ide.core.operations;
 import com.github.rustdt.tooling.cargo.CargoTargetHelper;
 
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.NoopOperationConsoleHandler;
+import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.NullOperationMonitor;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
@@ -27,7 +27,7 @@ public class CoreCargoTargetHelper extends CargoTargetHelper {
 		/* FIXME: dont use toolManager */
 		ToolManager toolManager = LangCore.getToolManager();
 		CommonBuildTargetOperation buildOp = bt.getBuildOperation(toolManager, 
-			new NoopOperationConsoleHandler());
+			new NullOperationMonitor());
 		return getBuildMode(buildOp.getEffectiveProccessCommandLine());
 	}
 	

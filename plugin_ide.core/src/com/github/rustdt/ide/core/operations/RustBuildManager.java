@@ -20,7 +20,7 @@ import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperationConsoleHandler;
+import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperationMonitor;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.ToolMarkersHelper;
 import melnorme.lang.ide.core.operations.build.BuildManager;
@@ -124,9 +124,9 @@ public class RustBuildManager extends BuildManager {
 		
 		@Override
 		public CommonBuildTargetOperation getBuildOperation(
-				ToolManager toolManager, BuildTarget buildTarget, IOperationConsoleHandler opHandler
+				ToolManager toolManager, BuildTarget buildTarget, IOperationMonitor opMonitor
 		) throws CommonException {
-			return new RustBuildTargetOperation(toolManager, buildTarget, opHandler);
+			return new RustBuildTargetOperation(toolManager, buildTarget, opMonitor);
 		}
 		
 	}
@@ -206,9 +206,9 @@ public class RustBuildManager extends BuildManager {
 	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
 		
 		public RustBuildTargetOperation(
-				ToolManager toolManager, BuildTarget buildTarget, IOperationConsoleHandler opHandler
+				ToolManager toolManager, BuildTarget buildTarget, IOperationMonitor opMonitor
 		) throws CommonException {
-			super(toolManager, buildTarget, opHandler);
+			super(toolManager, buildTarget, opMonitor);
 		}
 		
 		@Override
