@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
@@ -27,6 +29,7 @@ import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.BuildTargetData;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
+import melnorme.lang.ide.core.operations.build.ProjectBuildInfo;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.bundle.BuildConfiguration;
@@ -49,13 +52,11 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
  */
 public class RustBuildManager extends BuildManager {
 	
-	public static final String BuildType_Default = "crate#no-tests";
-	public static final String BuildType_CrateTests = "crate#tests";
+	public static final String BuildType_Build = "build";
+	public static final String BuildType_Check = "check";
 	
-	public static final RustCrateNoTestsBuildType BUILD_TYPE_Default = 
-			new RustCrateNoTestsBuildType(BuildType_Default);
-	public static final RustCrateTestsBuildType BUILD_TYPE_Tests = 
-			new RustCrateTestsBuildType(BuildType_CrateTests);
+	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, "test --no-run");
+	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCrateBuildType(BuildType_Check, "check");
 	
 	public RustBuildManager(LangBundleModel bundleModel, ToolManager toolManager) {
 		super(bundleModel, toolManager);
@@ -64,33 +65,44 @@ public class RustBuildManager extends BuildManager {
 	@Override
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
-			BUILD_TYPE_Default,
-			BUILD_TYPE_Tests
+			BUILD_TYPE_Build,
+			BUILD_TYPE_Check
 		);
+	}
+	
+	@Override
+	public BuildTargetNameParser getBuildTargetNameParser() {
+		return new BuildTargetNameParser2();
 	}
 	
 	@Override
 	protected ArrayList2<BuildTarget> getDefaultBuildTargets(IProject project, BundleInfo newBundleInfo) {
 		ArrayList2<BuildTarget> buildTargets = new ArrayList2<>();
 		
-		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Default, new BuildConfiguration("", null)));
-		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Tests, new BuildConfiguration("", null)));
+		BuildConfiguration buildConfig = new BuildConfiguration("", null);
+		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Build, buildConfig, true, false));
+		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Check, buildConfig, false, true));
 		
 		return buildTargets;
 	}
 	
 	protected BuildTarget createBuildTarget(IProject project, BundleInfo newBundleInfo, BuildType buildType,
-			BuildConfiguration buildConfig) {
+			BuildConfiguration buildConfig, boolean normalBuildEnabled, boolean autoBuildEnabled) {
 		String targetName = getBuildTargetName2(buildConfig.getName(), buildType.getName());
 		
-		BuildTargetData newBuildTargetData = new BuildTargetData(targetName, true, false); 
-		
+		BuildTargetData newBuildTargetData = new BuildTargetData(targetName, normalBuildEnabled, autoBuildEnabled); 
 		return new BuildTarget(project, newBundleInfo, newBuildTargetData, buildType, buildConfig);
 	}
 	
-	@Override
-	public BuildTargetNameParser getBuildTargetNameParser() {
-		return new BuildTargetNameParser2();
+	public BuildTarget getFirstDefinedBuildTarget(IProject project, BuildType buildType) throws CommonException {
+		ProjectBuildInfo buildInfo = getBuildInfo(project);
+		
+		assertNotNull(buildType);
+		BuildTarget foundBT = buildInfo.getBuildTargets().findElement((bt) -> bt.getBuildType() == buildType);
+		if(foundBT == null) {
+			throw CommonException.fromMsgFormat("No Build Target found for build type `{0}`. ", buildType.getName());
+		}
+		return foundBT;
 	}
 	
 	public static abstract class RustBuildType extends BuildType {
@@ -131,15 +143,18 @@ public class RustBuildManager extends BuildManager {
 		
 	}
 	
-	public static class RustCrateNoTestsBuildType extends RustBuildType {
+	public static class RustCrateBuildType extends RustBuildType {
 		
-		public RustCrateNoTestsBuildType(String name) {
+		protected final String defaultCommandArguments;
+		
+		public RustCrateBuildType(String name, String defaultCommandArguments) {
 			super(name);
+			this.defaultCommandArguments = assertNotNull(defaultCommandArguments);
 		}
 		
 		@Override
 		public String getDefaultCommandArguments(BuildTarget bt) throws CommonException {
-			return "build";
+			return defaultCommandArguments;
 		}
 		
 		@Override
@@ -163,32 +178,9 @@ public class RustBuildManager extends BuildManager {
 				binariesPaths.add(getLaunchArtifact(bt, binTargetName.getBinaryPathString()));
 			}
 			
-			return binariesPaths;
-		}
-		
-	}
-	
-	public static class RustCrateTestsBuildType extends RustBuildType {
-		
-		public RustCrateTestsBuildType(String name) {
-			super(name);
-		}
-		
-		@Override
-		public String getDefaultCommandArguments(BuildTarget bt) throws CommonException {
-			return "test --no-run";
-		}
-		
-		@Override
-		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
-			return null;
-		}
-		
-		@Override
-		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
-			CargoManifest manifest = bt.getBundleInfo().getManifest();
+			addTestsSubTargets(bt, manifest, new ArrayList2<>());
 			
-			return addTestsSubTargets(bt, manifest, new ArrayList2<>());
+			return binariesPaths;
 		}
 		
 		protected ArrayList2<LaunchArtifact> addTestsSubTargets(BuildTarget bt, CargoManifest manifest,
