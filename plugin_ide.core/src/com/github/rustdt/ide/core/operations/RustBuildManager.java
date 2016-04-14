@@ -29,7 +29,6 @@ import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.BuildTargetData;
 import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
-import melnorme.lang.ide.core.operations.build.ProjectBuildInfo;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.bundle.BuildConfiguration;
@@ -92,17 +91,6 @@ public class RustBuildManager extends BuildManager {
 		
 		BuildTargetData newBuildTargetData = new BuildTargetData(targetName, normalBuildEnabled, autoBuildEnabled); 
 		return new BuildTarget(project, newBundleInfo, newBuildTargetData, buildType, buildConfig);
-	}
-	
-	public BuildTarget getFirstDefinedBuildTarget(IProject project, BuildType buildType) throws CommonException {
-		ProjectBuildInfo buildInfo = getBuildInfo(project);
-		
-		assertNotNull(buildType);
-		BuildTarget foundBT = buildInfo.getBuildTargets().findElement((bt) -> bt.getBuildType() == buildType);
-		if(foundBT == null) {
-			throw CommonException.fromMsgFormat("No Build Target found for build type `{0}`. ", buildType.getName());
-		}
-		return foundBT;
 	}
 	
 	public static abstract class RustBuildType extends BuildType {
