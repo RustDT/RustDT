@@ -16,7 +16,7 @@ import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.NullOperationMonitor;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
-import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
+import melnorme.lang.ide.core.operations.build.BuildTargetOperation;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.utilbox.core.CommonException;
 
@@ -26,8 +26,7 @@ public class CoreCargoTargetHelper extends CargoTargetHelper {
 		/* FIXME: re-test this*/
 		/* FIXME: dont use toolManager */
 		ToolManager toolManager = LangCore.getToolManager();
-		CommonBuildTargetOperation buildOp = bt.getBuildOperation(toolManager, 
-			new NullOperationMonitor());
+		BuildTargetOperation buildOp = bt.getBuildOperation(toolManager, new NullOperationMonitor());
 		return getBuildMode(buildOp.getEffectiveProccessCommandLine());
 	}
 	

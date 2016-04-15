@@ -22,14 +22,13 @@ import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IOperationMonitor;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.ToolMarkersHelper;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.BuildTargetData;
-import melnorme.lang.ide.core.operations.build.CommandInvocation;
-import melnorme.lang.ide.core.operations.build.CommonBuildTargetOperation;
+import melnorme.lang.ide.core.operations.build.BuildTargetOperation;
+import melnorme.lang.ide.core.operations.build.BuildTargetOperation.BuildOperationParameters;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.bundle.BuildConfiguration;
@@ -124,10 +123,8 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public CommonBuildTargetOperation getBuildOperation(IOperationMonitor opMonitor,
-				ToolManager toolMgr, BuildTarget bt, CommandInvocation buildCommand
-		) throws CommonException {
-			return new RustBuildTargetOperation(opMonitor, toolMgr, bt.getBuildTargetName(), buildCommand);
+		public BuildTargetOperation getBuildOperation(BuildOperationParameters buildOpParams) throws CommonException {
+			return new RustBuildTargetOperation(buildOpParams);
 		}
 		
 	}
@@ -184,11 +181,10 @@ public class RustBuildManager extends BuildManager {
 	
 	/* ----------------- Build ----------------- */
 	
-	protected static class RustBuildTargetOperation extends CommonBuildTargetOperation {
+	protected static class RustBuildTargetOperation extends BuildTargetOperation {
 		
-		public RustBuildTargetOperation(IOperationMonitor opMonitor, ToolManager toolManager, String buildTargetName,
-				CommandInvocation buildCommand) {
-			super(opMonitor, toolManager, buildTargetName, buildCommand);
+		public RustBuildTargetOperation(BuildOperationParameters buildOpParams) {
+			super(buildOpParams);
 		}
 		
 		@Override

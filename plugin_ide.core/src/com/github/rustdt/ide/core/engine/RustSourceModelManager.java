@@ -79,7 +79,7 @@ public class RustSourceModelManager extends SourceModelManager {
 				}
 				return newStructure;
 			} catch(CommonException ce) {
-				toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusError());
+				toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusException());
 				return null;
 			}
 			
@@ -102,7 +102,7 @@ public class RustSourceModelManager extends SourceModelManager {
 			} catch(OperationCancellation e) {
 				return null;
 			} catch(CommonException ce) {
-				toolManager.logAndNotifyError("Error running parse-describe process:", ce.toStatusError());
+				toolManager.logAndNotifyError("Error running parse-describe process:", ce.toStatusException());
 				return null;
 			}
 			
