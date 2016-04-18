@@ -11,7 +11,9 @@
 package com.github.rustdt.ide.ui.preferences;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
+import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.ui.operations.StartToolDownload_FromField;
 import melnorme.lang.ide.ui.preferences.pages.DownloadToolTextField;
 import melnorme.lang.utils.EnvUtils;
@@ -47,13 +49,13 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		this.sourceArgs.addAll2(sourceArgs);
 	}
 	
-	protected String getSDKPath() {
-		return toolMgr.getSDKPathPreference(null);
+	protected String getSDKPathString() {
+		return LangCore.preferences().SDK_LOCATION.getRawPreference(Optional.empty()).get();
 	}
 	
 	@Override
 	protected ProcessBuilder getProcessToStart_andSetToolPath() throws CommonException {
-		Path sdkToolPath = toolMgr.getSDKToolPathValidator().getValidatedPath(getSDKPath());
+		Path sdkToolPath = toolMgr.getSDKToolPathValidator().getValidatedPath(getSDKPathString());
 		
 		// Determine install destination path
 		Location dest = getCargoRootDestinationPath();
@@ -64,7 +66,6 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		args.addAll(sourceArgs);
 		args.addElements("--root", dest.toPathString());
 		
-		/* FIXME: re-test*/
 		return toolMgr.createToolProcessBuilder(null, sdkToolPath, args.toArray(String.class));
 	}
 	

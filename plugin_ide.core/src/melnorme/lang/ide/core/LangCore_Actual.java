@@ -15,10 +15,12 @@ import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleMo
 import com.github.rustdt.ide.core.engine.RustSourceModelManager;
 import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
 import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
+import melnorme.lang.tooling.ops.SDKLocationValidator;
 
 public class LangCore_Actual {
 	
@@ -40,6 +42,7 @@ public class LangCore_Actual {
 	
 	/* ----------------- Owned singletons: ----------------- */
 	
+	protected final CorePreferences corePrefs;
 	protected final ToolManager toolManager;
 	protected final RustBundleModelManager bundleManager;
 	protected final RustBuildManager buildManager;
@@ -48,10 +51,20 @@ public class LangCore_Actual {
 	public LangCore_Actual() {
 		instance = (LangCore) this;
 		
+		corePrefs = createCorePreferences();
 		toolManager = createToolManagerSingleton();
 		bundleManager = createBundleModelManager();
 		buildManager = createBuildManager(bundleManager.getModel());
 		sourceModelManager = createSourceModelManager();
+	}
+	
+	protected CorePreferences createCorePreferences() {
+		return new CorePreferences() {
+			@Override
+			protected SDKLocationValidator getSDKLocationValidator() {
+				return new RustSDKLocationValidator();
+			}
+		};
 	}
 	
 	public static ToolManager createToolManagerSingleton() {
@@ -72,6 +85,9 @@ public class LangCore_Actual {
 	
 	/* -----------------  ----------------- */
 	
+	public static CorePreferences preferences() {
+		return instance.corePrefs;
+	}
 	
 	public static ToolManager getToolManager() {
 		return instance.toolManager;

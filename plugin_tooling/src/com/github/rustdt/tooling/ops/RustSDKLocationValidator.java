@@ -12,6 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import java.text.MessageFormat;
 
+import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.SDKLocationValidator;
 import melnorme.utilbox.misc.Location;
 
@@ -29,6 +30,10 @@ public class RustSDKLocationValidator extends SDKLocationValidator {
 	@Override
 	protected String getSDKExecutableErrorMessage(Location exeLocation) {
 		return MessageFormat.format("Cargo executable not found at Rust location (`{0}`). ", exeLocation);
+	}
+	
+	public Location getRootLocation(String pathString) throws ValidationException {
+		return getValidatedLocation(pathString).resolve_fromValid("../..");
 	}
 	
 }

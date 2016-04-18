@@ -11,10 +11,12 @@
 package com.github.rustdt.ide.core.operations;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
+import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
 import melnorme.lang.ide.core.LangCore;
@@ -22,15 +24,14 @@ import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.prefs.DerivedValuePreference;
 import melnorme.lang.tooling.data.ValidationException;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
-import melnorme.lang.tooling.ops.util.LocationValidator;
 import melnorme.utilbox.misc.Location;
 
 public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static class RustSDKAcessor {
 		public Location getSDKLocation(IProject project) throws ValidationException {
-			return new LocationValidator("Rust installation:").getValidatedLocation(
-				SDK_PATH2.getEffectiveValue(project));
+			return new RustSDKLocationValidator().getRootLocation(
+				SDK_PATH.getEffectiveValue(Optional.of(project)));
 		}
 	}
 	

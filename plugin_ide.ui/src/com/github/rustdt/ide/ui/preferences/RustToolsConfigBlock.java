@@ -83,7 +83,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 				"racer") {
 				
 				@Override
-				protected String getSDKPath() {
+				protected String getSDKPathString() {
 					return RustToolsConfigBlock.this.sdkLocationField.getFieldValue();
 				};
 			};
@@ -109,7 +109,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 				"parse_describe") {
 				
 				@Override
-				protected String getSDKPath() {
+				protected String getSDKPathString() {
 					return RustToolsConfigBlock.this.sdkLocationField.getFieldValue();
 				};
 			};
@@ -141,7 +141,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 				"rustfmt") {
 				
 				@Override
-				protected String getSDKPath() {
+				protected String getSDKPathString() {
 					return RustToolsConfigBlock.this.sdkLocationField.getFieldValue();
 				};
 			};
