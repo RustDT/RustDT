@@ -20,7 +20,6 @@ import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
-import melnorme.lang.tooling.ops.SDKLocationValidator;
 
 public class LangCore_Actual {
 	
@@ -42,7 +41,7 @@ public class LangCore_Actual {
 	
 	/* ----------------- Owned singletons: ----------------- */
 	
-	protected final CorePreferences corePrefs;
+	protected final CoreSettings coreSettings;
 	protected final ToolManager toolManager;
 	protected final RustBundleModelManager bundleManager;
 	protected final RustBuildManager buildManager;
@@ -51,15 +50,15 @@ public class LangCore_Actual {
 	public LangCore_Actual() {
 		instance = (LangCore) this;
 		
-		corePrefs = createCorePreferences();
+		coreSettings = createCoreSettings();
 		toolManager = createToolManagerSingleton();
 		bundleManager = createBundleModelManager();
 		buildManager = createBuildManager(bundleManager.getModel());
 		sourceModelManager = createSourceModelManager();
 	}
 	
-	protected CorePreferences createCorePreferences() {
-		return new CorePreferences() {
+	protected CoreSettings createCoreSettings() {
+		return new CoreSettings() {
 			@Override
 			public RustSDKLocationValidator getSDKLocationValidator() {
 				return new RustSDKLocationValidator();
@@ -85,8 +84,8 @@ public class LangCore_Actual {
 	
 	/* -----------------  ----------------- */
 	
-	public static CorePreferences preferences() {
-		return instance.corePrefs;
+	public static CoreSettings settings() {
+		return instance.coreSettings;
 	}
 	
 	public static ToolManager getToolManager() {
