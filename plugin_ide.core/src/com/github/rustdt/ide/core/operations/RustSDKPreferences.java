@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
+import static melnorme.utilbox.core.CoreUtil.optional;
+
 import java.nio.file.Path;
-import java.util.Optional;
 
 import org.eclipse.core.resources.IProject;
 
@@ -31,7 +32,7 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	public static class RustSDKAcessor {
 		public Location getSDKLocation(IProject project) throws ValidationException {
 			return new RustSDKLocationValidator().getRootLocation(
-				SDK_PATH.getEffectiveValue(Optional.of(project)));
+				SDK_PATH.getEffectiveValue(optional(project)));
 		}
 	}
 	

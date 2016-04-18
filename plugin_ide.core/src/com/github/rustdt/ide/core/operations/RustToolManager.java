@@ -17,9 +17,4 @@ import melnorme.lang.tooling.ops.util.PathValidator;
 
 public class RustToolManager extends ToolManager {
 	
-	@Override
-	public PathValidator getSDKToolPathValidator() {
-		return new RustSDKLocationValidator();
-	}
-	
 }

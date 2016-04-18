@@ -61,7 +61,7 @@ public class LangCore_Actual {
 	protected CorePreferences createCorePreferences() {
 		return new CorePreferences() {
 			@Override
-			protected SDKLocationValidator getSDKLocationValidator() {
+			public RustSDKLocationValidator getSDKLocationValidator() {
 				return new RustSDKLocationValidator();
 			}
 		};

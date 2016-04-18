@@ -50,12 +50,12 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 	}
 	
 	protected String getSDKPathString() {
-		return LangCore.preferences().SDK_LOCATION.getRawPreference(Optional.empty()).get();
+		return LangCore.preferences().SDK_LOCATION.getRawValue(Optional.empty());
 	}
 	
 	@Override
 	protected ProcessBuilder getProcessToStart_andSetToolPath() throws CommonException {
-		Path sdkToolPath = toolMgr.getSDKToolPathValidator().getValidatedPath(getSDKPathString());
+		Path sdkToolPath = toolMgr.getSDKToolPathValidator2().getValidatedPath(getSDKPathString());
 		
 		// Determine install destination path
 		Location dest = getCargoRootDestinationPath();
