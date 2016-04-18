@@ -17,8 +17,8 @@ import org.eclipse.core.resources.IProject;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 import com.github.rustdt.tooling.cargo.CargoManifest.CrateDependencyRef;
 
-import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.tooling.LANG_SPECIFIC;
+import melnorme.lang.tooling.bundle.BundleInfo;
 import melnorme.utilbox.misc.ArrayUtil;
 
 @LANG_SPECIFIC

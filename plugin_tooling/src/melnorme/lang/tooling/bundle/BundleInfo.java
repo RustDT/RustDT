@@ -8,14 +8,12 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.lang.ide.core;
+package melnorme.lang.tooling.bundle;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
-import melnorme.lang.ide.core.project_model.AbstractBundleInfo;
-import melnorme.lang.tooling.bundle.BuildConfiguration;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 

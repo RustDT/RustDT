@@ -17,12 +17,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 
-import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.project_model.view.IBundleModelElement;
 import melnorme.lang.ide.ui.LangImages;
 import melnorme.lang.ide.ui.navigator.LangNavigatorLabelProvider;
 import melnorme.lang.ide.ui.navigator.NavigatorElementsSwitcher;
+import melnorme.lang.tooling.bundle.BundleInfo;
 
 public class RustNavigatorLabelProvider extends LangNavigatorLabelProvider implements IStyledLabelProvider {
 	

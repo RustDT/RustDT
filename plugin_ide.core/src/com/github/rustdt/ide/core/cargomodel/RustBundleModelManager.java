@@ -20,11 +20,11 @@ import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleMo
 import com.github.rustdt.tooling.cargo.CargoManifest;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
-import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.project_model.BundleManifestResourceListener;
 import melnorme.lang.ide.core.project_model.BundleModelManager;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
 import melnorme.lang.ide.core.utils.ResourceUtils;
+import melnorme.lang.tooling.bundle.BundleInfo;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.FileUtil;
 import melnorme.utilbox.misc.Location;

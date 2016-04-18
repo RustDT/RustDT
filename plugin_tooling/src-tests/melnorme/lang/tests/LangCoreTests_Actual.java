@@ -10,12 +10,28 @@
  *******************************************************************************/
 package melnorme.lang.tests;
 
+import com.github.rustdt.tooling.cargo.CargoManifest;
+
 import melnorme.lang.tooling.LANG_SPECIFIC;
+import melnorme.lang.tooling.bundle.BundleInfo;
+import melnorme.lang.tooling.bundle.FileRef;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.Location;
 
 @LANG_SPECIFIC
+/* FIXME: rename. */
 public class LangCoreTests_Actual {
 	
 	public static Location SAMPLE_SDK_PATH = LangToolingTestResources.getTestResourceLoc("mock_sdk");
-			
+	
+	public static BundleInfo createSampleBundleInfoA(String name, String version) {
+		return new BundleInfo(new CargoManifest(name, version, null, 
+			null, 
+			new ArrayList2<>(
+				new FileRef("sampleConfig", null)
+			)
+			, null
+		));
+	}
+	
 }

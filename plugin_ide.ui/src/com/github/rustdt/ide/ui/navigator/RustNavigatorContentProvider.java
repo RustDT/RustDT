@@ -13,9 +13,9 @@ package com.github.rustdt.ide.ui.navigator;
 import org.eclipse.core.resources.IProject;
 
 import melnorme.lang.ide.core.LangCore_Actual;
-import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.project_model.view.DependenciesContainer;
 import melnorme.lang.ide.ui.navigator.AbstractNavigatorContentProvider;
+import melnorme.lang.tooling.bundle.BundleInfo;
 import melnorme.utilbox.collections.ArrayList2;
 
 public class RustNavigatorContentProvider extends AbstractNavigatorContentProvider {

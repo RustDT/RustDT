@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.github.rustdt.tooling.RustBuildOutputParser;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
-import melnorme.lang.ide.core.BundleInfo;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.ToolMarkersHelper;
@@ -34,6 +33,7 @@ import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.bundle.BuildConfiguration;
 import melnorme.lang.tooling.bundle.BuildTargetNameParser;
 import melnorme.lang.tooling.bundle.BuildTargetNameParser2;
+import melnorme.lang.tooling.bundle.BundleInfo;
 import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.lang.tooling.ops.ToolSourceMessage;

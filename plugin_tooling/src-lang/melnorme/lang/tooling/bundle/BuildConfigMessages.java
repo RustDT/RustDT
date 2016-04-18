@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2015 IBM Corporation and others.
+ * Copyright (c) 2016 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,20 +8,14 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package melnorme.lang.ide.core.project_model;
+package melnorme.lang.tooling.bundle;
 
-import org.eclipse.core.resources.IProject;
+import java.text.MessageFormat;
 
-import melnorme.lang.tooling.bundle.AbstractBundleInfo;
-
-
-public interface IBundleModelManager {
+public interface BuildConfigMessages {
 	
-	void startManager();
-	void shutdownManager();
-	
-	LangBundleModel getModel();
-	
-	AbstractBundleInfo getProjectInfo(IProject project);
+	public static String BuildConfig_NotFound(String buildConfigName) {
+		return MessageFormat.format("Build configuration `{0}` not found.", buildConfigName);
+	}
 	
 }
