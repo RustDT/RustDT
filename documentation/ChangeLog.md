@@ -11,6 +11,7 @@ It's now possible to specify a command other than the default one (the $$SDK too
   
  * Fixed "IllegalStateException: The service has been unregistered" on Mars.2 when Eclipse is closed.
  * Fixed: Running Targets from "crate#tests" failed in OS X due to ".dSYM" dir. (#96)
+ * Fixed: Format tool (`rustfmt`) is invoked when an editor is saved automatically due to code completion. (#101)
 
 ### 0.5.1
  * Added support for source formatting using `rustfmt` (`Ctrl+Shift+F`).
