@@ -55,7 +55,7 @@ public class RustBuildManager extends BuildManager {
 	public static final String BuildType_Check = "check";
 	
 	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, "test --no-run");
-	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCrateBuildType(BuildType_Check, "check");
+	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BuildType_Check, "check");
 	
 	public RustBuildManager(LangBundleModel bundleModel, ToolManager toolManager) {
 		super(bundleModel, toolManager);
@@ -111,17 +111,6 @@ public class RustBuildManager extends BuildManager {
 			return ResourceUtils.getProjectLocation2(bt.getProject());
 		}
 		
-		protected LaunchArtifact getLaunchArtifact(BuildTarget bt, FileRef fileRef) throws CommonException {
-			String cargoTargetName = fileRef.getBinaryPathString();
-			return getLaunchArtifact(bt, cargoTargetName);
-		}
-		
-		protected LaunchArtifact getLaunchArtifact(BuildTarget bt, String cargoTargetName)
-				throws CommonException {
-			String exePath = cargoTargetHelper.getExecutablePathForCargoTarget(cargoTargetName, bt);
-			return new LaunchArtifact(cargoTargetName, exePath);
-		}
-		
 		@Override
 		public BuildTargetOperation getBuildOperation(BuildOperationParameters buildOpParams) throws CommonException {
 			return new RustBuildTargetOperation(buildOpParams);
@@ -169,6 +158,17 @@ public class RustBuildManager extends BuildManager {
 			return binariesPaths;
 		}
 		
+		protected LaunchArtifact getLaunchArtifact(BuildTarget bt, FileRef fileRef) throws CommonException {
+			String cargoTargetName = fileRef.getBinaryPathString();
+			return getLaunchArtifact(bt, cargoTargetName);
+		}
+		
+		protected LaunchArtifact getLaunchArtifact(BuildTarget bt, String cargoTargetName)
+				throws CommonException {
+			String exePath = cargoTargetHelper.getExecutablePathForCargoTarget(cargoTargetName, bt);
+			return new LaunchArtifact(cargoTargetName, exePath);
+		}
+		
 		protected ArrayList2<LaunchArtifact> addTestsSubTargets(BuildTarget bt, CargoManifest manifest,
 				ArrayList2<LaunchArtifact> launchArtifacts) throws CommonException {
 			for(String testTargetName : manifest.getEffectiveTestTargets(getProjectLocation(bt))) {
@@ -177,6 +177,22 @@ public class RustBuildManager extends BuildManager {
 			return launchArtifacts;
 		}
 		
+	}
+	
+	public static class RustCheckBuildType extends RustCrateBuildType {
+		public RustCheckBuildType(String name, String defaultCommandArguments) {
+			super(name, defaultCommandArguments);
+		}
+		
+		@Override
+		public LaunchArtifact getMainLaunchArtifact(BuildTarget bt) throws CommonException {
+			return null;
+		}
+		
+		@Override
+		public Indexable<LaunchArtifact> getSubTargetLaunchArtifacts(BuildTarget bt) throws CommonException {
+			return null;
+		}
 	}
 	
 	/* ----------------- Build ----------------- */
