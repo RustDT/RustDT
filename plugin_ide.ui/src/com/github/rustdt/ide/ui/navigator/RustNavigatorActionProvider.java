@@ -77,8 +77,7 @@ public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 				LangUIMessages_Actual.CargoFormat_OpName, 
 				project, 
 				list("--", "--write-mode=overwrite"), 
-				new StartOperationOptions(ProcessStartKind.BUILD, true, true),
-				true
+				new StartOperationOptions(ProcessStartKind.BUILD, true, true)
 			);
 		}
 		

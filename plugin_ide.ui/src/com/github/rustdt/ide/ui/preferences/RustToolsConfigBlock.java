@@ -48,7 +48,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 			{
 				ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
 				addSubComponent(sdkSrcLocation);
-				bindToDerivedPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH3);
+				bindFieldToDerivedPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH3);
 			}
 		};
 		sdkLocationField = languageSDKLocationGroup.sdkLocationField;
@@ -67,7 +67,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RacerLocationGroup() {
 			super("Racer");
 			
-			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RACER_PATH);
+			bindFieldToDerivedPreference(this.toolLocationField, RustSDKPreferences.RACER_PATH);
 			CheckBoxField showErrorsDialogOption = new CheckBoxField(
 				"Show error dialog if " + toolName + " failures occur.");
 			
@@ -99,7 +99,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RainicornLocationGroup() {
 			super("Rainicorn parse_describe");
 			
-			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RAINICORN_PATH2);
+			bindFieldToDerivedPreference(this.toolLocationField, RustSDKPreferences.RAINICORN_PATH2);
 		}
 		
 		@Override
@@ -127,7 +127,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		public RustFmtLocationGroup() {
 			super("rustfmt");
 			
-			bindToDerivedPreference(this.toolLocationField, RustSDKPreferences.RUSTFMT_PATH);
+			bindFieldToDerivedPreference(this.toolLocationField, RustSDKPreferences.RUSTFMT_PATH);
 			
 			this.addSubComponent(formatOnSaveField);
 			prefContext.bindToPreference(this.formatOnSaveField, RustSDKPreferences.FORMAT_ON_SAVE);
