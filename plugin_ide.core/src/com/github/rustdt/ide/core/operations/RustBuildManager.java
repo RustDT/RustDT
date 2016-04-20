@@ -164,7 +164,7 @@ public class RustBuildManager extends BuildManager {
 				binariesPaths.add(getLaunchArtifact(bt, binTargetName.getBinaryPathString()));
 			}
 			
-			addTestsSubTargets(bt, manifest, new ArrayList2<>());
+			addTestsSubTargets(bt, manifest, binariesPaths);
 			
 			return binariesPaths;
 		}
