@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.ops;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import melnorme.lang.tooling.data.IValidatableValue;
@@ -17,24 +21,35 @@ import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IToolOperationService;
+import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.concurrency.ICancelMonitor;
+import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.FileUtil;
 import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.misc.StringUtil;
 
 public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	
 	protected final IValidatableValue<Path> racerPath;
 	protected final IValidatableValue<Location> sdkSrcLocation;
-	protected final ArrayList2<String> arguments;
+	protected final String source;
+	protected final boolean useSubstituteFile;
+	protected final ArrayList2<String> racerArguments;
+	
+	protected Location substituteFile;
 	
 	public RacerOperation(IToolOperationService opHelper,
 			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation,
-			ArrayList2<String> arguments) {
+			String source, boolean useSubstituteFile, ArrayList2<String> racerArguments) {
 		super(opHelper, "NOT_USED", true);
 		this.racerPath = racerPath;
 		this.sdkSrcLocation = sdkSrcLocation;
-		this.arguments = arguments;
+		this.source = source;
+		this.useSubstituteFile = useSubstituteFile;
+		this.racerArguments = racerArguments;
 	}
 	
 	@Override
@@ -51,13 +66,47 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	}
 	
 	@Override
+	public RESULT execute(ICancelMonitor cm) throws CommonException, OperationCancellation, OperationSoftFailure {
+		
+		if(useSubstituteFile()) {
+			assertNotNull(source);
+			createSubstituteFile(source);
+		}
+		
+		RESULT result = super.execute(cm);
+		
+		if(useSubstituteFile()) {
+			substituteFile.toFile().delete();
+		}
+		
+		return result;
+	}
+	
+	protected void createSubstituteFile(String source) throws CommonException {
+		try {
+			substituteFile = Location.create_fromValid(Files.createTempFile("RustDT-", "-racer_substitute_file.rs"));
+			FileUtil.writeStringToFile(substituteFile.toFile(), source, StringUtil.UTF8);
+		} catch(IOException e) {
+			throw new CommonException("Error creating substitute file for Racer: ", e);
+		}
+	}
+	
+	protected boolean useSubstituteFile() {
+		return useSubstituteFile;
+	}
+	
+	@Override
 	protected ProcessBuilder createProcessBuilder() throws StatusException {
 		String toolExePath = racerPath.getValidatedValue().toString();
 		String rustSrcPath = sdkSrcLocation.getValidatedValue().toString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
 		
-		cmdLine.addAll(arguments);
+		cmdLine.addAll(racerArguments);
+		
+		if(substituteFile != null) {
+			cmdLine.add(substituteFile.toPathString());
+		}
 		
 		ProcessBuilder pb = new ProcessBuilder(cmdLine);
 		

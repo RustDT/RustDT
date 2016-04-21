@@ -12,7 +12,6 @@ package com.github.rustdt.ide.ui.actions;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
@@ -37,8 +36,6 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	@Override
 	protected void prepareOperation() throws CoreException, CommonException {
 		super.prepareOperation();
-		
-		getContext().getEditor_nonNull().doSave(new NullProgressMonitor());
 	}
 	
 	@Override
@@ -50,6 +47,8 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project) , 
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project), 
+			getContext().getSource(),
+			getContext().isSourceDocumentDirty(),
 			range.getOffset(), line_0, col_0, inputLoc);
 		
 		try {

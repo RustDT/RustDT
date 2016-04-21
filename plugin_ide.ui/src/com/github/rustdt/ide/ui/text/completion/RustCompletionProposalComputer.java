@@ -38,7 +38,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	
 	@Override
 	protected boolean needsEditorSave() {
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -57,6 +57,8 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project),
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
+			context.getSource(),
+			context.isSourceDocumentDirty(),
 			offset, line_0, col_0, fileLocation);
 		try {
 			return racerCompletionOp.execute(new EclipseCancelMonitor(pm));

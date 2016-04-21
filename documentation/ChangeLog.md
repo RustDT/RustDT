@@ -1,14 +1,14 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Added customization of the build command for Build Targets:
-It's now possible to specify a command other than the default one (the $$SDK tool). 
-   * Note however that RustDT still expects the output of the command (the error messages) to be in the same format as the default tool.
+ * Added customization of the build command for Build Targets: It's now possible to specify a command other than the default one (the $$SDK tool). 
+   * Note however that RustDT still expects command *output* (the compiler error messages) to be in the same format as the default tool.
  * Added a setting to invoke a special build target when a Rust editor is saved.
    * This allows invoking a build command (informally called a "check-build") that only checks for compiler errors, but doesn't not produce binaries. This has the potential to be faster than a full build.
    * Default is `cargo check` - *note that https://github.com/rsolomo/cargo-check needs to be installed for this.
    #TODO doc
-  
+ * RustDT no longer needs saving an editor to invoke a Racer operation.
+ 
  * Fixed "IllegalStateException: The service has been unregistered" on Mars.2 when Eclipse is closed.
  * Fixed: Running Targets from "crate#tests" failed in OS X due to ".dSYM" dir. (#96)
  * Fixed: Format tool (`rustfmt`) is invoked when an editor is saved automatically due to code completion. (#101)

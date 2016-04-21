@@ -24,8 +24,9 @@ public class RacerCompletionOperation extends RacerOperation<LangCompletionResul
 	
 	public RacerCompletionOperation(IToolOperationService opHelper, 
 			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation, 
-			int offset, int line_0, int col_0, Location fileLocation) {
-		super(opHelper, racerPath, sdkSrcLocation, getArguments("complete-with-snippet", line_0, col_0, fileLocation));
+			String source, boolean useSubstituteFile, int offset, int line_0, int col_0, Location fileLocation) {
+		super(opHelper, racerPath, sdkSrcLocation, source, useSubstituteFile, 
+			getArguments("complete-with-snippet", line_0, col_0, fileLocation));
 		
 		this.offset = offset;
 	}
