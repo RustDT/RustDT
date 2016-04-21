@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.data.IValidatableValue;
+import melnorme.lang.tooling.data.validation.ValidatedValueSource;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.utilbox.core.CommonException;
@@ -23,7 +23,7 @@ public class RacerFindDefinitionOperation extends RacerOperation<FindDefinitionR
 	protected final int offset;
 	
 	public RacerFindDefinitionOperation(IToolOperationService toolRunner, 
-			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation, 
+			ValidatedValueSource<Path> racerPath, ValidatedValueSource<Location> sdkSrcLocation, 
 			String source, boolean useSubstituteFile, int offset, int line_0, int col_0, Location fileLocation) {
 		super(toolRunner, racerPath, sdkSrcLocation, source, useSubstituteFile,
 			getArguments("find-definition", line_0, col_0, fileLocation));

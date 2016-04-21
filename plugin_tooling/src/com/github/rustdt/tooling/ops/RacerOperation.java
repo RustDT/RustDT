@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.data.IValidatableValue;
 import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.StatusException;
+import melnorme.lang.tooling.data.validation.ValidatedValueSource;
 import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.lang.tooling.ops.OperationSoftFailure;
@@ -33,8 +33,8 @@ import melnorme.utilbox.misc.StringUtil;
 
 public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	
-	protected final IValidatableValue<Path> racerPath;
-	protected final IValidatableValue<Location> sdkSrcLocation;
+	protected final ValidatedValueSource<Path> racerPath;
+	protected final ValidatedValueSource<Location> sdkSrcLocation;
 	protected final String source;
 	protected final boolean useSubstituteFile;
 	protected final ArrayList2<String> racerArguments;
@@ -42,7 +42,7 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	protected Location substituteFile;
 	
 	public RacerOperation(IToolOperationService opHelper,
-			IValidatableValue<Path> racerPath, IValidatableValue<Location> sdkSrcLocation,
+			ValidatedValueSource<Path> racerPath, ValidatedValueSource<Location> sdkSrcLocation,
 			String source, boolean useSubstituteFile, ArrayList2<String> racerArguments) {
 		super(opHelper, "NOT_USED", true);
 		this.racerPath = racerPath;

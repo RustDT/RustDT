@@ -23,7 +23,7 @@ import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.prefs.DerivedValuePreference;
-import melnorme.lang.tooling.data.ValidationException;
+import melnorme.lang.tooling.data.validation.ValidationException;
 import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
 import melnorme.utilbox.misc.Location;
 

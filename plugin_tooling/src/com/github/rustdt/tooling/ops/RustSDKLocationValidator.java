@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import java.text.MessageFormat;
 
-import melnorme.lang.tooling.data.ValidationException;
+import melnorme.lang.tooling.data.validation.ValidationException;
 import melnorme.lang.tooling.ops.SDKLocationValidator;
 import melnorme.utilbox.misc.Location;
 
