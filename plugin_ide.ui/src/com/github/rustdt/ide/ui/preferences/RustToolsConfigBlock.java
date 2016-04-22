@@ -37,9 +37,9 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	public RustToolsConfigBlock(PreferencesPageContext prefContext) {
 		super(prefContext);
 		
-		addSubComponent(racerGroup);
-		addSubComponent(rainicornGroup);
-		addSubComponent(rustfmtGroup);
+		addChildWidget(racerGroup);
+		addChildWidget(rainicornGroup);
+		addChildWidget(rustfmtGroup);
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		LanguageSDKLocationGroup languageSDKLocationGroup = new LanguageSDKLocationGroup() {
 			{
 				ButtonTextField sdkSrcLocation = new DirectoryTextField("Rust 'src' Directory:");
-				addSubComponent(sdkSrcLocation);
+				addChildWidget(sdkSrcLocation);
 				bindFieldToDerivedPreference(sdkSrcLocation, RustSDKPreferences.SDK_SRC_PATH3);
 			}
 		};
@@ -71,7 +71,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 			CheckBoxField showErrorsDialogOption = new CheckBoxField(
 				"Show error dialog if " + toolName + " failures occur.");
 			
-			this.addSubComponent(showErrorsDialogOption);
+			this.addChildWidget(showErrorsDialogOption);
 			prefContext.bindToPreference(showErrorsDialogOption, 
 				ContentAssistPreferences.ShowDialogIfContentAssistErrors);
 		}
@@ -129,7 +129,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 			
 			bindFieldToDerivedPreference(this.toolLocationField, RustSDKPreferences.RUSTFMT_PATH);
 			
-			this.addSubComponent(formatOnSaveField);
+			this.addChildWidget(formatOnSaveField);
 			prefContext.bindToPreference(this.formatOnSaveField, RustSDKPreferences.FORMAT_ON_SAVE);
 		}
 		
