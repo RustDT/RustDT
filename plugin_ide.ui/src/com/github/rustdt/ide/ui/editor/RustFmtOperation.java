@@ -13,7 +13,6 @@ package com.github.rustdt.ide.ui.editor;
 import java.nio.file.Path;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -42,7 +41,7 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 	
 	@Override
 	protected String doBackgroundValueComputation(IProgressMonitor monitor)
-			throws CoreException, CommonException, OperationCancellation {
+			throws CommonException, OperationCancellation {
 		
 		IProject project = EditorUtils.getAssociatedProject(editorInput);
 		
@@ -85,7 +84,7 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 	}
 	
 	@Override
-	protected void handleComputationResult() throws CoreException, CommonException {
+	protected void handleComputationResult() throws CommonException {
 		super.handleComputationResult();
 		
 		if(result != null) {

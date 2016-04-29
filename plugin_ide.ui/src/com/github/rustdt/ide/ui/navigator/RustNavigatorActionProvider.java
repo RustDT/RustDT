@@ -15,7 +15,6 @@ import static melnorme.utilbox.core.CoreUtil.list;
 import java.nio.file.Path;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IViewPart;
 
@@ -28,8 +27,8 @@ import melnorme.lang.ide.ui.LangUIMessages_Actual;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
 import melnorme.lang.ide.ui.navigator.LangNavigatorActionProvider;
-import melnorme.lang.ide.ui.operations.ToolSourceModifyingOperation;
 import melnorme.lang.ide.ui.operations.RunToolOperation.RunSDKToolOperation;
+import melnorme.lang.ide.ui.operations.ToolSourceModifyingOperation;
 import melnorme.utilbox.core.CommonException;
 
 public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
@@ -82,7 +81,7 @@ public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 		}
 		
 		@Override
-		protected ProcessBuilder createProcessBuilder() throws CoreException, CommonException {
+		protected ProcessBuilder createProcessBuilder() throws CommonException {
 			Path rustfmtPath = RustSDKPreferences.RUSTFMT_PATH.getDerivedValue();
 			// Look for sibling command cargo-fmt
 			Path cargoFmtPath = rustfmtPath.getParent().resolve("cargo-fmt");

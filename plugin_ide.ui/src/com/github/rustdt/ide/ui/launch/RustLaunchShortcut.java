@@ -12,7 +12,6 @@ package com.github.rustdt.ide.ui.launch;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
@@ -41,7 +40,7 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 	@Override
 	protected BuildTargetLaunchable getLaunchableForElement(Object element, IProject project,
 			BuildTargetLaunchCreator launchSettings, IProgressMonitor pm)
-					throws CoreException, CommonException, OperationCancellation {
+					throws CommonException, OperationCancellation {
 		if(element instanceof IFile) {
 			IFile file = (IFile) element;
 			if(!file.getParent().getProjectRelativePath().equals(new Path("tests"))) {

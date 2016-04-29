@@ -40,7 +40,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
 	@Override
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
-			throws CoreException, OperationCancellation, CommonException {
+			throws OperationCancellation, CommonException {
 		
 		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner();
 		
