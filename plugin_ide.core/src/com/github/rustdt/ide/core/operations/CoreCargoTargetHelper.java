@@ -17,6 +17,7 @@ import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.core.operations.build.BuildTargetOperation;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 
 public class CoreCargoTargetHelper extends CargoTargetHelper {
@@ -24,7 +25,7 @@ public class CoreCargoTargetHelper extends CargoTargetHelper {
 	public DebugMode getBuildMode(BuildTarget bt) throws CommonException {
 		ToolManager toolManager = bt.buildMgr.getToolManager();
 		BuildTargetOperation buildOp = bt.getBuildOperation(toolManager, new NullOperationMonitor());
-		return getBuildMode(buildOp.getEffectiveProccessCommandLine());
+		return getBuildMode(new ArrayList2<>(buildOp.getEffectiveProccessCommandLine()));
 	}
 	
 	public String getExecutablePathForCargoTarget(String cargoTargetName, BuildTarget bt) throws CommonException {
