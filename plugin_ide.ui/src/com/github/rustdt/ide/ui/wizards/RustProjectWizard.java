@@ -11,18 +11,26 @@
 package com.github.rustdt.ide.ui.wizards;
 
 
+import static melnorme.utilbox.core.CoreUtil.list;
 import static melnorme.utilbox.misc.MiscUtil.getClassResource;
+
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.widgets.Composite;
 
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
+import melnorme.lang.ide.core.operations.RunToolOperation.RunSDKToolOperation;
 import melnorme.lang.ide.ui.WizardMessages_Actual;
 import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
+import melnorme.util.swt.components.fields.CheckBoxField;
+import melnorme.utilbox.concurrency.OperationCancellation;
+import melnorme.utilbox.core.CommonException;
 
 /**
  * Rust New Project Wizard.
@@ -53,9 +61,22 @@ public class RustProjectWizard extends LangNewProjectWizard {
 	
 	@Override
 	protected void configureCreatedProject(ProjectCreator_ForWizard projectCreator, IProgressMonitor monitor)
+			throws CommonException, OperationCancellation, CoreException {
+
+		if(firstPage.useCargoInit.getBooleanFieldValue()) {
+			new RunSDKToolOperation(getProject(), list("init")).execute(monitor);
+		} else {
+			configureHelloWorld(projectCreator, monitor);
+		}
+	}
+	
+	protected void configureHelloWorld(ProjectCreator_ForWizard projectCreator, IProgressMonitor monitor)
 			throws CoreException {
+		String cargoManifest = HelloWorld_ManifestContents.replaceAll(Pattern.quote("$project_name$"), 
+			getProject().getName());
+		
 		projectCreator.createFile(getProject().getFile(CargoManifestParser.MANIFEST_FILENAME.toString()), 
-			HelloWorld_ManifestContents, false, monitor);
+			cargoManifest, false, monitor);
 		
 		IFile mainModule = getProject().getFolder("src").getFile("main.rs");
 		projectCreator.createFile(mainModule, HelloWorld_ModuleContents, true, monitor);
@@ -65,9 +86,20 @@ public class RustProjectWizard extends LangNewProjectWizard {
 
 class RustProjectWizardFirstPage extends LangProjectWizardFirstPage {
 	
+	protected final CheckBoxField useCargoInit = new CheckBoxField("Use `cargo init` to create project.");
+	
 	public RustProjectWizardFirstPage() {
 		setTitle(WizardMessages_Actual.LangNewProject_Page1_pageTitle);
 		setDescription(WizardMessages_Actual.LangNewProject_Page1_pageDescription);
+		
+		useCargoInit.set(true);
+	}
+	
+	@Override
+	protected void createContents_ValidationGroups(Composite parent) {
+		useCargoInit.createComponent(parent, sectionGDF().create());
+		
+		super.createContents_ValidationGroups(parent);
 	}
 	
 }

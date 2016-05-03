@@ -9,6 +9,7 @@
    #TODO doc
  * Added support for modifying the environment variables of a Build Target's build command.  
  * RustDT no longer needs saving an editor to invoke a Racer operation.
+ * New Cargo project can now initialize project using `cargo init`. (#106)
  
  * Fixed "IllegalStateException: The service has been unregistered" on Mars.2 when Eclipse is closed.
  * Fixed: Running Targets from "crate#tests" failed in OS X due to ".dSYM" dir. (#96)
