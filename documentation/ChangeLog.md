@@ -15,6 +15,7 @@
  * Fixed: Running Targets from "crate#tests" failed in OS X due to ".dSYM" dir. (#96)
  * Fixed: Format tool (`rustfmt`) is invoked when an editor is saved automatically due to code completion. (#101)
  * Fixed: Pressing Tab key does not indent according to Editor indentation preferences. (#99)
+ * Fixed: syntax highlighting for the character literal `'\"'` 
 
 ### 0.5.1
  * Added support for source formatting using `rustfmt` (`Ctrl+Shift+F`).
