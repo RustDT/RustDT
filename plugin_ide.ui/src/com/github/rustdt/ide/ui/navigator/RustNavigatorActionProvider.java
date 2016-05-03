@@ -21,13 +21,14 @@ import org.eclipse.ui.IViewPart;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.ide.ui.launch.RustLaunchShortcut;
 
+import melnorme.lang.ide.core.operations.RunToolOperationOnResource;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.ProcessStartKind;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.StartOperationOptions;
 import melnorme.lang.ide.ui.LangUIMessages_Actual;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
 import melnorme.lang.ide.ui.navigator.LangNavigatorActionProvider;
-import melnorme.lang.ide.ui.operations.RunToolOperation.RunSDKToolOperation;
+import melnorme.lang.ide.ui.operations.RunToolUIOperation.RunSDKUIToolOperation;
 import melnorme.lang.ide.ui.operations.ToolSourceModifyingOperation;
 import melnorme.utilbox.core.CommonException;
 
@@ -58,7 +59,7 @@ public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 		@Override
 		protected void initActions(MenuManager bundleOpsMenu, IProject project) {
 			addRunOperationAction(bundleOpsMenu, 
-				new RunSDKToolOperation(LangUIMessages_Actual.CargoUpdate_OpName, project, list("update")));
+				new RunSDKUIToolOperation(LangUIMessages_Actual.CargoUpdate_OpName, project, list("update")));
 			addRunOperationAction(bundleOpsMenu, 
 				new CargoFormatOperation(project));
 		}
@@ -74,19 +75,22 @@ public class RustNavigatorActionProvider extends LangNavigatorActionProvider {
 		public CargoFormatOperation(IProject project) {
 			super(
 				LangUIMessages_Actual.CargoFormat_OpName, 
-				project, 
-				list("--", "--write-mode=overwrite"), 
-				new StartOperationOptions(ProcessStartKind.BUILD, true, true)
+				new RunToolOperationOnResource(
+					project, 
+					list("--", "--write-mode=overwrite"), 
+					new StartOperationOptions(ProcessStartKind.BUILD, true, true)
+				) {
+					@Override
+					protected ProcessBuilder createProcessBuilder() throws CommonException {
+						Path rustfmtPath = RustSDKPreferences.RUSTFMT_PATH.getDerivedValue();
+						// Look for sibling command cargo-fmt
+						Path cargoFmtPath = rustfmtPath.getParent().resolve("cargo-fmt");
+						
+						return getToolManager().createToolProcessBuilder(project, cargoFmtPath, getCommands());
+					}
+				}
+				
 			);
-		}
-		
-		@Override
-		protected ProcessBuilder createProcessBuilder() throws CommonException {
-			Path rustfmtPath = RustSDKPreferences.RUSTFMT_PATH.getDerivedValue();
-			// Look for sibling command cargo-fmt
-			Path cargoFmtPath = rustfmtPath.getParent().resolve("cargo-fmt");
-			
-			return getToolManager().createToolProcessBuilder(project, cargoFmtPath, getCommands());
 		}
 		
 	}
