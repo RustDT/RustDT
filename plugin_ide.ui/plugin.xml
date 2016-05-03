@@ -179,6 +179,12 @@
 			sequence="M1+O">
 		</key>
 		<key
+			commandId="org.eclipse.ui.edit.text.shiftLeft"
+			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M2+Tab">
+		</key>
+		<key
 			commandId="com.github.rustdt.ide.ui.commands.Format"
 			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
 			sequence="M1+M2+F"
