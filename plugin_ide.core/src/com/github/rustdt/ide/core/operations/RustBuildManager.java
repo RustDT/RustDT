@@ -54,8 +54,10 @@ public class RustBuildManager extends BuildManager {
 	public static final String BuildType_Build = "build";
 	public static final String BuildType_Check = "check";
 	
-	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, "test --no-run");
-	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BuildType_Check, "check");
+	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, 
+		"test --no-run");
+	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BuildType_Check, 
+		"rustc --lib -- -Zno-trans");
 	
 	public RustBuildManager(LangBundleModel bundleModel, ToolManager toolManager) {
 		super(bundleModel, toolManager);

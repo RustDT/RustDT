@@ -5,7 +5,7 @@
    * Note however that RustDT still expects command *output* (the compiler error messages) to be in the same format as the default tool.
  * Added a setting to invoke a special build target when a Rust editor is saved.
    * This allows invoking a build command (informally called a "check-build") that only checks for compiler errors, but doesn't not produce binaries. This has the potential to be faster than a full build.
-   * Default is `cargo check` - *note that https://github.com/rsolomo/cargo-check needs to be installed for this.
+   * Default is `rustc --lib -- -Zno-trans`.
    #TODO doc
  * Added support for modifying the environment variables of a Build Target's build command.  
  * RustDT no longer needs saving an editor to invoke a Racer operation.
