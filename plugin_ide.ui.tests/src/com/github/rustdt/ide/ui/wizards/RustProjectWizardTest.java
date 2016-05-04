@@ -19,7 +19,9 @@ public class RustProjectWizardTest extends LangProjectWizardTest {
 	
 	@Override
 	protected RustProjectWizard createNewProjectWizard() {
-		return new RustProjectWizard();
+		RustProjectWizard rustProjectWizard = new RustProjectWizard();
+		rustProjectWizard.firstPage.useCargoInit.set(false);
+		return rustProjectWizard;
 	}
 	
 }
