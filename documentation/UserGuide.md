@@ -32,6 +32,19 @@ This will use `cargo install`, and as such the Rust installation must already be
 ##### Project creation:
 A new Rust project is created with the New Project Wizard: from the Project Explorer context menu, select `New / Project...` and then `Rust / Rust Cargo Project`. The same wizard can be used to add a pre-existing Cargo project: simply use the location field to select a pre-existing directory.
 
+##### Building:
+A project has a set of Build Targets, each being a command invocation that builds the source code into one or more artifacts, and reports back possible compilation errors to the IDE. Build Targets can be configured directly from the Project Explorer. 
+
+Build Targets can be enabled for a regular project build, or for auto-check. Auto-check is invoked when an editor is saved and no syntax errors are present in the source code. Normally it does not produce any artifacts, it just checks for compilation errors. **Note that auto-check is a different setting than the Eclipse workspace "Project / Build Automatically" option**. RustDT ignores the later option by default. Auto-check is also not invoked if a file is saved automatically due to a regular build being requested. 
+
+From the context menu of a Build Target, you can also directly create a Run or Debug launch configuration for one the generated executables. 
+
+### Editor and Navigation
+
+##### Editor newline auto-indentation:
+The editor will auto-indent new lines after an Enter is pressed. Pressing Backspace with the cursor after the indent characters in the start of the line will delete the indent and preceding newline, thus joining the rest of the line with the previous line. Pressing Delete before a newline will have an identical effect.
+This is unlike most source editors - if instead you want to just remove one level of indent (or delete the preceding Tab), press Shift-Tab. 
+
 ### Editor and Navigation
 
 ##### Editor newline auto-indentation:
