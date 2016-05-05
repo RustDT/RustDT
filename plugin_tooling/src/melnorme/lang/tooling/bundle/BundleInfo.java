@@ -22,6 +22,7 @@ public class BundleInfo extends AbstractBundleInfo {
 	protected final CargoManifest manifest;
 	
 	public BundleInfo(CargoManifest manifest) {
+		super(manifest.getName());
 		this.manifest = assertNotNull(manifest);
 	}
 	
