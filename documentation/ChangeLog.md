@@ -7,7 +7,7 @@
    * Default is `rustc --lib -- -Zno-trans`.
    * Added [Building](documentation/UserGuide.md#building) section to documentation.
    * The goal for the future is to enable invoking this command on-the-fly (as the user types), although for this to be useful in practice it will likely require the compiler to support incremental compilation (or be super fast otherwise).
- * Added support for modifying the environment variables of a Build Target's build command.  
+ * Added support for modifying the environment variables of a Build Target's build command. (#72)  
  * RustDT no longer needs saving an editor to invoke a Racer operation.
  * New Cargo project can now initialize project using `cargo init`. (#106)
  
