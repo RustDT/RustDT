@@ -37,11 +37,6 @@ import melnorme.utilbox.misc.Location;
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
-	protected boolean needsEditorSave() {
-		return false;
-	}
-	
-	@Override
 	protected LangCompletionResult doComputeProposals(SourceOperationContext context, int offset,
 			TimeoutProgressMonitor pm) 
 			throws CoreException, CommonException, OperationCancellation {
