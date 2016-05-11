@@ -21,7 +21,7 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.core.text.TextSourceUtils;
-import melnorme.lang.ide.core.utils.operation.EclipseCancelMonitor;
+import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
@@ -61,7 +61,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			context.isSourceDocumentDirty(),
 			offset, line_0, col_0, fileLocation);
 		try {
-			return racerCompletionOp.execute(new EclipseCancelMonitor(pm));
+			return racerCompletionOp.execute(EclipseUtils.cm(pm));
 		} catch(OperationSoftFailure e) {
 			throw e.toCommonException();
 		}
