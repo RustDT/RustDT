@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
 
 import melnorme.lang.ide.core.operations.RunToolOperation.RunSDKToolOperation;
+import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.ui.WizardMessages_Actual;
 import melnorme.lang.ide.ui.dialogs.LangNewProjectWizard;
 import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
@@ -64,7 +65,7 @@ public class RustProjectWizard extends LangNewProjectWizard {
 			throws CommonException, OperationCancellation, CoreException {
 
 		if(firstPage.useCargoInit.getBooleanFieldValue()) {
-			new RunSDKToolOperation(getProject(), list("init")).execute(monitor);
+			new RunSDKToolOperation(getProject(), list("init")).execute(EclipseUtils.om(monitor));
 		} else {
 			configureHelloWorld(projectCreator, monitor);
 		}

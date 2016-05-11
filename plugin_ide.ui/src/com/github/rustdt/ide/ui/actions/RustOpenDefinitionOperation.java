@@ -11,7 +11,6 @@
 package com.github.rustdt.ide.ui.actions;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
@@ -23,6 +22,7 @@ import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
+import melnorme.lang.tooling.ops.IOperationMonitor;
 import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -39,7 +39,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	}
 	
 	@Override
-	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IProgressMonitor monitor)
+	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IOperationMonitor monitor)
 			throws OperationCancellation, CommonException {
 		
 		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner();
@@ -52,7 +52,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 			range.getOffset(), line_0, col_0, inputLoc);
 		
 		try {
-			return op.execute(cm(monitor));
+			return op.execute(monitor);
 		} catch(OperationSoftFailure e) {
 			statusErrorMessage = e.getMessage();
 			return null;

@@ -12,7 +12,6 @@ package com.github.rustdt.ide.ui.launch;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
 import com.github.rustdt.ide.core.operations.CoreCargoTargetHelper;
@@ -24,6 +23,7 @@ import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
+import melnorme.lang.tooling.ops.IOperationMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
@@ -39,7 +39,7 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 	
 	@Override
 	protected BuildTargetLaunchable getLaunchableForElement(Object element, IProject project,
-			BuildTargetLaunchCreator launchSettings, IProgressMonitor pm)
+			BuildTargetLaunchCreator launchSettings, IOperationMonitor om)
 					throws CommonException, OperationCancellation {
 		if(element instanceof IFile) {
 			IFile file = (IFile) element;
@@ -60,7 +60,7 @@ public class RustLaunchShortcut extends LangLaunchShortcut {
 			return new BuildTargetLaunchable(project, launchSettings);
 		}
 		
-		return super.getLaunchableForElement(element, project, launchSettings, pm);
+		return super.getLaunchableForElement(element, project, launchSettings, om);
 	}
 	
 	@Override
