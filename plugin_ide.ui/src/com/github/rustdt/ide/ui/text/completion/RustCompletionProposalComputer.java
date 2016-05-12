@@ -21,8 +21,6 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.core.text.TextSourceUtils;
-import melnorme.lang.ide.core.utils.EclipseUtils;
-import melnorme.lang.ide.core.utils.operation.TimeoutProgressMonitor;
 import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
@@ -30,6 +28,7 @@ import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.ops.OperationSoftFailure;
+import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -38,7 +37,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	
 	@Override
 	protected LangCompletionResult doComputeProposals(SourceOperationContext context, int offset,
-			TimeoutProgressMonitor pm) 
+			ICancelMonitor cm) 
 			throws CoreException, CommonException, OperationCancellation {
 		
 		IProject project = context.getProject();
@@ -56,7 +55,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			context.isSourceDocumentDirty(),
 			offset, line_0, col_0, fileLocation);
 		try {
-			return racerCompletionOp.execute(EclipseUtils.cm(pm));
+			return racerCompletionOp.execute(cm);
 		} catch(OperationSoftFailure e) {
 			throw e.toCommonException();
 		}
