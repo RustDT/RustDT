@@ -2,7 +2,7 @@
 <feature
       id="com.github.rustdt"
       label="%featureName"
-      version="0.5.1.qualifier"
+      version="0.6.0.qualifier"
       provider-name="%providerName"
       plugin="com.github.rustdt.ide.ui">
 
