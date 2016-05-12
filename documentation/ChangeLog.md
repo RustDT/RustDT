@@ -1,22 +1,25 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Added customization of the build command for Build Targets: It's now possible to specify a command other than the default one (the $$SDK tool). 
-   * Note however that RustDT still expects command *output* (the compiler error messages) to be in the same format as the default tool.
+
+### 0.6.0
+ * Added customization of the build command for Build Targets: It's now possible to specify a command other than the default one (the Cargo tool). 
+   * Note however that RustDT still expects the command output (the compiler error messages) to be in the same format as the default tool.
  * Added support for invoking a specific Build Target when a Rust editor is saved. This is called "auto-check", and is intended for build commands that only check for compilation errors, but don't produce artifacts. This has the potential to be faster than a regular build. 
    * Default is `rustc --lib -- -Zno-trans`.
-   * Added [Building](documentation/UserGuide.md#building) section to documentation.
    * The goal for the future is to enable invoking this command on-the-fly (as the user types), although for this to be useful in practice it will likely require the compiler to support incremental compilation (or be super fast otherwise).
+   * Added [Building](documentation/UserGuide.md#building) section to documentation.
  * Added support for modifying the environment variables of a Build Target's build command. (#72)  
- * RustDT no longer needs saving an editor to invoke a Racer operation.
+ * RustDT no longer needs to save the editor before invoking Racer.
  * New Cargo project can now initialize project using `cargo init`. (#106)
  * Added some new code snippets: `enum`, `at` and `aq`, `if`, `ifl`, `whl`, `fn`, `fnr`, `test`, `macro`. (#109)
- 
+
+--
  * Fixed "IllegalStateException: The service has been unregistered" on Mars.2 when Eclipse is closed.
  * Fixed: Running Targets from "crate#tests" failed in OS X due to ".dSYM" dir. (#96)
  * Fixed: Format tool (`rustfmt`) is invoked when an editor is saved automatically due to code completion. (#101)
  * Fixed: Pressing Tab key does not indent according to Editor indentation preferences. (#99)
- * Fixed: syntax highlighting for the character literal `'\"'` 
+ * Fixed: syntax highlighting for the character literal `'\"'`. 
 
 ### 0.5.1
  * Added support for source formatting using `rustfmt` (`Ctrl+Shift+F`).
