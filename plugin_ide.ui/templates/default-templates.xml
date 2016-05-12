@@ -17,14 +17,48 @@
 // See the License for the specific language governing permissions and&#13;
 // limitations under the License.
 </template>
+
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="at" name="at" description="assert true" enabled="true">assert!(${cond});</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="aq" name="aq" description="assert equality" enabled="true">assert_eq!(${exp1}, ${exp2});</template>
+
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="enum" name="enum" description="enum declaration" enabled="true">enum ${name} {&#13;
+    ${Variant1},&#13;
+    ${Variant2}${cursor},&#13;
+}</template>
+
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="main" description="main function" enabled="true" name="main">fn main() {&#13;
 	${cursor}&#13;
 }</template>
+
+
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="if" name="if" description="if block" enabled="true">if ${cond} {&#13;
+	${cursor}&#13;
+}</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="ifl" name="ifl" description="if let block" enabled="true">if let ${Some}(${pat}) = ${expr} {&#13;
+	${cursor}&#13;
+}</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="whl" name="whl" description="while let block" enabled="true">while let ${Some}(${pat}) = ${expr} {&#13;
+	${cursor}&#13;
+}</template>
+
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="fn" name="fn" description="simple function" enabled="true">fn ${name}(${args}) {&#13;
+	${cursor}&#13;
+}</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="fnr" name="fnr" description="function with a return" enabled="true">fn ${name}(${args}) -> ${return_type} {&#13;
+	${cursor}&#13;
+}</template>
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="test" name="test" description="test function" enabled="true">#[test]&#13;
+fn ${name}() {&#13;
+	${cursor}unimplemented!();&#13;
+}</template>
+
+
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="forin" description="iterate over an iterable" enabled="true" name="forin">for ${iterable_element} in ${iterable} {&#13;
 	${cursor}&#13;
 }</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="pl" description="println variable" enabled="true" name="pl">println!("{}", ${var});</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="pld" description="println debug variable" enabled="true" name="pld">println!("{:?}", ${var});</template>
+
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="match" description="match expression" enabled="true" name="match">match ${value} {&#13;
 	${opt} =&gt; ${alt},&#13;
 	_ =&gt; ${altDefault},&#13;
@@ -33,4 +67,9 @@
 	${opt} =&gt; { ${alt} }&#13;
 	_ =&gt; { ${altDefault} }&#13;
 }</template>
+
+<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="macro" name="macro" description="macro declaration" enabled="true">macro_rules! ${macro_name} {&#13;
+	(${pat}) => (${exp});{cursor}&#13;
+}</template>
+
 </templates>
