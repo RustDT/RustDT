@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.github.rustdt.ide.ui.actions;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
@@ -34,7 +33,7 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	}
 	
 	@Override
-	protected void prepareOperation() throws CoreException, CommonException {
+	protected void prepareOperation() throws CommonException {
 		super.prepareOperation();
 	}
 	
