@@ -3,7 +3,7 @@
   	<extensionContent id="LangIDE-introExtension" style="intro.css" name="User Guide Extension" path="overview/@">
 		<group style-id="content-group" id="com-github-rustdt-introLink-group">
        		<link label="RustDT User Guide" 
-       		url="http://org.eclipse.ui.intro/openBrowser?url=http://rustdt.github.io/" 
+       		url="http://org.eclipse.ui.intro/openBrowser?url=https://github.com/RustDT/RustDT/blob/latest/documentation/UserGuide.md#user-guide" 
        		id="com-github-rustdt-introLink" style-id="content-link">
           		<text>The configuration and user manual for RustDT (recommended read).</text>
        		</link>
