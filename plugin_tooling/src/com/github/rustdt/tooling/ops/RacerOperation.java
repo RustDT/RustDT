@@ -16,15 +16,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.data.validation.ValidatedValueSource;
-import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.lang.tooling.ops.OperationSoftFailure;
-import melnorme.lang.tooling.ops.util.LocationOrSinglePathValidator;
+import melnorme.lang.tooling.toolchain.ops.AbstractSingleToolOperation;
+import melnorme.lang.utils.validators.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.fields.validation.ValidatedValueSource;
 import melnorme.utilbox.misc.FileUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;

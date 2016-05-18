@@ -12,8 +12,8 @@ package com.github.rustdt.tooling.ops;
 
 import java.text.MessageFormat;
 
-import melnorme.lang.tooling.data.validation.ValidationException;
-import melnorme.lang.tooling.ops.SDKLocationValidator;
+import melnorme.lang.tooling.toolchain.ops.SDKLocationValidator;
+import melnorme.utilbox.fields.validation.ValidationException;
 import melnorme.utilbox.misc.Location;
 
 public class RustSDKLocationValidator extends SDKLocationValidator {

@@ -36,7 +36,7 @@ import melnorme.lang.tooling.bundle.BundleInfo;
 import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.lang.tooling.ops.IOperationMonitor;
-import melnorme.lang.tooling.ops.ToolSourceMessage;
+import melnorme.lang.tooling.toolchain.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;

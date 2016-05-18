@@ -12,11 +12,11 @@ package com.github.rustdt.tooling.ops;
 
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.data.validation.ValidatedValueSource;
-import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.FindDefinitionResult;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.fields.validation.ValidatedValueSource;
 import melnorme.utilbox.misc.Location;
 
 public class RacerFindDefinitionOperation extends RacerOperation<FindDefinitionResult> {
@@ -33,7 +33,7 @@ public class RacerFindDefinitionOperation extends RacerOperation<FindDefinitionR
 	}
 	
 	@Override
-	protected FindDefinitionResult parseProcessOutput(StringCharSource output) throws CommonException {
+	public FindDefinitionResult parseProcessOutput(StringCharSource output) throws CommonException {
 		return createRacerOutputParser(offset).parseResolvedMatch(output.getSource());
 	}
 	

@@ -15,10 +15,10 @@ import static melnorme.lang.tooling.structure.StructureElementKind.VAR;
 import org.junit.Test;
 
 import melnorme.lang.tooling.ElementAttributes;
-import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.ops.AbstractStructureParser_Test;
+import melnorme.lang.tooling.common.ParserError;
+import melnorme.lang.tooling.structure.AbstractStructureParser_Test;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
 import melnorme.utilbox.collections.Indexable;

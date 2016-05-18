@@ -18,12 +18,11 @@ import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.tooling.ops.AbstractToolOutputParser2;
-import melnorme.lang.tooling.ops.FindDefinitionResult;
-import melnorme.lang.tooling.ops.SourceLineColumnRange;
+import melnorme.lang.tooling.toolchain.FindDefinitionResult;
+import melnorme.lang.tooling.toolchain.SourceLineColumnRange;
+import melnorme.lang.tooling.toolchain.ops.AbstractToolOutputParser2;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
-import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -40,7 +39,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@Override
-	public LangCompletionResult parse(StringParseSource source) throws CommonException {
+	public LangCompletionResult parse(StringCharSource source) throws CommonException {
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
@@ -67,7 +66,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected void parsePrefix(String line) throws CommonException {
-		StringParseSource lineLexer = new StringParseSource(line);
+		StringCharSource lineLexer = new StringCharSource(line);
 		lineLexer.tryConsume("PREFIX ");
 		int prefixStart = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
 		int prefixEnd = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
@@ -75,13 +74,13 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		prefixLength = prefixEnd - prefixStart;
 	}
 	
-	protected String consumeCommaDelimitedText(StringParseSource lineLexer) {
+	protected String consumeCommaDelimitedText(StringCharSource lineLexer) {
 		return LexingUtils.consumeUntilDelimiterOrEOS(lineLexer, ',');
 	}
 	
 	@SuppressWarnings("unused")
 	public ToolCompletionProposal parseProposal(String line, StringCharSource source) throws CommonException {
-		StringParseSource lineLexer = new StringParseSource(line);
+		StringCharSource lineLexer = new StringCharSource(line);
 		
 		lineLexer.tryConsume("MATCH ");
 		
@@ -131,7 +130,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			fullReplaceString, subElements);
 	}
 	
-	protected String consumeSemicolonDelimitedText(StringParseSource lineLexer) {
+	protected String consumeSemicolonDelimitedText(StringCharSource lineLexer) {
 		return LexingUtils.consumeUntilDelimiterOrEOS(lineLexer, ';');
 	}
 	
@@ -157,7 +156,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	/* -----------------  ----------------- */
 	
 	protected ArrayList2<String> parseParametersFromRawLabel(String rawLabel) {
-		StringParseSource lexer = new StringParseSource(rawLabel);
+		StringCharSource lexer = new StringCharSource(rawLabel);
 		
 		lexer.consumeUntil("(");
 		if(!lexer.tryConsume("(")) {
@@ -180,7 +179,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		return args;
 	}
 	
-	protected String parseRawLabelArg(StringParseSource lexer) {
+	protected String parseRawLabelArg(StringCharSource lexer) {
 		lexer.consumeUntil(":", true);
 		return lexer.consumeUntil("}", true);
 	}
@@ -225,7 +224,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	protected FindDefinitionResult doParseResolvedMatch(String lineInput) throws CommonException {
-		StringParseSource lineLexer = new StringParseSource(lineInput);
+		StringCharSource lineLexer = new StringCharSource(lineInput);
 		
 		if(lineLexer.tryConsume("MATCH ") == false) {
 			throw new CommonException(ToolingMessages.FIND_DEFINITION_NoTargetFound);

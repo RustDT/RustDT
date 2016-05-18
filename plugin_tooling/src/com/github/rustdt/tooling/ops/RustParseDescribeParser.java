@@ -17,17 +17,17 @@ import java.util.Iterator;
 
 import melnorme.lang.tooling.EProtection;
 import melnorme.lang.tooling.ElementAttributes;
-import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.ops.AbstractStructureParser;
+import melnorme.lang.tooling.common.ParserError;
 import melnorme.lang.tooling.parser.TextBlocksReader;
 import melnorme.lang.tooling.parser.TextBlocksReader.BlockVisitorX;
 import melnorme.lang.tooling.parser.TextBlocksReader.TextBlocksSubReader;
+import melnorme.lang.tooling.structure.AbstractStructureParser;
 import melnorme.lang.tooling.structure.SourceFileStructure;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
-import melnorme.lang.utils.parse.StringParseSource;
+import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -52,7 +52,7 @@ public class RustParseDescribeParser extends AbstractStructureParser {
 	
 	@Override
 	public SourceFileStructure parse(String describeOutput) throws CommonException {
-		TextBlocksReader reader = new TextBlocksReader(new StringParseSource(describeOutput));
+		TextBlocksReader reader = new TextBlocksReader(new StringCharSource(describeOutput));
 		
 		reader.expectText("RUST_PARSE_DESCRIBE");
 		
