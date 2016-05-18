@@ -213,7 +213,7 @@ public class RustBuildManager extends BuildManager {
 				protected void handleParseError(CommonException ce) {
 					 LangCore.logStatus(LangCore.createCoreException(ce));
 				}
-			}.parseOutput(processResult);
+			}.parseResult(processResult);
 			
 			new ToolMarkersHelper().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation2(project), om);
 		}

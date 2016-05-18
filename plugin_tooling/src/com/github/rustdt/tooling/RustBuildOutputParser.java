@@ -28,11 +28,6 @@ import melnorme.utilbox.misc.StringUtil;
 
 public abstract class RustBuildOutputParser extends BuildOutputParser {
 	
-	@Override
-	protected String getToolProcessName() {
-		return "Cargo";
-	}
-	
 	protected boolean isMessageEnd(String nextLine) {
 		return nextLine.startsWith("error: aborting due to ");
 	}
