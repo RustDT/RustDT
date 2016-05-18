@@ -23,7 +23,7 @@ import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
-import melnorme.lang.tooling.ops.IOperationMonitor;
+import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;

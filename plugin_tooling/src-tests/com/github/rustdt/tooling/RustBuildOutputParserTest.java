@@ -23,8 +23,8 @@ import java.util.List;
 import org.junit.Test;
 
 import melnorme.lang.tests.CommonToolingTest;
-import melnorme.lang.tooling.toolchain.SourceLineColumnRange;
-import melnorme.lang.tooling.toolchain.ToolSourceMessage;
+import melnorme.lang.tooling.common.SourceLineColumnRange;
+import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.status.Severity;
 

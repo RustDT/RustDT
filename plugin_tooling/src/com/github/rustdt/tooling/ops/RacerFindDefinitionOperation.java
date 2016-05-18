@@ -12,7 +12,7 @@ package com.github.rustdt.tooling.ops;
 
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.toolchain.FindDefinitionResult;
+import melnorme.lang.tooling.toolchain.ops.FindDefinitionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.core.CommonException;
