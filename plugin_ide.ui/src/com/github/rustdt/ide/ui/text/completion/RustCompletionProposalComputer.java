@@ -27,7 +27,7 @@ import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.tooling.ops.OperationSoftFailure;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;

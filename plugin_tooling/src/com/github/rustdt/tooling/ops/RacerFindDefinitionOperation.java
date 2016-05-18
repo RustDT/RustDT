@@ -12,8 +12,8 @@ package com.github.rustdt.tooling.ops;
 
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.ops.IToolOperationService;
 import melnorme.lang.tooling.toolchain.FindDefinitionResult;
+import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;

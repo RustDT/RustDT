@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.ops.IToolOperationService;
-import melnorme.lang.tooling.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.AbstractSingleToolOperation;
+import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.utils.validators.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.ICancelMonitor;
