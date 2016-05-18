@@ -18,17 +18,18 @@ import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.tooling.ops.AbstractToolOutputParser;
+import melnorme.lang.tooling.ops.AbstractToolOutputParser2;
 import melnorme.lang.tooling.ops.FindDefinitionResult;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.lang.utils.parse.LexingUtils;
+import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.lang.utils.parse.StringParseSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;
 
-public abstract class RacerCompletionOutputParser extends AbstractToolOutputParser<LangCompletionResult> {
+public abstract class RacerCompletionOutputParser extends AbstractToolOutputParser2<LangCompletionResult> {
 	
 	protected final int offset;
 	
@@ -39,12 +40,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@Override
-	protected String getToolProcessName() {
-		return "Racer";
-	}
-	
-	@Override
-	protected LangCompletionResult parse(StringParseSource source) throws CommonException {
+	public LangCompletionResult parse(StringParseSource source) throws CommonException {
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
@@ -84,7 +80,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@SuppressWarnings("unused")
-	public ToolCompletionProposal parseProposal(String line, StringParseSource source) throws CommonException {
+	public ToolCompletionProposal parseProposal(String line, StringCharSource source) throws CommonException {
 		StringParseSource lineLexer = new StringParseSource(line);
 		
 		lineLexer.tryConsume("MATCH ");
