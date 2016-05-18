@@ -12,10 +12,10 @@ package com.github.rustdt.tooling.ops;
 
 import java.text.MessageFormat;
 
-import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.data.validation.ValidationException;
 import melnorme.lang.tooling.ops.util.LocationValidator;
 import melnorme.utilbox.misc.Location;
+import melnorme.utilbox.status.Severity;
 
 public class RustSDKSrcLocationValidator extends LocationValidator {
 	

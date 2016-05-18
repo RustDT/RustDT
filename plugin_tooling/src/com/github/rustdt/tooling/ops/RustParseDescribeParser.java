@@ -20,7 +20,6 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.ops.AbstractStructureParser;
 import melnorme.lang.tooling.parser.TextBlocksReader;
 import melnorme.lang.tooling.parser.TextBlocksReader.BlockVisitorX;
@@ -33,6 +32,7 @@ import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;
+import melnorme.utilbox.status.Severity;
 
 public class RustParseDescribeParser extends AbstractStructureParser {
 	

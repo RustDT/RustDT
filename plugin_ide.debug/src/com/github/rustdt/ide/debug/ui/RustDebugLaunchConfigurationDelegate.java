@@ -50,12 +50,12 @@ import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate
 import melnorme.lang.ide.debug.core.GdbLaunchDelegateExtension;
 import melnorme.lang.ide.debug.core.LangSourceLookupDirector;
 import melnorme.lang.ide.debug.core.services.LangDebugServicesExtensions;
-import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.validation.ValidationException;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.misc.FileUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
+import melnorme.utilbox.status.StatusException;
 
 public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunchConfigurationDelegate {
 	

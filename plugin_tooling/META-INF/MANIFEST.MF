@@ -38,5 +38,6 @@ Export-Package: com.github.rustdt.tooling,
  melnorme.utilbox.misc,
  melnorme.utilbox.ownership,
  melnorme.utilbox.process,
+ melnorme.utilbox.status,
  melnorme.utilbox.tests,
  melnorme.utilbox.tree

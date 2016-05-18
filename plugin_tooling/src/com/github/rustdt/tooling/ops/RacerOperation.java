@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.data.Severity;
-import melnorme.lang.tooling.data.StatusException;
 import melnorme.lang.tooling.data.validation.ValidatedValueSource;
 import melnorme.lang.tooling.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.ops.IToolOperationService;
@@ -30,6 +28,8 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.FileUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;
+import melnorme.utilbox.status.Severity;
+import melnorme.utilbox.status.StatusException;
 
 public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
 	

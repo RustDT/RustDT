@@ -18,13 +18,13 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.ParserError;
 import melnorme.lang.tooling.ast.ParserErrorTypes;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.ops.AbstractStructureParser_Test;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
+import melnorme.utilbox.status.Severity;
 
 
 public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {

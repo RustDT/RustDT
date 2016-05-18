@@ -11,10 +11,10 @@
 package com.github.rustdt.tooling;
 
 
-import static melnorme.lang.tooling.data.Severity.ERROR;
-import static melnorme.lang.tooling.data.Severity.WARNING;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.CoreUtil.listFrom;
+import static melnorme.utilbox.status.Severity.ERROR;
+import static melnorme.utilbox.status.Severity.WARNING;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,10 +23,10 @@ import java.util.List;
 import org.junit.Test;
 
 import melnorme.lang.tests.CommonToolingTest;
-import melnorme.lang.tooling.data.Severity;
 import melnorme.lang.tooling.ops.SourceLineColumnRange;
 import melnorme.lang.tooling.ops.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.status.Severity;
 
 
 public class RustBuildOutputParserTest extends CommonToolingTest {
