@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Improved the default names for automatically created launch configuration.
  * Fixed regression: Cargo not able to find rustc. (#113)
 
 ### 0.6.0
