@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed regression: Cargo not able to find rustc. (#113)
 
 ### 0.6.0
  * Added customization of the build command for Build Targets: It's now possible to specify a command other than the default one (the Cargo tool). 
