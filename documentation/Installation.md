@@ -13,13 +13,13 @@
  1. Select the `RustDT` feature, and complete the wizard. 
   * RustDT dependencies such as CDT will automatically be added during installation.
  1. Restart Eclipse. 
- 1. For initial setup, follow the instructions at the configuration section in the [User Guide](UserGuide.md). It is recommended you read the rest of the guide too.
+ 1. Follow the instructions from the User Guide's [Configuration section](UserGuide.md#configuration) to configure the required external tools. It is recommended you read the rest of the guide too.  
  
 #### Updating:
 If you already have RustDT installed, and want to update it to a newer release, click `Help / Check for Updates...`.
 
 #### :cn: *Note for users in China*
-Note: if you are behind the Great Firewall of China, you are very likely to encounter problems installing RustDT: blocked connections, timeouts, or slow downloads. This is because the update site is hosted in Github, which is blocked or has limited access. These alternative steps might help you perform the installation:
+Note: if you are behind the Great Firewall of China, you are very likely to encounter problems installing RustDT: blocked connections, timeouts, or slow downloads. This is because the update site is hosted in Github, which is blocked or has limited access. These alternative steps should help you perform the installation:
 
 * Download the website from https://github.com/RustDT/rustdt.github.io/archive/master.zip, unpack the archive and use the `releases` directory as a Local repository instead of the Update Site URL. However, you will need to redownload the archive above whenever you want to update RustDT to a newer version.
 * Download an Eclipse installation which already contains CDT (C Development Tools), so it doesn't have to be installed at the same time as RustDT.
