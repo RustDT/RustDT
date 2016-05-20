@@ -53,7 +53,7 @@ public class RustSourceModelManager extends SourceModelManager {
 		}
 		
 		@Override
-		protected SourceFileStructure doCreateNewData() throws CommonException {
+		protected SourceFileStructure doCreateNewData() throws CommonException, OperationCancellation {
 			
 			Location fileLocation = structureInfo.getLocation();
 			
@@ -85,13 +85,13 @@ public class RustSourceModelManager extends SourceModelManager {
 			
 		}
 		
-		protected String getDescribeOutput(String source, Location fileLocation) {
+		protected String getDescribeOutput(String source, Location fileLocation) 
+				throws OperationCancellation, CommonException {
 			if(DevelopmentCodeMarkers.TESTS_MODE) {
 				return null;
 			}
 			
 			IProject project = fileLocation == null ? null : ResourceUtils.getProject(fileLocation);
-			try {
 				Path path = RustSDKPreferences.RAINICORN_PATH2.getDerivedValue(project);
 				
 				ProcessBuilder pb = toolManager.createToolProcessBuilder(project, path);
@@ -99,13 +99,6 @@ public class RustSourceModelManager extends SourceModelManager {
 				ExternalProcessResult describeResult = toolManager.runEngineTool(pb, source, cm);
 				return describeResult.getStdOutBytes().toString(StringUtil.UTF8);
 				
-			} catch(OperationCancellation e) {
-				return null;
-			} catch(CommonException ce) {
-				toolManager.logAndNotifyError("Error running parse-describe process:", ce.toStatusException());
-				return null;
-			}
-			
 		}
 	}
 	
