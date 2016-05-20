@@ -53,7 +53,7 @@ public class RustSourceModelManager extends SourceModelManager {
 		}
 		
 		@Override
-		protected SourceFileStructure createNewData() {
+		protected SourceFileStructure doCreateNewData() throws CommonException {
 			
 			Location fileLocation = structureInfo.getLocation();
 			
@@ -67,7 +67,7 @@ public class RustSourceModelManager extends SourceModelManager {
 				SourceFileStructure newStructure = parseDescribe.parse(describeOutput);
 				if(newStructure.getParserProblems().size() > 0 && newStructure.getChildren().isEmpty()) {
 					
-					SourceFileStructure previousStructure = structureInfo.getStoredData();
+					SourceFileStructure previousStructure = structureInfo.getStoredData().getOrNull();
 					if(previousStructure != null) {
 						// Use elements from previous structure:
 						Indexable<StructureElement> previousElements = 
@@ -79,8 +79,8 @@ public class RustSourceModelManager extends SourceModelManager {
 				}
 				return newStructure;
 			} catch(CommonException ce) {
-				toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusException());
-				return null;
+				throw new CommonException("Error reading parse-describe output:", ce.toStatusException());
+				//toolManager.logAndNotifyError("Error reading parse-describe output:", ce.toStatusException());
 			}
 			
 		}
