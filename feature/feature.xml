@@ -4,7 +4,7 @@
       label="%featureName"
       version="0.6.0.qualifier"
       provider-name="%providerName"
-      plugin="com.github.rustdt.ide.ui">
+      plugin="com.github.rustdt.jvmcheck">
 
    <description>
       %description
