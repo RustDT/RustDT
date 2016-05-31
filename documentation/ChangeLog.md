@@ -1,6 +1,8 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed Progress dialog never showing up when "Ok" pressed in LANG_NAME project properties page.
+
  * Improved the default names for automatically created launch configuration.
  * Improved error display for Outline operation failures.
 
