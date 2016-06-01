@@ -1,12 +1,12 @@
 ## release ChangeLog
 
 ### (NextVersion)
+
+### 0.6.1
+ * Improved the default names for automatically created launch configuration.
+ * Added error display notification for Outline operation failures.
  * Fixed: Progress dialog never showing up when "Ok" pressed in LANG_NAME project properties page.
  * Fixed: Eclipse variables not being substituted in environment-variable values.
-
- * Improved the default names for automatically created launch configuration.
- * Improved error display for Outline operation failures.
-
  * Fixed regression: Cargo not able to find rustc. (#113)
 
 ### 0.6.0
