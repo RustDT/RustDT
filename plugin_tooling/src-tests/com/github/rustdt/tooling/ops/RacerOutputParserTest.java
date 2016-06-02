@@ -78,8 +78,8 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH BufRead;BufRead;519;10;/RustProject/src/xpto2.rs;Trait;"+DESC2+NL
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "BufReader", "BufReader", Struct, att(), "xpto.rs", DESC1),
-				new ToolCompletionProposal(offset, 0, "BufRead", "BufRead", Trait, att(),  "xpto2.rs", DESC2)
+				new ToolCompletionProposal(offset, 0, "BufReader", "BufReader", Struct, att(), null, "xpto.rs", DESC1),
+				new ToolCompletionProposal(offset, 0, "BufRead", "BufRead", Trait, att(), null, "xpto2.rs", DESC2)
 			)
 		);
 		
@@ -89,7 +89,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"END\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, att(), "xpto.rs", DESC1)
+				new ToolCompletionProposal(offset-2, 2, "BufReader", "BufReader", Let, att(), null, "xpto.rs", DESC1)
 			)
 		);
 		
@@ -102,13 +102,14 @@ public class RacerOutputParserTest extends CommonToolingTest {
 					+"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {" +NL
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, att(), "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "stdin", "stdin()", Function, att(), null, "stdio.rs",
 					"pub fn stdin() -> Stdin {",
 					"stdin()", new ArrayList2<SourceRange>()),
-				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, att(), "util.rs",
+				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, att(), null, "util.rs",
 					"pub fn repeat(byte: u8) -> Repeat { Repeat { byte: byte } }",
 					"repeat(byte)", new ArrayList2<>(sr(7, 4))),
-				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, att(), "util.rs",
+				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, att(), 
+					null, "util.rs",
 					"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {",
 					"copy(r, w)", new ArrayList2<>(sr(5, 1), sr(8, 1)))
 			)
@@ -121,10 +122,10 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			"MATCH xxx2;xxx2(${;122;7;/rustc-nightly/src/libstd/io/stdio.rs;Function;pub fn stdin() -> Stdin {\n"
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), null, "stdio.rs",
 					"pub fn stdin() -> Stdin {",
 					"xxx()", new ArrayList2<SourceRange>()),
-				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), null, "stdio.rs",
 					"pub fn stdin() -> Stdin {",
 					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
 			)
@@ -153,10 +154,10 @@ public class RacerOutputParserTest extends CommonToolingTest {
 			DESC_LINE2
 			, 
 			listFrom(
-				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "xxx", "xxx()", Function, att(), null, "stdio.rs",
 					"pub fn stdin() -> Stdin {" +NL+ DESC_LINE2,
 					"xxx()", new ArrayList2<SourceRange>()),
-				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), "stdio.rs",
+				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), null, "stdio.rs",
 					"pub fn xxx2() -> Stdin {" +NL+ DESC_LINE2 +NL+ DESC_LINE2,
 					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
 			)

@@ -126,7 +126,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 		return new ToolCompletionProposal(
 			completionOffset, prefixLength, baseName, 
 			label, kind, attributes,
-			moduleName, description,
+			null, moduleName, description,
 			fullReplaceString, subElements);
 	}
 	
