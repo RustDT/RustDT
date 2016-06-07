@@ -12,14 +12,12 @@ package com.github.rustdt.ide.ui.editor;
 
 import java.nio.file.Path;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolManager;
-import melnorme.lang.ide.ui.editor.EditorUtils;
 import melnorme.lang.ide.ui.utils.operations.AbstractEditorOperation2;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
@@ -43,8 +41,6 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 	protected String doBackgroundValueComputation(IOperationMonitor monitor)
 			throws CommonException, OperationCancellation {
 		
-		IProject project = EditorUtils.getAssociatedProject(editorInput);
-		
 		Path rustFmt = RustSDKPreferences.RUSTFMT_PATH.getDerivedValue(project);
 		
 		ArrayList2<String> cmdLine = new ArrayList2<>(rustFmt.toString());
@@ -55,7 +51,7 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 		ProcessBuilder pb = new ProcessBuilder(cmdLine);
 		// set directory, workaround for bug: https://github.com/rust-lang-nursery/rustfmt/issues/562
 		// Also, it make rustfmt look for the rustfmt.toml config file in folders parent chain
-		pb.directory(inputLoc.getParent().toFile());
+		pb.directory(getInputLocation().getParent().toFile());
 		
 		String input = doc.get();
 		ExternalProcessResult result = toolMgr.runEngineTool(pb, input, monitor);

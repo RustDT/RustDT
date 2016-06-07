@@ -11,11 +11,8 @@
 package melnorme.lang.ide.ui.editor.actions;
 
 
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.CoreUtil.areEqual;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -35,46 +32,23 @@ import melnorme.lang.tooling.common.SourceLineColumnRange;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.toolchain.ops.FindDefinitionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
-import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
-import melnorme.utilbox.status.StatusException;
 
-public abstract class AbstractOpenElementOperation extends AbstractEditorOperation2<FindDefinitionResult> 
-	implements IToolOperationService {
+public abstract class AbstractOpenElementOperation extends AbstractEditorOperation2<FindDefinitionResult> {
 	
-	protected final String source;
-	protected final SourceRange range; // range of element to open. Usually only offset matters
 	protected final OpenNewEditorMode openEditorMode;
-	protected final IProject project;
-	protected final SourceOperationContext context;
-	
-	// prepare_items
-	protected int line_0;
-	protected int col_0;
 	
 	public AbstractOpenElementOperation(String operationName, ITextEditor editor, SourceRange range, 
 			OpenNewEditorMode openEditorMode) {
-		super(operationName, editor);
+		super(operationName, editor, range);
 		
-		this.source = doc.get();
-		this.range = assertNotNull(range);
 		this.openEditorMode = openEditorMode;
-		
-		IFile file = EditorUtils.findFileOfEditor(editor);
-		this.project = file == null ? null : file.getProject();
-		
-		this.context = new SourceOperationContext(range.getOffset(), range, doc, editor);
 	}
 	
 	public int getInvocationOffset() {
-		return context.getInvocationOffset();
-	}
-	
-	public SourceOperationContext getContext() {
-		return context;
+		return getOperationOffset();
 	}
 	
 	protected ToolManager getToolManager() {
@@ -82,21 +56,9 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorOperati
 	}
 	
 	@Override
-	protected void prepareOperation() throws CommonException {
-		super.prepareOperation();
-		
-		if(! (new SourceRange(0, source.length())).contains(range)) {
-			throw new CommonException("Invalid range, out of bounds of the document");
-		}
-		
-		line_0 = getContext().getInvocationLine_0();
-		col_0 = getContext().getInvocationColumn_0();
-	}
-	
-	@Override
-	protected FindDefinitionResult doBackgroundValueComputation(IOperationMonitor monitor)
+	protected FindDefinitionResult doBackgroundValueComputation(IOperationMonitor om)
 			throws CommonException, OperationCancellation {
-		return performLongRunningComputation_doAndGetResult(monitor);
+		return performLongRunningComputation_doAndGetResult(om);
 	}
 	
 	protected abstract FindDefinitionResult performLongRunningComputation_doAndGetResult(IOperationMonitor monitor) 
@@ -133,12 +95,12 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorOperati
 		EditorUtils.setEditorSelection(newEditor, new SourceRange(selectionOffset, 0));
 	}
 	
-	protected IEditorInput getNewEditorInput(Location newEditorFilePath) throws CoreException {
+	protected IEditorInput getNewEditorInput(Location newEditorFilePath) throws CommonException {
 		if(newEditorFilePath == null) {
-			throw LangCore.createCoreException("No path provided for new element. ", null);
+			throw new CommonException("No path provided for new element. ");
 		}
 		
-		if(areEqual(newEditorFilePath, inputLoc)) {
+		if(areEqual(newEditorFilePath, getInputLocation())) {
 			return editor.getEditorInput();
 		} else {
 			return EditorUtils.getBestEditorInputForLoc(newEditorFilePath);
@@ -158,15 +120,8 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorOperati
 	
 	/* -----------------  ----------------- */
 	
-	@Override
-	public ExternalProcessResult runProcess(ProcessBuilder pb, String input, ICancelMonitor cm)
-			throws OperationCancellation, CommonException {
-		return LangCore.getToolManager().runEngineTool(pb, input, cm);
-	}
-	
-	@Override
-	public void logStatus(StatusException statusException) {
-		LangCore.logStatusException(statusException);
+	public IToolOperationService getToolService() {
+		return LangCore.getToolManager().getEngineToolsOperationService();
 	}
 	
 }

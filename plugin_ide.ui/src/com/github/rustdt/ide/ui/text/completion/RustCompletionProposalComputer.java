@@ -42,8 +42,8 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 		
 		IProject project = context.getProject();
 		
-		int line_0 = context.getInvocationLine_0();
-		int col_0 = context.getInvocationColumn_0();
+		int line_0 = context.getContext().getInvocationLine_0();
+		int col_0 = context.getContext().getInvocationColumn_0();
 		Location fileLocation = context.getEditorInputLocation();
 		
 		ToolManagerEngineToolRunner toolRunner = getEngineToolRunner();

@@ -43,12 +43,15 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 		
 		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner();
 		
+		int line_0 = sourceOpContext.getInvocationLine_0();
+		int col_0 = sourceOpContext.getInvocationColumn_0();
+		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project) , 
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project), 
-			getContext().getSource(),
-			getContext().isSourceDocumentDirty(),
-			range.getOffset(), line_0, col_0, inputLoc);
+			getSource(),
+			sourceOpContext.isDocumentDirty(),
+			getInvocationOffset(), line_0, col_0, getInputLocation());
 		
 		try {
 			return op.execute(monitor);
