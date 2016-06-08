@@ -14,6 +14,7 @@ import java.nio.file.Path;
 
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.ops.ToolOpResult;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
@@ -33,8 +34,10 @@ public class RacerCompletionOperation extends RacerOperation<LangCompletionResul
 	}
 	
 	@Override
-	public LangCompletionResult parseProcessOutput(StringCharSource outputParseSource) throws CommonException {
-		return createRacerOutputParser(offset).parse(outputParseSource);
+	public ToolOpResult<LangCompletionResult> parseProcessOutput(StringCharSource outputParseSource) 
+			throws CommonException {
+		LangCompletionResult resultaData = createRacerOutputParser(offset).parse(outputParseSource);
+		return new ToolOpResult<>(resultaData);
 	}
 	
 	@Override

@@ -11,7 +11,6 @@
 package com.github.rustdt.ide.ui.text.completion;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -21,13 +20,12 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.core.text.TextSourceUtils;
-import melnorme.lang.ide.ui.editor.actions.SourceOperationContext;
+import melnorme.lang.ide.ui.editor.actions.EditorOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -36,9 +34,8 @@ import melnorme.utilbox.misc.Location;
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
-	protected LangCompletionResult doComputeProposals(SourceOperationContext context, int offset,
-			ICancelMonitor cm) 
-			throws CoreException, CommonException, OperationCancellation {
+	protected LangCompletionResult doComputeProposals(EditorOperationContext context, ICancelMonitor cm) 
+			throws CommonException, OperationCancellation {
 		
 		IProject project = context.getProject();
 		
@@ -53,12 +50,10 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
 			context.getSource(),
 			context.isSourceDocumentDirty(),
-			offset, line_0, col_0, fileLocation);
-		try {
-			return racerCompletionOp.execute(cm);
-		} catch(OperationSoftFailure e) {
-			throw e.toCommonException();
-		}
+			context.getOffset(),
+			line_0, col_0, fileLocation);
+		
+		return racerCompletionOp.execute(cm).get();
 	}
 	
 	@Override
