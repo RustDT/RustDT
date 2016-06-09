@@ -21,8 +21,8 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.core.text.TextSourceUtils;
 import melnorme.lang.ide.core.utils.ResourceUtils;
-import melnorme.lang.ide.ui.editor.actions.EditorOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
+import melnorme.lang.ide.ui.text.completion.CompletionContext;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
@@ -35,7 +35,7 @@ import melnorme.utilbox.misc.Location;
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
-	protected LangCompletionResult doComputeProposals(EditorOperationContext context, ICancelMonitor cm) 
+	protected LangCompletionResult doComputeProposals(CompletionContext context, ICancelMonitor cm) 
 			throws CommonException, OperationCancellation {
 		
 		IProject project = ResourceUtils.getProject(context.getContext().getOptionalFileLocation());
@@ -58,7 +58,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	}
 	
 	@Override
-	protected ICompletionProposal adaptToolProposal(EditorOperationContext context, ToolCompletionProposal proposal) {
+	protected ICompletionProposal adaptToolProposal(CompletionContext context, ToolCompletionProposal proposal) {
 		IContextInformation ctxInfo = null; // TODO: context information
 		
 		return new LangCompletionProposal(context.getSourceBuffer(), proposal, getImage(proposal), ctxInfo) {
