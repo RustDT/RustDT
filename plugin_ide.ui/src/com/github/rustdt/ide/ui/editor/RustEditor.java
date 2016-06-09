@@ -12,18 +12,13 @@ package com.github.rustdt.ide.ui.editor;
 
 import org.eclipse.ui.IEditorInput;
 
-import melnorme.lang.ide.ui.EditorSettings_Actual;
-import melnorme.lang.ide.ui.LangUIPlugin;
 import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
 import melnorme.lang.ide.ui.editor.structure.LangOutlinePage;
 import melnorme.lang.ide.ui.editor.structure.StructureElementContentProvider;
 import melnorme.lang.ide.ui.editor.text.LangPairMatcher;
-import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
-import melnorme.lang.ide.ui.text.LangSourceViewerConfiguration;
 import melnorme.lang.tooling.structure.IStructureElementContainer;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
-import melnorme.util.swt.jface.text.ColorManager2;
 
 public class RustEditor extends AbstractLangStructureEditor {
 	
@@ -45,13 +40,6 @@ public class RustEditor extends AbstractLangStructureEditor {
 	@Override
 	protected LangPairMatcher init_createBracketMatcher() {
 		return new LangPairMatcher("{}[]()".toCharArray());
-	}
-	
-	@Override
-	protected AbstractLangSourceViewerConfiguration createSourceViewerConfiguration() {
-		ColorManager2 colorManager = LangUIPlugin.getInstance().getColorManager();
-		return new LangSourceViewerConfiguration(getPreferenceStore(), colorManager, this, 
-			EditorSettings_Actual.getStylingPreferences());
 	}
 	
 	@Override
