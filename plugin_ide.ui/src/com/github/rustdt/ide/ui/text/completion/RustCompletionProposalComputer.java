@@ -20,6 +20,7 @@ import com.github.rustdt.tooling.ops.RacerCompletionOperation;
 
 import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner;
 import melnorme.lang.ide.core.text.TextSourceUtils;
+import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.editor.actions.EditorOperationContext;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
@@ -37,7 +38,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	protected LangCompletionResult doComputeProposals(EditorOperationContext context, ICancelMonitor cm) 
 			throws CommonException, OperationCancellation {
 		
-		IProject project = context.getProject();
+		IProject project = ResourceUtils.getProject(context.getContext().getOptionalFileLocation());
 		
 		int line_0 = context.getContext().getInvocationLine_0();
 		int col_0 = context.getContext().getInvocationColumn_0();
@@ -49,7 +50,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project),
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
 			context.getSource(),
-			context.isSourceDocumentDirty(),
+			context.getSourceBuffer().isDirty(),
 			context.getOffset(),
 			line_0, col_0, fileLocation);
 		
@@ -57,10 +58,10 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	}
 	
 	@Override
-	protected ICompletionProposal adaptToolProposal(ToolCompletionProposal proposal) {
+	protected ICompletionProposal adaptToolProposal(EditorOperationContext context, ToolCompletionProposal proposal) {
 		IContextInformation ctxInfo = null; // TODO: context information
 		
-		return new LangCompletionProposal(proposal, getImage(proposal), ctxInfo) {
+		return new LangCompletionProposal(context.getSourceBuffer(), proposal, getImage(proposal), ctxInfo) {
 			@Override
 			protected boolean isValidPrefix(String prefix) {
 				String rplString = getBaseReplaceString();
