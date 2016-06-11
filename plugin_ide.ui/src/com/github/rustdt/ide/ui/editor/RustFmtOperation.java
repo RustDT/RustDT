@@ -11,9 +11,6 @@
 package com.github.rustdt.ide.ui.editor;
 
 import java.nio.file.Path;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.texteditor.ITextEditor;
