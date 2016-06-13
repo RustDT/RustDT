@@ -22,9 +22,10 @@ import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.toolchain.ops.FindDefinitionResult;
-import melnorme.lang.tooling.toolchain.ops.ToolOpResult;
+import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.status.StatusException;
 
 public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
@@ -53,10 +54,10 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 			sourceOpContext.isDocumentDirty(),
 			getInvocationOffset(), line_0, col_0, getInputLocation());
 		
-		ToolOpResult<FindDefinitionResult> opResult = op.execute(monitor);
+		ToolResponse<FindDefinitionResult> opResult = op.execute(monitor);
 		try {
-			return opResult.get();
-		} catch(CommonException e) {
+			return opResult.getValidResult();
+		} catch(StatusException e) {
 			statusErrorMessage = e.getMessage();
 			return null;
 		}

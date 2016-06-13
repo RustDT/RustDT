@@ -54,7 +54,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			context.getOffset(),
 			line_0, col_0, fileLocation);
 		
-		return racerCompletionOp.execute(cm).get();
+		return racerCompletionOp.execute(cm).getValidResult();
 	}
 	
 	@Override

@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 import melnorme.lang.tooling.toolchain.ops.FindDefinitionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
-import melnorme.lang.tooling.toolchain.ops.ToolOpResult;
+import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
@@ -34,10 +34,10 @@ public class RacerFindDefinitionOperation extends RacerOperation<FindDefinitionR
 	}
 	
 	@Override
-	public ToolOpResult<FindDefinitionResult> parseProcessOutput(StringCharSource output)
+	public ToolResponse<FindDefinitionResult> parseProcessOutput(StringCharSource output)
 			throws CommonException {
 		FindDefinitionResult findDefResult = createRacerOutputParser(offset).parseResolvedMatch(output.getSource());
-		return new ToolOpResult<>(findDefResult);
+		return new ToolResponse<>(findDefResult);
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import java.nio.file.Path;
 
 import melnorme.lang.tooling.toolchain.ops.AbstractSingleToolOperation;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
-import melnorme.lang.tooling.toolchain.ops.ToolOpResult;
+import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.lang.utils.validators.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.ICancelMonitor;
@@ -66,14 +66,14 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	}
 	
 	@Override
-	public ToolOpResult<RESULT> execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
+	public ToolResponse<RESULT> execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
 		
 		if(useSubstituteFile()) {
 			assertNotNull(source);
 			createSubstituteFile(source);
 		}
 		
-		ToolOpResult<RESULT> result = super.execute(cm);
+		ToolResponse<RESULT> result = super.execute(cm);
 		
 		if(useSubstituteFile()) {
 			substituteFile.toFile().delete();
