@@ -17,23 +17,23 @@ import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.core.text.StrictDamagerRepairer;
 import melnorme.lang.ide.ui.LangUIPlugin_Actual;
-import melnorme.lang.ide.ui.editor.structure.AbstractLangStructureEditor;
+import melnorme.lang.ide.core.text.ISourceBufferExt;
 import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 import melnorme.lang.tooling.LANG_SPECIFIC;
-import melnorme.lang.tooling.common.ISourceBuffer;
 
 @LANG_SPECIFIC
 public class LangSourceViewerConfiguration extends AbstractLangSourceViewerConfiguration {
 	
-	public LangSourceViewerConfiguration(IPreferenceStore preferenceStore, ISourceBuffer sourceBuffer, 
-			AbstractLangStructureEditor editor) {
+	public LangSourceViewerConfiguration(IPreferenceStore preferenceStore, ISourceBufferExt sourceBuffer, 
+			ITextEditor editor) {
 		super(preferenceStore, sourceBuffer, editor);
 	}
 	
