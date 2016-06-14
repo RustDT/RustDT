@@ -28,6 +28,8 @@ import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public class RustFmtOperation extends AbstractEditorOperation2<String> {
+	private static final int NO_ERRORS = 0;
+	private static final int PARSING_ERRORS = 2;
 	
 	protected final ToolManager toolMgr = LangCore.getToolManager();
 	
@@ -57,17 +59,19 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 		ExternalProcessResult result = toolMgr.runEngineTool(pb, input, monitor);
 		int exitValue = result.exitValue;
 		
-		if(exitValue != 0) {
-			String stdErr = result.getStdErrBytes().toUtf8String();
-			String firstStderrLine = StringUtil.splitString(stdErr, '\n')[0].trim();
-			
-			statusErrorMessage = ToolingMessages.PROCESS_CompletedWithNonZeroValue("rustfmt", exitValue) + "\n" +
-					firstStderrLine;
-			return null;
+		switch(exitValue) {
+			case NO_ERRORS:
+				// formatted file is in stdout
+				return result.getStdOutBytes().toUtf8String();
+			case PARSING_ERRORS:
+				return input;
+			default:
+				String stdErr = result.getStdErrBytes().toUtf8String();
+				String firstStderrLine = StringUtil.splitString(stdErr, '\n')[0].trim();
+				
+				statusErrorMessage = ToolingMessages.PROCESS_CompletedWithNonZeroValue("rustfmt", exitValue) + "\n" + firstStderrLine;
+				return null;
 		}
-		
-		// formatted file is in stdout
-		return result.getStdOutBytes().toUtf8String();
 	}
 	
 	@Override
