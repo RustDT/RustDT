@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed: Eclipse variables not being substituted in environment-variables settings of launch configurations.
 
 ### 0.6.1
  * Improved the default names for automatically created launch configuration.
