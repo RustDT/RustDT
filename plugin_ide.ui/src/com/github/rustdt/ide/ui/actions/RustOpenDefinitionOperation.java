@@ -34,11 +34,6 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	}
 	
 	@Override
-	protected void prepareOperation() throws CommonException {
-		super.prepareOperation();
-	}
-	
-	@Override
 	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IOperationMonitor monitor)
 			throws OperationCancellation, CommonException {
 		
