@@ -29,8 +29,8 @@ import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.common.SourceLineColumnRange;
-import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.toolchain.ops.SourceLocation;
+import melnorme.lang.tooling.toolchain.ops.ToolResponse.StatusValidation;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.MiscUtil;
@@ -45,10 +45,6 @@ public class RacerOutputParserTest extends CommonToolingTest {
 	
 	protected RacerCompletionOutputParser createTestsParser(int offset) {
 		return new RacerCompletionOutputParser(offset) {
-			@Override
-			protected void handleParseError(CommonException ce) {
-				assertFail();
-			}
 			@Override
 			protected void handleInvalidMatchKindString(String matchKindString) throws CommonException {
 			}
@@ -135,15 +131,19 @@ public class RacerOutputParserTest extends CommonToolingTest {
 //		testMultiLineDesc(offset, buildParser);
 	}
 	
-	protected void testParseOutput(RacerCompletionOutputParser parser, String output, List<?> expected) 
-			throws CommonException {
-		LangCompletionResult result = parser.parse(output);
-		assertAreEqualLists((List<?>) result.getProposals_maybeNull(), expected);
+	protected void testParseOutput(RacerCompletionOutputParser parser, String output, List<?> expected)  {
+		try {
+			ArrayList2<ToolCompletionProposal> proposals = parser.parseOutput(output);
+			assertAreEqualLists(proposals, expected);
+		} catch(CommonException | StatusValidation e) {
+			assertFail();
+		}
 	}
 	
 	protected static final String DESC_LINE2 = "          where K: AsRef<OsStr>, V: AsRef<OsStr>";
 	
-	protected void testMultiLineDesc(int offset, RacerCompletionOutputParser buildParser) throws CommonException {
+	protected void testMultiLineDesc(int offset, RacerCompletionOutputParser buildParser) 
+			throws CommonException, StatusValidation {
 		// Test multi-line description
 		testParseOutput(buildParser, 
 			"PREFIX 1,1,\n" +

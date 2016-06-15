@@ -142,7 +142,7 @@ public class RustBuildOutputParserTest extends CommonToolingTest {
 	
 	protected void testParseMessages(RustBuildOutputParser buildProcessor, String stderr, List<?> expected) 
 			throws CommonException {
-		ArrayList<ToolSourceMessage> buildMessages = buildProcessor.parseMessages(stderr);
+		ArrayList<ToolSourceMessage> buildMessages = buildProcessor.parseOutput(stderr);
 		assertEquals(buildMessages, expected);
 	}
 	

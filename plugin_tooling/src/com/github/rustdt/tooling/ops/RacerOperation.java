@@ -47,7 +47,7 @@ public abstract class RacerOperation<RESULTDATA, RESPONSE extends ToolResponse<R
 	public RacerOperation(IToolOperationService opHelper,
 			ValidatedValueSource<Path> racerPath, ValidatedValueSource<Location> sdkSrcLocation,
 			SourceOpContext sourceOpContext) {
-		super(opHelper, "NOT_USED", true);
+		super(opHelper, "NOT_USED");
 		this.racerPath = racerPath;
 		this.sdkSrcLocation = sdkSrcLocation;
 		this.sourceOpContext = assertNotNull(sourceOpContext);
@@ -56,7 +56,7 @@ public abstract class RacerOperation<RESULTDATA, RESPONSE extends ToolResponse<R
 	}
 	
 	@Override
-	protected String getToolName(ProcessBuilder pb) throws CommonException {
+	protected String getToolName() throws CommonException {
 		return "Racer";
 	}
 	
@@ -133,7 +133,7 @@ public abstract class RacerOperation<RESULTDATA, RESPONSE extends ToolResponse<R
 	protected RacerCompletionOutputParser createRacerOutputParser(int offset) {
 		RacerCompletionOutputParser parser = new RacerCompletionOutputParser(offset) {
 			@Override
-			protected void handleParseError(CommonException ce) throws CommonException {
+			protected void handleUnknownLineFormat(CommonException ce) throws CommonException {
 				opHelper.logStatus(ce.toStatusException(Severity.WARNING));
 			}
 			

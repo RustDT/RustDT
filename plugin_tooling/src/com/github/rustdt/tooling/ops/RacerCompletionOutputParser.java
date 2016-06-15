@@ -18,9 +18,9 @@ import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.common.SourceLineColumnRange;
-import melnorme.lang.tooling.completion.LangCompletionResult;
-import melnorme.lang.tooling.toolchain.ops.AbstractToolOutputParser2;
+import melnorme.lang.tooling.toolchain.ops.AbstractToolResultParser;
 import melnorme.lang.tooling.toolchain.ops.SourceLocation;
+import melnorme.lang.tooling.toolchain.ops.ToolOutputParseHelper;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.ArrayList2;
@@ -28,7 +28,8 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.StringUtil;
 
-public abstract class RacerCompletionOutputParser extends AbstractToolOutputParser2<LangCompletionResult> {
+public abstract class RacerCompletionOutputParser extends AbstractToolResultParser<ArrayList2<ToolCompletionProposal>> 
+	implements ToolOutputParseHelper {
 	
 	protected final int offset;
 	
@@ -39,7 +40,12 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 	}
 	
 	@Override
-	public LangCompletionResult parse(StringCharSource source) throws CommonException {
+	protected String getToolName() throws CommonException {
+		return "Racer";
+	}
+	
+	@Override
+	public ArrayList2<ToolCompletionProposal> parseOutput(StringCharSource source) throws CommonException {
 		
 		ArrayList2<ToolCompletionProposal> proposals = new ArrayList2<>();
 		prefixLength = 0;
@@ -48,7 +54,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			String line = LexingUtils.consumeUntilDelimiterOrEOS(source, '\n', '\\');
 			
 			if(line == null || line.isEmpty()) {
-				return new LangCompletionResult(proposals);
+				return proposals;
 			}
 			
 			if(line.startsWith("PREFIX ")) {
@@ -58,11 +64,15 @@ public abstract class RacerCompletionOutputParser extends AbstractToolOutputPars
 			} else if(line.startsWith("END")) {
                 continue;
             } else {
-            	handleParseError(new CommonException("Unknown line format: " + line));
+            	handleUnknownLineFormat(new CommonException("Unknown line format: " + line));
 			}
 			
 		}
 		
+	}
+	
+	protected void handleUnknownLineFormat(CommonException ce) throws CommonException {
+		throw ce;
 	}
 	
 	protected void parsePrefix(String line) throws CommonException {

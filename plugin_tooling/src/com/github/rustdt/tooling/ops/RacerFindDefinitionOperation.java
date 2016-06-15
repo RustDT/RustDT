@@ -42,15 +42,13 @@ public class RacerFindDefinitionOperation extends RacerOperation<SourceLocation,
 	}
 	
 	@Override
-	public ToolResponse<SourceLocation> parseProcessOutput(StringCharSource output)
-			throws CommonException {
-		SourceLocation findDefResult = createRacerOutputParser(offset).parseResolvedMatch(output.getSource());
-		return new ToolResponse<>(findDefResult);
+	public SourceLocation parseOutput(StringCharSource output) throws CommonException {
+		return createRacerOutputParser(offset).parseResolvedMatch(output.getSource());
 	}
 	
 	@Override
-	protected ToolResponse<SourceLocation> createErrorResponse(String errorMessage) {
-		return createErrorToolResponse(errorMessage);
+	protected ToolResponse<SourceLocation> createToolResponse(SourceLocation resultData, String errorMessage) {
+		return createDefaultToolResponse(resultData, errorMessage);
 	}
 	
 }

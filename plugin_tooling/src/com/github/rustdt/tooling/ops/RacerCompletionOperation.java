@@ -17,6 +17,7 @@ import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
 import melnorme.lang.utils.parse.StringCharSource;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
@@ -43,14 +44,17 @@ public class RacerCompletionOperation extends RacerOperation<Indexable<ToolCompl
 	}
 	
 	@Override
-	public LangCompletionResult parseProcessOutput(StringCharSource outputParseSource) 
-			throws CommonException {
-		return createRacerOutputParser(offset).parse(outputParseSource);
+	public ArrayList2<ToolCompletionProposal> parseOutput(StringCharSource outputParseSource) throws CommonException {
+		return createRacerOutputParser(offset).parseOutput(outputParseSource);
 	}
 	
 	@Override
-	protected LangCompletionResult createErrorResponse(String errorMessage) {
-		return new LangCompletionResult(errorMessage);
+	protected LangCompletionResult createToolResponse(Indexable<ToolCompletionProposal> resultData,
+			String errorMessage) {
+		if(errorMessage != null) {
+			return new LangCompletionResult(errorMessage);
+		}
+		return new LangCompletionResult(resultData);
 	}
 	
 }
