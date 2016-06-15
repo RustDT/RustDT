@@ -20,7 +20,6 @@ import java.text.MessageFormat;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.bindings.keys.KeySequence;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -33,18 +32,16 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.keys.IBindingService;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.text.ISourceBufferExt;
 import melnorme.lang.ide.ui.ContentAssistPreferences;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.editor.EditorUtils;
 import melnorme.lang.ide.ui.templates.LangTemplateCompletionProposalComputer;
 import melnorme.lang.ide.ui.utils.UIOperationsStatusHandler;
-import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.common.ISourceBuffer;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
@@ -53,12 +50,12 @@ public class LangContentAssistProcessor extends ContenAssistProcessorExt {
 	
 	protected final ContentAssistant contentAssistant;
 	protected final Indexable<CompletionProposalsGrouping> categories;
-	protected final ISourceBuffer sourceBuffer;
+	protected final ISourceBufferExt sourceBuffer;
 	protected final ITextEditor editor; // can be null
 	protected final IProject project; // can be null
 	
 	public LangContentAssistProcessor(ContentAssistantExt contentAssistant, 
-			Indexable<CompletionProposalsGrouping> groupings, ISourceBuffer sourceBuffer, ITextEditor editor) {
+			Indexable<CompletionProposalsGrouping> groupings, ISourceBufferExt sourceBuffer, ITextEditor editor) {
 		this.contentAssistant = assertNotNull(contentAssistant);
 		this.categories = groupings;
 		assertTrue(categories != null && categories.size() > 0);
@@ -210,25 +207,15 @@ public class LangContentAssistProcessor extends ContenAssistProcessorExt {
 	
 	/* -----------------  ----------------- */
 	
-	protected CompletionContext createContext(ITextViewer viewer, int offset) {
-		assertNotNull(viewer);
-		
-		SourceRange selection = EditorUtils.getSelectedRange(viewer);
-		IDocument document = viewer.getDocument();
-		
-		return new CompletionContext(sourceBuffer, offset, selection, document);
-	}
-	
 	@Override
 	protected ICompletionProposal[] doComputeCompletionProposals(ITextViewer viewer, int offset) {
-		CompletionContext context = createContext(viewer, offset);
 		
 		CompletionProposalsGrouping cat = getCurrentCategory();
 		invocationIteration++;
 		
 		Indexable<ICompletionProposal> proposals;
 		try {
-			proposals = cat.computeCompletionProposals(context);
+			proposals = cat.computeCompletionProposals(sourceBuffer, viewer, offset);
 		} catch(CommonException ce) {
 			if(ContentAssistPreferences.ShowDialogIfContentAssistErrors.getEffectiveValue(option(project))) {
 				handleExceptionInUI(ce);
@@ -249,14 +236,13 @@ public class LangContentAssistProcessor extends ContenAssistProcessorExt {
 	
 	@Override
 	protected IContextInformation[] doComputeContextInformation(ITextViewer viewer, int offset) {
-		CompletionContext context = createContext(viewer, offset);
 		
 		CompletionProposalsGrouping cat = getCurrentCategory();
 		invocationIteration++;
 		
-		Indexable<IContextInformation> proposals = cat.computeContextInformation(context);
+		Indexable<IContextInformation> proposals = cat.computeContextInformation(sourceBuffer, viewer, offset);
 		setAndDisplayErrorMessage(cat.getErrorMessage());
-
+		
 		return proposals.toArray(IContextInformation.class);
 	}
 	
@@ -267,10 +253,7 @@ public class LangContentAssistProcessor extends ContenAssistProcessorExt {
 	
 	protected void setAndDisplayErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-		if(editor instanceof AbstractTextEditor) {
-			AbstractTextEditor abstractTextEditor = (AbstractTextEditor) editor;
-			EditorUtils.setStatusLineErrorMessage(abstractTextEditor, errorMessage, null);
-		}
+		EditorUtils.setStatusLineErrorMessage(editor, errorMessage, null);
 	}
 	
 	/* ----------------- Messages ----------------- */

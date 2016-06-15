@@ -22,46 +22,38 @@ import melnorme.lang.ide.core.operations.ToolManager.ToolManagerEngineToolRunner
 import melnorme.lang.ide.core.text.TextSourceUtils;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.ui.templates.LangTemplateProposal;
-import melnorme.lang.ide.ui.text.completion.CompletionContext;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
+import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.Location;
 
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
-	protected LangCompletionResult doComputeProposals(CompletionContext context, ICancelMonitor cm) 
+	protected LangCompletionResult doComputeProposals(SourceOpContext sourceOpContext, ICancelMonitor cm) 
 			throws CommonException, OperationCancellation {
 		
-		IProject project = ResourceUtils.getProject(context.getContext().getOptionalFileLocation());
-		
-		int line_0 = context.getContext().getInvocationLine_0();
-		int col_0 = context.getContext().getInvocationColumn_0();
-		Location fileLocation = context.getEditorInputLocation();
+		IProject project = ResourceUtils.getProject(sourceOpContext.getOptionalFileLocation());
 		
 		ToolManagerEngineToolRunner toolRunner = getEngineToolRunner();
 		
 		RacerCompletionOperation racerCompletionOp = new RacerCompletionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project),
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
-			context.getSource(),
-			context.getSourceBuffer().isDirty(),
-			context.getOffset(),
-			line_0, col_0, fileLocation);
+			sourceOpContext);
 		
-		return racerCompletionOp.execute(cm).getValidResult();
+		return racerCompletionOp.execute(cm);
 	}
 	
 	@Override
-	protected ICompletionProposal adaptToolProposal(CompletionContext context, ToolCompletionProposal proposal) {
+	protected ICompletionProposal adaptToolProposal(SourceOpContext sourceOpContext, ToolCompletionProposal proposal) {
 		IContextInformation ctxInfo = null; // TODO: context information
 		
-		return new LangCompletionProposal(context.getSourceBuffer(), proposal, getImage(proposal), ctxInfo) {
+		return new LangCompletionProposal(sourceOpContext, proposal, getImage(proposal), ctxInfo) {
 			@Override
 			protected boolean isValidPrefix(String prefix) {
 				String rplString = getBaseReplaceString();

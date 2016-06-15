@@ -21,11 +21,10 @@ import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
-import melnorme.lang.tooling.toolchain.ops.FindDefinitionResult;
+import melnorme.lang.tooling.toolchain.ops.SourceLocation;
 import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.status.StatusException;
 
 public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	
@@ -34,29 +33,18 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	}
 	
 	@Override
-	protected FindDefinitionResult performLongRunningComputation_doAndGetResult(IOperationMonitor monitor)
-			throws OperationCancellation, CommonException {
+	protected ToolResponse<SourceLocation> doBackgroundValueComputation(IOperationMonitor om)
+			throws CommonException, OperationCancellation {
 		
 		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner();
 		
-		int line_0 = sourceOpContext.getInvocationLine_0();
-		int col_0 = sourceOpContext.getInvocationColumn_0();
-		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project) , 
-			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project), 
-			getSource(),
-			sourceOpContext.isDocumentDirty(),
-			getInvocationOffset(), line_0, col_0, getInputLocation());
+			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
+			sourceOpContext
+		);
 		
-		ToolResponse<FindDefinitionResult> opResult = op.execute(monitor);
-		try {
-			return opResult.getValidResult();
-		} catch(StatusException e) {
-			statusErrorMessage = e.getMessage();
-			return null;
-		}
-		
+		return op.execute(om);
 	}
 	
 }

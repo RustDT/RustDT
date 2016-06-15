@@ -16,11 +16,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.toolchain.ops.AbstractSingleToolOperation;
+import melnorme.lang.tooling.toolchain.ops.AbstractToolInvocationOperation;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
 import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.lang.utils.validators.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -31,29 +33,30 @@ import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.status.Severity;
 import melnorme.utilbox.status.StatusException;
 
-public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation<RESULT> {
+public abstract class RacerOperation<RESULTDATA, RESPONSE extends ToolResponse<RESULTDATA>> 
+	extends AbstractToolInvocationOperation<RESULTDATA, RESPONSE> {
 	
 	protected final ValidatedValueSource<Path> racerPath;
 	protected final ValidatedValueSource<Location> sdkSrcLocation;
+	protected final SourceOpContext sourceOpContext;
 	protected final String source;
 	protected final boolean useSubstituteFile;
-	protected final ArrayList2<String> racerArguments;
 	
 	protected Location substituteFile;
 	
 	public RacerOperation(IToolOperationService opHelper,
 			ValidatedValueSource<Path> racerPath, ValidatedValueSource<Location> sdkSrcLocation,
-			String source, boolean useSubstituteFile, ArrayList2<String> racerArguments) {
+			SourceOpContext sourceOpContext) {
 		super(opHelper, "NOT_USED", true);
 		this.racerPath = racerPath;
 		this.sdkSrcLocation = sdkSrcLocation;
-		this.source = source;
-		this.useSubstituteFile = useSubstituteFile;
-		this.racerArguments = racerArguments;
+		this.sourceOpContext = assertNotNull(sourceOpContext);
+		this.source = sourceOpContext.getSource();
+		this.useSubstituteFile = sourceOpContext.isDocumentDirty();
 	}
 	
 	@Override
-	protected String getToolName() {
+	protected String getToolName(ProcessBuilder pb) throws CommonException {
 		return "Racer";
 	}
 	
@@ -66,14 +69,14 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	}
 	
 	@Override
-	public ToolResponse<RESULT> execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
+	public RESPONSE execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
 		
 		if(useSubstituteFile()) {
 			assertNotNull(source);
 			createSubstituteFile(source);
 		}
 		
-		ToolResponse<RESULT> result = super.execute(cm);
+		RESPONSE result = super.execute(cm);
 		
 		if(useSubstituteFile()) {
 			substituteFile.toFile().delete();
@@ -96,13 +99,13 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 	}
 	
 	@Override
-	protected ProcessBuilder createProcessBuilder() throws StatusException {
+	protected ProcessBuilder createProcessBuilder() throws CommonException {
 		String toolExePath = racerPath.getValidatedValue().toString();
 		String rustSrcPath = sdkSrcLocation.getValidatedValue().toString();
 		
 		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
 		
-		cmdLine.addAll(racerArguments);
+		cmdLine.addAll2(getRacerArguments());
 		
 		if(substituteFile != null) {
 			cmdLine.add(substituteFile.toPathString());
@@ -113,6 +116,8 @@ public abstract class RacerOperation<RESULT> extends AbstractSingleToolOperation
 		pb.environment().put("RUST_SRC_PATH", rustSrcPath);
 		return pb;
 	}
+	
+	protected abstract Indexable<String> getRacerArguments() throws CommonException;
 	
 	public static class RustRacerLocationValidator extends LocationOrSinglePathValidator {
 		

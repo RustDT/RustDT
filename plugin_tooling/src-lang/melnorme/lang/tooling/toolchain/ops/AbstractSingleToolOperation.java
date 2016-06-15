@@ -13,14 +13,18 @@ package melnorme.lang.tooling.toolchain.ops;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
+import melnorme.lang.tooling.common.ops.IOperationMonitor;
+import melnorme.lang.tooling.common.ops.ResultOperation;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
-import melnorme.utilbox.status.IStatusMessage.StatusMessage;
 import melnorme.utilbox.status.Severity;
+import melnorme.utilbox.status.StatusMessage;
 
-public abstract class AbstractSingleToolOperation<RESULT> extends AbstractToolOperation2<RESULT> {
+@Deprecated
+public abstract class AbstractSingleToolOperation<RESULT> extends AbstractToolOperation2<RESULT> 
+	implements ResultOperation<ToolResponse<RESULT>> {
 	
 	protected final IToolOperationService opHelper;
 	protected final String toolPath;
@@ -32,6 +36,11 @@ public abstract class AbstractSingleToolOperation<RESULT> extends AbstractToolOp
 		this.opHelper = assertNotNull(opHelper);
 		this.toolPath = assertNotNull(toolPath);
 		this.nonZeroExitIsFatal = nonZeroResultIsFatal;
+	}
+	
+	@Override
+	public final ToolResponse<RESULT> executeOp(IOperationMonitor om) throws CommonException, OperationCancellation {
+		return execute(om);
 	}
 	
 	public ToolResponse<RESULT> execute(ICancelMonitor cm) throws CommonException, OperationCancellation {

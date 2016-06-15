@@ -6,7 +6,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.ui.RustImages;
-import com.github.rustdt.ide.ui.editor.RustFmtOperation;
+import com.github.rustdt.ide.ui.editor.RustFmtEditorOperation;
 import com.github.rustdt.ide.ui.text.RustAutoEditStrategy;
 
 import melnorme.lang.ide.core.LangCore_Actual;
@@ -66,7 +66,7 @@ public final class LangUIPlugin_Actual {
 	/* -----------------  ----------------- */
 	
 	public static BasicUIOperation getFormatOperation(ITextEditor editor) {
-		return new RustFmtOperation(editor);
+		return new RustFmtEditorOperation(editor);
 	}
 	
 }

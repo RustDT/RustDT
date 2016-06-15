@@ -8,41 +8,42 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.ui.editor;
+package com.github.rustdt.tooling.ops;
+
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
 import java.nio.file.Path;
 
-import org.eclipse.ui.texteditor.ITextEditor;
-
-import com.github.rustdt.ide.core.operations.RustSDKPreferences;
-
-import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.operations.ToolManager;
-import melnorme.lang.ide.ui.utils.operations.AbstractEditorOperation2;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
+import melnorme.lang.tooling.common.ops.ResultOperation;
+import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
+import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
+import melnorme.utilbox.status.StatusMessage;
 
-public class RustFmtOperation extends AbstractEditorOperation2<String> {
-	
-	protected final ToolManager toolMgr = LangCore.getToolManager();
-	
+public class RustFmtOperation implements ResultOperation<ToolResponse<String>> {
+		
 	protected boolean rustfmtFailureAsHardFailure = true;
 	
-	public RustFmtOperation(ITextEditor editor) {
-		super("Format", editor);
+	protected final SourceOpContext sourceOpContext;
+	protected final IToolOperationService toolOpService;
+	protected final Path rustFmt;
+	
+	public RustFmtOperation(SourceOpContext sourceOpContext, IToolOperationService toolOpService, Path rustFmt) {
+		this.sourceOpContext = assertNotNull(sourceOpContext);
+		this.toolOpService = assertNotNull(toolOpService);
+		this.rustFmt = assertNotNull(rustFmt);
 	}
 	
 	@Override
-	protected String doBackgroundValueComputation(IOperationMonitor monitor)
-			throws CommonException, OperationCancellation {
-		
-		Path rustFmt = RustSDKPreferences.RUSTFMT_PATH.getDerivedValue(project);
-		
+	public ToolResponse<String> executeOp(IOperationMonitor om) throws CommonException, OperationCancellation {
+	
 		ArrayList2<String> cmdLine = new ArrayList2<>(rustFmt.toString());
 		
 //		cmdLine.add("--write-mode=diff");
@@ -51,41 +52,26 @@ public class RustFmtOperation extends AbstractEditorOperation2<String> {
 		ProcessBuilder pb = new ProcessBuilder(cmdLine);
 		// set directory, workaround for bug: https://github.com/rust-lang-nursery/rustfmt/issues/562
 		// Also, it make rustfmt look for the rustfmt.toml config file in folders parent chain
-		pb.directory(getInputLocation().getParent().toFile());
+		pb.directory(sourceOpContext.getFileLocation().getParent().toFile());
 		
-		String input = doc.get();
-		ExternalProcessResult result = toolMgr.runEngineTool(pb, input, monitor);
+		String input = sourceOpContext.getSource();
+		ExternalProcessResult result = toolOpService.runProcess(pb, input, om);
 		int exitValue = result.exitValue;
 		
 		if(exitValue != 0) {
 			String stdErr = result.getStdErrBytes().toUtf8String();
 			String firstStderrLine = StringUtil.splitString(stdErr, '\n')[0].trim();
 			
-			statusErrorMessage = ToolingMessages.PROCESS_CompletedWithNonZeroValue("rustfmt", exitValue) + "\n" +
+			String errorMessage = ToolingMessages.PROCESS_CompletedWithNonZeroValue("rustfmt", exitValue) + "\n" +
 					firstStderrLine;
-			return null;
+			if(rustfmtFailureAsHardFailure) {
+				throw new CommonException(errorMessage);
+			} else {
+				return new ToolResponse<>(null, new StatusMessage(errorMessage));
+			}
 		}
 		
 		// formatted file is in stdout
-		return result.getStdOutBytes().toUtf8String();
+		return new ToolResponse<>(result.getStdOutBytes().toUtf8String());
 	}
-	
-	@Override
-	protected void handleStatusErrorMessage(String statusErrorMessage) throws CommonException {
-		if(rustfmtFailureAsHardFailure) {
-			throw new CommonException(statusErrorMessage);
-		} else {
-			super.handleStatusErrorMessage(statusErrorMessage);
-		}
-	}
-	
-	@Override
-	protected void handleComputationResult() throws CommonException {
-		super.handleComputationResult();
-		
-		if(result != null) {
-			setEditorTextPreservingCarret(result);
-		}
-	}
-	
 }

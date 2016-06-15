@@ -12,37 +12,45 @@ package com.github.rustdt.tooling.ops;
 
 import java.nio.file.Path;
 
+import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
-import melnorme.lang.tooling.toolchain.ops.ToolResponse;
+import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
 import melnorme.lang.utils.parse.StringCharSource;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
 import melnorme.utilbox.misc.Location;
 
-public class RacerCompletionOperation extends RacerOperation<LangCompletionResult> {
+public class RacerCompletionOperation extends RacerOperation<Indexable<ToolCompletionProposal>, LangCompletionResult> {
 	
 	protected final int offset;
 	
-	public RacerCompletionOperation(IToolOperationService opHelper, 
+	public RacerCompletionOperation(
+			IToolOperationService opHelper, 
 			ValidatedValueSource<Path> racerPath, ValidatedValueSource<Location> sdkSrcLocation, 
-			String source, boolean useSubstituteFile, int offset, int line_0, int col_0, Location fileLocation) {
-		super(opHelper, racerPath, sdkSrcLocation, source, useSubstituteFile, 
-			getArguments("complete-with-snippet", line_0, col_0, fileLocation));
-		
-		this.offset = offset;
+			SourceOpContext sourceOpContext) {
+		super(opHelper, racerPath, sdkSrcLocation, sourceOpContext);
+		this.offset = sourceOpContext.getOffset();
 	}
 	
 	@Override
-	public ToolResponse<LangCompletionResult> parseProcessOutput(StringCharSource outputParseSource) 
+	protected Indexable<String> getRacerArguments() throws CommonException {
+		int line_0 = sourceOpContext.getInvocationLine_0();
+		int col_0 = sourceOpContext.getInvocationColumn_0();
+		Location fileLocation = sourceOpContext.getFileLocation();
+		return getArguments("complete-with-snippet", line_0, col_0, fileLocation);
+	}
+	
+	@Override
+	public LangCompletionResult parseProcessOutput(StringCharSource outputParseSource) 
 			throws CommonException {
-		LangCompletionResult resultaData = createRacerOutputParser(offset).parse(outputParseSource);
-		return new ToolResponse<>(resultaData);
+		return createRacerOutputParser(offset).parse(outputParseSource);
 	}
 	
 	@Override
-	protected String getToolProcessName() {
-		return getToolName();
+	protected LangCompletionResult createErrorResponse(String errorMessage) {
+		return new LangCompletionResult(errorMessage);
 	}
 	
 }

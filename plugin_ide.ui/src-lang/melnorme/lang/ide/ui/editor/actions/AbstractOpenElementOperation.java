@@ -16,7 +16,6 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -26,19 +25,13 @@ import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.ui.EditorSettings_Actual;
 import melnorme.lang.ide.ui.editor.EditorUtils;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
-import melnorme.lang.ide.ui.utils.UIOperationsStatusHandler;
-import melnorme.lang.ide.ui.utils.operations.AbstractEditorOperation2;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.common.SourceLineColumnRange;
-import melnorme.lang.tooling.common.ops.IOperationMonitor;
-import melnorme.lang.tooling.toolchain.ops.FindDefinitionResult;
-import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
-import melnorme.utilbox.concurrency.OperationCancellation;
+import melnorme.lang.tooling.toolchain.ops.SourceLocation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
-import melnorme.utilbox.status.Severity;
 
-public abstract class AbstractOpenElementOperation extends AbstractEditorOperation2<FindDefinitionResult> {
+public abstract class AbstractOpenElementOperation extends AbstractEditorToolOperation<SourceLocation> {
 	
 	protected final OpenNewEditorMode openEditorMode;
 	
@@ -58,30 +51,11 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorOperati
 	}
 	
 	@Override
-	protected FindDefinitionResult doBackgroundValueComputation(IOperationMonitor om)
-			throws CommonException, OperationCancellation {
-		return performLongRunningComputation_doAndGetResult(om);
-	}
-	
-	protected abstract FindDefinitionResult performLongRunningComputation_doAndGetResult(IOperationMonitor monitor) 
-			throws CommonException, OperationCancellation;
-	
-	@Override
-	protected void handleComputationResult() throws CommonException {
-		super.handleComputationResult();
+	protected void handleResultData(SourceLocation resultData) throws CommonException {
 		
-		if(result == null) {
-			Display.getCurrent().beep();
-			return;
-		}
+		SourceLineColumnRange sourceRange = resultData.getSourceRange();
 		
-		if(result.getInfoMessage() != null) {
-			UIOperationsStatusHandler.displayStatusMessage(operationName, Severity.INFO, result.getInfoMessage());
-		}
-		
-		SourceLineColumnRange sourceRange = result.getSourceRange();
-		
-		EclipseUtils.run(() -> openEditorForLocation(result.getFileLocation(), sourceRange));
+		EclipseUtils.run(() -> openEditorForLocation(resultData.getFileLocation(), sourceRange));
 	}
 	
 	protected void openEditorForLocation(Location fileLoc, SourceLineColumnRange sourceRange) 
@@ -118,12 +92,6 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorOperati
 		}
 		
 		return lineOffset + column_oneBased-1;
-	}
-	
-	/* -----------------  ----------------- */
-	
-	public IToolOperationService getToolService() {
-		return LangCore.getToolManager().getEngineToolsOperationService();
 	}
 	
 }

@@ -16,26 +16,51 @@ import java.util.Optional;
 
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
+import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 
 public interface ISourceBuffer {
+	
+	public abstract Location getLocation_orNull();
 	
 	public default Optional<Location> getLocation_opt() {
 		return option(getLocation_orNull());
 	}
 	
-	public abstract Location getLocation_orNull();
+	public default Location getLocation() throws CommonException {
+		if(getLocation_orNull() == null) {
+			throw new CommonException(SourceOpContext.MSG_NoFileLocationForThisOperation);
+		}
+		return getLocation_orNull();
+	}
 	
 	public abstract String getSource();
 	
-	public abstract boolean isEditable();
-	
 	public abstract boolean isDirty();
 	
-	public abstract boolean trySaveBuffer();
+	/**
+	 * Try to save a buffer if it is dirty.
+	 * 
+	 * @return success if buffer is now non-dirty 
+	 * (either because it was saved, or because it was never dirty in the first place), false otherwise 
+	 */
+	default boolean trySaveBufferIfDirty() {
+		if(!isDirty()) {
+			return true;
+		}
+		return doTrySaveBuffer();
+	}
+	
+	public abstract boolean doTrySaveBuffer();
+	
+	public abstract ISourceBuffer getReadOnlyView();
 	
 	public default SourceOpContext getSourceOpContext(SourceRange range) {
-		return new SourceOpContext(getLocation_opt(), range.getOffset(), getSource(), isDirty());
+		return getSourceOpContext(range.getOffset(), new SourceRange(range.getOffset(), 0));
+	}
+	
+	public default SourceOpContext getSourceOpContext(int offset, SourceRange selection) {
+		return new SourceOpContext(getLocation_opt(), offset, selection, getSource(), isDirty());
 	}
 	
 }
