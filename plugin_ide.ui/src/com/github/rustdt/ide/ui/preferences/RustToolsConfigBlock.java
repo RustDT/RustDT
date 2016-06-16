@@ -15,7 +15,6 @@ import static melnorme.utilbox.core.CoreUtil.list;
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
-import melnorme.lang.ide.ui.ContentAssistPreferences;
 import melnorme.lang.ide.ui.preferences.AbstractToolLocationGroup;
 import melnorme.lang.ide.ui.preferences.LangSDKConfigBlock;
 import melnorme.lang.ide.ui.preferences.common.PreferencesPageContext;
@@ -68,12 +67,6 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 			super("Racer");
 			
 			bindFieldToDerivedPreference(this.toolLocationField, RustSDKPreferences.RACER_PATH);
-			CheckBoxField showErrorsDialogOption = new CheckBoxField(
-				"Show error dialog if " + toolName + " failures occur.");
-			
-			this.addChildWidget(showErrorsDialogOption);
-			prefContext.bindToPreference(showErrorsDialogOption, 
-				ContentAssistPreferences.ShowDialogIfContentAssistErrors);
 		}
 		
 		@Override
