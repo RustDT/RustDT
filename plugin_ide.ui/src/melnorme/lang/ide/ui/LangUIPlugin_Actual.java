@@ -12,7 +12,6 @@ import com.github.rustdt.ide.ui.text.RustAutoEditStrategy;
 import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.ui.editor.hover.ILangEditorTextHover;
 import melnorme.lang.ide.ui.editor.text.LangAutoEditsPreferencesAccess;
-import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
 import melnorme.lang.ide.ui.views.StructureElementLabelProvider;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
@@ -65,7 +64,7 @@ public final class LangUIPlugin_Actual {
 	
 	/* -----------------  ----------------- */
 	
-	public static BasicUIOperation getFormatOperation(ITextEditor editor) {
+	public static RustFmtEditorOperation getFormatOperation(ITextEditor editor) {
 		return new RustFmtEditorOperation(editor);
 	}
 	
