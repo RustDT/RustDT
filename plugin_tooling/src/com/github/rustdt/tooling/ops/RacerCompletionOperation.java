@@ -13,7 +13,6 @@ package com.github.rustdt.tooling.ops;
 import java.nio.file.Path;
 
 import melnorme.lang.tooling.ToolCompletionProposal;
-import melnorme.lang.tooling.completion.LangCompletionResult;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
 import melnorme.lang.utils.parse.StringCharSource;
@@ -23,7 +22,7 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
 import melnorme.utilbox.misc.Location;
 
-public class RacerCompletionOperation extends RacerOperation<Indexable<ToolCompletionProposal>, LangCompletionResult> {
+public class RacerCompletionOperation extends RacerOperation<Indexable<ToolCompletionProposal>> {
 	
 	protected final int offset;
 	
@@ -46,15 +45,6 @@ public class RacerCompletionOperation extends RacerOperation<Indexable<ToolCompl
 	@Override
 	public ArrayList2<ToolCompletionProposal> parseOutput(StringCharSource outputParseSource) throws CommonException {
 		return createRacerOutputParser(offset).parseOutput(outputParseSource);
-	}
-	
-	@Override
-	protected LangCompletionResult createToolResponse(Indexable<ToolCompletionProposal> resultData,
-			String errorMessage) {
-		if(errorMessage != null) {
-			return new LangCompletionResult(errorMessage);
-		}
-		return new LangCompletionResult(resultData);
 	}
 	
 }

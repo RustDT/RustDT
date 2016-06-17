@@ -15,14 +15,13 @@ import java.nio.file.Path;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
 import melnorme.lang.tooling.toolchain.ops.SourceLocation;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
-import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
 import melnorme.utilbox.misc.Location;
 
-public class RacerFindDefinitionOperation extends RacerOperation<SourceLocation, ToolResponse<SourceLocation>> {
+public class RacerFindDefinitionOperation extends RacerOperation<SourceLocation> {
 	
 	protected final int offset;
 	
@@ -44,11 +43,6 @@ public class RacerFindDefinitionOperation extends RacerOperation<SourceLocation,
 	@Override
 	public SourceLocation parseOutput(StringCharSource output) throws CommonException {
 		return createRacerOutputParser(offset).parseResolvedMatch(output.getSource());
-	}
-	
-	@Override
-	protected ToolResponse<SourceLocation> createToolResponse(SourceLocation resultData, String errorMessage) {
-		return createDefaultToolResponse(resultData, errorMessage);
 	}
 	
 }

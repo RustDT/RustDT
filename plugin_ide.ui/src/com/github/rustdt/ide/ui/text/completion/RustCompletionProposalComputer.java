@@ -25,8 +25,10 @@ import melnorme.lang.ide.ui.templates.LangTemplateProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposal;
 import melnorme.lang.ide.ui.text.completion.LangCompletionProposalComputer;
 import melnorme.lang.tooling.ToolCompletionProposal;
-import melnorme.lang.tooling.completion.LangCompletionResult;
+import melnorme.lang.tooling.common.ops.IOperationMonitor.NullOperationMonitor;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -34,8 +36,8 @@ import melnorme.utilbox.core.CommonException;
 public class RustCompletionProposalComputer extends LangCompletionProposalComputer {
 	
 	@Override
-	protected LangCompletionResult doComputeProposals(SourceOpContext sourceOpContext, ICancelMonitor cm) 
-			throws CommonException, OperationCancellation {
+	protected Indexable<ToolCompletionProposal> doComputeProposals(SourceOpContext sourceOpContext, ICancelMonitor cm) 
+			throws CommonException, OperationCancellation, OperationSoftFailure {
 		
 		IProject project = ResourceUtils.getProject(sourceOpContext.getOptionalFileLocation());
 		
@@ -46,7 +48,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
 			sourceOpContext);
 		
-		return racerCompletionOp.execute(cm);
+		return racerCompletionOp.executeToolOperation(new NullOperationMonitor(cm));
 	}
 	
 	@Override

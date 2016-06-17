@@ -16,14 +16,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.toolchain.ops.AbstractToolInvocationOperation;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
-import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.lang.utils.validators.LocationOrSinglePathValidator;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
-import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.fields.validation.ValidatedValueSource;
@@ -33,8 +33,7 @@ import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.status.Severity;
 import melnorme.utilbox.status.StatusException;
 
-public abstract class RacerOperation<RESULTDATA, RESPONSE extends ToolResponse<RESULTDATA>> 
-	extends AbstractToolInvocationOperation<RESULTDATA, RESPONSE> {
+public abstract class RacerOperation<RESULTDATA> extends AbstractToolInvocationOperation<RESULTDATA> {
 	
 	protected final ValidatedValueSource<Path> racerPath;
 	protected final ValidatedValueSource<Location> sdkSrcLocation;
@@ -69,14 +68,15 @@ public abstract class RacerOperation<RESULTDATA, RESPONSE extends ToolResponse<R
 	}
 	
 	@Override
-	public RESPONSE execute(ICancelMonitor cm) throws CommonException, OperationCancellation {
+	public RESULTDATA executeToolOperation(IOperationMonitor om)
+			throws CommonException, OperationCancellation, OperationSoftFailure {
 		
 		if(useSubstituteFile()) {
 			assertNotNull(source);
 			createSubstituteFile(source);
 		}
 		
-		RESPONSE result = super.execute(cm);
+		RESULTDATA result = super.executeToolOperation(om);
 		
 		if(useSubstituteFile()) {
 			substituteFile.toFile().delete();

@@ -41,9 +41,10 @@ public abstract class AbstractEditorOperation2<RESULT> extends CalculateValueUIO
 	protected final ITextEditor editor;
 	protected final IWorkbenchWindow window;
 	
+	protected final EditorSourceBuffer sourceBuffer;
 	protected final IDocument doc;
 	protected final IProject project;
-	protected final SourceOpContext sourceOpContext;
+	private final SourceOpContext sourceOpContext;
 	
 	
 	public AbstractEditorOperation2(String operationName, ITextEditor editor) {
@@ -57,10 +58,11 @@ public abstract class AbstractEditorOperation2<RESULT> extends CalculateValueUIO
 		
 		this.doc = assertNotNull(editor.getDocumentProvider().getDocument(editor.getEditorInput()));
 		this.project = EditorUtils.getAssociatedProject(editor.getEditorInput());
-		this.sourceOpContext = new EditorSourceBuffer(editor).getSourceOpContext(range);
+		this.sourceBuffer = new EditorSourceBuffer(editor);
+		this.sourceOpContext = sourceBuffer.getSourceOpContext(range);
 	}
 	
-	public SourceOpContext getContext2() {
+	public SourceOpContext getSourceOpContext() {
 		return sourceOpContext;
 	}
 	
@@ -82,7 +84,7 @@ public abstract class AbstractEditorOperation2<RESULT> extends CalculateValueUIO
 	
 	@Override
 	public void prepareOperation() throws CommonException {
-		if(!getContext2().getOptionalFileLocation().isPresent()) {
+		if(!sourceOpContext.getOptionalFileLocation().isPresent()) {
 			throw new CommonException("No file available for editor contents.");
 		}
 	}

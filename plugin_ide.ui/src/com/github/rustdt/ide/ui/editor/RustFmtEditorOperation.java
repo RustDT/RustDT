@@ -21,7 +21,7 @@ import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.ui.editor.actions.AbstractEditorToolOperation;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
-import melnorme.lang.tooling.toolchain.ops.ToolResponse;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 
@@ -34,11 +34,11 @@ public class RustFmtEditorOperation extends AbstractEditorToolOperation<String> 
 	}
 	
 	@Override
-	protected ToolResponse<String> doBackgroundValueComputation(IOperationMonitor monitor)
-			throws CommonException, OperationCancellation {
+	protected String doBackgroundToolResultComputation(IOperationMonitor om)
+			throws CommonException, OperationCancellation, OperationSoftFailure {
 		
 		Path rustFmt = RustSDKPreferences.RUSTFMT_PATH.getDerivedValue(project);
-		return new RustFmtOperation(getContext2(), getToolService(), rustFmt).executeOp(monitor);
+		return new RustFmtOperation(getSourceOpContext(), getToolService(), rustFmt).executeToolOperation(om);
 	}
 	
 	@Override

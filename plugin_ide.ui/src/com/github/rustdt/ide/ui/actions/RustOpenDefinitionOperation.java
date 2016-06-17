@@ -21,8 +21,8 @@ import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractOpenElementOperation;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.SourceLocation;
-import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 
@@ -33,18 +33,18 @@ public class RustOpenDefinitionOperation extends AbstractOpenElementOperation {
 	}
 	
 	@Override
-	protected ToolResponse<SourceLocation> doBackgroundValueComputation(IOperationMonitor om)
-			throws CommonException, OperationCancellation {
+	protected SourceLocation doBackgroundToolResultComputation(IOperationMonitor om)
+			throws CommonException, OperationCancellation, OperationSoftFailure {
 		
 		ToolManagerEngineToolRunner toolRunner = getToolManager().new ToolManagerEngineToolRunner();
 		
 		RacerFindDefinitionOperation op = new RacerFindDefinitionOperation(toolRunner, 
 			RustSDKPreferences.RACER_PATH.getValidatableValue(project) , 
 			RustSDKPreferences.SDK_SRC_PATH3.getValidatableValue(project),
-			sourceOpContext
+			getSourceOpContext()
 		);
 		
-		return op.execute(om);
+		return op.executeToolOperation(om);
 	}
 	
 }

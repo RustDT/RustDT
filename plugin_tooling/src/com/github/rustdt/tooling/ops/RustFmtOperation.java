@@ -16,18 +16,17 @@ import java.nio.file.Path;
 
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
-import melnorme.lang.tooling.common.ops.ResultOperation;
+import melnorme.lang.tooling.toolchain.ops.AbstractToolOperation;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
-import melnorme.lang.tooling.toolchain.ops.ToolResponse;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
-import melnorme.utilbox.status.StatusMessage;
 
-public class RustFmtOperation implements ResultOperation<ToolResponse<String>> {
+public class RustFmtOperation implements AbstractToolOperation<String> {
 		
 	protected boolean rustfmtFailureAsHardFailure = true;
 	
@@ -42,7 +41,8 @@ public class RustFmtOperation implements ResultOperation<ToolResponse<String>> {
 	}
 	
 	@Override
-	public ToolResponse<String> executeOp(IOperationMonitor om) throws CommonException, OperationCancellation {
+	public String executeToolOperation(IOperationMonitor om) 
+			throws CommonException, OperationCancellation, OperationSoftFailure {
 	
 		ArrayList2<String> cmdLine = new ArrayList2<>(rustFmt.toString());
 		
@@ -67,11 +67,11 @@ public class RustFmtOperation implements ResultOperation<ToolResponse<String>> {
 			if(rustfmtFailureAsHardFailure) {
 				throw new CommonException(errorMessage);
 			} else {
-				return new ToolResponse<>(null, new StatusMessage(errorMessage));
+				throw new OperationSoftFailure(errorMessage);
 			}
 		}
 		
 		// formatted file is in stdout
-		return new ToolResponse<>(result.getStdOutBytes().toUtf8String());
+		return result.getStdOutBytes().toUtf8String();
 	}
 }
