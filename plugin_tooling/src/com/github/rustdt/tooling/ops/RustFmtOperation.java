@@ -14,7 +14,6 @@ import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
 import java.nio.file.Path;
 
-import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.toolchain.ops.AbstractToolOperation;
 import melnorme.lang.tooling.toolchain.ops.IToolOperationService;
@@ -23,13 +22,10 @@ import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public class RustFmtOperation implements AbstractToolOperation<String> {
 		
-	protected boolean rustfmtFailureAsHardFailure = true;
-	
 	protected final SourceOpContext sourceOpContext;
 	protected final IToolOperationService toolOpService;
 	protected final Path rustFmt;
@@ -55,20 +51,16 @@ public class RustFmtOperation implements AbstractToolOperation<String> {
 		pb.directory(sourceOpContext.getFileLocation().getParent().toFile());
 		
 		String input = sourceOpContext.getSource();
-		ExternalProcessResult result = toolOpService.runProcess(pb, input, om);
+		
+		return handleResult(toolOpService.runProcess(pb, input, om));
+	}
+	
+	protected String handleResult(ExternalProcessResult result) throws CommonException, OperationSoftFailure {
 		int exitValue = result.exitValue;
 		
 		if(exitValue != 0) {
-			String stdErr = result.getStdErrBytes().toUtf8String();
-			String firstStderrLine = StringUtil.splitString(stdErr, '\n')[0].trim();
-			
-			String errorMessage = ToolingMessages.PROCESS_CompletedWithNonZeroValue("rustfmt", exitValue) + "\n" +
-					firstStderrLine;
-			if(rustfmtFailureAsHardFailure) {
-				throw new CommonException(errorMessage);
-			} else {
-				throw new OperationSoftFailure(errorMessage);
-			}
+			throw new OperationSoftFailure("`rustfmt` did not complete successfully, exit code: " + exitValue + "\n" + 
+					result.getStdErrBytes().toUtf8String());
 		}
 		
 		// formatted file is in stdout
