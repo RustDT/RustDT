@@ -91,7 +91,7 @@ public class RustSourceModelManager extends SourceModelManager {
 				return null;
 			}
 			
-			IProject project = fileLocation == null ? null : ResourceUtils.getProject(fileLocation);
+			IProject project = fileLocation == null ? null : ResourceUtils.getProjectFromMemberLocation(fileLocation);
 				Path path = RustSDKPreferences.RAINICORN_PATH2.getDerivedValue(project);
 				
 				ProcessBuilder pb = toolManager.createToolProcessBuilder(project, path);

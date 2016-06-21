@@ -39,7 +39,7 @@ public class RustCompletionProposalComputer extends LangCompletionProposalComput
 	protected Indexable<ToolCompletionProposal> doComputeProposals(SourceOpContext sourceOpContext, ICancelMonitor cm) 
 			throws CommonException, OperationCancellation, OperationSoftFailure {
 		
-		IProject project = ResourceUtils.getProject(sourceOpContext.getOptionalFileLocation());
+		IProject project = ResourceUtils.getProjectFromMemberLocation(sourceOpContext.getOptionalFileLocation());
 		
 		ToolManagerEngineToolRunner toolRunner = getEngineToolRunner();
 		
