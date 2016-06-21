@@ -12,8 +12,6 @@ package com.github.rustdt.ide.core.cargomodel;
 
 import static com.github.rustdt.tooling.cargo.CargoManifestParser.MANIFEST_FILENAME;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
@@ -54,19 +52,22 @@ public class RustBundleModelManager extends BundleModelManager<RustBundleModel> 
 	
 	@Override
 	protected BundleInfo createNewInfo(IProject project) {
+		String manifestSource;
 		try {
 			Location loc = ResourceUtils.getProjectLocation2(project).resolve(MANIFEST_FILENAME);
-			
-			String manifestSource = FileUtil.readStringFromFile(loc, StringUtil.UTF8, 
-				() -> MessageFormat.format("Could not read `{0}` file: ", MANIFEST_FILENAME));
-			
-			CargoManifest manifest = new CargoManifestParser().parse(manifestSource);
-			return new BundleInfo(manifest);
-			
+			manifestSource = FileUtil.readFileContents(loc, StringUtil.UTF8);
 		} catch(CommonException e) {
-			return new BundleInfo(new CargoManifest("<cargo.toml error>", null, null, null, null, null));
+			return new BundleInfo(new CargoManifest("<cargo.toml read error>", null, null, null, null, null));
 		}
 		
+		try {
+			CargoManifest manifest = new CargoManifestParser().parse(manifestSource);
+			return new BundleInfo(manifest);
+		} catch(CommonException e) {
+			return new BundleInfo(new CargoManifest("<cargo.toml parse error>", null, null, null, null, null));
+		}
+		
+		// TODO: we could have a better mechanism for error reporting: actually put the exception message somewhere
 	}
 	
 }
