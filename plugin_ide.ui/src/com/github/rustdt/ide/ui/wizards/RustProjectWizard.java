@@ -23,6 +23,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 
 import com.github.rustdt.tooling.cargo.CargoManifestParser;
+import com.github.rustdt.tooling.cargo.RustNamingRules;
 
 import melnorme.lang.ide.core.operations.RunToolOperation.RunSDKToolOperation;
 import melnorme.lang.ide.core.utils.EclipseUtils;
@@ -32,6 +33,8 @@ import melnorme.lang.ide.ui.dialogs.LangProjectWizardFirstPage;
 import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.status.Severity;
+import melnorme.utilbox.status.StatusException;
 
 /**
  * Rust New Project Wizard.
@@ -90,10 +93,37 @@ class RustProjectWizardFirstPage extends LangProjectWizardFirstPage {
 	protected final CheckBoxField useCargoInit = new CheckBoxField("Use `cargo init` to create project.");
 	
 	public RustProjectWizardFirstPage() {
+		super();
 		setTitle(WizardMessages_Actual.LangNewProject_Page1_pageTitle);
 		setDescription(WizardMessages_Actual.LangNewProject_Page1_pageDescription);
 		
 		useCargoInit.set(true);
+		useCargoInit.addChangeListener(() -> nameGroup.getNameField().fireFieldValueChanged());
+	}
+	
+	@Override
+	protected NameGroup createNameGroup() {
+		return new NameGroup() {
+			
+			@Override
+			public void validateProjectName() throws StatusException {
+				super.validateProjectName();
+				
+				try {
+					RustNamingRules.validateCrateName(getName());
+				} catch(StatusException e) {
+					if(useCargoInit.getBooleanFieldValue()) {
+						throw e;
+					} else {
+						// Change validation to Warning
+						throw new StatusException(Severity.WARNING, 
+							e.getMessage() + 
+							" The crate name will need to changed if the project is created with this name.");
+					}
+				}
+			}
+
+		};
 	}
 	
 	@Override
