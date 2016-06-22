@@ -255,7 +255,7 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 					// I guess this could change in the future, need to watch out for that.
 					
 					containers.add(new MapEntrySourceContainer(
-						projectLoc.append("../src"),
+						projectLoc.append("../src").toOSString(),
 						ResourceUtils.epath(sdkSrcLocation)
 					));
 				}
