@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed: NPE when invoking Content Assist inside a comment, string or character.
  * Updated minimum CDT to version `9.0`.
  * Added: validation of crate name for Rust Project Wizard.
  * Removed preference "Show error dialog if Racer failures occur" as it's no longer necessary.
