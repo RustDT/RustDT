@@ -19,6 +19,7 @@ import com.github.rustdt.ide.core.operations.RustBuildManager;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.launch.BuildTargetLaunchCreator;
+import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.BuildTarget;
 import melnorme.lang.ide.ui.launch.LangLaunchShortcut;
 import melnorme.lang.ide.ui.navigator.BuildTargetsActionGroup;
@@ -30,7 +31,7 @@ import melnorme.utilbox.misc.StringUtil;
 
 public class RustLaunchShortcut extends LangLaunchShortcut {
 	
-	protected RustBuildManager buildMgr = LangCore.getBuildManager();
+	protected BuildManager buildMgr = LangCore.getBuildManager();
 	
 	@Override
 	protected String getLaunchTypeId() {

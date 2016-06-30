@@ -11,17 +11,15 @@
 package melnorme.lang.ide.core;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
-import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager.RustBundleModel;
 import com.github.rustdt.ide.core.engine.RustSourceModelManager;
 import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
-import melnorme.lang.ide.core.engine.SourceModelManager;
 import melnorme.lang.ide.core.operations.ToolManager;
-import melnorme.lang.ide.core.project_model.LangBundleModel;
+import melnorme.utilbox.misc.ILogHandler;
 
-public class LangCore_Actual {
+public class LangCore_Actual extends AbstractLangCore {
 	
 	public static final String PLUGIN_ID = "com.github.rustdt.ide.core";
 	public static final String NATURE_ID = PLUGIN_ID +".nature";
@@ -37,26 +35,11 @@ public class LangCore_Actual {
 	public static final String VAR_NAME_SdkToolPath = "CARGO_TOOL_PATH";
 	public static final String VAR_NAME_SdkToolPath_DESCRIPTION = "The path of the Cargo tool";
 	
-	public static LangCore instance;
-	
-	/* ----------------- Owned singletons: ----------------- */
-	
-	protected final CoreSettings coreSettings;
-	protected final ToolManager toolManager;
-	protected final RustBundleModelManager bundleManager;
-	protected final RustBuildManager buildManager;
-	protected final RustSourceModelManager sourceModelManager;
-	
-	public LangCore_Actual() {
-		instance = (LangCore) this;
-		
-		coreSettings = createCoreSettings();
-		toolManager = createToolManagerSingleton();
-		bundleManager = createBundleModelManager();
-		buildManager = createBuildManager(bundleManager.getModel());
-		sourceModelManager = createSourceModelManager();
+	public LangCore_Actual(ILogHandler logHandler) {
+		super(logHandler);
 	}
-	
+		
+	@Override
 	protected CoreSettings createCoreSettings() {
 		return new CoreSettings() {
 			@Override
@@ -66,42 +49,23 @@ public class LangCore_Actual {
 		};
 	}
 	
-	public static ToolManager createToolManagerSingleton() {
-		return new RustToolManager();
+	@Override
+	public ToolManager createToolManager() {
+		return new RustToolManager(coreSettings);
 	}
 	
 	public static RustSourceModelManager createSourceModelManager() {
 		return new RustSourceModelManager();
 	}
 	
+	
 	public static RustBundleModelManager createBundleModelManager() {
 		return new RustBundleModelManager();
 	}
-	public static RustBuildManager createBuildManager(LangBundleModel bundleModel) {
-		return new RustBuildManager(bundleModel, getToolManager());
-	}
 	
-	
-	/* -----------------  ----------------- */
-	
-	public static CoreSettings settings() {
-		return instance.coreSettings;
-	}
-	
-	public static ToolManager getToolManager() {
-		return instance.toolManager;
-	}
-	public static RustBundleModel getBundleModel() {
-		return instance.bundleManager.getModel();
-	}
-	public static RustBuildManager getBuildManager() {
-		return instance.buildManager;
-	}
-	public static RustBundleModelManager getBundleModelManager() {
-		return instance.bundleManager;
-	}
-	public static SourceModelManager getSourceModelManager() {
-		return instance.sourceModelManager;
+	@Override
+	public RustBuildManager createBuildManager() {
+		return new RustBuildManager(this.bundleManager.getModel(), getToolManager());
 	}
 	
 }
