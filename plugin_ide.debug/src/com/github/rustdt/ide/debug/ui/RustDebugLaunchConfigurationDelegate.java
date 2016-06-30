@@ -44,6 +44,7 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 
 import com.github.rustdt.ide.core.operations.RustSDKPreferences;
 
+import melnorme.lang.ide.core.EclipseCore;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.ide.debug.core.AbstractLangDebugLaunchConfigurationDelegate;
@@ -194,7 +195,7 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 				
 				super.stepSourceGDBInitFile(rm);
 			} catch(IOException e) {
-				rm.setStatus(LangCore.createErrorStatus("Could not create GDB init temp file", e));
+				rm.setStatus(EclipseCore.createErrorStatus("Could not create GDB init temp file", e));
 				rm.done();
 			}
 		}
