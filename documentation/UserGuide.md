@@ -45,12 +45,6 @@ From the context menu of a Build Target, you can also directly create a Run or D
 The editor will auto-indent new lines after an Enter is pressed. Pressing Backspace with the cursor after the indent characters in the start of the line will delete the indent and preceding newline, thus joining the rest of the line with the previous line. Pressing Delete before a newline will have an identical effect.
 This is unlike most source editors - if instead you want to just remove one level of indent (or delete the preceding Tab), press Shift-Tab. 
 
-### Editor and Navigation
-
-##### Editor newline auto-indentation:
-The editor will auto-indent new lines after an Enter is pressed. Pressing Backspace with the cursor after the indent characters in the start of the line will delete the indent and preceding newline, thus joining the rest of the line with the previous line. Pressing Delete before a newline will have an identical effect.
-This is unlike most source editors - if instead you want to just remove one level of indent (or delete the preceding Tab), press Shift-Tab. 
-
 ##### Content Assist / Open Definition:
 Content Assist (also know as Code Completion, Auto Complete) is invoked with `Ctrl-Space`. 
 
