@@ -1,12 +1,14 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Fixed: NPE when invoking Content Assist inside a comment, string or character.
- * Updated minimum CDT to version `9.0`.
- * Added: validation of crate name for Rust Project Wizard.
+
+### 0.6.2
+ * Updated minimum CDT to version `9.0` (Eclipse Neon).
+ * Added: validation of crate name for Rust Project Wizard. (#119)
  * Removed preference "Show error dialog if Racer failures occur" as it's no longer necessary.
    * Content Assist will now distinguish between setup errors (errors that the user can fix, which are related to configuration and not the source) and other tool errors. For setup errors, a dialog will always be shown. For the other errors, if Content Assist was invoked manually, a dialog will also be shown, but if it was activated automatically the error will only be displayed in the editor status line. 
  * Fixed: Eclipse variables not being substituted in environment-variables settings of launch configurations.
+ * Fixed: NPE when invoking Content Assist inside a comment, string or character.
 
 ### 0.6.1
  * Improved the default names for automatically created launch configuration.
