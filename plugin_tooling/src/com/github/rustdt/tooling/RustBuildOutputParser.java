@@ -19,14 +19,27 @@ import java.util.regex.Pattern;
 
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
+import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.IByteSequence;
 import melnorme.utilbox.misc.StringUtil;
+import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 
 public abstract class RustBuildOutputParser extends BuildOutputParser2 {
+	
+	@Override
+	protected void handleNonZeroExitCode(ExternalProcessResult result) throws CommonException, OperationSoftFailure {
+		// Do nothing
+	}
+	
+	@Override
+	protected IByteSequence getOutputFromProcessResult(ExternalProcessResult result) {
+		return result.getStdErrBytes();
+	}
 	
 	protected boolean isMessageEnd(String nextLine) {
 		return nextLine.startsWith("error: aborting due to ");
