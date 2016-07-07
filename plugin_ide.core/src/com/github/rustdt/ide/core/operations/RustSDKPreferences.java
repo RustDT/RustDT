@@ -20,7 +20,6 @@ import com.github.rustdt.tooling.ops.RacerOperation.RustRacerLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 import com.github.rustdt.tooling.ops.RustSDKSrcLocationValidator;
 
-import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.prefs.DerivedValuePreference;
 import melnorme.lang.utils.validators.LocationOrSinglePathValidator;
@@ -38,20 +37,20 @@ public interface RustSDKPreferences extends ToolchainPreferences {
 	
 	public static final RustSDKAcessor SDK_PATH_Acessor = new RustSDKAcessor();
 	
-	public static final DerivedValuePreference<Location> SDK_SRC_PATH3 = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+	public static final DerivedValuePreference<Location> SDK_SRC_PATH3 = new DerivedValuePreference<>( 
 			"sdk_src_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
 		new RustSDKSrcLocationValidator().asLocationValidator());
 	
-	public static final DerivedValuePreference<Path> RACER_PATH = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+	public static final DerivedValuePreference<Path> RACER_PATH = new DerivedValuePreference<>( 
 		"racer_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
 		new RustRacerLocationValidator());
 	
-	public static final DerivedValuePreference<Path> RAINICORN_PATH2 = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+	public static final DerivedValuePreference<Path> RAINICORN_PATH2 = new DerivedValuePreference<>( 
 		"rainicorn_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
 		new LocationOrSinglePathValidator("Rainicorn parse_describe:"));
 	
 	
-	public static final DerivedValuePreference<Path> RUSTFMT_PATH = new DerivedValuePreference<>(LangCore.PLUGIN_ID, 
+	public static final DerivedValuePreference<Path> RUSTFMT_PATH = new DerivedValuePreference<>( 
 			"rustfmt_path", "", ToolchainPreferences.USE_PROJECT_SETTINGS,
 		new LocationOrSinglePathValidator("rustfmt:"));
 
