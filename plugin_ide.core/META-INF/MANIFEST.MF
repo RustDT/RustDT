@@ -21,6 +21,7 @@ Require-Bundle: com.github.rustdt.tooling;visibility:=reexport,
 Bundle-ClassPath: .
 Export-Package: com.github.rustdt.ide.core,
  com.github.rustdt.ide.core.cargomodel,
+ com.github.rustdt.ide.core.engine,
  com.github.rustdt.ide.core.launch,
  com.github.rustdt.ide.core.operations,
  com.github.rustdt.ide.core.text,

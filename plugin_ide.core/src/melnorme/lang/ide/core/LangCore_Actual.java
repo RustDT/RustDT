@@ -17,9 +17,7 @@ import com.github.rustdt.ide.core.operations.RustBuildManager;
 import com.github.rustdt.ide.core.operations.RustToolManager;
 import com.github.rustdt.tooling.ops.RustSDKLocationValidator;
 
-import melnorme.lang.ide.core.engine.LanguageServerHandler;
 import melnorme.lang.ide.core.operations.ToolManager;
-import melnorme.lang.ide.core.utils.operation.EclipseJobExecutor;
 import melnorme.utilbox.misc.ILogHandler;
 
 public class LangCore_Actual extends AbstractLangCore {
