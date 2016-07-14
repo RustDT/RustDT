@@ -17,35 +17,17 @@ import java.util.concurrent.TimeoutException;
 
 import melnorme.utilbox.core.Assert.AssertFailedException;
 
-public abstract class AbstractRunnableFuture<RET> extends AbstractFuture2<RET> implements Runnable {
-	
-	protected final CompletableResult<RET> completableResult = new CompletableResult<>();
+public abstract class AbstractRunnableFuture<RET> extends AbstractRunnableFuture2<RET> 
+	implements NonCancellableFuture<RET> 
+{
 	
 	public AbstractRunnableFuture() {
 		super();
 	}
 	
 	@Override
-	public void run() {
-		completableResult.setResult(invokeToResult());
-	}
-	
-	protected abstract RET invokeToResult();
-	
-	@Override
 	public boolean tryCancel() throws AssertFailedException {
-		// Hum, perhaps we should be more lenient and just return false?
-		throw assertFail();
-	}
-	
-	@Override
-	public boolean isCancelled() {
-		return completableResult.isCancelled();
-	}
-	
-	@Override
-	public boolean isDone() {
-		return completableResult.isDone();
+		return false;
 	}
 	
 	@Override
@@ -61,15 +43,6 @@ public abstract class AbstractRunnableFuture<RET> extends AbstractFuture2<RET> i
 	public RET awaitResult(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
 		try {
 			return completableResult.awaitResult(timeout, unit);
-		} catch(OperationCancellation e) {
-			throw assertFail();
-		}
-	}
-	
-	@Override
-	public RET getResult() {
-		try {
-			return super.getResult();
 		} catch(OperationCancellation e) {
 			throw assertFail();
 		}

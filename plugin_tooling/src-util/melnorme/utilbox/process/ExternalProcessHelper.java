@@ -75,15 +75,15 @@ public class ExternalProcessHelper extends AbstractExternalProcessHelper {
 		return stderrReader.runnableFuture;
 	}
 	
-	protected static class ReadAllBytesTask {
+	protected class ReadAllBytesTask {
 		
 		protected final InputStream is;
 		protected final ByteArrayOutputStreamExt byteArray = new ByteArrayOutputStreamExt(32);
-		protected final ResultRunnableFuture<ByteArrayOutputStreamExt, IOException> runnableFuture;
+		protected final RunnableFuture2<Result<ByteArrayOutputStreamExt, IOException>> runnableFuture;
 		
 		public ReadAllBytesTask(InputStream is) {
 			this.is = is;
-			this.runnableFuture = RunnableFuture2.toResultRunnableFuture(this::doRun);
+			this.runnableFuture = new ResultRunnableFuture<ByteArrayOutputStreamExt, IOException>(this::doRun);
 		}
 		
 		public RunnableFuture2<Result<ByteArrayOutputStreamExt, IOException>> asRunnableFuture() {
@@ -97,7 +97,7 @@ public class ExternalProcessHelper extends AbstractExternalProcessHelper {
 				byte[] buffer = new byte[BUFFER_SIZE];
 				
 				int read;
-				while((read = is.read(buffer)) != StreamUtil.EOF) {
+				while((read = is.read(buffer)) != StreamUtil.EOF && !cancelMonitor.isCanceled()) {
 					byteArray.write(buffer, 0, read);
 					notifyReadChunk(buffer, 0, read);
 				}
@@ -221,9 +221,9 @@ public class ExternalProcessHelper extends AbstractExternalProcessHelper {
 			awaitTermination(timeoutMs);
 			
 			// Check for IOExceptions (although I'm not sure this scenario is possible)
-			mainReader.asRunnableFuture().getResult();
+			mainReader.asRunnableFuture().awaitResult2();
 			if(stderrReader != null) {
-				stderrReader.asRunnableFuture().getResult();
+				stderrReader.asRunnableFuture().awaitResult2();
 			}
 		} catch (Exception e) {
 			process.destroy();

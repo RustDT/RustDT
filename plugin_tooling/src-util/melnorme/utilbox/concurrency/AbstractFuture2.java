@@ -10,6 +10,9 @@
  *******************************************************************************/
 package melnorme.utilbox.concurrency;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -17,9 +20,47 @@ import java.util.concurrent.TimeoutException;
 
 public abstract class AbstractFuture2<RET> implements Future2<RET> {
 	
+	protected final CompletableResult<RET> completableResult = new CompletableResult<>();
+	
 	public AbstractFuture2() {
 		super();
 	}
+	
+	@Override
+	public boolean isCancelled() {
+		return completableResult.isCancelled();
+	}
+	
+	@Override
+	public boolean isDone() {
+		return completableResult.isDone();
+	}
+	
+	@Override
+	public boolean tryCancel() {
+		boolean wasCancelledNow = completableResult.setCancelledResult();
+		if(wasCancelledNow) {
+			handleCancellation();
+		}
+		return wasCancelledNow;
+	}
+	
+	protected void handleCancellation() {
+		// default: do nothing
+	}
+	
+	@Override
+	public RET awaitResult() throws InterruptedException, OperationCancellation {
+		return completableResult.awaitResult();
+	}
+	
+	@Override
+	public RET awaitResult(long timeout, TimeUnit unit) 
+			throws InterruptedException, TimeoutException, OperationCancellation {
+		return completableResult.awaitResult(timeout, unit);
+	}
+	
+	/* -----------------  ----------------- */ 
 	
 	public Future<RET> asFuture1() {
 		return asFuture;
@@ -66,5 +107,21 @@ public abstract class AbstractFuture2<RET> implements Future2<RET> {
 		}
 		
 	};
+	
+	/* -----------------  ----------------- */
+	
+	public static class CompletedFuture<RET> extends AbstractFuture2<RET> {
+		
+		public CompletedFuture(RET result) {
+			completableResult.setResult(result);
+			assertTrue(isCompletedWithResult());
+		}
+		
+		@Override
+		protected void handleCancellation() {
+			assertFail(); // Should not happen
+		}
+		
+	}
 	
 }
