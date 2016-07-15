@@ -14,6 +14,7 @@ import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import melnorme.lang.ide.core.LangCore;
@@ -23,6 +24,7 @@ import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 
+@Ignore
 public class LanguageServerHandler_Test extends CommonCoreTest {
 	
 	@Test
