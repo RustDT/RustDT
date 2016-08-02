@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Fixed editor NPE when opening files from a non-workspace VCS revision. 
 
 ### 0.6.2
  * Updated minimum CDT to version `9.0` (Eclipse Neon).
