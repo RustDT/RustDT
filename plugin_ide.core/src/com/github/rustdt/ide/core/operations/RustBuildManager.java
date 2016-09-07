@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
+ *     Pieter Penninckx - support for Json error output
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
@@ -54,6 +55,9 @@ public class RustBuildManager extends BuildManager {
 	
 	public static final String BuildType_Build = "build";
 	public static final String BuildType_Check = "check";
+	
+	public static final String OutputFormatEnvironmentVariableName = "RUSTFLAGS";
+	public static final String OutputFormatEnvironmentVariableUseJson = "--error-format json";
 	
 	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, 
 		"test --no-run");
@@ -212,9 +216,9 @@ public class RustBuildManager extends BuildManager {
 			MapAccess<String, String> environmentVars = super.buildCommand.getEnvironmentVars();
 			boolean rustFlagsErrorFormatIsJson = false;
 			if (environmentVars != null) {
-				String rustFlags = environmentVars.get("RUSTFLAGS");
+				String rustFlags = environmentVars.get(OutputFormatEnvironmentVariableName);
 				if (rustFlags != null) {
-					rustFlagsErrorFormatIsJson = rustFlags.contains("--error-format json");
+					rustFlagsErrorFormatIsJson = rustFlags.contains(OutputFormatEnvironmentVariableUseJson);
 				}
 			}
 			return rustFlagsErrorFormatIsJson;
