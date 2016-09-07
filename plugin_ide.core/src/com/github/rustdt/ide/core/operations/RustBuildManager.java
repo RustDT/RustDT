@@ -40,6 +40,7 @@ import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
+import melnorme.utilbox.collections.MapAccess;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.CollectionUtil;
@@ -205,9 +206,24 @@ public class RustBuildManager extends BuildManager {
 			super(buildOpParams);
 		}
 		
+		// TODO: we currently require the user to set the output error format, which is not user friendly.
+		// Return whether the Rust compiler was configured to output its errors in the json format. 
+		protected boolean rustcErrorOutputIsJson() {
+			MapAccess<String, String> environmentVars = super.buildCommand.getEnvironmentVars();
+			boolean rustFlagsErrorFormatIsJson = false;
+			if (environmentVars != null) {
+				String rustFlags = environmentVars.get("RUSTFLAGS");
+				if (rustFlags != null) {
+					rustFlagsErrorFormatIsJson = rustFlags.contains("--error-format json");
+				}
+			}
+			return rustFlagsErrorFormatIsJson;
+		}
+
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
+			// TODO: use a to-be-developed parser if the function rustcErrorOutputIsJson() returns true. 
 			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
 				@Override
 				protected void handleParseError(CommonException ce) {
