@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Bruno Medeiros and other Contributors.
+ * Copyright (c) 2016 Bruno Medeiros and other Contributors.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
+ *     Pieter Penninckx - small refactoring
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
@@ -57,76 +58,35 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 			return null;
 		}
 		
-		CompositeToolMessageData messageData = parseSimpleMessage(outputLine);
+		ToolMessageData messageData = RUSTC_OUTPUT_LINE_PARSER.parseLine(outputLine);
 		if(messageData == null) {
-			Matcher matcher = CARGO_MESSAGE_Regex.matcher(outputLine);
-			
-			if(matcher.matches()) {
-				return parseFromMatcher(outputLine, matcher);
+			ToolMessageData cargoMessageData = CARGO_OUTPUT_LINE_PARSER.parseLine(outputLine);
+			if (cargoMessageData != null) {
+				return new CompositeToolMessageData(cargoMessageData);
 			} else {
-				throw createUnknownLineSyntaxError(outputLine);	
+				throw createUnknownLineSyntaxError(outputLine);
 			}
 		}
 		
-		parseMultiLineMessageText(output, messageData);
+		CompositeToolMessageData compositeMessageData = new CompositeToolMessageData(messageData);
 		
-		parseAssociatedMessage(output, messageData);
+		parseMultiLineMessageText(output, compositeMessageData);
 		
-		return messageData;
+		parseAssociatedMessage(output, compositeMessageData);
+		
+		return compositeMessageData;
 	}
 	
-	protected static final Pattern CARGO_MESSAGE_Regex = Pattern.compile(
-		"^([^:\\n]*):" + // file
-		"(\\d*):((\\d*))?" +// line:column
-		"(-(\\d*):(\\d*))?" + // end line:column
-		"()" + // type and sep
-		"\\s(.*)$" // error message
-	);
-	
-	protected static final Pattern MESSAGE_LINE_Regex = Pattern.compile(
-		"^([^:\\n]*):" + // file
-		"(\\d*):((\\d*):)?" +// line:column
-		"( (\\d*):(\\d*))?" + // end line:column
-		" (warning|error|note):" + // type
-		"\\s(.*)$" // error message
-	);
-	
-	public CompositeToolMessageData parseSimpleMessage(String line) {
-		Matcher matcher = MESSAGE_LINE_Regex.matcher(line);
-		if(!matcher.matches()) {
-			return null;
-		}
+	protected static final AbstractRustBuildOutputLineParser CARGO_OUTPUT_LINE_PARSER = 
+		new CargoRustBuildOutputLineParser();
+	protected static final AbstractRustBuildOutputLineParser RUSTC_OUTPUT_LINE_PARSER =
+		new ClassicRustcRustBuildOutputLineParser();
 		
-		return parseFromMatcher(line, matcher);
-	}
-	
-	public CompositeToolMessageData parseFromMatcher(String line, Matcher matcher) {
-		CompositeToolMessageData msgData = new CompositeToolMessageData();
-		
-		msgData.pathString = matcher.group(1);
-		msgData.lineString = matcher.group(2);
-		msgData.columnString = matcher.group(4);
-		
-		msgData.endLineString = matcher.group(6);
-		msgData.endColumnString = matcher.group(7);
-		
-		msgData.messageTypeString = matcher.group(8);
-		if(areEqual(msgData.messageTypeString, "note")) {
-			
-			msgData.messageTypeString = "info";
-		}
-		
-		msgData.messageText = matcher.group(9);
-		msgData.sourceBeforeMessageText = line.substring(0, line.length() - msgData.messageText.length());
-		
-		return msgData;
-	}
-	
 	protected void parseMultiLineMessageText(StringCharSource output, CompositeToolMessageData msg) {
 		while(true) {
 			String lineAhead = LexingUtils.stringUntilNewline(output);
 			
-			if(lineAhead.isEmpty() || MESSAGE_LINE_Regex.matcher(lineAhead).matches()) {
+			if(lineAhead.isEmpty() || RUSTC_OUTPUT_LINE_PARSER.canParseLine(lineAhead)) {
 				break;
 			}
 			if(isMessageEnd(lineAhead)) {
@@ -144,7 +104,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 			if(thirdLineTrimmed.startsWith("^") && 
 					(thirdLineTrimmed.endsWith("^") || thirdLineTrimmed.endsWith("~"))) {
 				LexingUtils.consumeLine(output);
-				// dont add this message, or nextLine, to actual error message.
+				// don't add this message, or nextLine, to actual error message.
 				break;
 			}
 			
@@ -158,13 +118,13 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 		
 		msg.simpleMessageText = msg.messageText;
 		
-		CompositeToolMessageData nextMessage = parseSimpleMessage(lineAhead);
+		ToolMessageData nextMessage = RUSTC_OUTPUT_LINE_PARSER.parseLine(lineAhead);
 		if(nextMessage != null) {
 			
 			if(isTemplateInstantiationMessage(nextMessage)) {
-				nextMessage = parseMessageData(output);
-				msg.nextMessage = nextMessage;
-				msg.messageText += "\n" + nextMessage.getFullMessageSource(); 
+				CompositeToolMessageData compositeNextMessage = parseMessageData(output);
+				msg.nextMessage = compositeNextMessage;
+				msg.messageText += "\n" + compositeNextMessage.getFullMessageSource();
 			}
 			
 		}
@@ -174,6 +134,25 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 		
 		public CompositeToolMessageData nextMessage;
 		public String simpleMessageText;
+		
+		public CompositeToolMessageData() {
+			
+		}
+		
+		// TODO: create a copy constructor for `ToolMessageData` and call that here as `super(init)`.
+		public CompositeToolMessageData(ToolMessageData init) {
+			this.pathString = init.pathString;
+			this.lineString = init.lineString;
+			this.columnString = init.columnString;
+			
+			this.endLineString = init.endLineString;
+			this.endColumnString = init.endColumnString;
+			
+			this.messageTypeString = init.messageTypeString;
+			
+			this.sourceBeforeMessageText = init.sourceBeforeMessageText;
+			this.messageText = init.messageText;
+		}
 		
 		public String getFullMessageSource() {
 			assertNotNull(sourceBeforeMessageText);
