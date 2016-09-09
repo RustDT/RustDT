@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
+import com.github.rustdt.tooling.RustBuildOutputParserJson;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.LangCore;
@@ -38,6 +39,7 @@ import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
+import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
@@ -227,13 +229,24 @@ public class RustBuildManager extends BuildManager {
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
-			// TODO: use a to-be-developed parser if the function rustcErrorOutputIsJson() returns true. 
-			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
-				@Override
-				protected void handleParseError(CommonException ce) {
-					 LangCore.logStatusException(ce.toStatusException());
-				}
-			}.doParseResult(processResult);
+			// TODO: use a to-be-developed parser if the function rustcErrorOutputIsJson() returns true.
+			BuildOutputParser2 outputParser = null;
+			if (rustcErrorOutputIsJson()) {
+				outputParser = new RustBuildOutputParserJson() {
+					@Override
+					protected void handleParseError(CommonException ce) {
+						 LangCore.logStatusException(ce.toStatusException());
+					}
+				};
+			} else {
+				outputParser = new RustBuildOutputParser() {
+					@Override
+					protected void handleParseError(CommonException ce) {
+						 LangCore.logStatusException(ce.toStatusException());
+					}
+				};
+			}
+			ArrayList<ToolSourceMessage> buildMessage = outputParser.doParseResult(processResult);
 			
 			new ToolMarkersHelper().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation2(project), om);
 		}

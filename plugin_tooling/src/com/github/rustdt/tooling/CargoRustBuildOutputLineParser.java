@@ -13,6 +13,9 @@ package com.github.rustdt.tooling;
 
 import java.util.regex.Pattern;
 
+import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2.ToolMessageData;
+import melnorme.utilbox.status.Severity;
+
 /**
  * Simple regexp-based parser for (error) output lines of cargo.
  *
@@ -22,13 +25,22 @@ public class CargoRustBuildOutputLineParser extends AbstractRustBuildOutputLineP
 			"^([^:\\n]*):" + // file
 			"(\\d*):((\\d*))?" +// line:column
 			"(-(\\d*):(\\d*))?" + // end line:column
-			"()" + // type and sep
+			"()" + // type and sep. Type is assumed to always be 'Error', we will override parseLine to fix this.
 			"\\s(.*)$" // error message
 		);
 	
 	@Override
 	protected Pattern getPattern() {
 		return CARGO_MESSAGE_Regex;
+	}
+	
+	@Override
+	public ToolMessageData parseLine(String line) {
+		ToolMessageData result = super.parseLine(line);
+		if (result != null) {
+			result.messageTypeString = Severity.ERROR.getLabel();
+		}
+		return result;
 	}
 
 }
