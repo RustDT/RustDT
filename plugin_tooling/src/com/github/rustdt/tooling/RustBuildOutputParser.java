@@ -137,19 +137,8 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 			
 		}
 		
-		// TODO: create a copy constructor for `ToolMessageData` and call that here as `super(init)`.
 		public CompositeToolMessageData(ToolMessageData init) {
-			this.pathString = init.pathString;
-			this.lineString = init.lineString;
-			this.columnString = init.columnString;
-			
-			this.endLineString = init.endLineString;
-			this.endColumnString = init.endColumnString;
-			
-			this.messageTypeString = init.messageTypeString;
-			
-			this.sourceBeforeMessageText = init.sourceBeforeMessageText;
-			this.messageText = init.messageText;
+			super(init);
 		}
 		
 		public String getFullMessageSource() {

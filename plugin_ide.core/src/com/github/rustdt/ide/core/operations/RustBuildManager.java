@@ -229,7 +229,6 @@ public class RustBuildManager extends BuildManager {
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
-			// TODO: use a to-be-developed parser if the function rustcErrorOutputIsJson() returns true.
 			BuildOutputParser2 outputParser = null;
 			if (rustcErrorOutputIsJson()) {
 				outputParser = new RustBuildOutputParserJson() {
