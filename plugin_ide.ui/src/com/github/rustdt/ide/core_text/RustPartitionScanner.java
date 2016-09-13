@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.core.text;
+package com.github.rustdt.ide.core_text;
 
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -21,7 +21,7 @@ import com.github.rustdt.tooling.lexer.RustLifetimeLexingRule;
 import com.github.rustdt.tooling.lexer.RustRawStringLiteralRule;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.core.text.LangPartitionScanner;
+import melnorme.lang.ide.core_text.LangPartitionScanner;
 import melnorme.utilbox.collections.ArrayList2;
 
 public class RustPartitionScanner extends LangPartitionScanner {

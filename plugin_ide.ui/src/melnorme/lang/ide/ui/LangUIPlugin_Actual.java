@@ -2,9 +2,11 @@ package melnorme.lang.ide.ui;
 
 import java.util.List;
 
+import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.core_text.RustDocumentSetupParticipant;
+import com.github.rustdt.ide.core_text.RustPartitionScanner;
 import com.github.rustdt.ide.ui.RustImages;
 import com.github.rustdt.ide.ui.editor.RustFmtEditorOperation;
 import com.github.rustdt.ide.ui.text.RustAutoEditStrategy;
@@ -35,9 +37,15 @@ public final class LangUIPlugin_Actual {
 	
 	protected static final Class<?> PLUGIN_IMAGES_CLASS = RustImages.class;
 	
+	/* ----------------- text ----------------- */
+	
 	@SuppressWarnings("unused")
 	protected static void initTextHovers_afterProblemHover(
 			List<Class<? extends ILangEditorTextHover<?>>> textHoverSpecifications) {
+	}
+	
+	public static IPartitionTokenScanner createPartitionScanner() {
+		return new RustPartitionScanner();
 	}
 	
 	public static RustAutoEditStrategy createAutoEditStrategy(String contentType, 

@@ -18,7 +18,7 @@ import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
 import melnorme.lang.ide.core.text.ISourceBufferExt;
-import melnorme.lang.ide.core.text.StrictDamagerRepairer;
+import melnorme.lang.ide.core_text.StrictDamagerRepairer;
 import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 import melnorme.lang.tooling.LANG_SPECIFIC;
