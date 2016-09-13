@@ -2,6 +2,18 @@
 <?eclipse version="3.4"?>
 <plugin>
 	
+	<extension
+		 id="com.github.rustdt.DocumentSetupParticipant"
+		 name="Rust Document Setup Participant"
+		 point="org.eclipse.core.filebuffers.documentSetup">
+		<participant
+			class="com.github.rustdt.ide.core.text.RustDocumentSetupParticipant"
+			contentTypeId="com.github.rustdt.ide.core.content.source">
+		</participant>
+	</extension>
+	
+	<!-- ============ Actual UI ============= -->
+	
 	<extension point="org.eclipse.ui.ide.projectNatureImages">
 		<image
 			icon="icons/project-nature.ovr.png"

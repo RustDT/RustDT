@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.ide.core.text;
+package LANG_PROJECT_ID.ide.core_text;
 
 import static melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes.ATTRIBUTE;
 
@@ -17,7 +17,6 @@ import org.junit.Test;
 import com.github.rustdt.tooling.lexer.RustAttributeRule;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.core.text.LangPartitionScannerTest;
 
 public class RustPartitionScannerTest extends LangPartitionScannerTest {
 	

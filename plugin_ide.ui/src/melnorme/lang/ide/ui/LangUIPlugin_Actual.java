@@ -8,6 +8,8 @@ import com.github.rustdt.ide.ui.RustImages;
 import com.github.rustdt.ide.ui.editor.RustFmtEditorOperation;
 import com.github.rustdt.ide.ui.text.RustAutoEditStrategy;
 
+import LANG_PROJECT_ID.ide.core_text.LangDocumentPartitionerSetup;
+import LANG_PROJECT_ID.ide.core_text.RustDocumentSetupParticipant;
 import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.text.format.ILastKeyInfoProvider;
 import melnorme.lang.ide.ui.editor.hover.ILangEditorTextHover;
@@ -41,6 +43,10 @@ public final class LangUIPlugin_Actual {
 	public static RustAutoEditStrategy createAutoEditStrategy(String contentType, 
 		ILastKeyInfoProvider lastKeyInfoProvider) {
 		return new RustAutoEditStrategy(contentType, new LangAutoEditsPreferencesAccess(), lastKeyInfoProvider);
+	}
+	
+	public static LangDocumentPartitionerSetup createDocumentSetupHelper() {
+		return new RustDocumentSetupParticipant();
 	}
 	
 	public static StructureElementLabelProvider getStructureElementLabelProvider() {
