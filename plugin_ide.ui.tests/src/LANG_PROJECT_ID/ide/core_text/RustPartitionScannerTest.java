@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.github.rustdt.tooling.lexer.RustAttributeRule;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
+import melnorme.lang.ide.core_text.LangPartitionScannerTest;
 
 public class RustPartitionScannerTest extends LangPartitionScannerTest {
 	

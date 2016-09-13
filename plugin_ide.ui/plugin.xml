@@ -7,7 +7,7 @@
 		 name="Rust Document Setup Participant"
 		 point="org.eclipse.core.filebuffers.documentSetup">
 		<participant
-			class="com.github.rustdt.ide.core.text.RustDocumentSetupParticipant"
+			class="com.github.rustdt.ide.core_text.RustDocumentSetupParticipant"
 			contentTypeId="com.github.rustdt.ide.core.content.source">
 		</participant>
 	</extension>
