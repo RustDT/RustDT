@@ -10,21 +10,15 @@
  *******************************************************************************/
 package melnorme.lang.ide.ui.text;
 
-import static melnorme.utilbox.core.CoreUtil.array;
-
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.ui.text.completion.RustCompletionProposalComputer;
 
 import melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes;
-import melnorme.lang.ide.core.text.StrictDamagerRepairer;
-import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.core.text.ISourceBufferExt;
+import melnorme.lang.ide.core.text.StrictDamagerRepairer;
 import melnorme.lang.ide.ui.text.completion.ILangCompletionProposalComputer;
 import melnorme.lang.ide.ui.text.completion.LangContentAssistProcessor.ContentAssistCategoriesBuilder;
 import melnorme.lang.tooling.LANG_SPECIFIC;
@@ -50,15 +44,6 @@ public class LangSourceViewerConfiguration extends AbstractLangSourceViewerConfi
 	@Override
 	protected String getToggleCommentPrefix() {
 		return "//";
-	}
-	
-	@Override
-	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
-		if(IDocument.DEFAULT_CONTENT_TYPE.equals(contentType)) {
-			return array(LangUIPlugin_Actual.createAutoEditStrategy(sourceViewer, contentType));
-		} else {
-			return super.getAutoEditStrategies(sourceViewer, contentType);
-		}
 	}
 	
 	/* ----------------- Content Assist ----------------- */

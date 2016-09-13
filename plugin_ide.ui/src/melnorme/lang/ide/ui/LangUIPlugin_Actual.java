@@ -2,7 +2,6 @@ package melnorme.lang.ide.ui;
 
 import java.util.List;
 
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.github.rustdt.ide.ui.RustImages;
@@ -10,6 +9,7 @@ import com.github.rustdt.ide.ui.editor.RustFmtEditorOperation;
 import com.github.rustdt.ide.ui.text.RustAutoEditStrategy;
 
 import melnorme.lang.ide.core.LangCore_Actual;
+import melnorme.lang.ide.core.text.format.ILastKeyInfoProvider;
 import melnorme.lang.ide.ui.editor.hover.ILangEditorTextHover;
 import melnorme.lang.ide.ui.editor.text.LangAutoEditsPreferencesAccess;
 import melnorme.lang.ide.ui.views.StructureElementLabelProvider;
@@ -38,8 +38,9 @@ public final class LangUIPlugin_Actual {
 			List<Class<? extends ILangEditorTextHover<?>>> textHoverSpecifications) {
 	}
 	
-	public static RustAutoEditStrategy createAutoEditStrategy(ISourceViewer sourceViewer, String contentType) {
-		return new RustAutoEditStrategy(contentType, sourceViewer, new LangAutoEditsPreferencesAccess());
+	public static RustAutoEditStrategy createAutoEditStrategy(String contentType, 
+		ILastKeyInfoProvider lastKeyInfoProvider) {
+		return new RustAutoEditStrategy(contentType, new LangAutoEditsPreferencesAccess(), lastKeyInfoProvider);
 	}
 	
 	public static StructureElementLabelProvider getStructureElementLabelProvider() {
