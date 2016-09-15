@@ -38,10 +38,8 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 import melnorme.lang.ide.core.LangCore;
-import melnorme.lang.ide.core.TextSettings_Actual;
 import melnorme.lang.ide.core.operations.ToolchainPreferences;
 import melnorme.lang.ide.core.utils.EclipseUtils;
-import melnorme.lang.ide.core.utils.prefs.EclipsePreferencesAdapter;
 import melnorme.lang.ide.ui.EditorSettings_Actual;
 import melnorme.lang.ide.ui.EditorSettings_Actual.EditorPrefConstants;
 import melnorme.lang.ide.ui.LangImages;
@@ -52,6 +50,7 @@ import melnorme.lang.ide.ui.editor.actions.GotoMatchingBracketManager;
 import melnorme.lang.ide.ui.editor.text.LangPairMatcher;
 import melnorme.lang.ide.ui.text.AbstractLangSourceViewerConfiguration;
 import melnorme.lang.ide.ui.utils.PluginImagesHelper.ImageHandle;
+import melnorme.lang.ide.ui.utils.prefs.EclipsePreferencesAdapter;
 import melnorme.lang.utils.EnablementCounter;
 import melnorme.utilbox.concurrency.ICancelMonitor;
 import melnorme.utilbox.misc.ArrayUtil;
@@ -113,7 +112,7 @@ public abstract class AbstractLangEditor extends TextEditorExt {
 		
 		IDocument doc = getDocumentProvider().getDocument(input);
 		// Setup up partitioning if not set. It can happen if opening non-language files in the language editor.
-		TextSettings_Actual.createDocumentSetupHelper().setupPartitioningIfNotSet(doc);
+		LangUIPlugin_Actual.createDocumentSetupHelper().setupPartitioningIfNotSet(doc);
 		
 		internalDoSetInput(input);
 	}

@@ -16,18 +16,17 @@ import static melnorme.utilbox.core.Assert.AssertNamespace.assertUnreachable;
 import static melnorme.utilbox.core.CoreUtil.array;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 
 import melnorme.lang.ide.core.text.BlockHeuristicsScannner;
-import melnorme.lang.ide.core.text.TextSourceUtils;
 import melnorme.lang.ide.core.text.BlockHeuristicsScannner.BlockBalanceResult;
 import melnorme.lang.ide.core.text.BlockHeuristicsScannner.BlockTokenRule;
+import melnorme.lang.ide.core.text.DocumentCommand2;
+import melnorme.lang.ide.core.text.TextSourceUtils;
 
 /**
  * LangAutoEditStrategy provides a common auto-edit strategy of smart indenting and de-indenting, 
@@ -49,13 +48,17 @@ public class LangAutoEditStrategy extends AbstractAutoEditStrategy {
 	protected final String partitioning;
 	protected final String contentType;
 	
-	protected LangAutoEditStrategy(ITextViewer viewer, ILangAutoEditsPreferencesAccess preferences) {
-		this(viewer, IDocumentExtension3.DEFAULT_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE, preferences);
+	protected LangAutoEditStrategy(ILastKeyInfoProvider lastKeyInfoProvider,
+		ILangAutoEditsPreferencesAccess preferences) {
+		this(lastKeyInfoProvider, IDocumentExtension3.DEFAULT_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE,
+			preferences);
 	}
 	
-	public LangAutoEditStrategy(ITextViewer viewer, String partitioning, String contentType,
-			ILangAutoEditsPreferencesAccess preferences) {
-		super(viewer);
+	public LangAutoEditStrategy(ILastKeyInfoProvider lastKeyInfoProvider,
+		String partitioning, String contentType,
+		ILangAutoEditsPreferencesAccess preferences
+	) {
+		super(lastKeyInfoProvider);
 		this.preferences = preferences;
 		this.partitioning = partitioning;
 		this.contentType = contentType;
@@ -65,7 +68,7 @@ public class LangAutoEditStrategy extends AbstractAutoEditStrategy {
 	protected String indentUnit;
 	
 	@Override
-	protected void doCustomizeDocumentCommand(IDocument doc, DocumentCommand cmd) throws BadLocationException {
+	protected void doCustomizeDocumentCommand(IDocument doc, DocumentCommand2 cmd) throws BadLocationException {
 		parenthesesAsBlocks = preferences.parenthesesAsBlocks();
 		indentUnit = preferences.getIndentUnit();
 		boolean isSmartIndent = preferences.isSmartIndent();
@@ -94,7 +97,7 @@ public class LangAutoEditStrategy extends AbstractAutoEditStrategy {
 	
 	/* ------------------------------------- */
 	
-	protected void smartIndentAfterNewLine(IDocument doc, DocumentCommand cmd) throws BadLocationException {
+	protected void smartIndentAfterNewLine(IDocument doc, DocumentCommand2 cmd) throws BadLocationException {
 		if(cmd.length > 0 || cmd.text == null)
 			return;
 		
@@ -230,7 +233,7 @@ public class LangAutoEditStrategy extends AbstractAutoEditStrategy {
 	
 	/* ------------------------------------- */
 	
-	protected boolean smartDeIndentAfterDeletion(IDocument doc, DocumentCommand cmd) throws BadLocationException {
+	protected boolean smartDeIndentAfterDeletion(IDocument doc, DocumentCommand2 cmd) throws BadLocationException {
 		if(!preferences.isSmartDeIndent())
 			return false;
 		
@@ -321,7 +324,7 @@ public class LangAutoEditStrategy extends AbstractAutoEditStrategy {
 	
 	/* ------------------------------------- */
 	
-	protected void smartIndentOnKeypress(IDocument doc, DocumentCommand cmd) {
+	protected void smartIndentOnKeypress(IDocument doc, DocumentCommand2 cmd) {
 		assertTrue(cmd.text.length() == 1);
 		
 		int offset = cmd.offset;
