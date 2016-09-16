@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
+ *     Pieter Penninckx - support for Json error output
  *******************************************************************************/
 package com.github.rustdt.ide.core.operations;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 
 import com.github.rustdt.tooling.RustBuildOutputParser;
+import com.github.rustdt.tooling.RustBuildOutputParserJson;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.LangCore;
@@ -37,9 +39,11 @@ import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
+import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.Indexable;
+import melnorme.utilbox.collections.MapAccess;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.CollectionUtil;
@@ -53,6 +57,9 @@ public class RustBuildManager extends BuildManager {
 	
 	public static final String BuildType_Build = "build";
 	public static final String BuildType_Check = "check";
+	
+	public static final String OutputFormatEnvironmentVariableName = "RUSTFLAGS";
+	public static final String OutputFormatEnvironmentVariableUseJson = "--error-format json";
 	
 	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, 
 		"test --no-run");
@@ -205,15 +212,40 @@ public class RustBuildManager extends BuildManager {
 			super(buildOpParams);
 		}
 		
+		// TODO: we currently require the user to set the output error format, which is not user friendly.
+		// Return whether the Rust compiler was configured to output its errors in the json format. 
+		protected boolean rustcErrorOutputIsJson() {
+			MapAccess<String, String> environmentVars = super.buildCommand.getEnvironmentVars();
+			boolean rustFlagsErrorFormatIsJson = false;
+			if (environmentVars != null) {
+				String rustFlags = environmentVars.get(OutputFormatEnvironmentVariableName);
+				if (rustFlags != null) {
+					rustFlagsErrorFormatIsJson = rustFlags.contains(OutputFormatEnvironmentVariableUseJson);
+				}
+			}
+			return rustFlagsErrorFormatIsJson;
+		}
+
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
-			ArrayList<ToolSourceMessage> buildMessage = new RustBuildOutputParser() {
-				@Override
-				protected void handleParseError(CommonException ce) {
-					 LangCore.logStatusException(ce.toStatusException());
-				}
-			}.doParseResult(processResult);
+			BuildOutputParser2 outputParser = null;
+			if (rustcErrorOutputIsJson()) {
+				outputParser = new RustBuildOutputParserJson() {
+					@Override
+					protected void handleParseError(CommonException ce) {
+						 LangCore.logStatusException(ce.toStatusException());
+					}
+				};
+			} else {
+				outputParser = new RustBuildOutputParser() {
+					@Override
+					protected void handleParseError(CommonException ce) {
+						 LangCore.logStatusException(ce.toStatusException());
+					}
+				};
+			}
+			ArrayList<ToolSourceMessage> buildMessage = outputParser.doParseResult(processResult);
 			
 			new ToolMarkersHelper().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation2(project), om);
 		}
