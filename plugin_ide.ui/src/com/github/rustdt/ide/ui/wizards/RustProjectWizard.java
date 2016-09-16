@@ -98,7 +98,7 @@ class RustProjectWizardFirstPage extends LangProjectWizardFirstPage {
 		setDescription(WizardMessages_Actual.LangNewProject_Page1_pageDescription);
 		
 		useCargoInit.set(true);
-		useCargoInit.addChangeListener(() -> nameGroup.getNameField().fireFieldValueChanged());
+		useCargoInit.addChangeListener(() -> nameGroup.nameField().fireFieldValueChanged());
 	}
 	
 	@Override
