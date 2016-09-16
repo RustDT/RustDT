@@ -230,6 +230,106 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 			"}",
 			listFrom(msg(path("src/main.rs"), 1, 1, 1, 1, ERROR, "main function not found")));
 		
+		testParseMessages(buildParser,
+			"{\"message\":\"mismatched types\","+
+				"\"code\":{\"code\":\"E0308\","+
+					"\"explanation\":\"\\n"+
+					"This error occurs when the compiler was unable to infer the concrete type of a\\n"+
+					"variable. It can occur for several cases, the most common of which is a\\n"+
+					"mismatch in the expected type that the compiler inferred for a variable\'s\\n"+
+					"initializing expression, and the actual type explicitly assigned to the\\n"+
+					"variable.\\n\\nFor example:\\n\\n```compile_fail,E0308\\n"+
+					"let x: i32 = \\\"I am not a number!\\\";\\n//     ~~~   ~~~~~~~~~~~~~~~~~~~~\\n"+
+					"//      |             |\\n//      |    initializing expression;\\n"+
+					"//      |    compiler infers type `&str`\\n//      |\\n"+
+					"//    type `i32` assigned to variable `x`\\n```\\n\\n"+
+					"Another situation in which this occurs is when you attempt to use the `try!`\\n"+
+					"macro inside a function that does not return a `Result<T, E>`:\\n"+
+					"\\n```compile_fail,E0308\\nuse std::fs::File;\\n\\nfn main() {\\n"+
+					"    let mut f = try!(File::create(\\\"foo.txt\\\"));\\n}\\n```\\n\\n"+
+					"This code gives an error like this:\\n\\n```text\\n"+
+					"<std macros>:5:8: 6:42 error: mismatched types:\\n expected `()`,\\n"+
+					"     found `core::result::Result<_, _>`\\n (expected (),\\n"+
+					"     found enum `core::result::Result`) [E0308]\\n```\\n\\n"+
+					"`try!` returns a `Result<T, E>`, and so the function must. But `main()` has\\n"+
+					"`()` as its return type, hence the error.\\n\""+
+				"},"+
+				"\"level\":\"error\","+
+				"\"spans\":["+
+					"{"+
+						"\"file_name\":\"<std macros>\",\"byte_start\":23234,\"byte_end\":23245,\"line_start\":5,"+
+						"\"line_end\":5,\"column_start\":22,\"column_end\":33,\"is_primary\":true,"+
+						"\"text\":[{\"text\":\"if ! ( * left_val == * right_val ) {\","+
+							"\"highlight_start\":22,\"highlight_end\":33}"+
+						"],"+
+						"\"label\":\"expected enum `std::option::Option`, found &{integer}\","+
+						"\"suggested_replacement\":null,"+
+						"\"expansion\":{"+
+							"\"span\":{"+
+								"\"file_name\":\"src/test.rs\",\"byte_start\":20203,\"byte_end\":20234,"+
+								"\"line_start\":331,\"line_end\":331,\"column_start\":2,\"column_end\":33,"+
+								"\"is_primary\":false,"+
+								"\"text\":[{"+
+									"\"text\":\"\\tassert_eq!(Some(&3_usize), &3);\","+
+									"\"highlight_start\":2,\"highlight_end\":33"+
+								"}],"+
+								"\"label\":null,\"suggested_replacement\":null,\"expansion\":null"+
+							"},"+
+							"\"macro_decl_name\":\"assert_eq!\","+
+							"\"def_site_span\":{"+
+								"\"file_name\":\"<std macros>\",\"byte_start\":23108,\"byte_end\":23746,"+
+								"\"line_start\":1,\"line_end\":18,\"column_start\":1,\"column_end\":71,"+
+								"\"is_primary\":false,"+
+								"\"text\":[{\"text\":\"( $ left : expr , $ right : expr ) => (\","+
+									"\"highlight_start\":1,\"highlight_end\":40},{\"text\":\"{\",\"highlight_start\":"+
+									"1,\"highlight_end\":2},{\"text\":\"match ( & $ left , & $ right ) {\","+
+									"\"highlight_start\":1,\"highlight_end\":33},{\"text\":\"( left_val , right_val )"+
+									"=> {\",\"highlight_start\":1,\"highlight_end\":30},{\"text\":\"if ! ( * left_val"+
+									" == * right_val ) {\",\"highlight_start\":1,\"highlight_end\":37},{\"text\""+
+									":\"panic ! (\",\"highlight_start\":1,\"highlight_end\":10},{\"text\":\"\\"+
+									"\"assertion failed: `(left == right)` \\\\\",\"highlight_start\":1,"+
+									"\"highlight_end\":39},{\"text\":\"                           (left: `{:?}`,"+
+									" right: `{:?}`)\\\"\",\"highlight_start\":1,\"highlight_end\":58},"+
+									"{\"text\":\", left_val , right_val ) } } } } ) ; (\",\"highlight_start\":"+
+									"1,\"highlight_end\":39},{\"text\":\"$ left : expr , $ right : expr , $ ( $ "+
+									"arg : tt ) * ) => (\",\"highlight_start\":1,\"highlight_end\":59},"+
+									"{\"text\":\"{\",\"highlight_start\":1,\"highlight_end\":2},"+
+									"{\"text\":\"match ( & ( $ left ) , & ( $ right ) ) {\",\"highlight_start"+
+									"\":1,\"highlight_end\":41},{\"text\":\"( left_val , right_val ) => {\","+
+									"\"highlight_start\":1,\"highlight_end\":30},{\"text\":\"if ! ( * left_val "+
+									"== * right_val ) {\",\"highlight_start\":1,\"highlight_end\":37},{\"text\":"+
+									"\"panic ! (\",\"highlight_start\":1,\"highlight_end\":10},{\"text\""+
+									":\"\\\"assertion failed: `(left == right)` \\\\\",\"highlight_start\":1,"+
+									"\"highlight_end\":39},{\"text\":\"                           (left: `{:?}`, "+
+									"right: `{:?}`): {}\\\"\",\"highlight_start\":1,\"highlight_end\":62},"+
+									"{\"text\":\", left_val , right_val , format_args ! ( $ ( $ arg ) * ) ) } } } } "+
+									") ;\",\"highlight_start\":1,\"highlight_end\":71}],\"label\":null,\"suggested_"+
+									"replacement\":null,\"expansion\":null"+
+								"}"+
+							"}"+
+						"}"+
+					"],"+
+					"\"children\":["+
+						"{"+
+							"\"message\":\"expected type `std::option::Option<&usize>`\","+
+							"\"code\":null,"+
+							"\"level\":\"note\",\"spans\":[],\"children\":[],\"rendered\":null"+
+						"},{"+
+							"\"message\":\"   found type `&{integer}`\","+
+							"\"code\":null,"+
+							"\"level\":\"note\",\"spans\":[],\"children\":[],\"rendered\":null"+
+						"}"+
+					"],"+
+				"\"rendered\":null"+
+			"}",
+			listFrom(msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, "mismatched types [E0308]:"+
+					"expected enum `std::option::Option`, found &{integer} "+
+					"("+
+						"expected type `std::option::Option<&usize>`, "+
+						"   found type `&{integer}`"+
+					")")));
+						
+		
 	}
 	
 	protected void testParseMessages(RustBuildOutputParserJson buildProcessor, String stderr, List<?> expected) 
