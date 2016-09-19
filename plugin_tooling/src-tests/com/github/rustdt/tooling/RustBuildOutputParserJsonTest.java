@@ -100,25 +100,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 			"{\"message\":\"mismatched types\","+
 				"\"code\":{"+
 					"\"code\":\"E0308\","+
-					"\"explanation\":\"\\n"+
-						"This error occurs when the compiler was unable to infer the concrete type of a\\n" +
-						"variable. It can occur for several cases, the most common of which is a\\n"+
-						"mismatch in the expected type that the compiler inferred for a variable\'s\\n"+
-						"initializing expression, and the actual type explicitly assigned to the\\nvariable.\\n"+
-						"\\nFor example:\\n\\n```compile_fail,E0308\\n"+
-						"let x: i32 = \\\"I am not a number!\\\";\\n// ~~~ ~~~~~~~~~~~~~~~~~~~~\\n// | |\\n"+
-						"// | initializing expression;\\n"+
-						"// | compiler infers type `&str`\\n// |\\n// type `i32` assigned to variable `x`\\n```\\n" +
-						"\\nAnother situation in which this occurs is when you attempt to use the `try!`\\n"+
-						"macro inside a function that does not return a `Result<T, E>`:\\n\\n"+
-						"```compile_fail,E0308\\nuse std::fs::File;\\n\\n" + 
-						"fn main() {\\n let mut f = try!(File::create(\\\"foo.txt\\\"));\\n}\\n```\\n\\n"+
-						"This code gives an error like this:\\n\\n"+
-						"```text\\n<std macros>:5:8: 6:42 error: mismatched types:\\n expected `()`,"+
-						"\\n found `core::result::Result<_, _>`\\n (expected (),\\n "+
-						"found enum `core::result::Result`) [E0308]\\n```\\n"+
-						"\\n`try!` returns a `Result<T, E>`, and so the function must. But `main()` has\\n"+
-						"`()` as its return type, hence the error.\\n\""+
+					"\"explanation\":\"EXPLENATION\""+
 				"}," + 
 				"\"level\":\"error\"," + 
 				"\"spans\":["+
@@ -159,15 +141,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 		testParseMessages(buildParser,
 			"{\"message\":\"cannot borrow `i` as mutable more than once at a time\"," + 
 			"\"code\":{\"code\":\"E0499\"," + 
-				"\"explanation\":\"\\nA variable was borrowed as mutable more than once. Erroneous code example:\\n\\n"+
-				"```compile_fail,E0499\\nlet mut i = 0;\\nlet mut x = &mut i;\\nlet mut a = &mut i;\\n"+
-				"// error: cannot borrow `i` as mutable more than once at a time\\n```\\n\\n"+
-				"Please note that in rust, you can either have many immutable references, or one\\n"+
-				"mutable reference. Take a look at\\n"+
-				"https://doc.rust-lang.org/stable/book/references-and-borrowing.html for more\\n"+
-				"information. Example:\\n\\n\\n```\\nlet mut i = 0;\\nlet mut x = &mut i; // ok!\\n\\n// or:\\n"+
-				"let mut i = 0;\\nlet a = &i; // ok!\\nlet b = &i; // still ok!\\nlet c = &i; // still ok!\\n```\\n"+
-				"\"},"+
+				"\"explanation\":\"EXPLENATION\"},"+
 			"\"level\":\"error\",\"spans\":["+
 				"{"+
 					"\"file_name\":\"test.rs\",\"byte_start\":74,\"byte_end\":75,\"line_start\":7,\"line_end\":7,"+
@@ -201,7 +175,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 		
 		testParseMessages(buildParser,
 			"{\"message\":\"the trait bound `u8: Tr` is not satisfied\"," +
-				"\"code\":{\"code\":\"E0277\",\"explanation\":\"blablabla\"}," +
+				"\"code\":{\"code\":\"E0277\",\"explanation\":\"EXPLENATION\"}," +
 				"\"level\":\"error\"," +
 				"\"spans\":[" +
 					"{" +
@@ -233,26 +207,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 		testParseMessages(buildParser,
 			"{\"message\":\"mismatched types\","+
 				"\"code\":{\"code\":\"E0308\","+
-					"\"explanation\":\"\\n"+
-					"This error occurs when the compiler was unable to infer the concrete type of a\\n"+
-					"variable. It can occur for several cases, the most common of which is a\\n"+
-					"mismatch in the expected type that the compiler inferred for a variable\'s\\n"+
-					"initializing expression, and the actual type explicitly assigned to the\\n"+
-					"variable.\\n\\nFor example:\\n\\n```compile_fail,E0308\\n"+
-					"let x: i32 = \\\"I am not a number!\\\";\\n//     ~~~   ~~~~~~~~~~~~~~~~~~~~\\n"+
-					"//      |             |\\n//      |    initializing expression;\\n"+
-					"//      |    compiler infers type `&str`\\n//      |\\n"+
-					"//    type `i32` assigned to variable `x`\\n```\\n\\n"+
-					"Another situation in which this occurs is when you attempt to use the `try!`\\n"+
-					"macro inside a function that does not return a `Result<T, E>`:\\n"+
-					"\\n```compile_fail,E0308\\nuse std::fs::File;\\n\\nfn main() {\\n"+
-					"    let mut f = try!(File::create(\\\"foo.txt\\\"));\\n}\\n```\\n\\n"+
-					"This code gives an error like this:\\n\\n```text\\n"+
-					"<std macros>:5:8: 6:42 error: mismatched types:\\n expected `()`,\\n"+
-					"     found `core::result::Result<_, _>`\\n (expected (),\\n"+
-					"     found enum `core::result::Result`) [E0308]\\n```\\n\\n"+
-					"`try!` returns a `Result<T, E>`, and so the function must. But `main()` has\\n"+
-					"`()` as its return type, hence the error.\\n\""+
+					"\"explanation\":\"EXPLENATION\""+
 				"},"+
 				"\"level\":\"error\","+
 				"\"spans\":["+
