@@ -127,9 +127,10 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		ToolMessageData primary = null;
 		for (JsonValue span : spansArray.values()) {
 			JsonObject spanObject = span.asObject();
+			boolean isPrimary = spanObject.getBoolean("is_primary", false); 
 			ToolMessageData subMessage = toolMessageDataFromJsonObject(spanObject, messageText,
-				severityLevel, errorCode);
-			if (spanObject.getBoolean("is_primary", false)) {
+				severityLevel, errorCode, isPrimary);
+			if (isPrimary) {
 				primary = subMessage;
 			} 
 			this.buffer.add(subMessage);
@@ -143,26 +144,32 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	}
 	
 	protected ToolMessageData toolMessageDataFromJsonObject(JsonObject spanObject, String message, 
-			String severityLevel, String errorCode) throws UnsupportedOperationException, NumberFormatException {
+			String severityLevel, String errorCode, boolean isPrimary) 
+			throws UnsupportedOperationException, NumberFormatException {
 		
 		ToolMessageData subMessage = new ToolMessageData();
-		subMessage.lineString = Integer.toString(spanObject.getInt("line_start", -1));
-		subMessage.endLineString = Integer.toString(spanObject.getInt("line_end", -1));
-		subMessage.columnString = Integer.toString(spanObject.getInt("column_start", -1));
-		subMessage.endColumnString = Integer.toString(spanObject.getInt("column_end", -1));
-		subMessage.pathString = spanObject.getString("file_name", "");
-		subMessage.messageText = message;
-		subMessage.sourceBeforeMessageText = ""; // TODO
-		
-		boolean isPrimary = spanObject.getBoolean("is_primary", false);
-		if (isPrimary) {
-			// Avoid clutter and show the code (e.g. "[E0499]") only for the primary span.
-			if (errorCode != null && !errorCode.isEmpty()) {
-				subMessage.messageText = subMessage.messageText + " [" + errorCode + "]";
-			}
-			subMessage.messageTypeString = severityLevel;
+		JsonValue expansion = spanObject.get("expansion");
+		if (expansion != null && !expansion.isNull()) {
+			JsonObject expansionSpan = expansion.asObject().get("span").asObject();
+			subMessage = toolMessageDataFromJsonObject(expansionSpan, message, severityLevel, errorCode, isPrimary);
 		} else {
-			subMessage.messageTypeString = Severity.INFO.getLabel();
+			subMessage.lineString = Integer.toString(spanObject.getInt("line_start", -1));
+			subMessage.endLineString = Integer.toString(spanObject.getInt("line_end", -1));
+			subMessage.columnString = Integer.toString(spanObject.getInt("column_start", -1));
+			subMessage.endColumnString = Integer.toString(spanObject.getInt("column_end", -1));
+			subMessage.pathString = spanObject.getString("file_name", "");
+			subMessage.messageText = message;
+			subMessage.sourceBeforeMessageText = ""; // This does not seem to be used (?). TODO
+			
+			if (isPrimary) {
+				// Avoid clutter and show the code (e.g. "[E0499]") only for the primary span.
+				if (errorCode != null && !errorCode.isEmpty()) {
+					subMessage.messageText = subMessage.messageText + " [" + errorCode + "]";
+				}
+				subMessage.messageTypeString = severityLevel;
+			} else {
+				subMessage.messageTypeString = Severity.INFO.getLabel();
+			}
 		}
 		
 		JsonValue label = spanObject.get("label");

@@ -322,7 +322,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 					"],"+
 				"\"rendered\":null"+
 			"}",
-			listFrom(msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, "mismatched types [E0308]:"+
+			listFrom(msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, "mismatched types [E0308]: "+
 					"expected enum `std::option::Option`, found &{integer} "+
 					"("+
 						"expected type `std::option::Option<&usize>`, "+
