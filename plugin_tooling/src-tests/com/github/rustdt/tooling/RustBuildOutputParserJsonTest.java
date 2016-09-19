@@ -291,7 +291,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 						"expected type `std::option::Option<&usize>`, "+
 						"   found type `&{integer}`"+
 					")"),
-					msg(path("<std macros>"), 1, 1, 18, 71, ERROR, "mismatched types [E0308]: "+
+					msg(path("<std macros>"), 1, 1, 18, 71, ERROR, "[macro expansion error] mismatched types [E0308]: "+
 					"expected enum `std::option::Option`, found &{integer} "+
 					"("+
 						"expected type `std::option::Option<&usize>`, "+

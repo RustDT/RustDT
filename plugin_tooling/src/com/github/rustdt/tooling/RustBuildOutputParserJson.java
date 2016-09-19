@@ -185,8 +185,8 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			addToolMessageFromSpanObject(expansionSpan, message, severityLevel, errorCode, notes, 
 				defaultLabel, isPrimary, macroDeclarationName);
 			JsonObject expansionDefSiteSpan = expansionObject.get("def_site_span").asObject();
-			addToolMessageFromSpanObject(expansionDefSiteSpan, message, severityLevel, errorCode, notes, 
-				defaultLabel, isPrimary, "");
+			addToolMessageFromSpanObject(expansionDefSiteSpan, "[macro expansion error] " + message, severityLevel, 
+				errorCode, notes, defaultLabel, isPrimary, "");
 		}
 	}
 	
