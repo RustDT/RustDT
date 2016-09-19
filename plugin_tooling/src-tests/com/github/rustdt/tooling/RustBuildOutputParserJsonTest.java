@@ -277,14 +277,27 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 					"],"+
 				"\"rendered\":null"+
 			"}",
-			listFrom(msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, "mismatched types [E0308]: "+
+			listFrom(msg(path("<std macros>"), 5, 22, 5, 33, ERROR, "mismatched types [E0308]: "+
+					"expected enum `std::option::Option`, found &{integer} "+
+					"("+
+						"expected type `std::option::Option<&usize>`, "+
+						"   found type `&{integer}`"+
+					")"),
+					msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, "mismatched types "+
+					"(in expansion of `assert_eq!`) "+
+					"[E0308]: "+
+					"expected enum `std::option::Option`, found &{integer} "+
+					"("+
+						"expected type `std::option::Option<&usize>`, "+
+						"   found type `&{integer}`"+
+					")"),
+					msg(path("<std macros>"), 1, 1, 18, 71, ERROR, "mismatched types [E0308]: "+
 					"expected enum `std::option::Option`, found &{integer} "+
 					"("+
 						"expected type `std::option::Option<&usize>`, "+
 						"   found type `&{integer}`"+
 					")")));
 						
-		
 	}
 	
 	protected void testParseMessages(RustBuildOutputParserJson buildProcessor, String stderr, List<?> expected) 

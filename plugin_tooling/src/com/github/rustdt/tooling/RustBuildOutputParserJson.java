@@ -12,6 +12,7 @@ package com.github.rustdt.tooling;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import melnorme.utilbox.status.Severity;
@@ -119,68 +120,87 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		}
 		String severityLevel = messages.getString("level", Severity.WARNING.getLabel());
 		String errorCode = getErrorCode(messages);
+		String notes = getNotes(messages.get("children"));
+		
 		JsonValue spans = messages.get("spans");
 		if (spans == null) { // spans should at least be an empty array.
 			throw createUnknownLineSyntaxError(this.lineParsing);
 		}
-		JsonArray spansArray = spans.asArray();
-		ToolMessageData primary = null;
-		for (JsonValue span : spansArray.values()) {
-			JsonObject spanObject = span.asObject();
-			boolean isPrimary = spanObject.getBoolean("is_primary", false); 
-			ToolMessageData subMessage = toolMessageDataFromJsonObject(spanObject, messageText,
-				severityLevel, errorCode, isPrimary);
-			if (isPrimary) {
-				primary = subMessage;
-			} 
-			this.buffer.add(subMessage);
-		}
-		if (primary == null) {
+		List<JsonValue> spansList = spans.asArray().values();
+		if (spansList.isEmpty()) {
 			// Output line contains no spans. Example: "no main function found".
-			primary = toolMessageWithoutSpan(messageText, severityLevel);
-			this.buffer.add(primary);
+			ToolMessageData without_span = toolMessageWithoutSpan(messageText, severityLevel, notes);
+			this.buffer.add(without_span);			
+		} else {
+			for (JsonValue span : spansList) {
+				JsonObject spanObject = span.asObject();
+				addToolMessageFromSpanObject(spanObject, messageText, severityLevel, errorCode, notes, "", false, "");
+			}
 		}
-		primary.messageText += getNotes(messages.get("children"));
 	}
 	
-	protected ToolMessageData toolMessageDataFromJsonObject(JsonObject spanObject, String message, 
-			String severityLevel, String errorCode, boolean isPrimary) 
+	protected void addToolMessageFromSpanObject(JsonObject spanObject, String message, 
+			String severityLevel, String errorCode, String notes, String defaultLabel, 
+			boolean overridePrimaryToTrue, String macroDeclarationName) 
 			throws UnsupportedOperationException, NumberFormatException {
 		
-		ToolMessageData subMessage = new ToolMessageData();
-		JsonValue expansion = spanObject.get("expansion");
-		if (expansion != null && !expansion.isNull()) {
-			JsonObject expansionSpan = expansion.asObject().get("span").asObject();
-			subMessage = toolMessageDataFromJsonObject(expansionSpan, message, severityLevel, errorCode, isPrimary);
+		ToolMessageData subMessage = toolMessageWithRange(spanObject);
+		boolean isPrimary = overridePrimaryToTrue ? true: spanObject.getBoolean("is_primary", false);
+		subMessage.messageText = message;
+		subMessage.sourceBeforeMessageText = ""; // This does not seem to be used (?). TODO
+		
+		if (! "".equals(macroDeclarationName)) {
+			subMessage.messageText = subMessage.messageText + " (in expansion of `" + macroDeclarationName + "`)";
+		}
+		
+		if (isPrimary) {
+			// Avoid clutter and show the code (e.g. "[E0499]") only for the primary span.
+			if (errorCode != null && !errorCode.isEmpty()) {
+				subMessage.messageText = subMessage.messageText + " [" + errorCode + "]";
+			} 
+			subMessage.messageTypeString = severityLevel;
 		} else {
-			subMessage.lineString = Integer.toString(spanObject.getInt("line_start", -1));
-			subMessage.endLineString = Integer.toString(spanObject.getInt("line_end", -1));
-			subMessage.columnString = Integer.toString(spanObject.getInt("column_start", -1));
-			subMessage.endColumnString = Integer.toString(spanObject.getInt("column_end", -1));
-			subMessage.pathString = spanObject.getString("file_name", "");
-			subMessage.messageText = message;
-			subMessage.sourceBeforeMessageText = ""; // This does not seem to be used (?). TODO
-			
-			if (isPrimary) {
-				// Avoid clutter and show the code (e.g. "[E0499]") only for the primary span.
-				if (errorCode != null && !errorCode.isEmpty()) {
-					subMessage.messageText = subMessage.messageText + " [" + errorCode + "]";
-				}
-				subMessage.messageTypeString = severityLevel;
-			} else {
-				subMessage.messageTypeString = Severity.INFO.getLabel();
-			}
+			subMessage.messageTypeString = Severity.INFO.getLabel();
 		}
 		
 		JsonValue label = spanObject.get("label");
 		if (label != null && label.isString()) {
-			subMessage.messageText = subMessage.messageText + ": " + label.asString();
+			defaultLabel = label.asString();
+		}
+		if (defaultLabel != null && !"".equals(defaultLabel)) {
+			subMessage.messageText = subMessage.messageText + ": " + defaultLabel;
 		}
 		
+		if (isPrimary) {
+			subMessage.messageText = subMessage.messageText + notes;
+		}
+		
+		this.buffer.add(subMessage);
+		
+		JsonValue expansion = spanObject.get("expansion");
+		if (expansion != null && !expansion.isNull()) {
+			JsonObject expansionObject = expansion.asObject();
+			macroDeclarationName = expansionObject.getString("macro_decl_name", "");
+			JsonObject expansionSpan = expansionObject.get("span").asObject();
+			addToolMessageFromSpanObject(expansionSpan, message, severityLevel, errorCode, notes, 
+				defaultLabel, isPrimary, macroDeclarationName);
+			JsonObject expansionDefSiteSpan = expansionObject.get("def_site_span").asObject();
+			addToolMessageFromSpanObject(expansionDefSiteSpan, message, severityLevel, errorCode, notes, 
+				defaultLabel, isPrimary, "");
+		}
+	}
+	
+	protected ToolMessageData toolMessageWithRange(JsonObject spanObject) {
+		ToolMessageData subMessage = new ToolMessageData();
+		subMessage.lineString = Integer.toString(spanObject.getInt("line_start", -1));
+		subMessage.endLineString = Integer.toString(spanObject.getInt("line_end", -1));
+		subMessage.columnString = Integer.toString(spanObject.getInt("column_start", -1));
+		subMessage.endColumnString = Integer.toString(spanObject.getInt("column_end", -1));
+		subMessage.pathString = spanObject.getString("file_name", "");
 		return subMessage;
 	}
 	
-	protected ToolMessageData toolMessageWithoutSpan(String message, String level) 
+	protected ToolMessageData toolMessageWithoutSpan(String message, String level, String notes) 
 			throws UnsupportedOperationException {
 		ToolMessageData subMessage = new ToolMessageData();
 		subMessage.lineString = "1";
@@ -192,7 +212,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		} else {
 			subMessage.pathString = "";
 		}
-		subMessage.messageText = message;
+		subMessage.messageText = message + notes;
 		subMessage.sourceBeforeMessageText = "";
 		subMessage.messageTypeString = level;
 		return subMessage;
