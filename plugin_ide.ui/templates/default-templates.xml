@@ -72,4 +72,18 @@ fn ${name}() {&#13;
 	(${pat}) => (${exp});{cursor}&#13;
 }</template>
 
+<template autoinsert="false" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="doc" name="doc" description="Rust documentation template" enabled="true" >/// ${cursor}&lt;What does it do?&gt;&#13;
+///&#13;
+/// &lt;Details here&gt;&#13;
+///&#13;
+/// # Panics&#13;
+///&#13;
+/// &lt;When does it panic?&gt;&#13;
+///&#13;
+/// # Examples&#13;
+///&#13;
+/// ```&#13;
+/// &lt;Example code here&gt;&#13;
+/// ```</template>
+
 </templates>
