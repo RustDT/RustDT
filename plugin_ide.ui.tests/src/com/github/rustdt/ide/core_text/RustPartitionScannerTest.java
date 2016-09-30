@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package LANG_PROJECT_ID.ide.core_text;
+package com.github.rustdt.ide.core_text;
 
 import static melnorme.lang.ide.core.TextSettings_Actual.LangPartitionTypes.ATTRIBUTE;
 
