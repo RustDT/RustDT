@@ -59,14 +59,32 @@ fn ${name}() {&#13;
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="pl" description="println variable" enabled="true" name="pl">println!("{}", ${var});</template>
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="pld" description="println debug variable" enabled="true" name="pld">println!("{:?}", ${var});</template>
 
-<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="match" description="match expression" enabled="true" name="match">match ${value} {&#13;
+<template autoinsert="false" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" enabled="true" id="match" name="match" description="match expression">match ${cursor}${word_selection} {&#13;
 	${opt} =&gt; ${alt},&#13;
 	_ =&gt; ${altDefault},&#13;
 }</template>
-<template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="matchb" description="match expression with blocks" enabled="true" name="matchb">match ${value} {&#13;
+
+<template autoinsert="false" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" enabled="true" id="matchb" name="matchb" description="match expression with blocks">match ${cursor}${word_selection} {&#13;
 	${opt} =&gt; { ${alt} }&#13;
 	_ =&gt; { ${altDefault} }&#13;
 }</template>
+
+<template autoinsert="false" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" enabled="true" id="matchOpt" name="matchOpt" description="match an Option&lt;&gt;" >match ${cursor}${word_selection} {&#13;
+	Some(${some}) =&gt; { ${some} } &#13;
+	None =&gt; { &#13;
+		${}&#13;
+	}&#13;
+}&#13;
+</template>
+
+<template autoinsert="false" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" enabled="true" id="matchRes" name="matchRes" description="match a result" >match ${cursor}${word_selection} {&#13;
+	Ok(${ok}) =&gt; { ${ok} } &#13;
+	Err(error) =&gt; { &#13;
+		${}&#13;
+	}&#13;
+}&#13;
+</template>
+
 
 <template autoinsert="true" context="com.github.rustdt.ide.ui.TemplateContextType" deleted="false" id="macro" name="macro" description="macro declaration" enabled="true">macro_rules! ${macro_name} {&#13;
 	(${pat}) => (${exp});{cursor}&#13;
