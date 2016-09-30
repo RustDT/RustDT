@@ -65,16 +65,12 @@ Alternatively, to automatically create and run a launch configuration (if a matc
 Whenever a launch is requested, a build will be performed beforehand. This behavior can be configured under general Eclipse settings, or in the launch configuration.
 
 ##### Debugging
-a
-sdafsdf
-
-
 You can debug a Rust program by running a launch in debug mode. You will also need GDB. 
 
-| **OS X note:** _The GDB that is included with OS X doesn't work properly. You'll need to install the latest GDB from Homebrew. See [this article](http://ntraft.com/installing-gdb-on-os-x-mavericks/) for details. Or alternatively, [this SO link](https://stackoverflow.com/questions/33162757/how-to-install-gdb-debugger-in-mac-osx-el-capitan), which might me more up-to-date. _ |
+| **Windows note:** _Using Cygwin GDB doesn't work properly. The recommended way to debug in Windows is to use the GDB of [TDM-GCC](http://tdm-gcc.tdragon.net/), or the one of [mingw-w64](http://mingw-w64.org/)._ |
 |----|
 
-| **Windows note:** _Using Cygwin GDB doesn't work properly. The recommended way to debug in Windows is to use the GDB of [TDM-GCC](http://tdm-gcc.tdragon.net/), or the one of [mingw-w64](http://mingw-w64.org/)._ |
+| **OS X note:** _The GDB that is included with OS X doesn't work properly. You'll need to install the latest GDB from Homebrew. See [this article](http://ntraft.com/installing-gdb-on-os-x-mavericks/) for details. Or alternatively, [this SO link](https://stackoverflow.com/questions/33162757/how-to-install-gdb-debugger-in-mac-osx-el-capitan), which might me more up-to-date. _ |
 |----|
 
 To configure debug options (in particular, the path to the debugger to use), open the launch under 'Run' / 'Debug Configurations...', and then navigate to the 'Debugger' tab in the desired launch configuration:
