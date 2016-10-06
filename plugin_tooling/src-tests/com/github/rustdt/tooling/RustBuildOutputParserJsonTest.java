@@ -46,6 +46,8 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 		
 		testParseMessages(buildParser, "", listFrom());  // Empty
 		
+		testParseMessages(buildParser, "Compiling my_project v0.1.0 (file:///path/to/my_project)", listFrom());
+		
 		{
 			// TODO: write more tests in case of errors.
 			testParseMessages(buildParser_allowParseErrors, "{\"message", listFrom());
