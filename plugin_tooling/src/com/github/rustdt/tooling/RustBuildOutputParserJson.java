@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import melnorme.utilbox.status.Severity;
 
@@ -42,78 +40,55 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	protected IByteSequence getOutputFromProcessResult(ExternalProcessResult result) {
 		return result.getStdErrBytes(); // Use StdErr instead of StdOut.
 	}
-	
-	// One line of Json data can contain more than one ToolMessageData, but we can only return one `ToolMessageData`
-	// from the method `parseMessageData`.
-	// So we create a buffer of remaining data.
-	protected String lineParsing = null; // The line we are currently working with. 
-	protected Queue<ToolMessageData> buffer; // Invariant: if buffer.isEmpty() then lineParsing == null
-	
-	public RustBuildOutputParserJson() {
-		super();
-		this.buffer = new ArrayDeque<ToolMessageData>();
-	}
-	
+		
 	protected static final AbstractRustBuildOutputLineParser CARGO_OUTPUT_LINE_PARSER = 
 			new CargoRustBuildOutputLineParser();
 	
 	@Override
-	protected ToolMessageData parseMessageData(StringCharSource output) throws CommonException {
-		// The call-site stops calling `parseMessageData` when the `output` parameter is exhausted.
-		// So we may not completely exhaust the `output` variable when there are
-		// still `ToolMessageDatas`-s in the buffer.
-		ToolMessageData result = null;
+	protected void doParseToolMessage(StringCharSource output) {
 		try {
-			if (this.lineParsing != null) {
-				// Because of the invariant associated to buffer, we know that this.buffer is not empty.
-				result = this.buffer.remove();
+			String lineParsing = LexingUtils.consumeLine(output);
+			
+			if (lineParsing.startsWith("{")) {
+				try {
+					addMessagesFromJsonObject(lineParsing);
+				}
+				catch(ParseException|UnsupportedOperationException|NumberFormatException e) {
+					throw createUnknownLineSyntaxError(lineParsing);
+				}
 			} else {
-				this.lineParsing = LexingUtils.stringUntilNewline(output);
-				
-				if (this.lineParsing.startsWith("{")) {
-					try {
-						JsonObject messages = Json.parse(this.lineParsing).asObject();
-						addMessagesToBuffer(messages);
-						if (!this.buffer.isEmpty()) {
-							result = this.buffer.remove();
-						}
-					}
-					catch(ParseException|UnsupportedOperationException|NumberFormatException e) {
-						throw createUnknownLineSyntaxError(this.lineParsing);
-					}
-				} else {
-					result = CARGO_OUTPUT_LINE_PARSER.parseLine(this.lineParsing);
+				ToolMessageData cargo_tool_message = CARGO_OUTPUT_LINE_PARSER.parseLine(lineParsing);
+				if (cargo_tool_message != null) {
+					addBuildMessage(cargo_tool_message);
 				}
 			}
+		} catch (CommonException ce) {
+			handleMessageParseError(ce);
 		}
-		finally {
-			// Restore the invariant for buffer.
-			if (this.buffer.isEmpty()) {
-				// No more data to return next time, we may clear the output.
-				output.consumeAhead(this.lineParsing);
-				output.consumeAhead(LexingUtils.determineNewlineSequenceAt(output, 0));
-				this.lineParsing = null;
-			}
-		}
-		return result;
+	}
+		
+	@Override
+	protected ToolMessageData parseMessageData(StringCharSource output) throws CommonException {
+		return null; // This function is not called from within this class because we override doParseToolMessage.
 	}
 	
 	protected boolean isMessageEnd(String message) {
 		return message.startsWith("aborting due to ");
 	}
 	
-	/** Add all compiler errors (if any) to the buffer in the order in which they appear.
+	/** Add all compiler errors (if any) to the list of build messages in the order in which they appear.
 	 * 
 	 * @param messages The JsonObject to parse into messages.
 	 * @throws CommonException when messageLine is not in the expected format.
 	 * @throws UnsupportedOperationException when messageLine is not in the expected format.
 	 * @throws NumberFormatException when messageLine is not in the expected format.
 	 */
-	protected void addMessagesToBuffer(JsonObject messages) 
+	protected void addMessagesFromJsonObject(String lineParsing) 
 			throws CommonException, UnsupportedOperationException, NumberFormatException {
+		JsonObject messages = Json.parse(lineParsing).asObject();
 		String messageText = messages.getString("message", null);
 		if (messageText == null) {
-			throw createUnknownLineSyntaxError(this.lineParsing);
+			throw createUnknownLineSyntaxError(lineParsing);
 		}
 		if (isMessageEnd(messageText)) {
 			return;
@@ -124,13 +99,13 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		
 		JsonValue spans = messages.get("spans");
 		if (spans == null) { // spans should at least be an empty array.
-			throw createUnknownLineSyntaxError(this.lineParsing);
+			throw createUnknownLineSyntaxError(lineParsing);
 		}
 		List<JsonValue> spansList = spans.asArray().values();
 		if (spansList.isEmpty()) {
 			// Output line contains no spans. Example: "no main function found".
 			ToolMessageData without_span = toolMessageWithoutSpan(messageText, severityLevel, notes);
-			this.buffer.add(without_span);			
+			addBuildMessage(without_span);
 		} else {
 			for (JsonValue span : spansList) {
 				JsonObject spanObject = span.asObject();
@@ -142,7 +117,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	protected void addToolMessageFromSpanObject(JsonObject spanObject, String message, 
 			String severityLevel, String errorCode, String notes, String defaultLabel, 
 			boolean overridePrimaryToTrue, String macroDeclarationName) 
-			throws UnsupportedOperationException, NumberFormatException {
+			throws UnsupportedOperationException, NumberFormatException, CommonException {
 		
 		ToolMessageData subMessage = toolMessageWithRange(spanObject);
 		boolean isPrimary = overridePrimaryToTrue ? true: spanObject.getBoolean("is_primary", false);
@@ -175,7 +150,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			subMessage.messageText = subMessage.messageText + notes;
 		}
 		
-		this.buffer.add(subMessage);
+		addBuildMessage(subMessage);
 		
 		JsonValue expansion = spanObject.get("expansion");
 		if (expansion != null && !expansion.isNull()) {
