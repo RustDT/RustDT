@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Improved syntax highlighting for macro invocations (`foo!=bar` no longer highlights `foo!` as a macro) 
  * Default setting for "auto-insert" of Code Snippets is now false.
  * Added more extensive `doc` code snippet. #TODO test after build
  * Added `matchRes` and `matchOpt` code snippets.

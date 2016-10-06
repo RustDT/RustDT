@@ -46,7 +46,7 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 			TOKEN word,
 			TOKEN macroCall, 
 			TOKEN numberLiteral
-			) {
+	) {
 		super(whitespaceToken, word);
 		this.macroCall = macroCall;
 		this.numberLiteral = numberLiteral;
@@ -74,8 +74,13 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 		CharacterReader_SubReader subReader = new CharacterReader_SubReader(reader); 
 		LexingUtils.skipWhitespace(subReader);
 		if(subReader.tryConsume('!')) {
-			subReader.consumeInParentReader();
-			return macroCall;
+			
+			int afterWS = LexingUtils.countWhitespace(subReader);
+			int lookahead = subReader.lookahead(afterWS);
+			if(lookahead == '(' || lookahead == '[') {
+				subReader.consumeInParentReader();
+				return macroCall;
+			}
 		}
 		return result;
 	}
