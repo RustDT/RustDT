@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Default setting for "auto-insert" of Code Snippets is now false.
  * Added more extensive `doc` code snippet. #TODO test after build
  * Added `matchRes` and `matchOpt` code snippets.
  * Fixed stale validation message for location field in New Project Wizard.
