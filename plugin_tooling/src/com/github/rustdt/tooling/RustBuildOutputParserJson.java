@@ -21,6 +21,10 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.ParseException;
 
+import com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonReader;
+
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.utils.parse.LexingUtils;
@@ -50,6 +54,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			String lineParsing = LexingUtils.consumeLine(output);
 			
 			if (lineParsing.startsWith("{")) {
+				JsonParser parser = new JsonParser(); // Not yet used. Just to ensure that we can use it.
 				try {
 					addMessagesFromJsonObject(lineParsing);
 				}
