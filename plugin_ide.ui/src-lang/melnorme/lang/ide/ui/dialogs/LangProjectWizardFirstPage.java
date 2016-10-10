@@ -12,6 +12,7 @@ package melnorme.lang.ide.ui.dialogs;
 
 
 import static melnorme.lang.ide.ui.utils.DialogPageUtils.severityToMessageType;
+import static melnorme.utilbox.core.CoreUtil.list;
 import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 
 import org.eclipse.core.resources.IProject;
@@ -46,7 +47,7 @@ import melnorme.util.swt.components.fields.TextFieldWidget;
 import melnorme.util.swt.components.misc.StatusMessageWidget;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
-import melnorme.utilbox.fields.FieldValueListener.FieldChangeListener;
+import melnorme.utilbox.fields.validation.ValidationSource;
 import melnorme.utilbox.status.IStatusMessage;
 import melnorme.utilbox.status.Severity;
 import melnorme.utilbox.status.StatusException;
@@ -121,11 +122,10 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 		locationGroup.createComponent(parent, sectionGDF().create());
 		createContents_ValidationGroups(parent);
 		
-		FieldChangeListener listener = this::validateDialog;
-		nameGroup.textField.addChangeListener(listener);
-		locationGroup.addChangeListener(listener);
+		nameGroup.nameField.addChangeListener(this::updateValidationMessage);
+		locationGroup.addChangeListener(this::updateValidationMessage);
 		
-		validateDialog();
+		updateValidationMessage();
 	}
 	
 	protected void createContents_ValidationGroups(Composite parent) {
@@ -143,23 +143,22 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 	
 	public static class NameGroup extends CompositeWidget {
 		
-		protected TextFieldWidget textField = new TextFieldWidget(WizardMessages.LangNewProject_NameGroup_label);
+		protected final TextFieldWidget nameField = new TextFieldWidget(WizardMessages.LangNewProject_NameGroup_label);
 		
 		public NameGroup() {
 			super(true);
-			addChildWidget(textField);
+			addChildWidget(nameField);
 			this.layoutColumns = 2;
 			
-			ValidationSourceX validationSource = this::validateProjectName;
-			validation.addFieldValidation(true, textField, validationSource);
+			nameField.addFieldValidator2(this::getProjectHandleFor);
+		}
+		
+		public TextFieldWidget nameField() {
+			return nameField;
 		}
 		
 		public String getName() {
-			return textField.getFieldValue();
-		}
-		
-		public TextFieldWidget getNameField() {
-			return textField;
+			return nameField.getFieldValue();
 		}
 		
 		public void validateProjectName() throws StatusException {
@@ -167,20 +166,21 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 		}
 		
 		public IProject getProjectHandle2() throws StatusException {
-			return new ProjectValidator().getProjectHandle(getName());
+			return getProjectHandleFor(getName());
+		}
+		
+		public IProject getProjectHandleFor(String projectName) throws StatusException {
+			return new ProjectValidator().getProjectHandle(projectName);
 		}
 		
 		/* -----------------  ----------------- */
 		
 		public void postSetFocus() {
-			SWTUtil.post_setFocus(textField.getFieldControl());
+			SWTUtil.post_setFocus(nameField.getFieldControl());
 		}
 		
 	}
 	
-	public IProject getProjectHandle2() throws CommonException {
-		return nameGroup.getProjectHandle2();
-	}
 	
 	/* ----------------- Location ----------------- */
 	
@@ -193,9 +193,10 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 				WizardMessages.LangNewProject_Location_Directory_buttonLabel
 			);
 		
-			nameGroup.getNameField().addChangeListener(this::updateDefaultFieldValue);
+			nameGroup.nameField.addChangeListener(this::updateDefaultFieldValue);
 			
-			addFieldValidationX(true, () -> doValidate());
+			getValidation().addFieldValidation2(true, list(nameGroup.nameField, this), 
+				ValidationSource.fromRunnable(this::doValidate));
 		}
 		
 		protected String getProjectName() {
@@ -276,7 +277,7 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 		public void updateWidgetFromInput() {
 			IProject projectHandle;
 			try {
-				projectHandle = getProjectHandle2();
+				projectHandle = nameGroup.getProjectHandle2();
 			} catch(CommonException e) {
 				projectHandle = null;
 			}
@@ -337,8 +338,8 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 		LangCore.settings().SDK_LOCATION.getValue();
 	}
 	
-	protected boolean validateDialog() {
-		IStatusMessage validationStatus = getValidationStatus();
+	protected boolean updateValidationMessage() {
+		IStatusMessage validationStatus = ValidationSource.getValidationStatus(nameGroup, locationGroup);
 		
 		boolean valid;
 		if(validationStatus == null) {
@@ -358,16 +359,6 @@ public abstract class LangProjectWizardFirstPage extends WizardPage {
 		prefValidationGroup.updateWidgetFromInput();
 		
 		return valid;
-	}
-	
-	protected IStatusMessage getValidationStatus() {
-		try {
-			nameGroup.validate();
-			locationGroup.validate();
-			return null;
-		} catch(StatusException e) {
-			return e;
-		}
 	}
 	
 }

@@ -17,18 +17,15 @@ import melnorme.util.swt.SWTUtil;
 import melnorme.utilbox.fields.Field;
 import melnorme.utilbox.fields.FieldValueListener;
 import melnorme.utilbox.fields.FieldValueListener.FieldChangeListener;
-import melnorme.utilbox.fields.validation.IValidatableField;
-import melnorme.utilbox.fields.validation.ValidationField;
-import melnorme.utilbox.fields.validation.ValidationSource;
-import melnorme.utilbox.fields.validation.Validator;
 import melnorme.utilbox.fields.IField;
+import melnorme.utilbox.fields.validation.Validator;
 
 /**
  * Field component with a field value that can be manipulated (get/set) even if the 
  * componented is not created.
  */
 public abstract class FieldWidget<VALUE> extends AbstractDisableableWidget 
-	implements IField<VALUE>, IValidatableField<VALUE> {
+	implements IField<VALUE> {
 	
 	private final Field<VALUE> field;
 	
@@ -123,21 +120,8 @@ public abstract class FieldWidget<VALUE> extends AbstractDisableableWidget
 	
 	/* -----------------  ----------------- */
 	
-	@Override
-	public ValidationField getValidation() {
-		return super.getValidation();
-	}
-	
-	public void addFieldValidator(boolean init, Validator<VALUE, ?> validator) {
-		getValidation().addFieldValidator(init, this, validator);
-	}
-	
-	public void addFieldValidation(boolean init, ValidationSource validationSource) {
-		getValidation().addFieldValidation(init, this, validationSource);
-	}
-	
-	public void addFieldValidationX(boolean init, ValidationSourceX validationSource) {
-		getValidation().addFieldValidation(init, this, validationSource);
+	public void addFieldValidator2(Validator<VALUE, ?> validator) {
+		validation().addFieldValidation2(this, validator.toValidationSource(this));
 	}
 	
 }

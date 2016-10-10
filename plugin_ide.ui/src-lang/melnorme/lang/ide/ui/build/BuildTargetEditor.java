@@ -19,14 +19,12 @@ import melnorme.lang.ide.core.operations.build.VariablesResolver;
 import melnorme.lang.ide.ui.LangUIMessages;
 import melnorme.lang.ide.ui.utils.ControlUtils;
 import melnorme.lang.tooling.commands.CommandInvocation;
-import melnorme.lang.tooling.commands.CommandInvocation.ValidatedCommandArgumentsSource;
 import melnorme.util.swt.components.CompositeWidget;
 import melnorme.util.swt.components.fields.CheckBoxField;
 import melnorme.util.swt.components.fields.EnablementButtonTextField;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.fntypes.CommonGetter;
-import melnorme.utilbox.status.StatusException;
 
 public class BuildTargetEditor extends CompositeWidget {
 	
@@ -116,16 +114,6 @@ public class BuildTargetEditor extends CompositeWidget {
 			this.label = LangUIMessages.Fields_BuildCommand;
 		}
 		
-		@Override
-		protected void validateArguments() throws StatusException {
-			try {
-				super.validateArguments();
-			} catch(StatusException se) {
-				if(se.getMessage() == ValidatedCommandArgumentsSource.MSG_NO_COMMAND_SPECIFIED) {
-					throw new StatusException("No build command supplied.");
-				}
-			}
-		}
 	}
 	
 	public class ProgramPathField extends EnablementButtonTextField {

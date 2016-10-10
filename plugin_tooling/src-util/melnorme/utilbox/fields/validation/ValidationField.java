@@ -10,7 +10,10 @@
  *******************************************************************************/
 package melnorme.utilbox.fields.validation;
 
+import static melnorme.utilbox.core.CoreUtil.list;
+
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.fields.Field;
 import melnorme.utilbox.fields.IFieldView;
 import melnorme.utilbox.status.IStatusMessage;
@@ -27,43 +30,55 @@ public class ValidationField extends Field<IStatusMessage> implements Validation
 		validators.add(() -> explicitStatus);
 	}
 	
-	public <SOURCE> void addFieldValidator(boolean init, IFieldView<SOURCE> field, Validator<SOURCE, ?> validator) {
-		addFieldValidation(init, field, new ValidatableField<>(field, validator));
-	}
-	
-	public final void addFieldValidationX(boolean init, IFieldView<?> field, ValidationSourceX validationSource) {
-		addFieldValidation(init, field, validationSource);
-	}
-	
-	public void addFieldValidation(boolean init, IFieldView<?> field, ValidationSource validationSource) {
-		validators.add(validationSource);
-		field.registerListener(init, (__) -> updateFieldValue());
-	}
-	
-	public void addValidatableField(boolean init, IValidatableField<?> statusField) {
-		addFieldValidation(init, statusField, statusField);
-	}
-	
-	public void addStatusField(boolean init, IFieldView<IStatusMessage> statusField) {
-		addFieldValidation(init, statusField, () -> statusField.getFieldValue());
-	}
-	
-	public void updateFieldValue() {
-		setFieldValue(ValidationSource.getHighestStatus(validators));
-	}
-	
 	@Override
 	public IStatusMessage getValidationStatus() {
 		return getFieldValue();
 	}
 	
-	public void setExplicitStatus(IStatusMessage explicitStatus) {
-		doSetExplicitStatus(explicitStatus);
-		updateFieldValue();
+	public void updateValidation() {
+		setFieldValue(ValidationSource.getHighestStatus(validators));
 	}
 	
-	protected void doSetExplicitStatus(IStatusMessage explicitStatus) {
+	public void setExplicitStatus(IStatusMessage explicitStatus) {
 		this.explicitStatus = explicitStatus;
+		updateValidation();
+	}
+	
+	/* -----------------  ----------------- */
+	
+	/**
+	 * {@link #addFieldValidation2(boolean, IFieldView, ValidationSource)}
+	 */
+	public void addFieldValidation2(IFieldView<?> field, ValidationSource validationSource) {
+		addFieldValidation2(true, field, validationSource); 
+	}
+	
+	/**
+	 * {@link #addFieldValidation2(boolean, Indexable, ValidationSource)}
+	 */
+	protected void addFieldValidation2(boolean init, IFieldView<?> field, ValidationSource validationSource) {
+		addFieldValidation2(init, list(field), validationSource);
+	}
+	
+	/**
+	 * Add a validation source derived from given field.
+	 * 
+	 * Note: it is highly recommended that given validationSource calculation only depends from given fields,
+	 * otherwise a manual call to {@link #updateValidation()} will be required to update this validation field.
+	 * 
+	 * @param init
+	 * @param field
+	 * @param validationSource
+	 */
+	public void addFieldValidation2(boolean init, Indexable<IFieldView<?>> fields, ValidationSource validationSource) {
+		validators.add(validationSource);
+		for (IFieldView<?> sourceField : fields) {
+			sourceField.registerListener(init, (__) -> updateValidation());
+		}
+	}
+	
+	public void addStatusField(boolean init, IFieldView<IStatusMessage> statusField) {
+		addFieldValidation2(init, statusField, () -> statusField.getFieldValue());
 	}
 	
 }

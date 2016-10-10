@@ -107,7 +107,7 @@ public class SourceLinesInfo {
 		
 		if(lineIndex >= lines.size()) {
 			throw CommonException.fromMsgFormat("Invalid line: {0} is over the max bound: {1}.", 
-				line_1, lines.size() + 1);
+				line_1, lines.size());
 		}
 		
 		return getValidateOffset_do(lineIndex, columnIndex);
@@ -148,7 +148,7 @@ public class SourceLinesInfo {
 	
 	public int getIdentifierAt(int validatedOffset) {
 		StringCharSource parser = new StringCharSource(source);
-		parser.consume(validatedOffset);
+		parser.consumeAmount(validatedOffset);
 		return LexingUtils.matchJavaIdentifier(parser);
 	}
 	

@@ -44,6 +44,14 @@ public class RustWordRuleTest extends CommonLexerRuleTest {
 		testRule("abc12x", 6);
 		
 		testRule("abc##a", 3);
+		
+		// Test macros
+		testRule("abc!(asdf)", 4);
+		testRule("abc![a", 4);
+		testRule("abc! [a", 4);
+		// Test macros (negative cases)
+		testRule("abc!=3", 3);
+		testRule("abc! asdf", 3);
 	}
 	
 }
