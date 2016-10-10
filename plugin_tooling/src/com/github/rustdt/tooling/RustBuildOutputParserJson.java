@@ -10,25 +10,25 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import melnorme.utilbox.status.Severity;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import com.eclipsesource.json.ParseException;
-
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.stream.JsonToken;
 
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
+import melnorme.lang.utils.parse.StringCharSource.StringCharSourceReader;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.IByteSequence;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
@@ -50,21 +50,35 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	
 	@Override
 	protected void doParseToolMessage(StringCharSource output) {
+		JsonParser parser = new JsonParser();
+		StringCharSourceReader reader = output.toReader();
 		try {
-			String lineParsing = LexingUtils.consumeLine(output);
-			
-			if (lineParsing.startsWith("{")) {
-				JsonParser parser = new JsonParser(); // Not yet used. Just to ensure that we can use it.
-				try {
-					addMessagesFromJsonObject(lineParsing);
-				}
-				catch(ParseException|UnsupportedOperationException|NumberFormatException e) {
-					throw createUnknownLineSyntaxError(lineParsing);
-				}
-			} else {
-				ToolMessageData cargo_tool_message = CARGO_OUTPUT_LINE_PARSER.parseLine(lineParsing);
-				if (cargo_tool_message != null) {
-					addBuildMessage(cargo_tool_message);
+			while (reader.hasCharAhead()) {
+				String beginning = reader.lookaheadString(0, 1);
+				if ("{".equals(beginning)) {
+					JsonReader jsonReader = new JsonReader(reader);
+					jsonReader.setLenient(true);
+					// JsonReader creates an internal buffer of its reader.
+					// There is no way we can know how much it has parsed.
+					try {
+						while (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+							try {
+								JsonElement element = parser.parse(jsonReader);
+								addMessagesFromJsonObject(element);
+							}
+							catch(JsonParseException e) {
+								throw createUnknownLineSyntaxError(LexingUtils.consumeLine(reader));
+							}
+						}
+					} catch (IOException ioe) {
+						throw new CommonException("Unexpected IO Exception");
+					}
+				} else {
+					String lineParsing = LexingUtils.consumeLine(reader);
+					ToolMessageData cargo_tool_message = CARGO_OUTPUT_LINE_PARSER.parseLine(lineParsing);
+					if (cargo_tool_message != null) {
+						addBuildMessage(cargo_tool_message);
+					}
 				}
 			}
 		} catch (CommonException ce) {
@@ -85,35 +99,38 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	 * 
 	 * @param messages The JsonObject to parse into messages.
 	 * @throws CommonException when messageLine is not in the expected format.
-	 * @throws UnsupportedOperationException when messageLine is not in the expected format.
-	 * @throws NumberFormatException when messageLine is not in the expected format.
 	 */
-	protected void addMessagesFromJsonObject(String lineParsing) 
-			throws CommonException, UnsupportedOperationException, NumberFormatException {
-		JsonObject messages = Json.parse(lineParsing).asObject();
-		String messageText = messages.getString("message", null);
-		if (messageText == null) {
-			throw createUnknownLineSyntaxError(lineParsing);
+	protected void addMessagesFromJsonObject(JsonElement jsonElement) throws CommonException {
+		JsonObject messages = jsonElement.getAsJsonObject();
+		if (!messages.has("message")) {
+			throw createUnknownLineSyntaxError(jsonElement.toString());
 		}
+		String messageText = messages.getAsJsonPrimitive("message").getAsString();
 		if (isMessageEnd(messageText)) {
 			return;
 		}
-		String severityLevel = messages.getString("level", Severity.WARNING.getLabel());
+		
+		String severityLevel = Severity.WARNING.getLabel();
+		JsonPrimitive severityLevelPrimitive = messages.getAsJsonPrimitive("level");
+		if (severityLevelPrimitive != null) {
+			severityLevel = severityLevelPrimitive.getAsString(); 
+		}
+		
 		String errorCode = getErrorCode(messages);
 		String notes = getNotes(messages.get("children"));
 		
-		JsonValue spans = messages.get("spans");
+		JsonElement spans = messages.get("spans");
 		if (spans == null) { // spans should at least be an empty array.
-			throw createUnknownLineSyntaxError(lineParsing);
+			throw createUnknownLineSyntaxError(jsonElement.toString());
 		}
-		List<JsonValue> spansList = spans.asArray().values();
-		if (spansList.isEmpty()) {
+		JsonArray spansArray = spans.getAsJsonArray();
+		if (!spansArray.iterator().hasNext()) {
 			// Output line contains no spans. Example: "no main function found".
 			ToolMessageData without_span = toolMessageWithoutSpan(messageText, severityLevel, notes);
 			addBuildMessage(without_span);
 		} else {
-			for (JsonValue span : spansList) {
-				JsonObject spanObject = span.asObject();
+			for (JsonElement span : spansArray) {
+				JsonObject spanObject = span.getAsJsonObject();
 				addToolMessageFromSpanObject(spanObject, messageText, severityLevel, errorCode, notes, "", false, "");
 			}
 		}
@@ -125,7 +142,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			throws UnsupportedOperationException, NumberFormatException, CommonException {
 		
 		ToolMessageData subMessage = toolMessageWithRange(spanObject);
-		boolean isPrimary = overridePrimaryToTrue ? true: spanObject.getBoolean("is_primary", false);
+		boolean isPrimary = overridePrimaryToTrue ? true: spanObject.getAsJsonPrimitive("is_primary").getAsBoolean();
 		subMessage.messageText = message;
 		subMessage.sourceBeforeMessageText = ""; // This does not seem to be used (?). TODO
 		
@@ -143,9 +160,12 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			subMessage.messageTypeString = Severity.INFO.getLabel();
 		}
 		
-		JsonValue label = spanObject.get("label");
-		if (label != null && label.isString()) {
-			defaultLabel = label.asString();
+		JsonElement label = spanObject.get("label");
+		if (label != null && label.isJsonPrimitive()) {
+			JsonPrimitive labelPrimitive = label.getAsJsonPrimitive();
+			if (labelPrimitive.isString()) {
+				defaultLabel = label.getAsString();
+			}
 		}
 		if (defaultLabel != null && !"".equals(defaultLabel)) {
 			subMessage.messageText = subMessage.messageText + ": " + defaultLabel;
@@ -157,14 +177,17 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		
 		addBuildMessage(subMessage);
 		
-		JsonValue expansion = spanObject.get("expansion");
-		if (expansion != null && !expansion.isNull()) {
-			JsonObject expansionObject = expansion.asObject();
-			macroDeclarationName = expansionObject.getString("macro_decl_name", "");
-			JsonObject expansionSpan = expansionObject.get("span").asObject();
+		JsonElement expansion = spanObject.get("expansion");
+		if (expansion != null && !expansion.isJsonNull()) {
+			JsonObject expansionObject = expansion.getAsJsonObject();
+			JsonPrimitive macroDeclarationNamePrimitive = expansionObject.getAsJsonPrimitive("macro_decl_name");
+			if (macroDeclarationNamePrimitive != null) {
+				macroDeclarationName = macroDeclarationNamePrimitive.getAsString(); 
+			}
+			JsonObject expansionSpan = expansionObject.getAsJsonObject("span");
 			addToolMessageFromSpanObject(expansionSpan, message, severityLevel, errorCode, notes, 
 				defaultLabel, isPrimary, macroDeclarationName);
-			JsonObject expansionDefSiteSpan = expansionObject.get("def_site_span").asObject();
+			JsonObject expansionDefSiteSpan = expansionObject.get("def_site_span").getAsJsonObject();
 			addToolMessageFromSpanObject(expansionDefSiteSpan, "[macro expansion error] " + message, severityLevel, 
 				errorCode, notes, defaultLabel, isPrimary, "");
 		}
@@ -172,11 +195,11 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	
 	protected ToolMessageData toolMessageWithRange(JsonObject spanObject) {
 		ToolMessageData subMessage = new ToolMessageData();
-		subMessage.lineString = Integer.toString(spanObject.getInt("line_start", -1));
-		subMessage.endLineString = Integer.toString(spanObject.getInt("line_end", -1));
-		subMessage.columnString = Integer.toString(spanObject.getInt("column_start", -1));
-		subMessage.endColumnString = Integer.toString(spanObject.getInt("column_end", -1));
-		subMessage.pathString = spanObject.getString("file_name", "");
+		subMessage.lineString = Integer.toString(spanObject.getAsJsonPrimitive("line_start").getAsInt());
+		subMessage.endLineString = Integer.toString(spanObject.getAsJsonPrimitive("line_end").getAsInt());
+		subMessage.columnString = Integer.toString(spanObject.getAsJsonPrimitive("column_start").getAsInt());
+		subMessage.endColumnString = Integer.toString(spanObject.getAsJsonPrimitive("column_end").getAsInt());
+		subMessage.pathString = spanObject.getAsJsonPrimitive("file_name").getAsString();
 		return subMessage;
 	}
 	
@@ -198,36 +221,36 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		return subMessage;
 	}
 	
-	protected String getNotes(JsonValue children) throws UnsupportedOperationException {
+	protected String getNotes(JsonElement children) {
 		if (children == null) {
 			return "";
 		}
 		ArrayList<String> notes = new ArrayList<String>();
-		try {
-			JsonArray childrenArray = children.asArray();
-			for(JsonValue child: childrenArray.values()) {
-				JsonObject childObject = child.asObject();
-				String childMessage = childObject.getString("message", "");
-				if (childMessage != null && !childMessage.isEmpty()) {
-					notes.add(childMessage);
+		JsonArray childrenArray = children.getAsJsonArray();
+		for(JsonElement child: childrenArray) {
+			JsonElement childMessageElement = child.getAsJsonObject().get("message");
+			if (childMessageElement != null) {
+				String childMessageString = childMessageElement.getAsString();
+				if (childMessageString != null && !childMessageString.isEmpty()) { 
+					notes.add(childMessageString);
 				}
 			}
-			if (!notes.isEmpty()) {
-				return " (" + String.join(", ", notes) + ")";
-			}
-
-		} catch (UnsupportedOperationException e){
-			// I think we can do without the notes.
-			// TODO: Maybe log a warning?
 		}
+		if (!notes.isEmpty()) {
+			return " (" + String.join(", ", notes) + ")";
+		}
+		// TODO: error catching
 		return "";
 	}
 	
-	protected String getErrorCode(JsonObject messageLine) throws UnsupportedOperationException {
+	protected String getErrorCode(JsonObject messageLine) {
 		String errorCode = "";
-		JsonValue code = messageLine.get("code");
-		if (code != null && code.isObject()) {
-			errorCode = code.asObject().getString("code", "");
+		JsonElement code = messageLine.get("code");
+		if (code != null && code.isJsonObject()) {
+			JsonObject errorCodeObject = code.getAsJsonObject();
+			if (errorCodeObject.has("code")) {
+				errorCode = errorCodeObject.getAsJsonPrimitive("code").getAsString();
+			}
 		}
 		return errorCode;
 	}

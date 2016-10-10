@@ -122,7 +122,15 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 						"expected type `std::option::Option<&usize>`, "+
 						"   found type `&{integer}`"+
 					")")));
-						
+		testParseMessages(buildParser,
+				getClassResource("start_to_end.json"),
+				listFrom(msg(path("src/main.rs"), 3, 5, 3, 6, ERROR, "mismatched types [E0308]: "+
+					"expected (), found integral variable "+
+					"("+
+						"expected type `()`, " +
+						"   found type `{integer}`"+
+					")")));
+
 	}
 	
 	protected void testParseMessages(RustBuildOutputParserJson buildProcessor, String stderr, List<?> expected) 
