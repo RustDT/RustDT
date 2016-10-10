@@ -123,6 +123,11 @@ public class StringCharSource extends OffsetBasedCharacterReader<RuntimeExceptio
 		public char consume() throws RuntimeException {
 			return this.child.consume();
 		}
+
+		@Override
+		public void unread() throws RuntimeException {
+			this.child.unread();
+		}
 	}
 	
 	public StringCharSourceReader toReader() {
