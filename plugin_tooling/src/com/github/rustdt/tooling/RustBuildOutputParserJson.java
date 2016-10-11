@@ -38,6 +38,8 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
 
 public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	
+	protected final GsonHelper helper = new GsonHelper();
+	
 	@Override
 	protected void handleNonZeroExitCode(ExternalProcessResult result) throws CommonException, OperationSoftFailure {
 		// Do nothing
@@ -113,15 +115,12 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			throw createUnknownLineSyntaxError(jsonElement.toString());
 		}
 		JsonObject messages = jsonElement.getAsJsonObject();
-		String messageText = JsonHelper.getStringMemberFromJsonObject(messages, "message");
-		if (messageText == null) {
-			throw createUnknownLineSyntaxError(jsonElement.toString());
-		}
+		String messageText = helper.getString(messages, "message");
 		if (isMessageEnd(messageText)) {
 			return;
 		}
 		
-		String severityLevel = JsonHelper.getStringMemberFromJsonObject(messages, "level");
+		String severityLevel = helper.getOptionalString(messages, "level");
 		if (severityLevel == null) {
 			severityLevel = Severity.WARNING.getLabel();
 		}
@@ -157,7 +156,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		ToolMessageData subMessage = toolMessageWithRange(spanObject);
 		boolean isPrimary = true;
 		if (!overridePrimaryToTrue) {
-			isPrimary = JsonHelper.getBooleanMemberFromJsonObject(spanObject, "is_primary", false);
+			isPrimary = helper.getOptionalBoolean(spanObject, "is_primary", false);
 		}
 		subMessage.messageText = message;
 		subMessage.sourceBeforeMessageText = ""; // This does not seem to be used (?). TODO
@@ -176,7 +175,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			subMessage.messageTypeString = Severity.INFO.getLabel();
 		}
 		
-		String label = JsonHelper.getStringMemberFromJsonObject(spanObject, "label");
+		String label = helper.getOptionalString(spanObject, "label");
 		if (label != null) {
 			defaultLabel = label;
 		}
@@ -190,38 +189,29 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		
 		addBuildMessage(subMessage);
 		
-		JsonObject expansion = JsonHelper.getObjectMemberFromJsonObject(spanObject, "expansion");
+		JsonObject expansion = helper.getOptionalObject(spanObject, "expansion");
 		if (expansion != null) {
-			String macroDeclarationNameInExpansion = JsonHelper.getStringMemberFromJsonObject(expansion, 
-				"macro_decl_name");
+			String macroDeclarationNameInExpansion = helper.getOptionalString(expansion, "macro_decl_name");
 			if (macroDeclarationNameInExpansion != null) {
-				macroDeclarationName = macroDeclarationNameInExpansion; 
+				macroDeclarationName = macroDeclarationNameInExpansion;
 			}
-			JsonObject expansionSpan = JsonHelper.getObjectMemberFromJsonObject(expansion, "span");
-			if (spanObject == null) {
-				throw createUnknownLineSyntaxError(expansion.toString());
-			}
+			JsonObject expansionSpan = helper.getObject(expansion, "span");
 			addToolMessageFromSpanObject(expansionSpan, message, severityLevel, errorCode, notes, 
 				defaultLabel, isPrimary, macroDeclarationName);
-			JsonObject expansionDefSiteSpan = JsonHelper.getObjectMemberFromJsonObject(expansion, "def_site_span");
-			if (expansionDefSiteSpan == null) {
-				throw createUnknownLineSyntaxError(expansion.toString());
-			}
+			
+			JsonObject expansionDefSiteSpan = helper.getObject(expansion, "def_site_span");
 			addToolMessageFromSpanObject(expansionDefSiteSpan, "[macro expansion error] " + message, severityLevel, 
 				errorCode, notes, defaultLabel, isPrimary, "");
 		}
 	}
 	
-	protected ToolMessageData toolMessageWithRange(JsonObject span) {
+	protected ToolMessageData toolMessageWithRange(JsonObject span) throws CommonException {
 		ToolMessageData subMessage = new ToolMessageData();
-		subMessage.lineString = Integer.toString(JsonHelper.getIntMemberFromJsonObject(span, "line_start", -1));
-		subMessage.endLineString = Integer.toString(JsonHelper.getIntMemberFromJsonObject(span, "line_end", -1));
-		subMessage.columnString = Integer.toString(JsonHelper.getIntMemberFromJsonObject(span, "column_start", -1));
-		subMessage.endColumnString = Integer.toString(JsonHelper.getIntMemberFromJsonObject(span, "column_end", -1));
-		subMessage.pathString = JsonHelper.getStringMemberFromJsonObject(span, "file_name");
-		if (subMessage.pathString == null) {
-			subMessage.pathString = "";
-		}
+		subMessage.lineString = Integer.toString(helper.getOptionalInteger(span, "line_start", -1));
+		subMessage.endLineString = Integer.toString(helper.getOptionalInteger(span, "line_end", -1));
+		subMessage.columnString = Integer.toString(helper.getOptionalInteger(span, "column_start", -1));
+		subMessage.endColumnString = Integer.toString(helper.getOptionalInteger(span, "column_end", -1));
+		subMessage.pathString = helper.getOptionalString(span, "file_name", "");
 		return subMessage;
 	}
 	
@@ -239,7 +229,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		return subMessage;
 	}
 	
-	protected String getNotes(JsonElement children) {
+	protected String getNotes(JsonElement children) throws CommonException {
 		if (children == null || !children.isJsonArray()) {
 			return "";
 		}
@@ -250,7 +240,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		ArrayList<String> notes = new ArrayList<String>();
 		for(JsonElement child: childrenArray) {
 			if (child.isJsonObject()) {
-				String childMessageString = JsonHelper.getStringMemberFromJsonObject(child.getAsJsonObject(), 
+				String childMessageString = helper.getOptionalString(child.getAsJsonObject(), 
 					"message");
 				if (childMessageString != null && !childMessageString.isEmpty()) {
 					notes.add(childMessageString);
@@ -260,10 +250,10 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		return " (" + String.join(", ", notes) + ")";
 	}
 	
-	protected String getErrorCode(JsonObject messageLine) {
-		JsonObject codeObject = JsonHelper.getObjectMemberFromJsonObject(messageLine, "code");
+	protected String getErrorCode(JsonObject messageLine) throws CommonException {
+		JsonObject codeObject = helper.getOptionalObject(messageLine, "code");
 		if (codeObject != null) {
-			String errorCode = JsonHelper.getStringMemberFromJsonObject(codeObject, "code");
+			String errorCode = helper.getOptionalString(codeObject, "code");
 			if (errorCode != null) {
 				return errorCode;
 			}
