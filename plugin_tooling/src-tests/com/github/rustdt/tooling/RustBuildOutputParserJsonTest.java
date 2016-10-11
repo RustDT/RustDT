@@ -98,10 +98,10 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 			getClassResource("main_function_not_found.json"),
 			listFrom(msg(path(""), 1, 1, 1, 1, ERROR, "main function not found")));
 		
-		if(false) // FIXME review
+		// Test macro errors
 		testParseMessages(buildParser,
 			getClassResource("macro_error.json"),
-			listFrom(msg(path("<std macros>"), 5, 22, 5, 33, ERROR, "mismatched types [E0308]: "+
+			listFrom(msg(path(""), 5, 22, 5, 33, ERROR, "mismatched types [E0308]: "+
 					"expected enum `std::option::Option`, found &{integer} "+
 					"("+
 						"expected type `std::option::Option<&usize>`, "+
@@ -115,7 +115,7 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 						"expected type `std::option::Option<&usize>`, "+
 						"   found type `&{integer}`"+
 					")"),
-					msg(path("<std macros>"), 1, 1, 18, 71, ERROR, "[macro expansion error] mismatched types [E0308]: "+
+					msg(path(""), 1, 1, 18, 71, ERROR, "[macro expansion error] mismatched types [E0308]: "+
 					"expected enum `std::option::Option`, found &{integer} "+
 					"("+
 						"expected type `std::option::Option<&usize>`, "+

@@ -11,6 +11,7 @@
 package com.github.rustdt.tooling;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
+import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
 import com.google.gson.stream.JsonToken;
 
+import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.utils.parse.LexingUtils;
@@ -268,4 +270,15 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		}
 		return "";
 	}
+	
+	@Override
+	protected ToolSourceMessage createMessage(ToolMessageData msgdata) throws CommonException {
+		if(areEqual(msgdata.pathString, "<std macros>")) {
+			// That path doesn't exist, 
+			// furthermore on Windows it's not even a valid Path, so createMessage would fail
+			msgdata.pathString = "";
+		}
+		return super.createMessage(msgdata);
+	}
+	
 }
