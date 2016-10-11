@@ -19,7 +19,7 @@ public class GsonHelper {
 	
 	public JsonObject getObject(JsonObject jsonObject, String key) throws CommonException {
 		JsonElement element = jsonObject.get(key);
-		if(element.isJsonObject()) {
+		if(element != null && element.isJsonObject()) {
 			return element.getAsJsonObject();
 		} else {
 			throw wrongTypeException(key, "Object");
@@ -28,7 +28,7 @@ public class GsonHelper {
 	
 	public String getString(JsonObject jsonObject, String key) throws CommonException {
 		JsonElement element = jsonObject.get(key);
-		if(element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+		if(element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
 			return element.getAsString();
 		} else {
 			throw wrongTypeException(key, "String");
@@ -37,7 +37,7 @@ public class GsonHelper {
 	
 	public boolean getBoolean(JsonObject jsonObject, String key) throws CommonException {
 		JsonElement element = jsonObject.get(key);
-		if(element.isJsonPrimitive() && element.getAsJsonPrimitive().isBoolean()) {
+		if(element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isBoolean()) {
 			return element.getAsBoolean();
 		} else {
 			throw wrongTypeException(key, "boolean");
@@ -46,7 +46,7 @@ public class GsonHelper {
 	
 	public Number getNumber(JsonObject jsonObject, String key) throws CommonException {
 		JsonElement element = jsonObject.get(key);
-		if(element.isJsonPrimitive() && element.getAsJsonPrimitive().isNumber()) {
+		if(element != null && element.isJsonPrimitive() && element.getAsJsonPrimitive().isNumber()) {
 			return element.getAsNumber();
 		} else {
 			throw wrongTypeException(key, "Number");
