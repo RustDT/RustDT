@@ -10,7 +10,8 @@
  * Added `matchRes` and `matchOpt` code snippets.
  * Fixed stale validation message for location field in New Project Wizard.
  * Fixed stale validation message for Build Command field in Build Targets property page and Launch Configurations dialog.
- * Fixed editor NPE when opening files from a non-workspace VCS revision. 
+ * Fixed editor NPE when opening files from a non-workspace VCS revision.
+ * Fixed: "IllegalStateException: Invalid table definition" during Cargo manifest parsing. (#129) 
 
 ### 0.6.2
  * Updated minimum CDT to version `9.0` (Eclipse Neon).

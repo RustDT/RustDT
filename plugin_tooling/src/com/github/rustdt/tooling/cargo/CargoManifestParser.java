@@ -35,7 +35,7 @@ public class CargoManifestParser {
 	public CargoManifest parse(String source) throws CommonException {
 		
 		Toml toml = new Toml().read(source);
-		Map<String, Object> manifestMap = toml.getValues();
+		Map<String, Object> manifestMap = toml.toMap();
 		
 		Map<String, Object> packageEntry = helper.getTable(manifestMap, "package", FAllowNull.NO);
 		
