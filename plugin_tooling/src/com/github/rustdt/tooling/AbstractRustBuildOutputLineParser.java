@@ -11,6 +11,8 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
+import static melnorme.utilbox.core.CoreUtil.areEqual;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
