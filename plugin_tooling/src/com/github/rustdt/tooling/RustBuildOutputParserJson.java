@@ -230,12 +230,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		subMessage.endLineString = "1";
 		subMessage.columnString = "1";
 		subMessage.endColumnString = "1";
-		/*FIXME: change*/
-		if ("main function not found".equals(message)) {
-			subMessage.pathString = "src/main.rs"; // TODO: this is only a guess.
-		} else {
-			subMessage.pathString = "";
-		}
+		subMessage.pathString = "";
 		subMessage.messageText = message + notes;
 		subMessage.sourceBeforeMessageText = "";
 		subMessage.messageTypeString = level;

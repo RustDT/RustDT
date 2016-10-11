@@ -94,11 +94,9 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 						"(required by `x`)")) // (message from child)
 				);
 		
-		// If the main function is not found, we naively assume that it is in the `src/main.rs` file.
-		// TODO: find out in which file the compiler looks for the main function.
 		testParseMessages(buildParser,
 			getClassResource("main_function_not_found.json"),
-			listFrom(msg(path("src/main.rs"), 1, 1, 1, 1, ERROR, "main function not found")));
+			listFrom(msg(path(""), 1, 1, 1, 1, ERROR, "main function not found")));
 		
 		if(false) // FIXME review
 		testParseMessages(buildParser,
