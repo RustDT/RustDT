@@ -87,6 +87,7 @@ public class StringCharSource extends OffsetBasedCharacterReader<RuntimeExceptio
 	}
 	
 	public static class StringCharSourceReader extends Reader {
+		
 		protected StringCharSource child;
 		
 		public StringCharSourceReader(StringCharSource child) {
@@ -94,12 +95,12 @@ public class StringCharSource extends OffsetBasedCharacterReader<RuntimeExceptio
 		}
 		
 		@Override
-		public void close() throws IOException {
+		public void close() {
 			// No need to close anything
 		}
 
 		@Override
-		public int read(char[] cbuf, int off, int len) throws IOException {
+		public int read(char[] cbuf, int off, int len) {
 			int result = this.child.copyToBuffer(cbuf, off, len);
 			if (result == 0) {
 				return -1; // Indicate that the end of the stream has been reached.
