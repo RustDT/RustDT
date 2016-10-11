@@ -65,8 +65,15 @@ public class GsonHelper {
 		return intValue;
 	}
 	
+	/* ----------------- optional ----------------- */
+	
+	public boolean isPresent(JsonObject jsonObject, String key) {
+		JsonElement jsonElement = jsonObject.get(key);
+		return jsonElement != null && !jsonElement.isJsonNull();
+	}
+	
 	public JsonObject getOptionalObject(JsonObject jsonObject, String key) throws CommonException {
-		if(!jsonObject.has(key)) {
+		if(!isPresent(jsonObject, key)) {
 			return null;
 		}
 		return getObject(jsonObject, key);
@@ -77,28 +84,28 @@ public class GsonHelper {
 	}
 	
 	public String getOptionalString(JsonObject jsonObject, String key, String defaultValue) throws CommonException {
-		if(!jsonObject.has(key)) {
+		if(!isPresent(jsonObject, key)) {
 			return defaultValue;
 		}
 		return getString(jsonObject, key);
 	}
 	
 	public Number getOptionalNumber(JsonObject jsonObject, String key) throws CommonException {
-		if(!jsonObject.has(key)) {
+		if(!isPresent(jsonObject, key)) {
 			return null;
 		}
 		return getNumber(jsonObject, key);
 	}
 	
 	public boolean getOptionalBoolean(JsonObject jsonObject, String key, boolean defaultValue) throws CommonException {
-		if(!jsonObject.has(key)) {
+		if(!isPresent(jsonObject, key)) {
 			return defaultValue;
 		}
 		return getBoolean(jsonObject, key);
 	}
 	
 	public int getOptionalInteger(JsonObject jsonObject, String key, int defaultValue) throws CommonException {
-		if(!jsonObject.has(key)) {
+		if(!isPresent(jsonObject, key)) {
 			return defaultValue;
 		}
 		return getInteger(jsonObject, key);
