@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 
-import com.github.rustdt.tooling.RustBuildOutputParser;
 import com.github.rustdt.tooling.RustBuildOutputParserJson;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
@@ -37,13 +36,14 @@ import melnorme.lang.tooling.bundle.BuildTargetNameParser2;
 import melnorme.lang.tooling.bundle.BundleInfo;
 import melnorme.lang.tooling.bundle.FileRef;
 import melnorme.lang.tooling.bundle.LaunchArtifact;
+import melnorme.lang.tooling.commands.CommandInvocation;
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
+import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.collections.Indexable;
-import melnorme.utilbox.collections.MapAccess;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.CollectionUtil;
@@ -55,15 +55,15 @@ import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
  */
 public class RustBuildManager extends BuildManager {
 	
-	public static final String BuildType_Build = "build";
-	public static final String BuildType_Check = "check";
+	public static final String BUILD_TYPE_Build_Label = "build";
+	public static final String BUILD_TYPE_Check_Label = "check";
 	
-	public static final String OutputFormatEnvironmentVariableName = "RUSTFLAGS";
-	public static final String OutputFormatEnvironmentVariableUseJson = "--error-format json";
+	public static final String ENV_VAR__RUSTFLAGS = "RUSTFLAGS";
+	public static final String RUSTFLAGS_ERROR_FORMAT = "--error-format json";
 	
-	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BuildType_Build, 
+	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BUILD_TYPE_Build_Label, 
 		"test --no-run");
-	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BuildType_Check, 
+	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BUILD_TYPE_Check_Label, 
 		"rustc --lib -- -Zno-trans");
 	
 	public RustBuildManager(LangBundleModel bundleModel, ToolManager toolManager) {
@@ -206,50 +206,46 @@ public class RustBuildManager extends BuildManager {
 	
 	/* ----------------- Build ----------------- */
 	
-	protected static class RustBuildTargetOperation extends BuildTargetOperation {
+	public static class RustBuildTargetOperation extends BuildTargetOperation {
 		
 		public RustBuildTargetOperation(BuildOperationParameters buildOpParams) {
-			super(buildOpParams);
+			super(modifyBuildCommand(buildOpParams));
 		}
 		
-		/*FIXME: automatically add  --error-format json */
-		
-		// TODO: we currently require the user to set the output error format, which is not user friendly.
-		// Return whether the Rust compiler was configured to output its errors in the json format. 
-		protected boolean rustcErrorOutputIsJson() {
-			MapAccess<String, String> environmentVars = super.buildCommand.getEnvironmentVars();
-			boolean rustFlagsErrorFormatIsJson = false;
-			if (environmentVars != null) {
-				String rustFlags = environmentVars.get(OutputFormatEnvironmentVariableName);
-				if (rustFlags != null) {
-					rustFlagsErrorFormatIsJson = rustFlags.contains(OutputFormatEnvironmentVariableUseJson);
-				}
+		public static BuildOperationParameters modifyBuildCommand(BuildOperationParameters buildOpParams) {
+			CommandInvocation bci = buildOpParams.buildCommand;
+			String rustflags = bci.getEnvironmentVars().get(ENV_VAR__RUSTFLAGS);
+			if(rustflags != null) {
+				// Leave it as is if it is set explicitly (user override)
+				return buildOpParams; 
 			}
-			return rustFlagsErrorFormatIsJson;
+			
+			rustflags = rustflags == null ? RUSTFLAGS_ERROR_FORMAT : rustflags + " " + RUSTFLAGS_ERROR_FORMAT;  
+			
+			HashMap2<String, String> newEnvs = bci.getEnvironmentVars().copyToHashMap();
+			newEnvs.put(ENV_VAR__RUSTFLAGS, rustflags);
+			
+			// Modify build commmand to automatically ask for json errors
+			buildOpParams.buildCommand = new CommandInvocation(
+				bci.getCommandLine(),
+				newEnvs,
+				bci.isAppendEnvironment()
+			);
+			return buildOpParams;
 		}
 		
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
-			BuildOutputParser2 outputParser = null;
-			if (rustcErrorOutputIsJson()) {
-				outputParser = new RustBuildOutputParserJson() {
-					@Override
-					protected void handleParseError(CommonException ce) {
-						 LangCore.logStatusException(ce.toStatusException());
-					}
-				};
-			} else {
-				outputParser = new RustBuildOutputParser() {
-					@Override
-					protected void handleParseError(CommonException ce) {
-						 LangCore.logStatusException(ce.toStatusException());
-					}
-				};
-			}
-			ArrayList<ToolSourceMessage> buildMessage = outputParser.doParseResult(processResult);
+			BuildOutputParser2 outputParser = new RustBuildOutputParserJson() {
+				@Override
+				protected void handleParseError(CommonException ce) {
+					 LangCore.logStatusException(ce.toStatusException());
+				}
+			};
+			ArrayList<ToolSourceMessage> buildMessages = outputParser.doParseResult(processResult);
 			
-			new ToolMarkersHelper().addErrorMarkers(buildMessage, ResourceUtils.getProjectLocation2(project), om);
+			new ToolMarkersHelper().addErrorMarkers(buildMessages, ResourceUtils.getProjectLocation2(project), om);
 		}
 	}
 	
