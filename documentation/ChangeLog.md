@@ -1,7 +1,9 @@
 ## release ChangeLog
 
 ### (NextVersion)
- * Added support for Rust 1.12 new error message format. (Thanks to https://github.com/PieterPenninckx for contribution)
+ * Added support for Rust 1.12 new error message format. (#130)
+  * (Thanks to https://github.com/PieterPenninckx for the contribution)
+  * Please upgrade to Rust 1.12 or later because the previous error format is no longer supported in RustDT. 
  * Improved syntax highlighting for macro invocations (`foo!=bar` no longer highlights `foo!` as a macro) 
  * Default setting for "auto-insert" of Code Snippets is now false.
  * Added more extensive `doc` code snippet. #TODO test after build
