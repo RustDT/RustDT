@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -51,28 +53,8 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	protected void doParseToolMessage(StringCharSource output) {
 		try {
 			while (output.hasCharAhead()) {
-				String beginning = output.lookaheadString(0, 1);
-				if ("{".equals(beginning)) {
-					// Only Json from now on. 
-					// JsonReader creates an internal buffer of its reader.
-					// There is no way we can know how much it has parsed.
-					JsonParser parser = new JsonParser();
-					StringCharSourceReader reader = output.toReader();
-					JsonReader jsonReader = new JsonReader(reader);
-					jsonReader.setLenient(true);
-					try {
-						while (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
-							try {
-								JsonElement element = parser.parse(jsonReader);
-								addMessagesFromJsonObject(element);
-							}
-							catch(JsonParseException e) {
-								throw new CommonException("Invalid output JSON object: ",  e);
-							}
-						}
-					} catch (IOException ioe) {
-						throw new CommonException("Unexpected IO Exception");
-					}
+				if (output.lookahead() == '{') {
+					parseJsonMessages(output);
 				} else {
 					String lineParsing = LexingUtils.consumeLine(output);
 					ToolMessageData cargo_tool_message = CARGO_OUTPUT_LINE_PARSER.parseLine(lineParsing);
@@ -85,11 +67,34 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 			handleMessageParseError(ce);
 		}
 	}
+	
+	protected void parseJsonMessages(StringCharSource output) throws CommonException {
+		// Only Json from now on. 
+		// JsonReader creates an internal buffer of its reader.
+		// There is no way we can know how much it has parsed.
+		JsonParser parser = new JsonParser();
+		StringCharSourceReader reader = output.toReader();
+		JsonReader jsonReader = new JsonReader(reader);
+		jsonReader.setLenient(true);
+		try {
+			while (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+				try {
+					JsonElement element = parser.parse(jsonReader);
+					addMessagesFromJsonObject(element);
+				}
+				catch(JsonParseException e) {
+					throw new CommonException("Invalid output JSON object: ",  e);
+				}
+			}
+		} catch (IOException ioe) {
+			throw new CommonException("Unexpected IO Exception");
+		}
+	}
 		
 	@Override
 	protected ToolMessageData parseMessageData(StringCharSource output) throws CommonException {
-		/*FIXME: */
-		return null; // This function is not called from within this class because we override doParseToolMessage.
+		// This function is not called from within this class because we override doParseToolMessage.
+		throw assertFail();
 	}
 	
 	protected boolean isMessageEnd(String message) {
