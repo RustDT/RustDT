@@ -58,6 +58,10 @@ public class StringCharSource extends OffsetBasedCharacterReader<RuntimeExceptio
 	protected void doUnread() {
 	}
 	
+	protected String sourceSubString(int startPos, int endPos) {
+		return source.substring(readPosition + startPos, readPosition + endPos);
+	}
+	
 	/**
 	 * Copy characters from the current position onwards to a buffer.
 	 * 
@@ -78,11 +82,11 @@ public class StringCharSource extends OffsetBasedCharacterReader<RuntimeExceptio
 	
 	/* -----------------  ----------------- */
 	
-	protected String sourceSubString(int startPos, int endPos) {
-		return source.substring(readPosition + startPos, readPosition + endPos);
+	public StringCharSourceReader toReader() {
+		return new StringCharSourceReader(this);
 	}
 	
-	public static class StringCharSourceReader extends Reader implements ICharacterReader {
+	public static class StringCharSourceReader extends Reader {
 		protected StringCharSource child;
 		
 		public StringCharSourceReader(StringCharSource child) {
@@ -103,35 +107,6 @@ public class StringCharSource extends OffsetBasedCharacterReader<RuntimeExceptio
 				return result;
 			}
 		}
-
-		@Override
-		public int lookahead(int offset) throws RuntimeException {
-			return this.child.lookahead(offset);
-		}
-
-		@Override
-		public int bufferedCharCount() {
-			return this.child.bufferedCharCount();
-		}
-
-		@Override
-		public String lookaheadString(int offset, int length) throws RuntimeException {
-			return this.child.lookaheadString(offset, length);
-		}
-
-		@Override
-		public char consume() throws RuntimeException {
-			return this.child.consume();
-		}
-
-		@Override
-		public void unread() throws RuntimeException {
-			this.child.unread();
-		}
-	}
-	
-	public StringCharSourceReader toReader() {
-		return new StringCharSourceReader(this);
 	}
 	
 }

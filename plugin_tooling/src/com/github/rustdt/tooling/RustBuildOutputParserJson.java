@@ -67,7 +67,7 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 								addMessagesFromJsonObject(element);
 							}
 							catch(JsonParseException e) {
-								throw createUnknownLineSyntaxError(LexingUtils.consumeLine(reader));
+								throw new CommonException("Invalid output JSON object: ",  e);
 							}
 						}
 					} catch (IOException ioe) {
