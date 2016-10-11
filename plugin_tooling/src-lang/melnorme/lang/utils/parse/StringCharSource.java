@@ -12,7 +12,6 @@ package melnorme.lang.utils.parse;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
-import java.io.IOException;
 import java.io.Reader;
 
 public class StringCharSource extends OffsetBasedCharacterReader<RuntimeException> implements ICharacterReader {
