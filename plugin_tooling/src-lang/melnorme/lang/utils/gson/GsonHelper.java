@@ -8,7 +8,7 @@
  * Contributors:
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
-package com.github.rustdt.tooling;
+package melnorme.lang.utils.gson;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

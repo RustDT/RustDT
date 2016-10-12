@@ -16,25 +16,25 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import melnorme.utilbox.status.Severity;
-
-import com.google.gson.JsonParser;
-import com.google.gson.JsonElement;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
+import melnorme.lang.utils.gson.GsonHelper;
+import melnorme.lang.utils.gson.JsonParserX;
+import melnorme.lang.utils.gson.JsonParserX.JsonSyntaxExceptionX;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.lang.utils.parse.StringCharSource.StringCharSourceReader;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.IByteSequence;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
+import melnorme.utilbox.status.Severity;
 
 public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	
@@ -76,22 +76,21 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 		// Only Json from now on. 
 		// JsonReader creates an internal buffer of its reader.
 		// There is no way we can know how much it has parsed.
-		JsonParser parser = new JsonParser();
 		StringCharSourceReader reader = output.toReader();
 		JsonReader jsonReader = new JsonReader(reader);
 		jsonReader.setLenient(true);
 		try {
 			while (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
 				try {
-					JsonElement element = parser.parse(jsonReader);
+					JsonElement element = new JsonParserX().parse(jsonReader);
 					addMessagesFromJsonObject(element);
 				}
-				catch(JsonParseException e) {
-					throw new CommonException("Invalid output JSON object: ",  e);
+				catch(JsonSyntaxExceptionX e) {
+					throw new CommonException("JSON syntax error in ouput message: ",  e);
 				}
 			}
 		} catch (IOException ioe) {
-			throw new CommonException("Unexpected IO Exception");
+			throw new CommonException("Unexpected IO Exception: ", ioe);
 		}
 	}
 		
