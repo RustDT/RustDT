@@ -8,7 +8,8 @@ Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.11.0";resolution:=optional,
- com.google.gson;bundle-version="2.2.4"
+ com.google.gson;bundle-version="2.2.4",
+ melnorme_util;bundle-version="0.10.0";visibility:=reexport
 Bundle-ClassPath: .,
  lib/toml4j-0.7.1.jar
 Export-Package: com.github.rustdt.tooling,
@@ -32,17 +33,4 @@ Export-Package: com.github.rustdt.tooling,
  melnorme.lang.utils,
  melnorme.lang.utils.concurrency,
  melnorme.lang.utils.parse,
- melnorme.lang.utils.validators,
- melnorme.utilbox.collections,
- melnorme.utilbox.collections.iter,
- melnorme.utilbox.concurrency,
- melnorme.utilbox.core,
- melnorme.utilbox.core.fntypes,
- melnorme.utilbox.fields,
- melnorme.utilbox.fields.validation,
- melnorme.utilbox.misc,
- melnorme.utilbox.ownership,
- melnorme.utilbox.process,
- melnorme.utilbox.status,
- melnorme.utilbox.tests,
- melnorme.utilbox.tree
+ melnorme.lang.utils.validators
