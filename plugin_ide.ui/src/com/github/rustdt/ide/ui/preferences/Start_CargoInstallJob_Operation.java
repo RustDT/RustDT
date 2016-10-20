@@ -65,6 +65,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		ArrayList2<String> args = new ArrayList2<>("install");
 		args.addAll(sourceArgs);
 		args.addElements("--root", dest.toPathString());
+		args.addElements("--force");
 		
 		return toolMgr.createToolProcessBuilder(null, sdkToolPath, args.toArray(String.class));
 	}

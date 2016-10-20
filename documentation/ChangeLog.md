@@ -8,6 +8,7 @@
  * Default setting for "auto-insert" of Code Snippets is now false.
  * Added more extensive `doc` code snippet. #TODO test after build
  * Added `matchRes` and `matchOpt` code snippets.
+ * Added `--force` to Cargo tool "Download" button in toolchain preferences page.
  * Fixed stale validation message for location field in New Project Wizard.
  * Fixed stale validation message for Build Command field in Build Targets property page and Launch Configurations dialog.
  * Fixed editor NPE when opening files from a non-workspace VCS revision.
