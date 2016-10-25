@@ -120,7 +120,34 @@ public class RustBuildOutputParserJsonTest extends RustBuildOutputParserTest {
 					"("+
 						"expected type `std::option::Option<&usize>`, "+
 						"   found type `&{integer}`"+
-					")")));
+					")"
+			))
+		);			
+		testParseMessages(buildParser,
+			getClassResource("macro_error2.json"),
+			listFrom(msg(path(""), 5, 22, 5, 33, ERROR, "mismatched types [E0308]: "+
+					"expected enum `std::option::Option`, found &{integer} "+
+					"("+
+						"expected type `std::option::Option<&usize>`, "+
+						"   found type `&{integer}`"+
+					")"),
+					msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, "mismatched types "+
+					"(in expansion of `assert_eq!`) "+
+					"[E0308]: "+
+					"expected enum `std::option::Option`, found &{integer} "+
+					"("+
+						"expected type `std::option::Option<&usize>`, "+
+						"   found type `&{integer}`"+
+					")"),
+					msg(path(""), 1, 1, 18, 71, ERROR, "[macro expansion error] mismatched types [E0308]: "+
+					"expected enum `std::option::Option`, found &{integer} "+
+					"("+
+						"expected type `std::option::Option<&usize>`, "+
+						"   found type `&{integer}`"+
+					")"
+			))
+		);		
+		
 		testParseMessages(buildParser,
 				getClassResource("start_to_end.json"),
 				listFrom(msg(path("src/main.rs"), 3, 5, 3, 6, ERROR, "mismatched types [E0308]: "+

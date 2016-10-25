@@ -7,7 +7,7 @@
  "level":"error",
  "spans":[
   {
-   "file_name":"<std macros>",
+   "file_name":"<proc-macro source code>",
    "byte_start":23234,
    "byte_end":23245,
    "line_start":5,

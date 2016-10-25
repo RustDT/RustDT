@@ -11,7 +11,6 @@
 package com.github.rustdt.tooling;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
-import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -262,9 +261,10 @@ public abstract class RustBuildOutputParserJson extends BuildOutputParser2 {
 	
 	@Override
 	protected ToolSourceMessage createMessage(ToolMessageData msgdata) throws CommonException {
-		if(areEqual(msgdata.pathString, "<std macros>")) {
-			// That path doesn't exist, 
-			// furthermore on Windows it's not even a valid Path, so createMessage would fail
+		if(msgdata.pathString.startsWith("<") && msgdata.pathString.endsWith(">")) {
+			// That path doesn't exist, it's a macro expansion.
+			// Furthermore, on Windows it's not even a valid Path, so createMessage would fail
+			// So we set it to empty:
 			msgdata.pathString = "";
 		}
 		return super.createMessage(msgdata);
