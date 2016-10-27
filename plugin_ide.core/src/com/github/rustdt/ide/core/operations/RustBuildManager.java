@@ -59,7 +59,7 @@ public class RustBuildManager extends BuildManager {
 	public static final String BUILD_TYPE_Check_Label = "check";
 	
 	public static final String ENV_VAR__RUSTFLAGS = "RUSTFLAGS";
-	public static final String RUSTFLAGS_ERROR_FORMAT = "--error-format json";
+	public static final String RUSTFLAGS_ERROR_FORMAT = "--error-format=json";
 	
 	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BUILD_TYPE_Build_Label, 
 		"test --no-run");
