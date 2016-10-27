@@ -9,6 +9,7 @@
  * Added more extensive `doc` code snippet. #TODO test after build
  * Added `matchRes` and `matchOpt` code snippets.
  * Added `--force` to Cargo tool "Download" button in toolchain preferences page.
+ * Fixed: finding Build Target executables for crates that have a dash ('-') in the name. (the dash is converted to an underscore).
  * Fixed stale validation message for location field in New Project Wizard.
  * Fixed stale validation message for Build Command field in Build Targets property page and Launch Configurations dialog.
  * Fixed editor NPE when opening files from a non-workspace VCS revision.

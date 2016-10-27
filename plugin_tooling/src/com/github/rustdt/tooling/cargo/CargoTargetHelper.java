@@ -47,6 +47,8 @@ public class CargoTargetHelper {
 	public LaunchArtifact getLaunchArtifactForTestTarget(Location crateLocation, String testTargetName, 
 			DebugMode buildMode)
 			throws CommonException {
+		testTargetName = testTargetName.replace('-', '_');
+		
 		String cargoTargetName = "test." + testTargetName;
 		String exePath = getExecutablePathForTestTarget(testTargetName, buildMode, crateLocation);
 		return new LaunchArtifact(cargoTargetName, exePath);
