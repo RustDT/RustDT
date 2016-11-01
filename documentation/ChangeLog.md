@@ -1,13 +1,15 @@
 ## release ChangeLog
 
 ### (NextVersion)
+
+### 0.7.0
  * Added support for Rust 1.12 new error message format. (#130)
+  * Please upgrade to Rust 1.12 or later because the previous Rust toolchain versions are no longer supported in RustDT. 
   * (Thanks to https://github.com/PieterPenninckx for the contribution)
-  * Please upgrade to Rust 1.12 or later because the previous error format is no longer supported in RustDT. 
  * Improved syntax highlighting for macro invocations (`foo!=bar` no longer highlights `foo!` as a macro) 
- * Default setting for "auto-insert" of Code Snippets is now false.
- * Added more extensive `doc` code snippet. #TODO test after build
+ * Added more extensive `doc` code snippet.
  * Added `matchRes` and `matchOpt` code snippets.
+ * Default setting for "auto-insert" of Code Snippets is now false.
  * Added `--force` to Cargo tool "Download" button in toolchain preferences page.
  * Fixed: finding Build Target executables for crates that have a dash ('-') in the name. (the dash is converted to an underscore).
  * Fixed stale validation message for location field in New Project Wizard.

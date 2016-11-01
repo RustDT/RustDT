@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.github.rustdt.tooling.tests;singleton:=true
-Bundle-Version: 0.6.2.qualifier
-Fragment-Host: com.github.rustdt.tooling;bundle-version="0.6.2"
+Bundle-Version: 0.7.0.qualifier
+Fragment-Host: com.github.rustdt.tooling;bundle-version="0.7.0"
 Bundle-Vendor: %pluginProvider
 Bundle-Name: %pluginNameTests
 Bundle-Localization: plugin

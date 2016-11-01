@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.github.rustdt.ide.ui;singleton:=true
-Bundle-Version: 0.6.2.qualifier
+Bundle-Version: 0.7.0.qualifier
 Bundle-Name: %pluginName
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
