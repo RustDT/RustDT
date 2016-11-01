@@ -6,6 +6,7 @@
  * Added support for Rust 1.12 new error message format. (#130)
   * Please upgrade to Rust 1.12 or later because the previous Rust toolchain versions are no longer supported in RustDT. 
   * (Thanks to https://github.com/PieterPenninckx for the contribution)
+  * Note: be aware of [this Cargo issue](https://github.com/rust-lang/rust/issues/37011) which might sometimes prevent errors to be parsed by RustDT. This will be addressed in a future RustDT release (see https://github.com/RustDT/RustDT/issues/138)
  * Improved syntax highlighting for macro invocations (`foo!=bar` no longer highlights `foo!` as a macro) 
  * Added more extensive `doc` code snippet.
  * Added `matchRes` and `matchOpt` code snippets.
