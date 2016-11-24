@@ -103,11 +103,11 @@ public class RacerOutputParserTest extends CommonToolingTest {
 					"stdin()", new ArrayList2<SourceRange>()),
 				new ToolCompletionProposal(offset, 0, "repeat", "repeat(byte: u8)", Function, att(), null, "util.rs",
 					"pub fn repeat(byte: u8) -> Repeat { Repeat { byte: byte } }",
-					"repeat(byte)", new ArrayList2<>(sr(7, 4))),
+					"repeat(byte)", ArrayList2.create(sr(7, 4))),
 				new ToolCompletionProposal(offset, 0, "copy", "copy(r: &mut R, w: &mut W)", Function, att(), 
 					null, "util.rs",
 					"pub fn copy<R: Read, W: Write>(r: &mut R, w: &mut W) -> io::Result<u64> {",
-					"copy(r, w)", new ArrayList2<>(sr(5, 1), sr(8, 1)))
+					"copy(r, w)", ArrayList2.create(sr(5, 1), sr(8, 1)))
 			)
 		);
 		
@@ -123,7 +123,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 					"xxx()", new ArrayList2<SourceRange>()),
 				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), null, "stdio.rs",
 					"pub fn stdin() -> Stdin {",
-					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
+					"xxx2(__)", ArrayList2.create(sr(5, 2)))
 			)
 		);
 		
@@ -159,7 +159,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 					"xxx()", new ArrayList2<SourceRange>()),
 				new ToolCompletionProposal(offset, 0, "xxx2", "xxx2()", Function, att(), null, "stdio.rs",
 					"pub fn xxx2() -> Stdin {" +NL+ DESC_LINE2 +NL+ DESC_LINE2,
-					"xxx2(__)", new ArrayList2<SourceRange>(sr(5, 2)))
+					"xxx2(__)", ArrayList2.create(sr(5, 2)))
 			)
 		);
 	}

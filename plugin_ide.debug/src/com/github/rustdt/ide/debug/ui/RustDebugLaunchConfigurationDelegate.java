@@ -115,7 +115,7 @@ public class RustDebugLaunchConfigurationDelegate extends AbstractLangDebugLaunc
 		
 		@Override
 		protected String[] getGDBCommandLineArray() {
-			ArrayList2<String> gdbCmdLine = new ArrayList2<>(super.getGDBCommandLineArray());
+			ArrayList2<String> gdbCmdLine = ArrayList2.create(super.getGDBCommandLineArray());
 			
 			if(prettyPrintLoc != null) {
 				

@@ -264,7 +264,7 @@ public class CargoManifest {
 	}
 	
 	protected static <T> Iterable<T> singletonIterable(T obj) {
-		return obj == null ? new ArrayList2<>() : new ArrayList2<>(obj);
+		return obj == null ? new ArrayList2<>() : ArrayList2.create(obj);
 	}
 	
 }

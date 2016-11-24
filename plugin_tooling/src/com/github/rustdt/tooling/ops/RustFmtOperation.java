@@ -40,7 +40,7 @@ public class RustFmtOperation implements AbstractToolOperation<String> {
 	public String executeToolOperation(IOperationMonitor om) 
 			throws CommonException, OperationCancellation, OperationSoftFailure {
 	
-		ArrayList2<String> cmdLine = new ArrayList2<>(rustFmt.toString());
+		ArrayList2<String> cmdLine = ArrayList2.create(rustFmt.toString());
 		
 //		cmdLine.add("--write-mode=diff");
 		cmdLine.add("--skip-children");

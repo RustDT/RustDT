@@ -60,7 +60,7 @@ public abstract class RacerOperation<RESULTDATA> extends AbstractToolInvocationO
 	}
 	
 	protected static ArrayList2<String> getArguments(String opName, int line_0, int col_0, Location fileLocation) {
-		ArrayList2<String> arguments = new ArrayList2<String>(opName);
+		ArrayList2<String> arguments = ArrayList2.create(opName);
 		arguments.add(Integer.toString(line_0 + 1)); // use one-based index
 		arguments.add(Integer.toString(col_0)); // But this one is zero-based index
 		arguments.add(fileLocation.toPathString());
@@ -103,7 +103,7 @@ public abstract class RacerOperation<RESULTDATA> extends AbstractToolInvocationO
 		String toolExePath = racerPath.getValidatedValue().toString();
 		String rustSrcPath = sdkSrcLocation.getValidatedValue().toString();
 		
-		ArrayList2<String> cmdLine = new ArrayList2<String>(toolExePath);
+		ArrayList2<String> cmdLine = ArrayList2.create(toolExePath);
 		
 		cmdLine.addAll2(getRacerArguments());
 		

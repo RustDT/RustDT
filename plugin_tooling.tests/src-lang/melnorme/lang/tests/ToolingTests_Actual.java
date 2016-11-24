@@ -26,7 +26,7 @@ public class ToolingTests_Actual {
 	public static BundleInfo createSampleBundleInfoA(String name, String version) {
 		return new BundleInfo(new CargoManifest(name, version, null, 
 			null, 
-			new ArrayList2<>(
+			ArrayList2.create(
 				new FileRef("sampleConfig", null)
 			)
 			, null

@@ -59,21 +59,21 @@ public class CargoManifest_Test extends CommonToolingTest {
 		
 		testEffectiveTargets(parseManifest(LOC_CRATE_SIMPLE), LOC_CRATE_SIMPLE,
 			null,
-			new ArrayList2<>(
+			ArrayList2.create(
 				new FileRef("crate_simple", null)
 			),
-			new ArrayList2<>()
+			ArrayList2.create()
 		);
 		
 		CargoManifest crateFooManifest = parseManifest(LOC_CRATE_FOO);
 		testEffectiveTargets(crateFooManifest, LOC_CRATE_FOO,
 			new FileRef("crate_foo", null), 
-			new ArrayList2<>(
+			ArrayList2.create(
 				new FileRef("crate_foo", null),
 				new FileRef("bin1", path("src/bin/bin1.rs").toString()),
 				new FileRef("bin2", path("src/bin/bin2.rs").toString())
 			),
-			new ArrayList2<>(
+			ArrayList2.create(
 				new FileRef("test1", path("tests/test1.rs").toString()),
 				new FileRef("test2", path("tests/test2.rs").toString())
 			)
@@ -104,7 +104,7 @@ public class CargoManifest_Test extends CommonToolingTest {
 		CargoManifest crateFoo = parseManifest(LOC_CRATE_FOO);
 		
 		assertEquals(crateFoo.getEffectiveTestTargets(LOC_CRATE_FOO),
-			new ArrayList2<>(
+			ArrayList2.create(
 				"test1",
 				"test2",
 				"lib.crate_foo",

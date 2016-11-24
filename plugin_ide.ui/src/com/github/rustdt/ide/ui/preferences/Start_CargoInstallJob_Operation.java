@@ -62,7 +62,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		
 		toolBinPath = dest.resolve(getBinExeSuffix()).toPathString();
 		
-		ArrayList2<String> args = new ArrayList2<>("install");
+		ArrayList2<String> args = ArrayList2.create("install");
 		args.addAll(sourceArgs);
 		args.addElements("--root", dest.toPathString());
 		args.addElements("--force");

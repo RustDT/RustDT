@@ -51,7 +51,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateDeps.toml"))),
 			new CargoManifest("hello_world", null,
-				new ArrayList2<>(
+				ArrayList2.create(
 					new CrateDependencyRef("rand", "0.3.0"),
 					new CrateDependencyRef("dep_empty", ""),
 					new CrateDependencyRef("dep_invalid", null),
@@ -67,7 +67,7 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		// Same contents, different toml format
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateDeps2.toml"))),
 			new CargoManifest("hello_world", null,
-				new ArrayList2<>(
+				ArrayList2.create(
 					new CrateDependencyRef("rand", "0.3.0"),
 					new CrateDependencyRef("dep_empty", ""),
 					new CrateDependencyRef("dep_invalid", null),
@@ -92,9 +92,9 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		// Test implicit binary
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateBin1.toml"))),
 			new CargoManifest("hello_world", null,
-				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
+				ArrayList2.create(new CrateDependencyRef("rand", "0.3.0")),
 				null,
-				new ArrayList2<>(
+				ArrayList2.create(
 //					new FileRef("hello_world", null)
 				),
 				null
@@ -103,9 +103,9 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateBin2.toml"))),
 			new CargoManifest("hello_world", null,
-				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
+				ArrayList2.create(new CrateDependencyRef("rand", "0.3.0")),
 				null,
-				new ArrayList2<>(
+				ArrayList2.create(
 					new FileRef("bin_default", null),
 					new FileRef("bin2", "src/helloWorld2.rs"),
 					new FileRef("bin3", null)
@@ -117,10 +117,10 @@ public class CargoManifestParser_Test extends CommonToolingTest {
 		// Test 'tests' targets
 		assertEquals(parser.parse(readStringFromFile(CARGO_BUNDLES.resolve("CrateTests1.toml"))),
 			new CargoManifest("hello_world", null,
-				new ArrayList2<>(new CrateDependencyRef("rand", "0.3.0")),
+				ArrayList2.create(new CrateDependencyRef("rand", "0.3.0")),
 				null,
 				null,
-				new ArrayList2<>(
+				ArrayList2.create(
 					new FileRef("test_default", null),
 					new FileRef("test2", "tests/helloWorld2.rs"),
 					new FileRef("test3", null)
