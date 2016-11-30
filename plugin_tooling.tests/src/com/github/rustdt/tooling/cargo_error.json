@@ -1,0 +1,44 @@
+{
+ "reason":"compiler-message",
+ "package_id":"hello_world 0.0.1 (path+file:///D:/devel/Scratchpad.D/RustTest)",
+ "target":{"kind":["lib"],"name":"hello_world", "src_path":"src/learn.rs"},
+ "message":
+ 
+ 
+{
+  "code":{
+    "code":"E0425",
+    "explanation":"\nAn unresolved name was used.\n\nErroneous code examples:\n\n```compile_fail,E0425\nsomething_that_doesnt_exist::foo;\n// error: unresolved name `something_that_doesnt_exist::foo`\n\n// or:\n\ntrait Foo {\n    fn bar() {\n        Self; // error: unresolved name `Self`\n    }\n}\n\n// or:\n\nlet x = unknown_variable;  // error: unresolved name `unknown_variable`\n```\n\nPlease verify that the name wasn't misspelled and ensure that the\nidentifier being referred to is valid for the given situation. Example:\n\n```\nenum something_that_does_exist {\n    Foo,\n}\n```\n\nOr:\n\n```\nmod something_that_does_exist {\n    pub static foo : i32 = 0i32;\n}\n\nsomething_that_does_exist::foo; // ok!\n```\n\nOr:\n\n```\nlet unknown_variable = 12u32;\nlet x = unknown_variable; // ok!\n```\n\nIf the item is not defined in the current module, it must be imported using a\n`use` statement, like so:\n\n```ignore\nuse foo::bar;\nbar();\n```\n\nIf the item you are importing is not defined in some super-module of the\ncurrent module, then it must also be declared as public (e.g., `pub fn`).\n"
+  },
+  "level":"error",
+  "message":"unresolved name `xpto`",
+  "rendered":null,
+  "children":[
+
+  ],
+  "spans":[
+    {
+      "byte_end":132,
+      "byte_start":128,
+      "column_end":23,
+      "column_start":19,
+      "expansion":null,
+      "file_name":"src/main.rs",
+      "is_primary":true,
+      "label":"unresolved name",
+      "line_end":8,
+      "line_start":8,
+      "suggested_replacement":null,
+      "text":[
+        {
+          "highlight_end":23,
+          "highlight_start":19,
+          "text":"    let x2 = &mut xpto;\r"
+        }
+      ]
+    }
+  ]
+}
+ 
+ 
+}

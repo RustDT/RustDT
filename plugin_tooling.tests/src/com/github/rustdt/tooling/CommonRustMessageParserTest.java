@@ -18,15 +18,36 @@ import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.utilbox.status.Severity;
 
 
-public class RustBuildOutputParserTest extends CommonToolingTest {
+public class CommonRustMessageParserTest extends CommonToolingTest {
 	
-	protected static ToolSourceMessage msg(Path path, int line, int column, int endLine, int endColumn, 
-			Severity severity, String errorMessage) {
-		
+	public static SourceLineColumnRange range(int line_1, int column_1, int endLine, int endColumn) {
+		return new SourceLineColumnRange(line_1, column_1, endLine, endColumn);
+	}
+	
+	public static SourceLineColumnRange noRange() {
+		return new SourceLineColumnRange(-1, -1);
+	}
+	
+	public static ToolSourceMessage msg(
+		Path path, int line, int column, int endLine, int endColumn, Severity severity, String errorMessage
+	) {
 		ToolSourceMessage msg = new ToolSourceMessage(path, 
 			new SourceLineColumnRange(line, column, endLine, endColumn), 
 			severity, errorMessage);
 		msg.toString();
 		return msg;
 	}
+	
+	protected static ToolSourceMessage msg(
+		String path, int line, int column, int endLine, int endColumn, Severity severity, String errorMessage
+	) {
+		return msg(path(path), line, column, endLine, endColumn, severity, errorMessage);
+	}
+	
+	protected static ToolSourceMessage msg(
+		String path, Severity severity, String errorMessage
+	) {
+		return msg(path(path), -1, -1, -1, -1, severity, errorMessage);
+	}
+	
 }

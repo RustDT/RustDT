@@ -1,0 +1,74 @@
+{
+  "children":[
+
+  ],
+  "code":{
+    "code":"E0499",
+    "explanation":"EXPLANATION\n"
+  },
+  "level":"error",
+  "message":"cannot borrow `xpto` as mutable more than once at a time",
+  "rendered":null,
+  "spans":[
+    {
+      "byte_end":93,
+      "byte_start":89,
+      "column_end":23,
+      "column_start":19,
+      "expansion":null,
+      "file_name":"src\\main.rs",
+      "is_primary":false,
+      "label":"first mutable borrow occurs here",
+      "line_end":6,
+      "line_start":6,
+      "suggested_replacement":null,
+      "text":[
+        {
+          "highlight_end":23,
+          "highlight_start":19,
+          "text":"    let x1 = &mut xpto;\r"
+        }
+      ]
+    },
+    {
+      "byte_end":124,
+      "byte_start":120,
+      "column_end":23,
+      "column_start":19,
+      "expansion":null,
+      "file_name":"src\\main.rs",
+      "is_primary":true,
+      "label":"second mutable borrow occurs here",
+      "line_end":8,
+      "line_start":8,
+      "suggested_replacement":null,
+      "text":[
+        {
+          "highlight_end":23,
+          "highlight_start":19,
+          "text":"    let x2 = &mut xpto;\r"
+        }
+      ]
+    },
+    {
+      "byte_end":183,
+      "byte_start":182,
+      "column_end":2,
+      "column_start":1,
+      "expansion":null,
+      "file_name":"src\\main.rs",
+      "is_primary":false,
+      "label":"first borrow ends here",
+      "line_end":14,
+      "line_start":14,
+      "suggested_replacement":null,
+      "text":[
+        {
+          "highlight_end":2,
+          "highlight_start":1,
+          "text":"}"
+        }
+      ]
+    }
+  ]
+}

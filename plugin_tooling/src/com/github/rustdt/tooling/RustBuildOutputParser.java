@@ -23,6 +23,7 @@ import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.HashcodeUtil;
 import melnorme.utilbox.misc.IByteSequence;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.process.ExternalProcessHelper.ExternalProcessResult;
@@ -153,6 +154,26 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 		}
 		
 		@Override
+		public boolean equals(Object obj) {
+			if(this == obj) return true;
+			if(!(obj instanceof CompositeToolMessageData)) return false;
+			
+			CompositeToolMessageData other = (CompositeToolMessageData) obj;
+			
+			return 
+				equalsOther(other) &&
+				areEqual(nextMessage, other.nextMessage) &&
+				areEqual(simpleMessageText, other.simpleMessageText)
+			;
+		}
+		
+		@Override
+		public int hashCode() {
+			return HashcodeUtil.combinedHashCode(super.hashCode(), nextMessage);
+		}
+		
+		
+		@Override
 		public String toString() {
 			return getFullMessageSource();
 		}
@@ -167,7 +188,7 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 	}
 	
 	@Override
-	protected ToolSourceMessage createMessage(ToolMessageData msgdata) throws CommonException {
+	public ToolSourceMessage createMessage(ToolMessageData msgdata) throws CommonException {
 		if(StringUtil.nullAsEmpty(msgdata.messageTypeString).isEmpty()) {
 			msgdata.messageTypeString = "error";
 		}

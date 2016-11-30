@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 
-import com.github.rustdt.tooling.RustBuildOutputParserJson;
+import com.github.rustdt.tooling.RustBuildOutputParser2;
 import com.github.rustdt.tooling.cargo.CargoManifest;
 
 import melnorme.lang.ide.core.LangCore;
@@ -210,7 +210,7 @@ public class RustBuildManager extends BuildManager {
 		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
-			BuildOutputParser2 outputParser = new RustBuildOutputParserJson() {
+			BuildOutputParser2 outputParser = new RustBuildOutputParser2() {
 				@Override
 				protected void handleParseError(CommonException ce) {
 					 LangCore.logStatusException(ce.toStatusException());

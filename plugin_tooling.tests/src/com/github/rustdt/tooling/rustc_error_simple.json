@@ -1,0 +1,34 @@
+{
+  "code":{
+    "code":"E0425",
+    "explanation":"EXPLANATION\n"
+  },
+  "level":"error",
+  "message":"unresolved name `xpto`",
+  "rendered":null,
+  "children":[
+
+  ],
+  "spans":[
+    {
+      "byte_end":132,
+      "byte_start":128,
+      "column_end":23,
+      "column_start":19,
+      "expansion":null,
+      "file_name":"src/main.rs",
+      "is_primary":true,
+      "label":"unresolved name",
+      "line_end":8,
+      "line_start":8,
+      "suggested_replacement":null,
+      "text":[
+        {
+          "highlight_end":23,
+          "highlight_start":19,
+          "text":"    let x2 = &mut xpto;\r"
+        }
+      ]
+    }
+  ]
+}

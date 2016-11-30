@@ -1,6 +1,0 @@
-Compiling bla v0.1.0 (file:///tmp/bla)
-{"message":"mismatched types","code":{"code":"E0308","explanation":"EXPLANATION"},"level":"error","spans":[{"file_name":"src/main.rs","byte_start":47,"byte_end":48,"line_start":3,"line_end":3,"column_start":5,"column_end":6,"is_primary":true,"text":[{"text":"    3","highlight_start":5,"highlight_end":6}],"label":"expected (), found integral variable","suggested_replacement":null,"expansion":null}],"children":[{"message":"expected type `()`","code":null,"level":"note","spans":[],"children":[],"rendered":null},{"message":"   found type `{integer}`","code":null,"level":"note","spans":[],"children":[],"rendered":null}],"rendered":null}
-{"message":"aborting due to previous error","code":null,"level":"error","spans":[],"children":[],"rendered":null}
-error: Could not compile `bla`.
-
-To learn more, run the command again with --verbose.

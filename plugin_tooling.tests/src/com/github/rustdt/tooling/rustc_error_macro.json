@@ -1,0 +1,184 @@
+  {
+    "children":[
+      {
+        "children":[
+
+        ],
+        "code":null,
+        "level":"note",
+        "message":"expected type `bool`",
+        "rendered":null,
+        "spans":[
+
+        ]
+      },
+      {
+        "children":[
+
+        ],
+        "code":null,
+        "level":"note",
+        "message":"   found type `{integer}`",
+        "rendered":null,
+        "spans":[
+
+        ]
+      }
+    ],
+    "code":{
+      "code":"E0308",
+      "explanation":"EXPLAIN"
+    },
+    "level":"error",
+    "message":"mismatched types",
+    "rendered":null,
+    "spans":[
+      {
+        "byte_end":640,
+        "byte_start":629,
+        "column_end":33,
+        "column_start":22,
+        "file_name":"<std macros>",
+        "is_primary":true,
+        "label":"expected bool, found integral variable",
+        "line_end":5,
+        "line_start":5,
+        "suggested_replacement":null,
+        "text":[
+          {
+            "highlight_end":33,
+            "highlight_start":22,
+            "text":"if ! ( * left_val == * right_val ) {"
+          }
+        ],
+        "expansion":{
+          "def_site_span":{
+            "byte_end":1141,
+            "byte_start":503,
+            "column_end":71,
+            "column_start":1,
+            "expansion":null,
+            "file_name":"<std macros>",
+            "is_primary":false,
+            "label":null,
+            "line_end":18,
+            "line_start":1,
+            "suggested_replacement":null,
+            "text":[
+              {
+                "highlight_end":40,
+                "highlight_start":1,
+                "text":"( $ left : expr , $ right : expr ) => ("
+              },
+              {
+                "highlight_end":2,
+                "highlight_start":1,
+                "text":"{"
+              },
+              {
+                "highlight_end":33,
+                "highlight_start":1,
+                "text":"match ( & $ left , & $ right ) {"
+              },
+              {
+                "highlight_end":30,
+                "highlight_start":1,
+                "text":"( left_val , right_val ) => {"
+              },
+              {
+                "highlight_end":37,
+                "highlight_start":1,
+                "text":"if ! ( * left_val == * right_val ) {"
+              },
+              {
+                "highlight_end":10,
+                "highlight_start":1,
+                "text":"panic ! ("
+              },
+              {
+                "highlight_end":39,
+                "highlight_start":1,
+                "text":"\"assertion failed: `(left == right)` \\"
+              },
+              {
+                "highlight_end":58,
+                "highlight_start":1,
+                "text":"                           (left: `{:?}`, right: `{:?}`)\""
+              },
+              {
+                "highlight_end":39,
+                "highlight_start":1,
+                "text":", left_val , right_val ) } } } } ) ; ("
+              },
+              {
+                "highlight_end":59,
+                "highlight_start":1,
+                "text":"$ left : expr , $ right : expr , $ ( $ arg : tt ) * ) => ("
+              },
+              {
+                "highlight_end":2,
+                "highlight_start":1,
+                "text":"{"
+              },
+              {
+                "highlight_end":41,
+                "highlight_start":1,
+                "text":"match ( & ( $ left ) , & ( $ right ) ) {"
+              },
+              {
+                "highlight_end":30,
+                "highlight_start":1,
+                "text":"( left_val , right_val ) => {"
+              },
+              {
+                "highlight_end":37,
+                "highlight_start":1,
+                "text":"if ! ( * left_val == * right_val ) {"
+              },
+              {
+                "highlight_end":10,
+                "highlight_start":1,
+                "text":"panic ! ("
+              },
+              {
+                "highlight_end":39,
+                "highlight_start":1,
+                "text":"\"assertion failed: `(left == right)` \\"
+              },
+              {
+                "highlight_end":62,
+                "highlight_start":1,
+                "text":"                           (left: `{:?}`, right: `{:?}`): {}\""
+              },
+              {
+                "highlight_end":71,
+                "highlight_start":1,
+                "text":", left_val , right_val , format_args ! ( $ ( $ arg ) * ) ) } } } } ) ;"
+              }
+            ]
+          },
+          "macro_decl_name":"assert_eq!",
+          "span":{
+            "byte_end":207,
+            "byte_start":186,
+            "column_end":26,
+            "column_start":5,
+            "expansion":null,
+            "file_name":"src\\main.rs",
+            "is_primary":false,
+            "label":null,
+            "line_end":15,
+            "line_start":15,
+            "suggested_replacement":null,
+            "text":[
+              {
+                "highlight_end":26,
+                "highlight_start":5,
+                "text":"    assert_eq!(true, 123)\r"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }

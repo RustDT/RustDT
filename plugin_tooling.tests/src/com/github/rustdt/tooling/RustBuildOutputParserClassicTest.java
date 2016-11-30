@@ -25,7 +25,7 @@ import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.utilbox.core.CommonException;
 
 
-public class RustBuildOutputParserClassicTest extends RustBuildOutputParserTest {
+public class RustBuildOutputParserClassicTest extends CommonRustMessageParserTest {
 	
 	public class TestsRustBuildOutputParser extends RustBuildOutputParser {
 		@Override
