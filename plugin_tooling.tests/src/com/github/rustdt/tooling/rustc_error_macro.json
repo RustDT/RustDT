@@ -164,7 +164,7 @@
             "column_end":26,
             "column_start":5,
             "expansion":null,
-            "file_name":"src\\main.rs",
+            "file_name":"src/main.rs",
             "is_primary":false,
             "label":null,
             "line_end":15,

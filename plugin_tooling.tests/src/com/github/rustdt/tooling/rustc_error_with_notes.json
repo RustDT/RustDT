@@ -39,7 +39,7 @@
       "column_end":12,
       "column_start":9,
       "expansion":null,
-      "file_name":"src\\main.rs",
+      "file_name":"src/main.rs",
       "is_primary":true,
       "label":"expected &MyTrait, found integral variable",
       "line_end":14,
