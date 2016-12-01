@@ -3,6 +3,7 @@
 ### 0.8.0
  * Added support for Cargo's JSON output, with `--message-format json`. (#138) 
  #TODO
+ * Added syntax coloring support for `?` operator.
 
 ### 0.7.0
  * Added support for Rust 1.12 new error message format. (#130)

@@ -61,7 +61,8 @@ public class EditorSettings_Actual {
 			RustColorPreferences.KEYWORDS_SELF,
 			RustColorPreferences.LIFETIME,
 			RustColorPreferences.ATTRIBUTE,
-			RustColorPreferences.MACRO_CALL
+			RustColorPreferences.MACRO_CALL,
+			RustColorPreferences.TRY_OPERATOR
 		);
 	}
 	

@@ -10,11 +10,16 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+
 import melnorme.lang.tooling.parser.lexer.CharacterReader_SubReader;
 import melnorme.lang.tooling.parser.lexer.WordLexerRule;
 import melnorme.lang.utils.parse.ICharacterReader;
 import melnorme.lang.utils.parse.LexingUtils;
 
+/**
+ * A lexer rule used for coloring purposes.
+ */
 public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	
 	public static final String[] keywords_control = { 
@@ -37,6 +42,7 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	
 	protected final TOKEN macroCall;
 	protected final TOKEN numberLiteral;
+	protected final TOKEN tryOperator;
 	
 	public RustWordLexerRule(
 			TOKEN whitespaceToken, 
@@ -45,11 +51,13 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 			TOKEN keywords_self, 
 			TOKEN word,
 			TOKEN macroCall, 
-			TOKEN numberLiteral
+			TOKEN numberLiteral,
+			TOKEN tryOperator
 	) {
 		super(whitespaceToken, word);
-		this.macroCall = macroCall;
-		this.numberLiteral = numberLiteral;
+		this.macroCall = assertNotNull(macroCall);
+		this.numberLiteral = assertNotNull(numberLiteral);
+		this.tryOperator = assertNotNull(tryOperator);
 		
 		addKeywords(keywords, RustWordLexerRule.keywords_control);
 		addKeywords(keywords_booleanLiteral, RustWordLexerRule.keywords_boolean_lit);
@@ -58,6 +66,10 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	
 	@Override
 	public TOKEN doEvaluateToken(ICharacterReader reader) {
+		if(reader.tryConsume('?')) {
+			return tryOperator;
+		}
+		
 		TOKEN result = super.doEvaluateToken(reader);
 		
 		if(result == null) {

@@ -63,5 +63,8 @@ public interface RustColorPreferences {
 	ThemedTextStylingPreference MACRO_CALL = new ThemedTextStylingPreference(PREFIX + "macro_call",
 		new TextStyling(new RGB(62, 153, 159), false, false),
 		new TextStyling(new RGB(70, 170, 180), false, false));
-	
+	ThemedTextStylingPreference TRY_OPERATOR = new ThemedTextStylingPreference(PREFIX + "try_operator",
+		new TextStyling(new RGB(62, 153, 159), true, false),
+		new TextStyling(new RGB(70, 170, 180), false, false));
+
 }
