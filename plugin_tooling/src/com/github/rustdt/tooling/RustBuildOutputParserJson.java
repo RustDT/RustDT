@@ -11,8 +11,6 @@
  *******************************************************************************/
 package com.github.rustdt.tooling;
 
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
-
 import java.io.IOException;
 import java.io.Reader;
 
@@ -22,12 +20,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import melnorme.lang.tooling.common.ToolSourceMessage;
-import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
-import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2.ToolMessageData;
+import melnorme.lang.tooling.toolchain.ops.ToolMessageData;
+import melnorme.lang.tooling.toolchain.ops.ToolMessageParser;
 import melnorme.lang.utils.gson.GsonHelper;
 import melnorme.lang.utils.gson.JsonParserX;
 import melnorme.lang.utils.gson.JsonParserX.JsonSyntaxExceptionX;
-import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
@@ -36,18 +33,7 @@ import melnorme.utilbox.status.Severity;
 public class RustBuildOutputParserJson {
 	
 	protected final GsonHelper helper = new GsonHelper();
-	// only used for createMessage FIXME: cleanup/refactor, it's a mess
-	protected final BuildOutputParser2 messageParseHelper = new BuildOutputParser2() {
-		@Override
-		protected ToolMessageData parseMessageData(StringCharSource output) throws CommonException {
-			throw assertFail();
-		}
-		
-		@Override
-		protected void handleParseError(CommonException ce) {
-			throw assertFail();
-		}
-	};
+	protected final ToolMessageParser messageParseHelper = new ToolMessageParser();
 	
 	public ToolSourceMessage parseSourceMessage(ToolMessageData msgdata) throws CommonException {
 		if(msgdata.pathString.startsWith("<") && msgdata.pathString.endsWith(">")) {
@@ -145,11 +131,6 @@ public class RustBuildOutputParserJson {
 			isPrimary = helper.getBooleanOr(spanObject, "is_primary", false);
 		}
 		subMessage.sourceBeforeMessageText = ""; // This does not seem to be used (?). TODO
-		
-		/*FIXME: review*/
-//		if (! "".equals(macroDeclarationName)) {
-//			subMessage.messageText = subMessage.messageText + " (in expansion of `" + macroDeclarationName + "`)";
-//		}
 		
 		if (isPrimary) {
 			subMessage.messageTypeString = severityLevel;

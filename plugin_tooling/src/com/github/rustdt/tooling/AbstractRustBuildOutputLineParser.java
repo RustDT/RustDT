@@ -16,7 +16,7 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2.ToolMessageData;
+import melnorme.lang.tooling.toolchain.ops.ToolMessageData;
 
 /**
  * Simple regexp-based parser for (error) output lines of the rust build process.

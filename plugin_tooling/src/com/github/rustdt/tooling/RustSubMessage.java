@@ -66,6 +66,11 @@ public class RustSubMessage extends RustMessage {
 	public void collectToolMessages(ArrayList2<ToolSourceMessage> sourceMessages, RustMainMessage mainMessage) {
 		super.collectToolMessages(sourceMessages, mainMessage);
 		
+		// TODO : review how macro expansion are displayed.
+//		if (! "".equals(macroDeclarationName)) {
+//			subMessage.messageText = subMessage.messageText + " (in expansion of `" + macroDeclarationName + "`)";
+//		}
+		
 		if(expansionMsg != null) {
 			expansionMsg.collectToolMessages(sourceMessages, mainMessage);
 		}

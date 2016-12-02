@@ -13,7 +13,7 @@ package com.github.rustdt.tooling;
 
 import java.util.regex.Pattern;
 
-import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2.ToolMessageData;
+import melnorme.lang.tooling.toolchain.ops.ToolMessageData;
 import melnorme.utilbox.status.Severity;
 
 /**
