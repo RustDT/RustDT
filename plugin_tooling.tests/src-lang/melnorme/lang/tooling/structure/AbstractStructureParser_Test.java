@@ -65,6 +65,10 @@ public abstract class AbstractStructureParser_Test extends CommonToolingTest {
 	}
 	
 	public static ElementAttributes att(EAttributeFlag... flags) {
+		return new ElementAttributes(null, flags);
+	}
+	
+	public static ElementAttributes attPub(EAttributeFlag... flags) {
 		return new ElementAttributes(EProtection.PUBLIC, flags);
 	}
 	

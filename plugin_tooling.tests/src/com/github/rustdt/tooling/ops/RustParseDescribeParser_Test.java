@@ -170,7 +170,7 @@ public class RustParseDescribeParser_Test extends AbstractStructureParser_Test {
 			elemString("Function", "func", "{pub}", NO_TYPE),
 			
 			array(
-				elem("func", StructureElementKind.FUNCTION, att(), null, list())
+				elem("func", StructureElementKind.FUNCTION, attPub(), null, list())
 			)
 		);
 		verifyThrows(() -> {
