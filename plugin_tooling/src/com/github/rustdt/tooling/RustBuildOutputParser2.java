@@ -12,7 +12,10 @@ package com.github.rustdt.tooling;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser3;
@@ -36,18 +39,31 @@ public abstract class RustBuildOutputParser2 extends BuildOutputParser3 {
 			new CargoRustBuildOutputLineParser();
 	
 	@Override
-	public void parseStdOut(StringCharSource stdout) throws CommonException {
+	public void parseStdOut(StringCharSource stdout) throws CommonException, IOException {
 		StringCharSourceReader reader = stdout.toReader();
 		parseStdOut(reader);
 	}
 	
-	public void parseStdOut(Reader reader) throws CommonException {
-		ArrayList2<CargoMessage> cargoMessages = new CargoMessageParser(reader).parseCargoMessages();
+	public void parseStdOut(Reader reader) throws CommonException, IOException {
+		BufferedReader lineReader = new BufferedReader(reader);
 		
-		for (CargoMessage cargoMessage : cargoMessages) {
-			ArrayList2<ToolSourceMessage> toolMessages = cargoMessage.message.retrieveToolMessages();
-			for(ToolSourceMessage flatMessage : toolMessages) {
-				addBuildMessage(flatMessage);
+		while(true) {
+			String line = lineReader.readLine();
+			if(line == null || line.isEmpty()) {
+				return;
+			}
+			if(line.startsWith("Build failed,")) {
+				continue;
+			}
+			
+			CargoMessageParser cargoMessageParser = new CargoMessageParser(new StringReader(line));
+			ArrayList2<CargoMessage> cargoMessages = cargoMessageParser.parseCargoMessages();
+			
+			for (CargoMessage cargoMessage : cargoMessages) {
+				ArrayList2<ToolSourceMessage> toolMessages = cargoMessage.message.retrieveToolMessages();
+				for(ToolSourceMessage flatMessage : toolMessages) {
+					addBuildMessage(flatMessage);
+				}
 			}
 		}
 	}

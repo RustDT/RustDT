@@ -11,6 +11,8 @@
  *******************************************************************************/
 package melnorme.lang.tooling.toolchain.ops;
 
+import java.io.IOException;
+
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.utils.parse.StringCharSource;
 import melnorme.utilbox.collections.ArrayList2;
@@ -43,17 +45,25 @@ public abstract class BuildOutputParser3 extends BuildOutputParser2 {
 	
 	public ArrayList2<ToolSourceMessage> parseOutputStreams(ExternalProcessResult result) throws CommonException {
 		
-		parseStdOut(new StringCharSource(result.getStdOutBytes().toString(StringUtil.UTF8)));
-		parseStdErr(new StringCharSource(result.getStdErrBytes().toString(StringUtil.UTF8)));
+		try {
+			parseStdOut(new StringCharSource(result.getStdOutBytes().toString(StringUtil.UTF8)));
+		} catch(IOException e) {
+			throw new CommonException("Error reading stdout: ", e);
+		}
+		try {
+			parseStdErr(new StringCharSource(result.getStdErrBytes().toString(StringUtil.UTF8)));
+		} catch(IOException e) {
+			throw new CommonException("Error reading stderr: ", e);
+		}
 		
 		return buildMessages;
 	}
 	
-	public void parseStdOut(StringCharSource stdout) throws CommonException {
+	public void parseStdOut(StringCharSource stdout) throws CommonException, IOException {
 		parseOutput(stdout);
 	}
 	
-	public void parseStdErr(StringCharSource stderr) throws CommonException {
+	public void parseStdErr(StringCharSource stderr) throws CommonException, IOException {
 		parseOutput(stderr);
 	}
 	
