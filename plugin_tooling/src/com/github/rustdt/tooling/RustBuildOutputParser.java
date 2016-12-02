@@ -16,7 +16,6 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import java.util.Collections;
 
-import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.lang.tooling.toolchain.ops.BuildOutputParser2;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.ToolMessageData;
@@ -188,15 +187,12 @@ public abstract class RustBuildOutputParser extends BuildOutputParser2 {
 			(messageText.startsWith("in expansion of") || areEqual(messageText, "expansion site"));
 	}
 	
-	public ToolSourceMessage createMessage(ToolMessageData msgdata) throws CommonException {
-		if(StringUtil.nullAsEmpty(msgdata.messageTypeString).isEmpty()) {
-			msgdata.messageTypeString = "error";
-		}
-		return toolMessageParser.createMessage(msgdata);
-	}
-	
 	@Override
 	protected void addBuildMessage(ToolMessageData toolMessage_) throws CommonException {
+		if(StringUtil.nullAsEmpty(toolMessage_.messageTypeString).isEmpty()) {
+			toolMessage_.messageTypeString = "error";
+		}
+		
 		super.addBuildMessage(toolMessage_);
 		
 		if(toolMessage_ instanceof CompositeToolMessageData) {
