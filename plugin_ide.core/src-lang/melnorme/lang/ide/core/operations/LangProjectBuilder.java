@@ -22,8 +22,6 @@ import java.util.Map;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,7 +34,6 @@ import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
-import melnorme.lang.tooling.common.ops.Operation;
 import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -58,14 +55,6 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 	}
 	
 	/* ----------------- helpers ----------------- */
-	
-	protected void deleteProjectBuildMarkers() {
-		try {
-			getProject().deleteMarkers(LangCore_Actual.BUILD_PROBLEM_ID, true, IResource.DEPTH_INFINITE);
-		} catch (CoreException ce) {
-			EclipseCore.logStatus(ce);
-		}
-	}
 	
 	protected String getBuildProblemId() {
 		return LangCore_Actual.BUILD_PROBLEM_ID;
@@ -99,11 +88,7 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 	protected static HashMap2<String, IToolOperationMonitor> workspaceOpMonitorMap = new HashMap2<>();
 	protected IToolOperationMonitor workspaceOpMonitor;
 	
-	protected void prepareForBuild(IProgressMonitor pm) throws CoreException, OperationCancellation {
-		handleBeginWorkspaceBuild(pm);
-	}
-	
-	protected void handleBeginWorkspaceBuild(IProgressMonitor pm) throws CoreException, OperationCancellation {
+	protected void handleBeginWorkspaceBuild() {
 		workspaceOpMonitor = workspaceOpMonitorMap.get(LangCore.NATURE_ID);
 		
 		if(workspaceOpMonitor != null) {
@@ -112,41 +97,26 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 		workspaceOpMonitor = getToolManager().startNewBuildOperation();
 		workspaceOpMonitorMap.put(LangCore.NATURE_ID, workspaceOpMonitor);
 		
-		ResourceUtils.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
-			@Override
-			public void resourceChanged(IResourceChangeEvent event) {
-				int type = event.getType();
-				if(type == IResourceChangeEvent.POST_BUILD || type == IResourceChangeEvent.PRE_BUILD) {
-					workspaceOpMonitor = null;
-					workspaceOpMonitorMap.remove(LangCore.NATURE_ID);
-					ResourceUtils.getWorkspace().removeResourceChangeListener(this);
-				}
-			}
-		}, IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.PRE_BUILD);
+//		ResourceUtils.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
+//			@Override
+//			public void resourceChanged(IResourceChangeEvent event) {
+//				int type = event.getType();
+//				if(type == IResourceChangeEvent.POST_BUILD || type == IResourceChangeEvent.PRE_BUILD) {
+//					workspaceOpMonitor = null;
+//					workspaceOpMonitorMap.remove(LangCore.NATURE_ID);
+//					ResourceUtils.getWorkspace().removeResourceChangeListener(this);
+//				}
+//			}
+//		}, IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.PRE_BUILD);
 		
 		workspaceOpMonitor.writeInfoMessage(
 			headerVeryBig(MessageFormat.format(MSG_Starting_LANG_Build, LangCore_Actual.NAME_OF_LANGUAGE))
 		);
-		
-		clearWorkspaceErrorMarkers(pm);
 	}
 	
-	protected void clearWorkspaceErrorMarkers(IProgressMonitor pm) throws CoreException, OperationCancellation {
-		clearErrorMarkers(getProject(), pm);
-		
-		for(IBuildConfiguration buildConfig : getContext().getAllReferencingBuildConfigs()) {
-			clearErrorMarkers(buildConfig.getProject(), pm);
-		}
-	}
-	
-	protected void clearErrorMarkers(IProject project, IProgressMonitor pm) 
-			throws CoreException, OperationCancellation {
-		Operation clearMarkersOp = buildManager.newProjectClearMarkersOperation(workspaceOpMonitor, project);
-		EclipseUtils.execute_asCore(EclipseUtils.om(pm), clearMarkersOp);
-	}
-	
-	protected void handleEndWorkspaceBuild2() {
+	protected void handleEndWorkspaceBuild3() {
 		workspaceOpMonitor = null;
+		workspaceOpMonitorMap.remove(LangCore.NATURE_ID);
 	}
 	
 	@Override
@@ -155,8 +125,11 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 		
 		IProject project = assertNotNull(getProject());
 		
+		handleBeginWorkspaceBuild();
 		try {
-			prepareForBuild(monitor);
+			if(isFirstProjectOfKind()) {
+				clearWorkspaceErrorMarkers(monitor);
+			}
 			
 			return doBuild(project, kind, args, monitor);
 		} 
@@ -178,10 +151,9 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 			getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			
 			if(isLastProjectOfKind()) {
-				handleEndWorkspaceBuild2();
+				handleEndWorkspaceBuild3();
 			}
 		}
-		
 	}
 	
 	@SuppressWarnings("unused")
@@ -200,7 +172,32 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 	
+	/* ----------------- Markers ----------------- */
+	
+	protected void clearWorkspaceErrorMarkers(IProgressMonitor pm) throws CoreException, OperationCancellation {
+		clearErrorMarkers(getProject(), pm);
+		
+		for(IBuildConfiguration buildConfig : getContext().getAllReferencingBuildConfigs()) {
+			clearErrorMarkers(buildConfig.getProject(), pm);
+		}
+	}
+	
+	protected void clearErrorMarkers(IProject project, IProgressMonitor pm) 
+			throws CoreException, OperationCancellation {
+		EclipseUtils.execute_asCore(pm, (om) -> {
+			buildManager.newProjectClearMarkersOperation(workspaceOpMonitor, project).execute(om);
+		});
+	}
+	
 	/* ----------------- Clean ----------------- */
+	
+	protected void deleteProjectBuildMarkers() {
+		try {
+			getProject().deleteMarkers(LangCore_Actual.BUILD_PROBLEM_ID, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException ce) {
+			EclipseCore.logStatus(ce);
+		}
+	}
 	
 	@Override
 	protected void clean(IProgressMonitor monitor) throws CoreException {

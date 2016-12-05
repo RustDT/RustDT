@@ -25,6 +25,20 @@ import melnorme.utilbox.core.fntypes.OperationResult;
  */
 public class OperationFuture<RET> extends MonitorRunnableFuture<OperationResult<RET>> {
 	
+	public static <RET> OperationFuture<RET> fromResultOperation(
+		IOperationMonitor om, ResultOperation<RET> resultOperation
+	) {
+		return new OperationFuture<>(resultOperation, om);
+	}
+	
+	public static OperationFuture<Void> fromOperation(
+		IOperationMonitor om, Operation resultOperation
+	) {
+		return new OperationFuture<>(resultOperation, om);
+	}
+	
+	/* -----------------  ----------------- */
+
 	protected final ResultOperation<RET> resultOperation;
 	protected final BiDelegatingOperationMonitor om;
 	
@@ -36,6 +50,10 @@ public class OperationFuture<RET> extends MonitorRunnableFuture<OperationResult<
 		super(dom.secondCancelMonitor);
 		this.resultOperation = assertNotNull(resultOperation);
 		this.om = assertNotNull(dom);
+	}
+	
+	public IOperationMonitor getOperationMonitor() {
+		return om;
 	}
 	
 	@Override

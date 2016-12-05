@@ -17,14 +17,15 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.common.ops.Operation;
+import melnorme.lang.tooling.common.ops.OperationFuture;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 
 public class CompositeBuildOperation {
 	
-	protected final IOperationMonitor monitor;
 	protected final Indexable<Operation> operations;
+	protected final OperationFuture<Void> opFuture;
 	protected final ISchedulingRule rule; // Can be null
 	
 	public CompositeBuildOperation(
@@ -32,20 +33,25 @@ public class CompositeBuildOperation {
 		Indexable<Operation> operations, 
 		ISchedulingRule rule
 	) {
-		this.monitor = assertNotNull(monitor);
 		this.operations = assertNotNull(operations);
+		this.opFuture = OperationFuture.fromOperation(monitor, this::opExecute); 
 		this.rule = rule;
 	}
 	
 	public void execute() throws CommonException, OperationCancellation {
+		opFuture.run();
+		opFuture.getResult_forTerminated();
+	}
+	
+	public void opExecute(IOperationMonitor monitor) throws CommonException, OperationCancellation {
 		if(rule == null) {
-			doExecute(monitor);
+			executeSubOperations(monitor);
 		} else {
-			ResourceUtils.runOperation(rule, monitor, (om) -> doExecute(om));
+			ResourceUtils.runOperation(rule, monitor, (om) -> executeSubOperations(om));
 		}
 	}
 	
-	protected void doExecute(IOperationMonitor monitor) throws CommonException, OperationCancellation {
+	public void executeSubOperations(IOperationMonitor monitor) throws CommonException, OperationCancellation {
 		if(monitor.isCancelled()) {
 			return;
 		}

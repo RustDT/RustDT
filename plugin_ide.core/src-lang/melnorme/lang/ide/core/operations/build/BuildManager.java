@@ -28,6 +28,7 @@ import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.launch.LaunchMessages;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IToolOperationMonitor;
 import melnorme.lang.ide.core.operations.ToolManager;
+import melnorme.lang.ide.core.operations.build.BuildOperationCreator.ProjectBuildOperation;
 import melnorme.lang.ide.core.operations.build.BuildTargetOperation.BuildOperationParameters;
 import melnorme.lang.ide.core.project_model.IProjectModelListener;
 import melnorme.lang.ide.core.project_model.LangBundleModel;
@@ -46,8 +47,10 @@ import melnorme.lang.tooling.common.ops.Operation;
 import melnorme.lang.utils.EnablementCounter;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Collection2;
+import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.SimpleLogger;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.status.StatusException;
@@ -486,12 +489,16 @@ public abstract class BuildManager {
 		return autoBuildsEnablement;
 	}
 	
-	protected BuildOperationCreator createBuildOperationCreator(IToolOperationMonitor opMonitor, IProject project) {
-		return new BuildOperationCreator(project, opMonitor);
+	protected BuildOperationCreator createBuildOperationCreator(
+		IToolOperationMonitor opMonitor, IProject project
+	) throws CommonException {
+		return new BuildOperationCreator(this, project, opMonitor);
 	}
 	
-	public Operation newProjectClearMarkersOperation(IToolOperationMonitor toolMonitor, IProject project) {
-		return createBuildOperationCreator(toolMonitor, project).newClearBuildMarkersOperation();
+	public Operation newProjectClearMarkersOperation(
+		IToolOperationMonitor toolMonitor, IProject project
+	) throws CommonException {
+		return new ClearMarkersOperation(project, toolMonitor);
 	}
 	
 	/* -----------------  ----------------- */
@@ -549,6 +556,34 @@ public abstract class BuildManager {
 		BuildOperationCreator buildOpCreator = createBuildOperationCreator(toolMonitor, project);
 		
 		return buildOpCreator.newProjectBuildOperation(om, buildCommands, clearMarkers);
+	}
+	
+	/* -----------------  ----------------- */
+	
+	protected final HashMap2<Location, ProjectBuildOperation> buildOps = new HashMap2<>();
+	protected final Object buildOps_mutex = new Object();
+	
+	public ProjectBuildOperation setNewBuildOperation(ProjectBuildOperation newOperation) {
+		Location location = newOperation.getLocation();
+		ProjectBuildOperation oldOp;
+		synchronized (buildOps_mutex) {
+			oldOp = buildOps.put(location, newOperation);
+		}
+		if(oldOp != null) {
+			oldOp.tryCancel();
+		}
+		return oldOp;
+	}
+	
+	public void cancelAllBuilds() {
+		HashMap2<Location, ProjectBuildOperation> oldBuildOps;
+		synchronized (buildOps_mutex) {
+			oldBuildOps = buildOps.copy();
+			buildOps.clear();
+		}
+		for (ProjectBuildOperation buildOp : oldBuildOps.values()) {
+			buildOp.tryCancel();
+		}
 	}
 	
 }
