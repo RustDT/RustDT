@@ -11,20 +11,24 @@
 package melnorme.lang.ide.core.operations.build;
 
 import static melnorme.lang.ide.core.LangCore_Actual.VAR_NAME_SdkToolPath;
+import static melnorme.lang.ide.core.operations.build.BuildManagerMessages.MSG_Starting_LANG_Build;
+import static melnorme.lang.ide.core.utils.TextMessageUtils.headerVeryBig;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 import static melnorme.utilbox.core.CoreUtil.areEqual;
-import static melnorme.utilbox.core.CoreUtil.list;
 import static melnorme.utilbox.core.CoreUtil.option;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import melnorme.lang.ide.core.LangCore;
+import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.launch.LaunchMessages;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IToolOperationMonitor;
 import melnorme.lang.ide.core.operations.ToolManager;
@@ -46,10 +50,11 @@ import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.common.ops.Operation;
 import melnorme.lang.utils.EnablementCounter;
 import melnorme.utilbox.collections.ArrayList2;
-import melnorme.utilbox.collections.Collection2;
 import melnorme.utilbox.collections.HashMap2;
 import melnorme.utilbox.collections.Indexable;
+import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
+import melnorme.utilbox.misc.CollectionUtil;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.SimpleLogger;
 import melnorme.utilbox.misc.StringUtil;
@@ -489,10 +494,49 @@ public abstract class BuildManager {
 		return autoBuildsEnablement;
 	}
 	
-	protected BuildOperationCreator createBuildOperationCreator(
-		IToolOperationMonitor opMonitor, IProject project
-	) throws CommonException {
-		return new BuildOperationCreator(this, project, opMonitor);
+	/* -----------------  ----------------- */
+	
+	public final void executeBuildTargetOperation(
+		IOperationMonitor om, IProject project, BuildTarget buildTarget
+	) throws CommonException, OperationCancellation {
+		executeBuildTargetsOperation(om, project, ArrayList2.create(buildTarget));
+	}
+	
+	public final void executeBuildTargetsOperation(
+		IOperationMonitor om, IProject project, Iterable<BuildTarget> targetsToBuild
+	) throws CommonException, OperationCancellation {
+		IToolOperationMonitor toolMonitor = getToolManager().startNewBuildOperation();
+		requestBuildOperation(om, toolMonitor, project, true, targetsToBuild).execute();
+	}
+	
+	public final void executeMultiBuild(
+		IOperationMonitor om, 
+		Iterable<IProject> projects,
+		boolean clearMarkers
+	) throws CommonException, OperationCancellation {
+		IToolOperationMonitor toolMonitor = getToolManager().startNewBuildOperation();
+		toolMonitor.writeInfoMessage(
+			headerVeryBig(MessageFormat.format(MSG_Starting_LANG_Build, LangCore_Actual.NAME_OF_LANGUAGE))
+		);
+		
+		ArrayList2<ProjectBuildOperation> projectOps = ArrayList2.create();
+		
+		for (IProject project : projects) {
+			// Note: this will immediately cancel previous operations
+			ProjectBuildOperation newBuildOp = 
+				requestProjectBuildOperation(om, toolMonitor, project, clearMarkers, false);
+			projectOps.add(newBuildOp);
+		}
+		
+		// Clear markers for all projects first
+		// This is because building for a project/bundle can actually create markers in other projects
+		for (IProject project : projects) {
+			newProjectClearMarkersOperation(toolMonitor, project).execute(om);
+		}
+		
+		for (ProjectBuildOperation projectOperation : projectOps) {
+			projectOperation.execute();
+		}
 	}
 	
 	public Operation newProjectClearMarkersOperation(
@@ -501,61 +545,50 @@ public abstract class BuildManager {
 		return new ClearMarkersOperation(project, toolMonitor);
 	}
 	
-	/* -----------------  ----------------- */
+	/* ----------------- ----------------- */
 	
-	public final CompositeBuildOperation newBuildTargetOperation(
-		IOperationMonitor om, IProject project, BuildTarget buildTarget
-	) throws CommonException {
-		return newBuildTargetsOperation(om, project, ArrayList2.create(buildTarget));
-	}
-	
-	public final CompositeBuildOperation newBuildTargetsOperation(
-		IOperationMonitor om, IProject project, Collection2<BuildTarget> targetsToBuild
-	) throws CommonException {
-		IToolOperationMonitor buildOp = getToolManager().startNewBuildOperation();
-		return newBuildOperation(om, buildOp, project, true, targetsToBuild);
-	}
-	
-	public final CompositeBuildOperation newProjectBuildOperation(
+	public final ProjectBuildOperation requestProjectBuildOperation(
 		IOperationMonitor om, 
 		IToolOperationMonitor toolMonitor,
 		IProject project,
 		boolean clearMarkers, 
 		boolean isAuto
-	) throws CommonException {
+	) throws CommonException, OperationCancellation {
 		ArrayList2<BuildTarget> enabledTargets = getValidBuildInfo(project).getEnabledTargets(!isAuto);
-		if(isAuto && enabledTargets.isEmpty()) {
-			return new CompositeBuildOperation(om, list(), null);
-		}
-		return newBuildOperation(om, toolMonitor, project, clearMarkers, enabledTargets);
+		return requestBuildOperation(om, toolMonitor, project, clearMarkers, enabledTargets);
 	}
 	
-	/* ----------------- ----------------- */
-	
-	public CompositeBuildOperation newBuildOperation(
+	public ProjectBuildOperation requestBuildOperation(
 		IOperationMonitor om, 
 		IToolOperationMonitor toolMonitor,
 		IProject project, 
 		boolean clearMarkers, 
-		Collection2<BuildTarget> targetsToBuild
+		Iterable<BuildTarget> targetsToBuild
 	) throws CommonException {
 		assertNotNull(toolMonitor);
-		ArrayList2<Operation> buildCommands = 
-				targetsToBuild.mapx((buildTarget) -> buildTarget.getBuildOperation(toolManager, toolMonitor));
+		ArrayList2<Operation> buildCommands = CollectionUtil.mapx(targetsToBuild, 
+			(buildTarget) -> buildTarget.getBuildOperation(toolManager, toolMonitor));
 		
-		return newTopLevelBuildOperation(om, toolMonitor, project, clearMarkers, buildCommands);
+		BuildOperationCreator opCreator = createBuildOperationCreator(toolMonitor, project);
+		ISchedulingRule rule = getDefaultOperationBuildRule();
+		ProjectBuildOperation newBuildOp = opCreator.newProjectBuildOperation2(om, clearMarkers, buildCommands, rule);
+		setNewBuildOperation(newBuildOp);
+		return newBuildOp;
 	}
 	
-	public CompositeBuildOperation newTopLevelBuildOperation(
-		IOperationMonitor om, 
-		IToolOperationMonitor toolMonitor,
-		IProject project,
-		boolean clearMarkers, 
-		Collection2<Operation> buildCommands
-	) throws CommonException {
-		BuildOperationCreator buildOpCreator = createBuildOperationCreator(toolMonitor, project);
+	protected ISchedulingRule getDefaultOperationBuildRule() {
+		// Don't lock the workspace or the project for the build.
+		// Assume the build tool can handle concurrency on it's own,
+		// or that the use will avoid conccurent operations.
 		
-		return buildOpCreator.newProjectBuildOperation(om, buildCommands, clearMarkers);
+		return null;
+//		return ResourceUtils.getWorkspaceRoot();
+	}
+	
+	protected BuildOperationCreator createBuildOperationCreator(
+		IToolOperationMonitor opMonitor, IProject project
+	) throws CommonException {
+		return new BuildOperationCreator(project, opMonitor);
 	}
 	
 	/* -----------------  ----------------- */

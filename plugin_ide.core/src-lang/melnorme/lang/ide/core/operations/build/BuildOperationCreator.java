@@ -42,42 +42,36 @@ public class BuildOperationCreator implements BuildManagerMessages {
 	
 	public static final String buildProblemId = LangCore_Actual.BUILD_PROBLEM_ID;
 	
-	protected final BuildManager buildMgr;
 	protected final Location location;
 	protected final String projectName;
 	protected final IToolOperationMonitor toolMonitor;
 
+	protected final ArrayList2<Operation> operations = ArrayList2.create();;
+	
 	public BuildOperationCreator(
-		BuildManager buildMgr, IProject project, IToolOperationMonitor toolMonitor
+		IProject project, IToolOperationMonitor toolMonitor
 	) throws CommonException {
-		this(buildMgr, ResourceUtils.getLocation(project), project.getName(), toolMonitor);
+		this(ResourceUtils.getLocation(project), project.getName(), toolMonitor);
 	}
 	
 	public BuildOperationCreator(
-		BuildManager buildMgr, Location location, String projectName, IToolOperationMonitor toolMonitor
+		Location location, String projectName, IToolOperationMonitor toolMonitor
 	) {
-		this.buildMgr = assertNotNull(buildMgr);
 		this.location = assertNotNull(location);
 		this.projectName = assertNotNull(projectName);
 		this.toolMonitor = assertNotNull(toolMonitor);
 	}
 	
-	protected ArrayList2<Operation> operations;
-	
 	protected boolean addOperation(Operation toolOp) {
 		return operations.add(toolOp);
 	}
 	
-	public CompositeBuildOperation newProjectBuildOperation(
+	public ProjectBuildOperation newProjectBuildOperation2(
 		IOperationMonitor om,
-		Collection2<Operation> buildOps, 
-		boolean clearMarkers
+		boolean clearMarkers,
+		Collection2<Operation> buildOps,
+		ISchedulingRule opRule
 	) throws CommonException {
-		operations = ArrayList2.create();
-		
-		if(buildOps.isEmpty()) {
-			return new CompositeBuildOperation(om, operations, null);
-		}
 		
 		addCompositeBuildOperationMessage();
 		
@@ -110,18 +104,13 @@ public class BuildOperationCreator implements BuildManagerMessages {
 		
 		addOperation(newMessageOperation(headerBIG(MSG_BuildTerminated)));
 		
-		return createProjectBuildOperation(om, location);
+		return createProjectBuildOperation(om, location, opRule);
 	}
 	
-	public ProjectBuildOperation createProjectBuildOperation(IOperationMonitor om, Location location) {
-		ISchedulingRule rule = getRuleForOperation();
-		return new ProjectBuildOperation(om, location, operations, rule);
-	}
-	
-	public ISchedulingRule getRuleForOperation() {
-		// Note: the locking rule has to be the whole workspace, because the build might read dependent projects
-		// and also error markers can be created globally
-		return ResourceUtils.getWorkspaceRoot();
+	public ProjectBuildOperation createProjectBuildOperation(
+		IOperationMonitor om, Location location, ISchedulingRule opRule
+	) {
+		return new ProjectBuildOperation(om, location, operations, opRule);
 	}
 	
 	public class ProjectBuildOperation extends CompositeBuildOperation {
@@ -137,14 +126,6 @@ public class BuildOperationCreator implements BuildManagerMessages {
 		
 		public Location getLocation() {
 			return location;
-		}
-		
-		@Override
-		public void opExecute(IOperationMonitor monitor) throws CommonException, OperationCancellation {
-			// Note, must do this before any lock, so that previous op can be cancelled:
-			buildMgr.setNewBuildOperation(this);
-			
-			super.opExecute(monitor);
 		}
 		
 		public boolean tryCancel() {

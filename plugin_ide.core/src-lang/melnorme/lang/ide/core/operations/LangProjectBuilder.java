@@ -11,12 +11,8 @@
 package melnorme.lang.ide.core.operations;
 
 
-import static melnorme.lang.ide.core.operations.build.BuildManagerMessages.MSG_Starting_LANG_Build;
-import static melnorme.lang.ide.core.utils.TextMessageUtils.headerVeryBig;
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 import org.eclipse.core.resources.IBuildConfiguration;
@@ -29,12 +25,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import melnorme.lang.ide.core.EclipseCore;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.LangCore_Actual;
-import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IToolOperationMonitor;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.core.utils.ResourceUtils;
-import melnorme.lang.tooling.common.ops.IOperationMonitor;
-import melnorme.utilbox.collections.HashMap2;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
@@ -85,60 +79,44 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 		assertTrue(getProject() != null);
 	}
 	
-	protected static HashMap2<String, IToolOperationMonitor> workspaceOpMonitorMap = new HashMap2<>();
-	protected IToolOperationMonitor workspaceOpMonitor;
-	
-	protected void handleBeginWorkspaceBuild() {
-		workspaceOpMonitor = workspaceOpMonitorMap.get(LangCore.NATURE_ID);
-		
-		if(workspaceOpMonitor != null) {
-			return;
-		}
-		workspaceOpMonitor = getToolManager().startNewBuildOperation();
-		workspaceOpMonitorMap.put(LangCore.NATURE_ID, workspaceOpMonitor);
-		
-//		ResourceUtils.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
-//			@Override
-//			public void resourceChanged(IResourceChangeEvent event) {
-//				int type = event.getType();
-//				if(type == IResourceChangeEvent.POST_BUILD || type == IResourceChangeEvent.PRE_BUILD) {
-//					workspaceOpMonitor = null;
-//					workspaceOpMonitorMap.remove(LangCore.NATURE_ID);
-//					ResourceUtils.getWorkspace().removeResourceChangeListener(this);
-//				}
-//			}
-//		}, IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.PRE_BUILD);
-		
-		workspaceOpMonitor.writeInfoMessage(
-			headerVeryBig(MessageFormat.format(MSG_Starting_LANG_Build, LangCore_Actual.NAME_OF_LANGUAGE))
-		);
-	}
-	
-	protected void handleEndWorkspaceBuild3() {
-		workspaceOpMonitor = null;
-		workspaceOpMonitorMap.remove(LangCore.NATURE_ID);
-	}
-	
 	@Override
 	protected IProject[] build(int kind, Map<String, String> args, IProgressMonitor monitor) throws CoreException {
 		assertTrue(kind != CLEAN_BUILD);
 		
-		IProject project = assertNotNull(getProject());
+		if(kind == IncrementalProjectBuilder.AUTO_BUILD) {
+			return null; // Ignore auto build
+		}
 		
-		handleBeginWorkspaceBuild();
+		ArrayList2<IProject> referenced = 
+			ArrayList2.createFrom(getContext().getAllReferencedBuildConfigs())
+			.map((buildConfig) -> buildConfig.getProject())
+			.filterx(new ArrayList2<>(), (project) -> project.hasNature(LangCore.NATURE_ID))
+		;
+		
+		ArrayList2<IProject> referencing = 
+			ArrayList2.createFrom(getContext().getAllReferencingBuildConfigs())
+			.map((buildConfig) -> buildConfig.getProject())
+			.filterx(new ArrayList2<>(), (project) -> project.hasNature(LangCore.NATURE_ID))
+		;
+		
+		boolean firstCall = referenced.isEmpty();
+		
+		ArrayList2<IProject> allOurProjects = referencing;
+		allOurProjects.add(getProject());
+		
+		if(!firstCall) {
+			return null;
+		}
+		
 		try {
-			if(isFirstProjectOfKind()) {
-				clearWorkspaceErrorMarkers(monitor);
-			}
-			
-			return doBuild(project, kind, args, monitor);
+			EclipseUtils.execute_asCore(monitor, (om) -> {
+				buildManager.executeMultiBuild(om, allOurProjects, false);
+			}); 
+			return null;
 		} 
 		catch(OperationCancellation cancel) {
-			forgetLastBuiltState();
 			return null;
 		} catch(CoreException ce) {
-			forgetLastBuiltState();
-			
 			if(monitor.isCanceled()) {
 				// This shouldn't usually happen, a OperationCancellation should have been thrown,
 				// but sometimes its not wrapped correctly.
@@ -147,47 +125,8 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 			EclipseCore.logStatus(ce);
 			throw ce;
 		}
-		finally {
-			getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-			
-			if(isLastProjectOfKind()) {
-				handleEndWorkspaceBuild3();
-			}
-		}
 	}
 	
-	@SuppressWarnings("unused")
-	protected IProject[] doBuild(final IProject project, int kind, Map<String, String> args, IProgressMonitor monitor)
-			throws CoreException, OperationCancellation {
-		
-		if(kind == IncrementalProjectBuilder.AUTO_BUILD) {
-			return null; // Ignore auto build
-		}
-		try {
-			IOperationMonitor om = EclipseUtils.om(monitor);
-			buildManager.newProjectBuildOperation(om, workspaceOpMonitor, getProject(), false, false).execute();
-		} catch (CommonException ce) {
-			throw EclipseCore.createCoreException(ce);
-		}
-		return null;
-	}
-	
-	/* ----------------- Markers ----------------- */
-	
-	protected void clearWorkspaceErrorMarkers(IProgressMonitor pm) throws CoreException, OperationCancellation {
-		clearErrorMarkers(getProject(), pm);
-		
-		for(IBuildConfiguration buildConfig : getContext().getAllReferencingBuildConfigs()) {
-			clearErrorMarkers(buildConfig.getProject(), pm);
-		}
-	}
-	
-	protected void clearErrorMarkers(IProject project, IProgressMonitor pm) 
-			throws CoreException, OperationCancellation {
-		EclipseUtils.execute_asCore(pm, (om) -> {
-			buildManager.newProjectClearMarkersOperation(workspaceOpMonitor, project).execute(om);
-		});
-	}
 	
 	/* ----------------- Clean ----------------- */
 	
