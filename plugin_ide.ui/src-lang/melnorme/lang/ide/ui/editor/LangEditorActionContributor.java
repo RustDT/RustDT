@@ -10,7 +10,6 @@
  *******************************************************************************/
 package melnorme.lang.ide.ui.editor;
 
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -30,6 +29,7 @@ import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.ide.ui.editor.actions.AbstractEditorHandler;
 import melnorme.lang.ide.ui.editor.actions.GoToMatchingBracketHandler;
 import melnorme.lang.ide.ui.editor.actions.OpenQuickOutlineHandler;
+import melnorme.lang.ide.ui.editor.actions.OpenTypeHandler;
 import melnorme.lang.ide.ui.editor.actions.ToggleCommentHandler;
 import melnorme.lang.ide.ui.utils.operations.AbstractEditorOperation2;
 import melnorme.lang.ide.ui.utils.operations.BasicUIOperation;
@@ -78,6 +78,7 @@ public abstract class LangEditorActionContributor extends LangEditorActionContri
 		activateHandler(EditorCommandIds.ToggleComment, getHandler_ToggleComment());
 		
 		activateHandler(EditorCommandIds.QuickOutline, getHandler_QuickOutline());
+		activateHandler(EditorCommandIds.OpenType, getHandler_OpenType());
 		
 		activateHandler(EditorCommandIds.Format, getHandler_Format());
 		
@@ -119,6 +120,10 @@ public abstract class LangEditorActionContributor extends LangEditorActionContri
 		return new OpenQuickOutlineHandler(getPage());
 	}
 	
+	protected AbstractHandler getHandler_OpenType() {
+		return new OpenTypeHandler(getPage());
+	}
+	
 	public AbstractEditorHandler getHandler_Format() {
 		return getEditorHandler(getOpCreator_Format());
 	}
@@ -149,6 +154,7 @@ public abstract class LangEditorActionContributor extends LangEditorActionContri
 	protected void prepareNavigateMenu(IMenuManager menu) {
 		IMenuManager navigateMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
 		if(navigateMenu != null) {
+			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, pushItem(EditorCommandIds.OpenType));
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, pushItem(EditorCommandIds.QuickOutline));
 		}
 		
@@ -161,7 +167,7 @@ public abstract class LangEditorActionContributor extends LangEditorActionContri
 	}
 	
 	protected void prepareEditMenu(IMenuManager menu) {
-		IMenuManager editMenu= menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
 		if(editMenu != null) {
 			editMenu.appendToGroup(ITextEditorActionConstants.GROUP_ASSIST, pushItem(
 				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, 

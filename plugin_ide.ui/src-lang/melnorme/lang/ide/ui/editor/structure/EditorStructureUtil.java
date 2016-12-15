@@ -11,28 +11,29 @@
 package melnorme.lang.ide.ui.editor.structure;
 
 import static melnorme.lang.ide.ui.EditorSettings_Actual.EDITOR_ID;
-import melnorme.lang.ide.ui.editor.EditorUtils;
-import melnorme.lang.tooling.structure.ISourceFileStructure;
-import melnorme.lang.tooling.structure.StructureElement;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class EditorStructureUtil {
+import melnorme.lang.ide.ui.editor.EditorUtils;
+import melnorme.lang.tooling.structure.ISourceFileStructure;
+import melnorme.lang.tooling.structure.StructureElement;
 
+public class EditorStructureUtil {
+	
 	public static void openInEditorAndReveal(Object selectedElement) throws CoreException {
 		
 		if(selectedElement instanceof StructureElement) {
 			StructureElement structureElement = (StructureElement) selectedElement;
 			
 			ISourceFileStructure fileStructure = structureElement.getContainingFileStructure();
-			if(fileStructure == null || fileStructure.getLocation() == null) {
+			if(fileStructure == null || !fileStructure.getLocation().isPresent()) {
 				return;
 			}
 			
-			IEditorInput newInput = EditorUtils.getBestEditorInputForLoc(fileStructure.getLocation());
+			IEditorInput newInput = EditorUtils.getBestEditorInputForLoc(fileStructure.getLocation().get());
 			
 			IEditorPart part = EditorUtils.openEditor(newInput, EDITOR_ID, true);
 			revealInEditor(part, structureElement);

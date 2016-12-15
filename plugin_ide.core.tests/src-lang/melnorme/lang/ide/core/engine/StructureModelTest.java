@@ -10,7 +10,6 @@ package melnorme.lang.ide.core.engine;
  *     Bruno Medeiros - initial API and implementation
  *******************************************************************************/
 
-
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertFail;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
@@ -20,17 +19,17 @@ import java.util.function.Function;
 import org.eclipse.jface.text.Document;
 import org.junit.Test;
 
-import melnorme.lang.ide.core.engine.SourceModelManager.StructureModelRegistration;
 import melnorme.lang.ide.core.engine.SourceModelManager.StructureInfo;
-import melnorme.lang.ide.core.engine.SourceModelManager.StructureUpdateTask;
+import melnorme.lang.ide.core.engine.SourceModelManager.StructureModelRegistration;
 import melnorme.lang.ide.core.tests.CommonCoreTest;
 import melnorme.lang.tooling.LocationKey;
 import melnorme.lang.tooling.common.ParserError;
 import melnorme.lang.tooling.structure.SourceFileStructure;
+import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
-import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.Assert.AssertFailedException;
+import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.fntypes.OperationCallable;
 import melnorme.utilbox.ownership.StrictDisposable;
 import melnorme.utilbox.tests.TestsWorkingDir;
@@ -179,7 +178,7 @@ public class StructureModelTest extends CommonCoreTest {
 			} catch(InterruptedException e) {
 				throw new OperationCancellation();
 			}
-			return null;			
+			return new SourceFileStructure(null, ArrayList2.create(), ArrayList2.create());
 		});
 		
 		StructureModelRegistration registration = mgr.connectStructureUpdates(key, doc, 

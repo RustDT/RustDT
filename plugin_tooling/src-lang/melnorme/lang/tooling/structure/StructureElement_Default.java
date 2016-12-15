@@ -80,15 +80,10 @@ abstract class StructureElement_Default extends AbstractStructureContainer imple
 		return "ELEM " + name + sourceRange + " " + elementKind + prefixStr(" : ", type) + " " + elementAttributes;
 	}
 	
-	public StructureElement cloneSubTree() {
-		return new StructureElement(name, nameSourceRange2, sourceRange, 
-			elementKind, elementAttributes, type, cloneSubTree(children));
-	}
-	
 	public static ArrayList2<StructureElement> cloneSubTree(Indexable<StructureElement> elements) {
 		ArrayList2<StructureElement> clonedElements = new ArrayList2<>(elements.size());
-		for (StructureElement child : elements) {
-			clonedElements.add(child.cloneSubTree());
+		for(StructureElement child : elements) {
+			clonedElements.add(child.cloneTree());
 		}
 		return clonedElements;
 	}
@@ -139,12 +134,6 @@ abstract class StructureElement_Default extends AbstractStructureContainer imple
 		this.parent = parent;
 	}
 	
-//	@Override
-//	public String getModuleName() {
-//		IStructureElementContainer parent = getParent();
-//		return parent == null ? null : parent.getModuleName();
-//	}
-	
 	@Override
 	public ISourceFileStructure getContainingFileStructure() {
 		return getFileStructure(this);
@@ -155,7 +144,7 @@ abstract class StructureElement_Default extends AbstractStructureContainer imple
 		
 		if(parent instanceof ISourceFileStructure) {
 			return (ISourceFileStructure) parent;
-		} else if (parent instanceof IStructureElement) {
+		} else if(parent instanceof IStructureElement) {
 			return getFileStructure((IStructureElement) parent);
 		} else {
 			return null;

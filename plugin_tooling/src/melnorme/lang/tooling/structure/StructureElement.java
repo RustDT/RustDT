@@ -10,11 +10,12 @@
  *******************************************************************************/
 package melnorme.lang.tooling.structure;
 
+import java.util.function.Consumer;
+
 import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.LANG_SPECIFIC;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.utilbox.collections.Indexable;
-
 
 @LANG_SPECIFIC
 public class StructureElement extends StructureElement_Default {
@@ -25,4 +26,17 @@ public class StructureElement extends StructureElement_Default {
 		super(name, nameSourceRange, sourceRange, elementKind, elementAttributes, type, children);
 	}
 	
+	public StructureElement cloneTree() {
+		return cloneWithChildren(cloneSubTree());
+	}
+	
+	public void visitTree(Consumer<StructureElement> visitor) {
+		visitor.accept(this);
+		visitSubTree(visitor);
+	}
+	
+	private StructureElement cloneWithChildren(Indexable<StructureElement> children) {
+		return new StructureElement(
+			name, nameSourceRange2, sourceRange, elementKind, elementAttributes, type, children);
+	}
 }

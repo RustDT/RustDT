@@ -16,15 +16,11 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import org.eclipse.jface.text.IDocument;
 
-import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.engine.DocumentReconcileManager.DocumentReconcileConnection;
 import melnorme.lang.tooling.LocationKey;
 import melnorme.lang.tooling.structure.SourceFileStructure;
-import melnorme.lang.utils.concurrency.ConcurrentlyDerivedData;
-import melnorme.lang.utils.concurrency.ConcurrentlyDerivedData.DataUpdateTask;
 import melnorme.lang.utils.concurrency.SynchronizedEntryMap;
 import melnorme.utilbox.concurrency.OperationCancellation;
-import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.core.fntypes.CommonResult;
 import melnorme.utilbox.fields.ListenerListHelper;
 import melnorme.utilbox.misc.Location;
@@ -122,13 +118,12 @@ public abstract class SourceModelManager extends AbstractAgentManager {
 	
 	/* -----------------  ----------------- */
 	
-	public class StructureInfo extends ConcurrentlyDerivedData<CommonResult<SourceFileStructure>, StructureInfo> {
+	public class StructureInfo extends StructureResult<StructureInfo> {
 		
 		protected final LocationKey key2;
 		
 		protected IDocument document = null;
 		protected DocumentReconcileConnection reconcileConnection = null;
-		
 		
 		public StructureInfo(LocationKey key) {
 			super();
@@ -245,42 +240,13 @@ public abstract class SourceModelManager extends AbstractAgentManager {
 		return new DisconnectUpdatesTask(structureInfo);
 	}
 	
-	public static abstract class StructureUpdateTask extends DataUpdateTask<CommonResult<SourceFileStructure>> {
-		
-		protected final StructureInfo structureInfo;
-		
-		public StructureUpdateTask(StructureInfo structureInfo) {
-			super(structureInfo, structureInfo.getKey2().toString());
-			this.structureInfo = structureInfo;
-		}
-		
-		@Override
-		protected void handleRuntimeException(RuntimeException e) {
-			LangCore.logInternalError(e);
-		}
-		
-		@Override
-		protected final CommonResult<SourceFileStructure> createNewData() throws OperationCancellation {
-			try {
-				return new CommonResult<>(doCreateNewData());
-			} catch(CommonException e) {
-				return new CommonResult<>(null, e);
-			}
-		}
-		
-		protected abstract SourceFileStructure doCreateNewData() throws CommonException, OperationCancellation;
-		
-	}
-	
 	public static class DisconnectUpdatesTask extends StructureUpdateTask {
-		
 		public DisconnectUpdatesTask(StructureInfo structureInfo) {
 			super(structureInfo);
 		}
 		
 		@Override
 		protected SourceFileStructure doCreateNewData() throws OperationCancellation {
-			Location location = structureInfo.getLocation();
 			if(location != null) {
 				handleDisconnectForLocation(location);
 			} else {
@@ -299,7 +265,6 @@ public abstract class SourceModelManager extends AbstractAgentManager {
 		}
 		
 	}
-	
 	
 	/* ----------------- Listeners ----------------- */
 	

@@ -31,7 +31,6 @@ import org.eclipse.jface.text.IDocument;
 import org.junit.Test;
 
 import melnorme.lang.ide.core.engine.SourceModelManager.StructureModelRegistration;
-import melnorme.lang.ide.core.engine.SourceModelManager.StructureUpdateTask;
 import melnorme.lang.ide.core.engine.StructureModelTest.FixtureSourceModelManager;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.operations.build.ProjectBuildInfo;

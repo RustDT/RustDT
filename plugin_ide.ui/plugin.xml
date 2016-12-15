@@ -153,6 +153,13 @@
 		
 		<command 
 			categoryId="com.github.rustdt.ide.ui.commands.Category"
+			id="com.github.rustdt.ide.ui.commands.OpenType"
+			name="%OpenTypeAction.name"
+			description="%OpenTypeAction.description"
+		/>
+		
+		<command 
+			categoryId="com.github.rustdt.ide.ui.commands.Category"
 			id="com.github.rustdt.ide.ui.commands.Format"
 			name="%FormatAction.name"
 			description="%FormatAction.description"
@@ -189,6 +196,12 @@
 			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M1+O">
+		</key>
+		<key
+			commandId="com.github.rustdt.ide.ui.commands.OpenType"
+			contextId="com.github.rustdt.ide.ui.Contexts.Editor"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+M2+T">
 		</key>
 		<key
 			commandId="org.eclipse.ui.edit.text.shiftLeft"

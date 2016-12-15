@@ -194,6 +194,7 @@ public abstract class AbstractLangEditor extends TextEditorExt {
 	public LangSourceViewer getSourceViewer_() {
 		return (LangSourceViewer) getSourceViewer();
 	}
+	
 	public ISourceViewerExt getSourceViewer_asExt() {
 		return (ISourceViewerExt) getSourceViewer();
 	}
