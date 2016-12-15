@@ -19,7 +19,6 @@ import java.util.concurrent.Callable;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.operations.ILangOperationsListener_Default.IToolOperationMonitor;
@@ -67,10 +66,8 @@ public class BuildOperationCreator implements BuildManagerMessages {
 	}
 	
 	public ProjectBuildOperation newProjectBuildOperation2(
-		IOperationMonitor om,
 		boolean clearMarkers,
-		Collection2<Operation> buildOps,
-		ISchedulingRule opRule
+		Collection2<Operation> buildOps
 	) throws CommonException {
 		
 		addCompositeBuildOperationMessage();
@@ -104,13 +101,13 @@ public class BuildOperationCreator implements BuildManagerMessages {
 		
 		addOperation(newMessageOperation(headerBIG(MSG_BuildTerminated)));
 		
-		return createProjectBuildOperation(om, location, opRule);
+		return createProjectBuildOperation(location);
 	}
 	
 	public ProjectBuildOperation createProjectBuildOperation(
-		IOperationMonitor om, Location location, ISchedulingRule opRule
+		Location location
 	) {
-		return new ProjectBuildOperation(om, location, operations, opRule);
+		return new ProjectBuildOperation(location, operations);
 	}
 	
 	public class ProjectBuildOperation extends CompositeBuildOperation {
@@ -118,9 +115,9 @@ public class BuildOperationCreator implements BuildManagerMessages {
 		protected final Location location;
 		
 		public ProjectBuildOperation(
-			IOperationMonitor monitor, Location location, Indexable<Operation> operations, ISchedulingRule rule
+			Location location, Indexable<Operation> operations
 		) {
-			super(monitor, operations, rule);
+			super(operations);
 			this.location = assertNotNull(location);
 		}
 		

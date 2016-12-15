@@ -28,6 +28,7 @@ import melnorme.lang.ide.core.LangCore_Actual;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.utils.EclipseUtils;
 import melnorme.lang.ide.core.utils.ResourceUtils;
+import melnorme.lang.ide.core.utils.operation.EclipseJobOperation;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
@@ -110,7 +111,14 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 		
 		try {
 			EclipseUtils.execute_asCore(monitor, (om) -> {
-				buildManager.executeMultiBuild(om, allOurProjects, false);
+				EclipseJobOperation job = buildManager.requestMultiBuild(om, allOurProjects, false);
+				if(!runAsynchronousBuild()) {
+					try {
+						job.join();
+					} catch(InterruptedException e) {
+						throw new OperationCancellation();
+					}
+				}
 			}); 
 			return null;
 		} 
@@ -127,6 +135,9 @@ public abstract class LangProjectBuilder extends IncrementalProjectBuilder {
 		}
 	}
 	
+	public boolean runAsynchronousBuild() {
+		return true;
+	}
 	
 	/* ----------------- Clean ----------------- */
 	

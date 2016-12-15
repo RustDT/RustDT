@@ -12,7 +12,6 @@ package melnorme.lang.tooling.common.ops;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 
-import melnorme.lang.tooling.common.ops.IOperationMonitor.DelegatingOperationMonitor;
 import melnorme.utilbox.concurrency.IRunnableFuture2;
 import melnorme.utilbox.concurrency.MonitorRunnableFuture;
 import melnorme.utilbox.core.fntypes.OperationCallable;
@@ -60,28 +59,6 @@ public class OperationFuture<RET> extends MonitorRunnableFuture<OperationResult<
 	protected OperationResult<RET> internalInvoke() {
 		OperationCallable<RET> toResult = () -> resultOperation.callOp(om);
 		return OperationResult.callToOpResult(toResult);
-	}
-	
-	/* -----------------  ----------------- */
-	
-	public static class BiDelegatingOperationMonitor extends DelegatingOperationMonitor {
-		
-		protected final CancelMonitor secondCancelMonitor;
-		
-		public BiDelegatingOperationMonitor(IOperationMonitor om) {
-			this(om, new CancelMonitor());
-		}
-		
-		public BiDelegatingOperationMonitor(IOperationMonitor om, CancelMonitor cancelMonitor) {
-			super(om);
-			this.secondCancelMonitor = assertNotNull(cancelMonitor);
-		}
-		
-		@Override
-		public boolean isCancelled() {
-			return super.isCancelled() || secondCancelMonitor.isCancelled();
-		}
-		
 	}
 	
 }

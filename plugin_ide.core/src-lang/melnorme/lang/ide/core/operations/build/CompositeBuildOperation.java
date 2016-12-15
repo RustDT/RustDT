@@ -11,47 +11,32 @@
 package melnorme.lang.ide.core.operations.build;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-
-import melnorme.lang.ide.core.utils.ResourceUtils;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.common.ops.Operation;
-import melnorme.lang.tooling.common.ops.OperationFuture;
+import melnorme.lang.tooling.common.ops.OperationFuture2;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.concurrency.OperationCancellation;
 import melnorme.utilbox.core.CommonException;
 
-public class CompositeBuildOperation {
+public class CompositeBuildOperation implements Operation {
 	
 	protected final Indexable<Operation> operations;
-	protected final OperationFuture<Void> opFuture;
-	protected final ISchedulingRule rule; // Can be null
+	protected final OperationFuture2<Void> opFuture;
 	
-	public CompositeBuildOperation(
-		IOperationMonitor monitor, 
-		Indexable<Operation> operations, 
-		ISchedulingRule rule
-	) {
+	public CompositeBuildOperation(Indexable<Operation> operations) {
 		this.operations = assertNotNull(operations);
-		this.opFuture = OperationFuture.fromOperation(monitor, this::opExecute); 
-		this.rule = rule;
+		this.opFuture = OperationFuture2.fromOperation(this::innerExecute); 
 	}
 	
-	public void execute() throws CommonException, OperationCancellation {
-		opFuture.run();
-		opFuture.getResult_forTerminated();
+	@Override
+	public void execute(IOperationMonitor om) throws CommonException, OperationCancellation {
+		assertTrue(opFuture.canExecute());
+		opFuture.callOp(om);
 	}
 	
-	public void opExecute(IOperationMonitor monitor) throws CommonException, OperationCancellation {
-		if(rule == null) {
-			executeSubOperations(monitor);
-		} else {
-			ResourceUtils.runOperation(rule, monitor, (om) -> executeSubOperations(om));
-		}
-	}
-	
-	public void executeSubOperations(IOperationMonitor monitor) throws CommonException, OperationCancellation {
+	public void innerExecute(IOperationMonitor monitor) throws CommonException, OperationCancellation {
 		if(monitor.isCancelled()) {
 			return;
 		}

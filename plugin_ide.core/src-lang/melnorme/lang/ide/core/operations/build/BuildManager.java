@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.LangCore_Actual;
@@ -40,6 +39,7 @@ import melnorme.lang.ide.core.project_model.ProjectBasedModel;
 import melnorme.lang.ide.core.project_model.UpdateEvent;
 import melnorme.lang.ide.core.utils.ProjectValidator;
 import melnorme.lang.ide.core.utils.ResourceUtils;
+import melnorme.lang.ide.core.utils.operation.EclipseJobOperation;
 import melnorme.lang.ide.core.utils.prefs.IProjectPreference;
 import melnorme.lang.ide.core.utils.prefs.StringPreference;
 import melnorme.lang.tooling.bundle.BuildConfiguration;
@@ -506,11 +506,11 @@ public abstract class BuildManager {
 		IOperationMonitor om, IProject project, Iterable<BuildTarget> targetsToBuild
 	) throws CommonException, OperationCancellation {
 		IToolOperationMonitor toolMonitor = getToolManager().startNewBuildOperation();
-		requestBuildOperation(om, toolMonitor, project, true, targetsToBuild).execute();
+		requestBuildOperation(toolMonitor, project, true, targetsToBuild).execute(om);
 	}
 	
-	public final void executeMultiBuild(
-		IOperationMonitor om, 
+	public final EclipseJobOperation requestMultiBuild(
+		IOperationMonitor parentOM, 
 		Iterable<IProject> projects,
 		boolean clearMarkers
 	) throws CommonException, OperationCancellation {
@@ -524,19 +524,26 @@ public abstract class BuildManager {
 		for (IProject project : projects) {
 			// Note: this will immediately cancel previous operations
 			ProjectBuildOperation newBuildOp = 
-				requestProjectBuildOperation(om, toolMonitor, project, clearMarkers, false);
+				requestProjectBuildOperation(toolMonitor, project, clearMarkers, false);
 			projectOps.add(newBuildOp);
 		}
 		
 		// Clear markers for all projects first
 		// This is because building for a project/bundle can actually create markers in other projects
 		for (IProject project : projects) {
-			newProjectClearMarkersOperation(toolMonitor, project).execute(om);
+			newProjectClearMarkersOperation(toolMonitor, project).execute(parentOM);
 		}
 		
-		for (ProjectBuildOperation projectOperation : projectOps) {
-			projectOperation.execute();
-		}
+		Operation op = (om) -> {
+			for (ProjectBuildOperation projectOperation : projectOps) {
+				projectOperation.execute(om);
+			}
+		};
+		
+		String opName = MessageFormat.format("Running {0} build", LangCore_Actual.NAME_OF_LANGUAGE);
+		EclipseJobOperation job = new EclipseJobOperation(opName, getToolManager(), op);
+		job.schedule();
+		return job;
 	}
 	
 	public Operation newProjectClearMarkersOperation(
@@ -548,18 +555,16 @@ public abstract class BuildManager {
 	/* ----------------- ----------------- */
 	
 	public final ProjectBuildOperation requestProjectBuildOperation(
-		IOperationMonitor om, 
 		IToolOperationMonitor toolMonitor,
 		IProject project,
 		boolean clearMarkers, 
 		boolean isAuto
 	) throws CommonException, OperationCancellation {
 		ArrayList2<BuildTarget> enabledTargets = getValidBuildInfo(project).getEnabledTargets(!isAuto);
-		return requestBuildOperation(om, toolMonitor, project, clearMarkers, enabledTargets);
+		return requestBuildOperation(toolMonitor, project, clearMarkers, enabledTargets);
 	}
 	
 	public ProjectBuildOperation requestBuildOperation(
-		IOperationMonitor om, 
 		IToolOperationMonitor toolMonitor,
 		IProject project, 
 		boolean clearMarkers, 
@@ -570,19 +575,9 @@ public abstract class BuildManager {
 			(buildTarget) -> buildTarget.getBuildOperation(toolManager, toolMonitor));
 		
 		BuildOperationCreator opCreator = createBuildOperationCreator(toolMonitor, project);
-		ISchedulingRule rule = getDefaultOperationBuildRule();
-		ProjectBuildOperation newBuildOp = opCreator.newProjectBuildOperation2(om, clearMarkers, buildCommands, rule);
+		ProjectBuildOperation newBuildOp = opCreator.newProjectBuildOperation2(clearMarkers, buildCommands);
 		setNewBuildOperation(newBuildOp);
 		return newBuildOp;
-	}
-	
-	protected ISchedulingRule getDefaultOperationBuildRule() {
-		// Don't lock the workspace or the project for the build.
-		// Assume the build tool can handle concurrency on it's own,
-		// or that the use will avoid conccurent operations.
-		
-		return null;
-//		return ResourceUtils.getWorkspaceRoot();
 	}
 	
 	protected BuildOperationCreator createBuildOperationCreator(

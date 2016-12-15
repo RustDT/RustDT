@@ -208,17 +208,6 @@ public class RustBuildManager extends BuildManager {
 		}
 		
 		@Override
-		public void execute(IOperationMonitor parentOM) throws CommonException, OperationCancellation {
-			// TODO: cancel previous build operations
-//			try {
-//				Thread.sleep(10_000);
-//			} catch(InterruptedException e) {
-//				return;
-//			}
-			super.execute(parentOM);
-		}
-		
-		@Override
 		protected void processBuildOutput(ExternalProcessResult processResult, IOperationMonitor om) 
 				throws CommonException, OperationCancellation {
 			BuildOutputParser2 outputParser = new RustBuildOutputParser2() {
