@@ -17,6 +17,7 @@ import melnorme.lang.ide.core_text.LangDocumentPartitionerSetup;
 import melnorme.lang.ide.ui.editor.hover.ILangEditorTextHover;
 import melnorme.lang.ide.ui.editor.text.LangAutoEditsPreferencesAccess;
 import melnorme.lang.ide.ui.views.StructureElementLabelProvider;
+import melnorme.lang.ide.ui.views.StructureElementLabelProvider.AdditionalInfo;
 import melnorme.lang.tooling.structure.StructureElement;
 import melnorme.lang.tooling.structure.StructureElementKind;
 
@@ -57,8 +58,8 @@ public final class LangUIPlugin_Actual {
 		return new RustDocumentSetupParticipant();
 	}
 	
-	public static StructureElementLabelProvider getStructureElementLabelProvider() {
-		return new StructureElementLabelProvider() {
+	public static StructureElementLabelProvider getStructureElementLabelProvider(AdditionalInfo additionalInfo) {
+		return new StructureElementLabelProvider(additionalInfo) {
 			@Override
 			protected String getTypeDescriptionPrefix(StructureElement structureElement) {
 				if(structureElement.getKind() == StructureElementKind.FUNCTION) {

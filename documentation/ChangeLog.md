@@ -2,6 +2,7 @@
 
 ### (NextVersion)
  * Added support for Open Type (`Ctrl+Shift+T`)
+ * Matches that were not found by Racer can now be found by the newly created index
  * Fixed: Build Target's append environment variables might not replace variables correctly in Windows, due to case issues.
 
 ### 0.8.0

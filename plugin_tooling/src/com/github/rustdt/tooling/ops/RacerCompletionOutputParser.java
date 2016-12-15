@@ -17,9 +17,7 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.common.SourceLineColumnRange;
 import melnorme.lang.tooling.toolchain.ops.AbstractToolResultParser;
-import melnorme.lang.tooling.toolchain.ops.SourceLocation;
 import melnorme.lang.tooling.toolchain.ops.ToolOutputParseHelper;
 import melnorme.lang.utils.parse.LexingUtils;
 import melnorme.lang.utils.parse.StringCharSource;
@@ -229,11 +227,11 @@ public abstract class RacerCompletionOutputParser extends AbstractToolResultPars
 	
 	/* ----------------- find-definition ----------------- */
 	
-	public SourceLocation parseResolvedMatch(String lineInput) throws CommonException {
+	public RacerCompletionResult parseResolvedMatch(String lineInput) throws CommonException {
 		return doParseResolvedMatch(lineInput);
 	}
 	
-	protected SourceLocation doParseResolvedMatch(String lineInput) throws CommonException {
+	private RacerCompletionResult doParseResolvedMatch(String lineInput) throws CommonException {
 		StringCharSource lineLexer = new StringCharSource(lineInput);
 		
 		if(lineLexer.tryConsume("MATCH ") == false) {
@@ -246,8 +244,7 @@ public abstract class RacerCompletionOutputParser extends AbstractToolResultPars
 		int column_0 = parsePositiveInt(consumeCommaDelimitedText(lineLexer));
 		Location loc = parseLocation(consumeCommaDelimitedText(lineLexer));
 		
-		SourceLineColumnRange position = new SourceLineColumnRange(line_1, column_0 + 1);
-		return new SourceLocation(loc, position);
+		return new RacerCompletionResult(loc, line_1, column_0 + 1);
 	}
 	
 }

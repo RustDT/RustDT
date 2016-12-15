@@ -27,6 +27,7 @@ import melnorme.lang.ide.ui.LangUIPlugin_Actual;
 import melnorme.lang.ide.ui.editor.EditorUtils;
 import melnorme.lang.ide.ui.views.AbstractLangImageProvider;
 import melnorme.lang.ide.ui.views.StructureElementLabelProvider;
+import melnorme.lang.ide.ui.views.StructureElementLabelProvider.AdditionalInfo;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.SourceOpContext;
@@ -101,7 +102,8 @@ public abstract class LangCompletionProposalComputer extends AbstractCompletionP
 	public ImageDescriptor createImageDescriptor(ToolCompletionProposal proposal) {
 		ImageDescriptor baseImage = getBaseImageDescriptor(proposal);
 		
-		StructureElementLabelProvider labelDecorator = LangUIPlugin_Actual.getStructureElementLabelProvider();
+		StructureElementLabelProvider labelDecorator =
+			LangUIPlugin_Actual.getStructureElementLabelProvider(AdditionalInfo.SIGNATURE);
 		return labelDecorator.getElementImageDescriptor(baseImage, proposal.getAttributes());
 	}
 	

@@ -8,16 +8,16 @@ import org.eclipse.ui.dialogs.FilteredList;
 import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
 import org.eclipse.ui.dialogs.SearchPattern;
 
+import melnorme.lang.tooling.structure.StructureElement;
+
 /**
  * Enhanced search dialog with support for wildcards, camel case searches and the like
  */
 public final class EnhancedSelectionDialog extends ElementListSelectionDialog {
 	SearchPattern searchPatternWithCamelCase = new SearchPattern();
-	private final ILabelProvider renderer;
 	
 	public EnhancedSelectionDialog(Shell parent, ILabelProvider renderer) {
 		super(parent, renderer);
-		this.renderer = renderer;
 	}
 	
 	@Override
@@ -31,7 +31,7 @@ public final class EnhancedSelectionDialog extends ElementListSelectionDialog {
 			
 			@Override
 			public boolean match(Object element) {
-				String elementText = renderer.getText(element);
+				String elementText = ((StructureElement) element).getName();
 				return searchPatternWithCamelCase.matches(elementText);
 			}
 		});
