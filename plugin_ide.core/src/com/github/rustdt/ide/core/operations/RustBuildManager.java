@@ -60,7 +60,7 @@ public class RustBuildManager extends BuildManager {
 	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BUILD_TYPE_Build_Label, 
 		"test --no-run --message-format=json");
 	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BUILD_TYPE_Check_Label, 
-		"rustc --lib -- -Zno-trans --error-format=json");
+		"check --message-format=json");
 	public static final RustCrateBuildType BUILD_TYPE_Clean = new RustCheckBuildType(BUILD_TYPE_Clean_Label, 
 		"clean");
 	
