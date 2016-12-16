@@ -58,9 +58,15 @@ public class RustFmtOperation implements AbstractToolOperation<String> {
 	protected String handleResult(ExternalProcessResult result) throws CommonException, OperationSoftFailure {
 		int exitValue = result.exitValue;
 		
+		if(exitValue == 3) {
+			// Some warnings were generated, but `rustfmt` did complete, so use the result
+			// TODO: we could display the warnings in a non-modal notification UI
+			// or even as warning markers?
+		} else 
 		if(exitValue != 0) {
-			throw new OperationSoftFailure("`rustfmt` did not complete successfully, exit code: " + exitValue + "\n" + 
-					result.getStdErrBytes().toUtf8String());
+			String msg = "`rustfmt` did not complete successfully, exit code: " + exitValue + "\n" + 
+					result.getStdErrBytes().toUtf8String();
+			throw new OperationSoftFailure(msg);
 		}
 		
 		// formatted file is in stdout
