@@ -55,11 +55,14 @@ public class RustBuildManager extends BuildManager {
 	
 	public static final String BUILD_TYPE_Build_Label = "build";
 	public static final String BUILD_TYPE_Check_Label = "check";
+	public static final String BUILD_TYPE_Clean_Label = "clean";
 	
 	public static final RustCrateBuildType BUILD_TYPE_Build = new RustCrateBuildType(BUILD_TYPE_Build_Label, 
 		"test --no-run --message-format=json");
 	public static final RustCrateBuildType BUILD_TYPE_Check = new RustCheckBuildType(BUILD_TYPE_Check_Label, 
 		"rustc --lib -- -Zno-trans --error-format=json");
+	public static final RustCrateBuildType BUILD_TYPE_Clean = new RustCheckBuildType(BUILD_TYPE_Clean_Label, 
+		"clean");
 	
 	public RustBuildManager(LangBundleModel bundleModel, ToolManager toolManager) {
 		super(bundleModel, toolManager);
@@ -69,7 +72,8 @@ public class RustBuildManager extends BuildManager {
 	protected Indexable<BuildType> getBuildTypes_do() {
 		return ArrayList2.create(
 			BUILD_TYPE_Build,
-			BUILD_TYPE_Check
+			BUILD_TYPE_Check,
+			BUILD_TYPE_Clean
 		);
 	}
 	
@@ -85,6 +89,7 @@ public class RustBuildManager extends BuildManager {
 		BuildConfiguration buildConfig = new BuildConfiguration("", null);
 		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Build, buildConfig, true, false));
 		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Check, buildConfig, false, true));
+		buildTargets.add(createBuildTarget(project, newBundleInfo, BUILD_TYPE_Clean, buildConfig, false, false));
 		
 		return buildTargets;
 	}
