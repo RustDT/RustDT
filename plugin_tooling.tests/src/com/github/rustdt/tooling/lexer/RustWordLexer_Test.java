@@ -11,14 +11,7 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.KEYWORD;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.KEYWORD_BOOL;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.KEYWORD_SELF;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.MACRO_CALL;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.NUMBER;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.TRY_OP;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.WORD;
-import static com.github.rustdt.tooling.lexer.RustWordLexer_Test.ColoringTokens.WS;
+import static com.github.rustdt.tooling.lexer.RustColoringTokens.*;
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
 import org.junit.Test;
@@ -28,31 +21,11 @@ import melnorme.lang.utils.parse.StringCharSource;
 
 public class RustWordLexer_Test extends CommonToolingTest {
 	
-	public enum ColoringTokens {
-		WS,
-		KEYWORD,
-		KEYWORD_BOOL,
-		KEYWORD_SELF,
-		WORD,
-		MACRO_CALL,
-		NUMBER,
-		TRY_OP,
-	}
-	
-	public void testRule(String source, ColoringTokens expectedToken, int expectedLength) {
-		RustWordLexerRule<ColoringTokens> wordLexerRule = new RustWordLexerRule<>(
-			WS,
-			KEYWORD,
-			KEYWORD_BOOL,
-			KEYWORD_SELF,
-			WORD,
-			MACRO_CALL,
-			NUMBER,
-			TRY_OP
-		);
+	public void testRule(String source, RustColoringTokens expectedToken, int expectedLength) {
+		RustWordLexerRule wordLexerRule = new RustWordLexerRule();
 		
 		StringCharSource reader = new StringCharSource(source);
-		ColoringTokens token = wordLexerRule.doEvaluateToken(reader);
+		RustColoringTokens token = wordLexerRule.doEvaluateToken(reader);
 		
 		assertTrue(token == expectedToken);
 		assertTrue(reader.getReadPosition() == expectedLength);
@@ -79,9 +52,15 @@ public class RustWordLexer_Test extends CommonToolingTest {
 		testRule("abc!(asdf)", MACRO_CALL, 4);
 		testRule("abc![a", MACRO_CALL, 4);
 		testRule("abc! [a", MACRO_CALL, 4);
+		
+		testRule("macro_rules!", MACRO_RULES, 12);
 		// Test macros (negative cases)
+		testRule("blah!", WORD, 4);
+		testRule("macro_rules!()", MACRO_RULES, 12);
 		testRule("abc!=3", WORD, 3);
 		testRule("abc! asdf", WORD, 3);
+
+		testRule("macro!", KEYWORD, 5); // Is reserved keyword
 	}
 	
 }

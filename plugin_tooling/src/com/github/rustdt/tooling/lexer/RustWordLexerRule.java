@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.github.rustdt.tooling.lexer;
 
-import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import melnorme.lang.tooling.parser.lexer.CharacterReader_SubReader;
 import melnorme.lang.tooling.parser.lexer.WordLexerRule;
@@ -20,7 +20,7 @@ import melnorme.lang.utils.parse.LexingUtils;
 /**
  * A lexer rule used for coloring purposes.
  */
-public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
+public class RustWordLexerRule extends WordLexerRule<RustColoringTokens> {
 	
 	public static final String[] keywords_control = { 
 			"abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", 
@@ -40,41 +40,25 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 	
 	protected final RustNumberLexingRule rustNumberLexingRule = new RustNumberLexingRule();
 	
-	protected final TOKEN macroCall;
-	protected final TOKEN numberLiteral;
-	protected final TOKEN tryOperator;
-	
-	public RustWordLexerRule(
-			TOKEN whitespaceToken, 
-			TOKEN keywords, 
-			TOKEN keywords_booleanLiteral, 
-			TOKEN keywords_self, 
-			TOKEN word,
-			TOKEN macroCall, 
-			TOKEN numberLiteral,
-			TOKEN tryOperator
-	) {
-		super(whitespaceToken, word);
-		this.macroCall = assertNotNull(macroCall);
-		this.numberLiteral = assertNotNull(numberLiteral);
-		this.tryOperator = assertNotNull(tryOperator);
+	public RustWordLexerRule() {
+		super(RustColoringTokens.WS, RustColoringTokens.WORD);
 		
-		addKeywords(keywords, RustWordLexerRule.keywords_control);
-		addKeywords(keywords_booleanLiteral, RustWordLexerRule.keywords_boolean_lit);
-		addKeywords(keywords_self, RustWordLexerRule.keywords_self);
+		addKeywords(RustColoringTokens.KEYWORD, RustWordLexerRule.keywords_control);
+		addKeywords(RustColoringTokens.KEYWORD_BOOL, RustWordLexerRule.keywords_boolean_lit);
+		addKeywords(RustColoringTokens.KEYWORD_SELF, RustWordLexerRule.keywords_self);
 	}
 	
 	@Override
-	public TOKEN doEvaluateToken(ICharacterReader reader) {
+	public RustColoringTokens doEvaluateToken(ICharacterReader reader) {
 		if(reader.tryConsume('?')) {
-			return tryOperator;
+			return RustColoringTokens.TRY_OP;
 		}
 		
-		TOKEN result = super.doEvaluateToken(reader);
+		RustColoringTokens result = super.doEvaluateToken(reader);
 		
 		if(result == null) {
 			if(rustNumberLexingRule.tryMatch(reader)) {
-				return numberLiteral;
+				return RustColoringTokens.NUMBER;
 			}
 		}
 		
@@ -89,9 +73,13 @@ public class RustWordLexerRule<TOKEN> extends WordLexerRule<TOKEN> {
 			
 			int afterWS = LexingUtils.countWhitespace(subReader);
 			int lookahead = subReader.lookahead(afterWS);
+			if(areEqual(lastEvaluatedWord, "macro_rules")) {
+				subReader.consumeInParentReader();
+				return RustColoringTokens.MACRO_RULES;
+			}
 			if(lookahead == '(' || lookahead == '[') {
 				subReader.consumeInParentReader();
-				return macroCall;
+				return RustColoringTokens.MACRO_CALL;
 			}
 		}
 		return result;
