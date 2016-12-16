@@ -27,6 +27,12 @@ import melnorme.utilbox.core.CommonException;
 
 public class RustMessageParserTest extends CommonRustMessageParserTest {
 	
+	// This is "<std macros>" in original JSON, 
+	// but we convert to "", due to a minor API limitation
+	public static final String STD_MACROS_PATH = "";
+	
+	public static Indexable<ToolSourceMessage> DONT_CHECK_ToolMessages = null;
+	
 	public static final String CANNOT_BORROW_MUT_MORE_THAN = 
 		"cannot borrow `xpto` as mutable more than once at a time";
 	
@@ -131,6 +137,43 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 //				msg(path(""), 1,1,18,71, ERROR, MSG_MISMATCHED_B)
 			)
 		);
+		
+		// test and def_site_span = null, and code = null
+		// Obtained with Rust code:
+		/*
+		   println!("{}");
+		*/
+		testParseMessage(
+			getClassResource("rustc_error_macro_NullDefSiteSpan.json"), 
+			new RustMainMessage(
+				new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, 
+					"invalid reference to argument `0` (no arguments given)"),
+				"",
+				null,
+				list(new RustSubMessage(
+					msg(STD_MACROS_PATH, 1,33,1,58, ERROR, ""), 
+					true, 
+					new RustSubMessage(
+						msg(STD_MACROS_PATH, 1,33,1,58, ERROR, ""),
+						true,
+						new RustSubMessage(
+							msg(STD_MACROS_PATH, 2,27,2,58, ERROR, ""),
+							true,
+							new RustSubMessage(
+								msg(STD_MACROS_PATH, 1,23,1,60, ERROR, ""),
+								true,
+								new RustSubMessage(msg("src/macro_tests.rs", 41,2,41,17, ERROR, "")),
+								new RustSubMessage(msg(STD_MACROS_PATH, 1,1,3,58, ERROR, ""))
+							),
+							new RustSubMessage(msg(STD_MACROS_PATH, 1,1,2,64, ERROR, ""))
+						),
+						null
+					), 
+					null
+				))
+			),
+			DONT_CHECK_ToolMessages
+		);
 	}
 	
 	public String subm(String subMessage) {
@@ -151,10 +194,15 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 		RustMainMessage message = unwrapSingle(rustMessages);
 		checkEquals(message, expected);
 		
-		assertEqualIndexable(message.retrieveToolMessages(), expectedSourceMessages);
+		if(expectedSourceMessages != DONT_CHECK_ToolMessages) {
+			assertEqualIndexable(message.retrieveToolMessages(), expectedSourceMessages);
+		}
 	}
 	
 	public void checkEquals(RustMessage message, RustMessage expected) {
+		if(message == expected) {
+			return;
+		}
 		if(!expected.equals(message)) {
 			
 			// Helper for the interactive debugger:
@@ -170,8 +218,8 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 	}
 	
 	public void checkSubMessage(RustSubMessage message, RustSubMessage expected) {
-		assertAreEqual(message.defSiteMsg, expected.defSiteMsg);
-		assertAreEqual(message.expansionMsg, expected.expansionMsg);
+		checkEquals(message.defSiteMsg, expected.defSiteMsg);
+		checkEquals(message.expansionMsg, expected.expansionMsg);
 	}
 	
 }

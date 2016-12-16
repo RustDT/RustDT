@@ -6,6 +6,7 @@
  * Added syntax coloring support for `?` operator.
  * Invoking a build operation for a project now immediately cancels the pending build operation for that project, if any.
  * More lenient with `rustfmt` exit code 3, don't treat those warnings as a failure. (#144)
+ * Fixed: "Member `def_site_span` is not an Object" error. (#146)
 
 ### 0.7.0
  * Added support for Rust 1.12 new error message format. (#130)

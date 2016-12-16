@@ -1,4 +1,4 @@
-  "message":{
+  {
     "children":[
 
     ],
@@ -75,16 +75,6 @@
                         "suggested_replacement":null,
                         "text":[
                           {
-                            "highlight_end":66,
-                            "highlight_start":1,
-                            "text":"( $ fmt : expr ) => ( print ! ( concat ! ( $ fmt , \"\\n\" ) ) ) ; ("
-                          },
-                          {
-                            "highlight_end":41,
-                            "highlight_start":1,
-                            "text":"$ fmt : expr , $ ( $ arg : tt ) * ) => ("
-                          },
-                          {
                             "highlight_end":58,
                             "highlight_start":1,
                             "text":"print ! ( concat ! ( $ fmt , \"\\n\" ) , $ ( $ arg ) * ) ) ;"
@@ -98,7 +88,7 @@
                         "column_end":17,
                         "column_start":2,
                         "expansion":null,
-                        "file_name":"src\\macro_tests.rs",
+                        "file_name":"src/macro_tests.rs",
                         "is_primary":false,
                         "label":null,
                         "line_end":41,

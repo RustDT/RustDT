@@ -156,10 +156,10 @@ public class RustBuildOutputParserJson {
 				expansionSpan, severityLevel, isPrimary, macroDeclarationName
 			);
 			
-			JsonObject expansionDefSiteSpan = helper.getObject(expansion, "def_site_span");
-			defSiteMsg = parseToolMessageFromSpanObject(
-				expansionDefSiteSpan, severityLevel, isPrimary, ""
-			);
+			JsonObject expansionDefSiteSpan = helper.getOptionalObject(expansion, "def_site_span");
+			if(expansionDefSiteSpan != null) {
+				defSiteMsg = parseToolMessageFromSpanObject(expansionDefSiteSpan, severityLevel, isPrimary, "");
+			}
 		}
 		
 		return new RustSubMessage(parseSourceMessage(subMessage), isPrimary, expansionMsg, defSiteMsg);
