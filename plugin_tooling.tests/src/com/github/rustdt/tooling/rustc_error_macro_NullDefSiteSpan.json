@@ -1,0 +1,176 @@
+  "message":{
+    "children":[
+
+    ],
+    "code":null,
+    "level":"error",
+    "message":"invalid reference to argument `0` (no arguments given)",
+    "rendered":null,
+    "spans":[
+      {
+        "byte_end":4288,
+        "byte_start":4263,
+        "column_end":58,
+        "column_start":33,
+        "expansion":{
+          "def_site_span":null,
+          "macro_decl_name":"concat!",
+          "span":{
+            "byte_end":4288,
+            "byte_start":4263,
+            "column_end":58,
+            "column_start":33,
+            "expansion":{
+              "def_site_span":null,
+              "macro_decl_name":"format_args!",
+              "span":{
+                "byte_end":4224,
+                "byte_start":4193,
+                "column_end":58,
+                "column_start":27,
+                "expansion":{
+                  "def_site_span":{
+                    "byte_end":4230,
+                    "byte_start":4139,
+                    "column_end":64,
+                    "column_start":1,
+                    "expansion":null,
+                    "file_name":"<std macros>",
+                    "is_primary":false,
+                    "label":null,
+                    "line_end":2,
+                    "line_start":1,
+                    "suggested_replacement":null,
+                    "text":[
+                      {
+                        "highlight_end":28,
+                        "highlight_start":1,
+                        "text":"( $ ( $ arg : tt ) * ) => ("
+                      },
+                      {
+                        "highlight_end":64,
+                        "highlight_start":1,
+                        "text":"$ crate :: io :: _print ( format_args ! ( $ ( $ arg ) * ) ) ) ;"
+                      }
+                    ]
+                  },
+                  "macro_decl_name":"print!",
+                  "span":{
+                    "byte_end":4290,
+                    "byte_start":4253,
+                    "column_end":60,
+                    "column_start":23,
+                    "expansion":{
+                      "def_site_span":{
+                        "byte_end":4395,
+                        "byte_start":4231,
+                        "column_end":58,
+                        "column_start":1,
+                        "expansion":null,
+                        "file_name":"<std macros>",
+                        "is_primary":false,
+                        "label":null,
+                        "line_end":3,
+                        "line_start":1,
+                        "suggested_replacement":null,
+                        "text":[
+                          {
+                            "highlight_end":66,
+                            "highlight_start":1,
+                            "text":"( $ fmt : expr ) => ( print ! ( concat ! ( $ fmt , \"\\n\" ) ) ) ; ("
+                          },
+                          {
+                            "highlight_end":41,
+                            "highlight_start":1,
+                            "text":"$ fmt : expr , $ ( $ arg : tt ) * ) => ("
+                          },
+                          {
+                            "highlight_end":58,
+                            "highlight_start":1,
+                            "text":"print ! ( concat ! ( $ fmt , \"\\n\" ) , $ ( $ arg ) * ) ) ;"
+                          }
+                        ]
+                      },
+                      "macro_decl_name":"println!",
+                      "span":{
+                        "byte_end":755,
+                        "byte_start":740,
+                        "column_end":17,
+                        "column_start":2,
+                        "expansion":null,
+                        "file_name":"src\\macro_tests.rs",
+                        "is_primary":false,
+                        "label":null,
+                        "line_end":41,
+                        "line_start":41,
+                        "suggested_replacement":null,
+                        "text":[
+                          {
+                            "highlight_end":17,
+                            "highlight_start":2,
+                            "text":"\tprintln!(\"{}\");\r"
+                          }
+                        ]
+                      }
+                    },
+                    "file_name":"<std macros>",
+                    "is_primary":false,
+                    "label":null,
+                    "line_end":1,
+                    "line_start":1,
+                    "suggested_replacement":null,
+                    "text":[
+                      {
+                        "highlight_end":60,
+                        "highlight_start":23,
+                        "text":"( $ fmt : expr ) => ( print ! ( concat ! ( $ fmt , \"\\n\" ) ) ) ; ("
+                      }
+                    ]
+                  }
+                },
+                "file_name":"<std macros>",
+                "is_primary":false,
+                "label":null,
+                "line_end":2,
+                "line_start":2,
+                "suggested_replacement":null,
+                "text":[
+                  {
+                    "highlight_end":58,
+                    "highlight_start":27,
+                    "text":"$ crate :: io :: _print ( format_args ! ( $ ( $ arg ) * ) ) ) ;"
+                  }
+                ]
+              }
+            },
+            "file_name":"<std macros>",
+            "is_primary":false,
+            "label":null,
+            "line_end":1,
+            "line_start":1,
+            "suggested_replacement":null,
+            "text":[
+              {
+                "highlight_end":58,
+                "highlight_start":33,
+                "text":"( $ fmt : expr ) => ( print ! ( concat ! ( $ fmt , \"\\n\" ) ) ) ; ("
+              }
+            ]
+          }
+        },
+        "file_name":"<std macros>",
+        "is_primary":true,
+        "label":null,
+        "line_end":1,
+        "line_start":1,
+        "suggested_replacement":null,
+        "text":[
+          {
+            "highlight_end":58,
+            "highlight_start":33,
+            "text":"( $ fmt : expr ) => ( print ! ( concat ! ( $ fmt , \"\\n\" ) ) ) ; ("
+          }
+        ]
+      }
+    ]
+  }

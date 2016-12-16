@@ -12,6 +12,7 @@ package com.github.rustdt.tooling;
 
 import melnorme.lang.tooling.common.ToolSourceMessage;
 import melnorme.utilbox.collections.ArrayList2;
+import melnorme.utilbox.core.DevelopmentCodeMarkers;
 import melnorme.utilbox.misc.HashcodeUtil;
 import melnorme.utilbox.misc.ToStringHelper;
 
@@ -74,8 +75,13 @@ public class RustSubMessage extends RustMessage {
 		if(expansionMsg != null) {
 			expansionMsg.collectToolMessages(sourceMessages, mainMessage);
 		}
-		if(defSiteMsg != null) {
-			defSiteMsg.collectToolMessages(sourceMessages, mainMessage);
+		
+		// Don't report def-site span, it doesn't seem to be useful,
+		// it's just the span for the whole macro declaration.
+		if (DevelopmentCodeMarkers.DISABLED_FUNCTIONALITY) {
+			if(defSiteMsg != null) {
+				defSiteMsg.collectToolMessages(sourceMessages, mainMessage);
+			}
 		}
 	}
 }

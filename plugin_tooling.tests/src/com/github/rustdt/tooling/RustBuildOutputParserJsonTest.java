@@ -119,8 +119,8 @@ public class RustBuildOutputParserJsonTest extends CommonRustMessageParserTest {
 				msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, 
 //					"(in expansion of `assert_eq!`) "+
 					MSG_MISMATCHED_M
-				),
-				msg(path(""), 1, 1, 18, 71, ERROR, MSG_MISMATCHED_M)
+				)
+//				msg(path(""), 1, 1, 18, 71, ERROR, MSG_MISMATCHED_M)
 			)
 		);			
 		testParseMessages(
@@ -132,8 +132,8 @@ public class RustBuildOutputParserJsonTest extends CommonRustMessageParserTest {
 				msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, 
 //					"(in expansion of `assert_eq!`) "+
 					MSG_MISMATCHED_M
-				),
-				msg(path(""), 1, 1, 18, 71, ERROR, MSG_MISMATCHED_M)
+				)
+//				msg(path(""), 1, 1, 18, 71, ERROR, MSG_MISMATCHED_M)
 			)
 		);
 	}

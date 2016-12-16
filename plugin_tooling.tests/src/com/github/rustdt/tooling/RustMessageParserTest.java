@@ -127,8 +127,8 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 			),
 			list(
 				msg(path(""), 5,22,5,33, ERROR, MSG_MISMATCHED_B+subm(spanMessage)),
-				msg(path("src/main.rs"), 15,5,15,26, ERROR, MSG_MISMATCHED_B),
-				msg(path(""), 1,1,18,71, ERROR, MSG_MISMATCHED_B)
+				msg(path("src/main.rs"), 15,5,15,26, ERROR, MSG_MISMATCHED_B)
+//				msg(path(""), 1,1,18,71, ERROR, MSG_MISMATCHED_B)
 			)
 		);
 	}
