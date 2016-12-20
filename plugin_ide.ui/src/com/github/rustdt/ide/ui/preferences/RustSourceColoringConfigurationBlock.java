@@ -39,7 +39,7 @@ public class RustSourceColoringConfigurationBlock extends AbstractSourceColoring
 				new SourceColoringElement("Numbers", RustColorPreferences.NUMBERS),
 				new SourceColoringElement("Lifetime", RustColorPreferences.LIFETIME),
 				new SourceColoringElement("Attribute", RustColorPreferences.ATTRIBUTE),
-				new SourceColoringElement("Macro Invocation", RustColorPreferences.MACRO_CALL),
+				new SourceColoringElement("Macro Invocation / macro_rules!", RustColorPreferences.MACRO_CALL),
 				new SourceColoringElement("Try Operator", RustColorPreferences.TRY_OPERATOR)
 			)),
 			new SourceColoringCategory("Comments", array(
