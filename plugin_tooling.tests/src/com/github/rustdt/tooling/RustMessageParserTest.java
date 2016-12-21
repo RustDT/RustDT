@@ -46,17 +46,6 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 			new RustSubMessage(msg("src/main.rs", 8, 19, 8, 23, ERROR, "unresolved name"))
 		)
 	);
-	public static final RustMainMessage MSG_MismatchedTypes = new RustMainMessage(
-		new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, "mismatched types"),
-		"E0308",
-		list(
-			"expected type `&MyTrait`",
-			"   found type `{integer}`"
-		),
-		list(
-			new RustSubMessage(msg("src/main.rs", 14, 9, 14, 12, ERROR, "expected &MyTrait, found integral variable"))
-		)
-	);
 	public static final RustMainMessage MSG_CannotReborrow = new RustMainMessage(
 		new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, CANNOT_BORROW_MUT_MORE_THAN),
 		"E0499",
@@ -71,12 +60,14 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 	@Test
 	public void test() throws Exception { test$(); }
 	public void test$() throws Exception {
+		// Test empty
 		testParseMessage(
 			"", 
 			null, 
 			list()
 		);
 		
+		// Test simple message 2
 		testParseMessage(
 			getClassResource("rustc_error_simple.json"), 
 			MSG_Simple, 
@@ -86,17 +77,49 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 			)
 		);
 		
-		String MSG_MISMATCHED_A = "mismatched types"+ " [E0308]:"+
+		// Test message with notes
+		String MSG_WithNotes_Main = "expected &MyTrait, found integral variable";
+		String MSG_WithNotes_Top = "mismatched types";
+		
+		String MSG_MISMATCHED_A = MSG_WithNotes_Top+ " [E0308]:"+
 			subm("expected type `&MyTrait`")+
 			subm("   found type `{integer}`")+
-			subm("expected &MyTrait, found integral variable");
+			subm(MSG_WithNotes_Main);
 		
 		testParseMessage(
 			getClassResource("rustc_error_with_notes.json"), 
-			MSG_MismatchedTypes, 
+			new RustMainMessage(
+				new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, MSG_WithNotes_Top),
+				"E0308",
+				list(
+					"expected type `&MyTrait`",
+					"   found type `{integer}`"
+				),
+				list(
+					new RustSubMessage(msg("src/main.rs", 14, 9, 14, 12, ERROR, MSG_WithNotes_Main))
+				)
+			), 
 			list(msg(path("src/main.rs"), 14, 9, 14, 12, ERROR, MSG_MISMATCHED_A))
 		);
 		
+		// Test message with notes (span.label = null)
+		String MSG_Main = "invalid fragment specifier `id`";
+		String MSG_Notes = "valid fragment specifiers are...";
+		testParseMessage(
+			getClassResource("rustc_error_with_notes2.json"), 
+			new RustMainMessage(
+				new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, MSG_Main),
+				"",
+				list(MSG_Notes),
+				list(new RustSubMessage(msg("src/macro_tests.rs", 55,6,55,11, ERROR, "")))
+			),
+			list(
+				msg(path("src/macro_tests.rs"), 55,6,55,11, ERROR, MSG_Main + ":\n" + MSG_Notes)
+			)
+		);
+		
+		
+		// test composite
 		testParseMessage(
 			getClassResource("rustc_error_composite.json"), 
 			MSG_CannotReborrow, 
@@ -110,15 +133,17 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 		);
 		
 		
+		// Test macros
+		
 		String spanMessage = "expected bool, found integral variable";
-		String MSG_MISMATCHED_B = "mismatched types"+ " [E0308]:"+
+		String MSG_MISMATCHED_B = MSG_WithNotes_Top+ " [E0308]:"+
 			subm("expected type `bool`")+
 			subm("   found type `{integer}`");
 		
 		testParseMessage(
 			getClassResource("rustc_error_macro.json"), 
 			new RustMainMessage(
-				new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, "mismatched types"),
+				new ToolSourceMessage(path(""), PARENT_MSG_RANGE, ERROR, MSG_WithNotes_Top),
 				"E0308",
 				list(
 					"expected type `bool`",
@@ -127,8 +152,8 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 				list(new RustSubMessage(
 					msg("", 5,22,5,33, ERROR, spanMessage), 
 					true, 
-					new RustSubMessage(msg("src/main.rs", 15,5,15,26, INFO, "")), 
-					new RustSubMessage(msg("", 1,1,18,71, INFO, ""))
+					new RustSubMessage(msg("src/main.rs", 15,5,15,26, ERROR, "")), 
+					new RustSubMessage(msg("", 1,1,18,71, ERROR, ""))
 				))
 			),
 			list(
@@ -151,21 +176,21 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 				"",
 				null,
 				list(new RustSubMessage(
-					msg(STD_MACROS_PATH, 1,33,1,58, INFO, ""), 
+					msg(STD_MACROS_PATH, 1,33,1,58, ERROR, ""), 
 					true, 
 					new RustSubMessage(
-						msg(STD_MACROS_PATH, 1,33,1,58, INFO, ""),
+						msg(STD_MACROS_PATH, 1,33,1,58, ERROR, ""),
 						true,
 						new RustSubMessage(
-							msg(STD_MACROS_PATH, 2,27,2,58, INFO, ""),
+							msg(STD_MACROS_PATH, 2,27,2,58, ERROR, ""),
 							true,
 							new RustSubMessage(
-								msg(STD_MACROS_PATH, 1,23,1,60, INFO, ""),
+								msg(STD_MACROS_PATH, 1,23,1,60, ERROR, ""),
 								true,
-								new RustSubMessage(msg("src/macro_tests.rs", 41,2,41,17, INFO, "")),
-								new RustSubMessage(msg(STD_MACROS_PATH, 1,1,3,58, INFO, ""))
+								new RustSubMessage(msg("src/macro_tests.rs", 41,2,41,17, ERROR, "")),
+								new RustSubMessage(msg(STD_MACROS_PATH, 1,1,3,58, ERROR, ""))
 							),
-							new RustSubMessage(msg(STD_MACROS_PATH, 1,1,2,64, INFO, ""))
+							new RustSubMessage(msg(STD_MACROS_PATH, 1,1,2,64, ERROR, ""))
 						),
 						null
 					), 

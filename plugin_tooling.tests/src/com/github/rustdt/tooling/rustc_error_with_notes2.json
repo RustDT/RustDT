@@ -1,0 +1,42 @@
+  {
+    "children":[
+      {
+        "children":[
+
+        ],
+        "code":null,
+        "level":"help",
+        "message":"valid fragment specifiers are...",
+        "rendered":null,
+        "spans":[
+
+        ]
+      }
+    ],
+    "code":null,
+    "level":"error",
+    "message":"invalid fragment specifier `id`",
+    "rendered":null,
+    "spans":[
+      {
+        "byte_end":997,
+        "byte_start":992,
+        "column_end":11,
+        "column_start":6,
+        "expansion":null,
+        "file_name":"src/macro_tests.rs",
+        "is_primary":true,
+        "label":null,
+        "line_end":55,
+        "line_start":55,
+        "suggested_replacement":null,
+        "text":[
+          {
+            "highlight_end":11,
+            "highlight_start":6,
+            "text":"    ($x:id) => (fn xxxx() { });\r"
+          }
+        ]
+      }
+    ]
+  }

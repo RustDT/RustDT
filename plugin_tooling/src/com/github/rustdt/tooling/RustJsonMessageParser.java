@@ -140,9 +140,6 @@ public class RustJsonMessageParser {
 		
 		String label = helper.getOptionalString(spanObject, "label");
 		subMessage.messageText = StringUtil.nullAsEmpty(label);
-		if(label == null && Severity.ERROR.getLabel().equalsIgnoreCase(subMessage.messageTypeString)) {
-			subMessage.messageTypeString = Severity.INFO.getLabel();
-		}
 		
 		RustMessage expansionMsg = null;
 		RustMessage defSiteMsg = null;

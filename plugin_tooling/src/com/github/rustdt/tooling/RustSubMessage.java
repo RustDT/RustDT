@@ -64,23 +64,24 @@ public class RustSubMessage extends RustMessage {
 	
 	
 	@Override
-	public void collectToolMessages(ArrayList2<ToolSourceMessage> sourceMessages, RustMainMessage mainMessage) {
-		super.collectToolMessages(sourceMessages, mainMessage);
-		
+	public void collectToolMessages(
+		ArrayList2<ToolSourceMessage> sourceMessages, RustMainMessage mainMessage, boolean isExpansion
+	) {
+		super.collectToolMessages(sourceMessages, mainMessage, isExpansion);
 		// TODO : review how macro expansion are displayed.
 //		if (! "".equals(macroDeclarationName)) {
 //			subMessage.messageText = subMessage.messageText + " (in expansion of `" + macroDeclarationName + "`)";
 //		}
 		
 		if(expansionMsg != null) {
-			expansionMsg.collectToolMessages(sourceMessages, mainMessage);
+			expansionMsg.collectToolMessages(sourceMessages, mainMessage, true);
 		}
 		
 		// Don't report def-site span, it doesn't seem to be useful,
 		// it's just the span for the whole macro declaration.
 		if (DevelopmentCodeMarkers.DISABLED_FUNCTIONALITY) {
 			if(defSiteMsg != null) {
-				defSiteMsg.collectToolMessages(sourceMessages, mainMessage);
+				defSiteMsg.collectToolMessages(sourceMessages, mainMessage, true);
 			}
 		}
 	}

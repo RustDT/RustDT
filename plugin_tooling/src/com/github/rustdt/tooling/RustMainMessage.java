@@ -67,7 +67,7 @@ public class RustMainMessage extends RustMessage {
 			);			
 		} else {
 			for (RustMessage spanMessage : spans) {
-				spanMessage.collectToolMessages(sourceMessages, this);
+				spanMessage.collectToolMessages(sourceMessages, this, false);
 			}
 		}
 		

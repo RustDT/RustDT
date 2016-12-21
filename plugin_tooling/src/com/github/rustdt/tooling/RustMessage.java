@@ -21,6 +21,7 @@ import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.misc.HashcodeUtil;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.misc.ToStringHelper;
+import melnorme.utilbox.status.Severity;
 
 /**
  * A structured Rust message as emitted by the Rust compiler.
@@ -102,24 +103,35 @@ public abstract class RustMessage implements ToStringHelper.ToString {
 		return msgTextWithNotes;
 	}
 	
-	public void collectToolMessages(ArrayList2<ToolSourceMessage> sourceMessages, RustMainMessage mainMessage) {
+	public void collectToolMessages(
+		ArrayList2<ToolSourceMessage> sourceMessages, RustMainMessage mainMessage, boolean isExpansion
+	) {
 		ToolSourceMessage srcMessage = this.sourceMessage;
+		Severity severity = srcMessage.severity;
 		
-		String newText = "";
-		if(isPrimary) {
+		boolean hasOwnMessage = emptyAsNull(srcMessage.message) != null;
+		String newText = null;
+		
+		if(isPrimary && mainMessage != null) {
 			newText = mainMessage.getMessageTextWithNotes();
-		}
-		
-		if(emptyAsNull(srcMessage.message) != null) {
-			if(mainMessage.notes.isEmpty()) {
+			if(mainMessage.notes.isEmpty() && hasOwnMessage) {
 				newText = StringUtil.addSuffix(newText, ":");
 			}
+			mainMessage = null;
+		}
+		
+		if(hasOwnMessage) {
 			newText = StringUtil.joinUsingSep(newText, "\n", srcMessage.message, true);
+		} else {
+			if(isExpansion) {
+				// if this message is a repetition (from macro), downgrade severity to info
+				severity = Severity.INFO;
+			}
 		}
 		
 		newText = StringUtil.nullAsEmpty(newText);
 		
-		srcMessage = new ToolSourceMessage(srcMessage.path, srcMessage.range, srcMessage.severity, newText);
+		srcMessage = new ToolSourceMessage(srcMessage.path, srcMessage.range, severity, newText);
 		sourceMessages.add(srcMessage);
 	}
 	
