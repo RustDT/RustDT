@@ -50,13 +50,6 @@ public class RustBuildOutputParserJsonTest extends CommonRustMessageParserTest {
 			getClassResource("simple_warning.json"),
 			list(msg(path("src/main.rs"), 1, 2, 3, 17, WARNING, "BLAH BLAH BLAH")));
 		
-		testParseMessages(
-			getClassResource("simple_warning_and_error.json"),
-			list(
-				msg(path("src/main.rs"), 1, 2, 3, 17, WARNING, "BLAH BLAH BLAH"),
-				msg(path("src/main.rs"), 2, 22, 2, 23, ERROR, "XXX")
-			)
-		);
 		
 		testParseMessages( 
 			getClassResource("error_with_children.json"), 
@@ -116,7 +109,7 @@ public class RustBuildOutputParserJsonTest extends CommonRustMessageParserTest {
 			list(
 				msg(path(""), 5, 22, 5, 33, ERROR, MSG_MISMATCHED_M
 					+"\nexpected enum `std::option::Option`, found &{integer}"),
-				msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, 
+				msg(path("src/test.rs"), 331, 2, 331, 33, INFO, 
 //					"(in expansion of `assert_eq!`) "+
 					MSG_MISMATCHED_M
 				)
@@ -129,7 +122,7 @@ public class RustBuildOutputParserJsonTest extends CommonRustMessageParserTest {
 				msg(path(""), 5, 22, 5, 33, ERROR, MSG_MISMATCHED_M
 					+"\nexpected enum `std::option::Option`, found &{integer}"
 				),
-				msg(path("src/test.rs"), 331, 2, 331, 33, ERROR, 
+				msg(path("src/test.rs"), 331, 2, 331, 33, INFO, 
 //					"(in expansion of `assert_eq!`) "+
 					MSG_MISMATCHED_M
 				)

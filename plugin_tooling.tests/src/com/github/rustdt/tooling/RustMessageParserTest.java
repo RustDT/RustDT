@@ -127,13 +127,13 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 				list(new RustSubMessage(
 					msg("", 5,22,5,33, ERROR, spanMessage), 
 					true, 
-					new RustSubMessage(msg("src/main.rs", 15,5,15,26, ERROR, "")), 
-					new RustSubMessage(msg("", 1,1,18,71, ERROR, ""))
+					new RustSubMessage(msg("src/main.rs", 15,5,15,26, INFO, "")), 
+					new RustSubMessage(msg("", 1,1,18,71, INFO, ""))
 				))
 			),
 			list(
 				msg(path(""), 5,22,5,33, ERROR, MSG_MISMATCHED_B+subm(spanMessage)),
-				msg(path("src/main.rs"), 15,5,15,26, ERROR, MSG_MISMATCHED_B)
+				msg(path("src/main.rs"), 15,5,15,26, INFO, MSG_MISMATCHED_B)
 //				msg(path(""), 1,1,18,71, ERROR, MSG_MISMATCHED_B)
 			)
 		);
@@ -151,21 +151,21 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 				"",
 				null,
 				list(new RustSubMessage(
-					msg(STD_MACROS_PATH, 1,33,1,58, ERROR, ""), 
+					msg(STD_MACROS_PATH, 1,33,1,58, INFO, ""), 
 					true, 
 					new RustSubMessage(
-						msg(STD_MACROS_PATH, 1,33,1,58, ERROR, ""),
+						msg(STD_MACROS_PATH, 1,33,1,58, INFO, ""),
 						true,
 						new RustSubMessage(
-							msg(STD_MACROS_PATH, 2,27,2,58, ERROR, ""),
+							msg(STD_MACROS_PATH, 2,27,2,58, INFO, ""),
 							true,
 							new RustSubMessage(
-								msg(STD_MACROS_PATH, 1,23,1,60, ERROR, ""),
+								msg(STD_MACROS_PATH, 1,23,1,60, INFO, ""),
 								true,
-								new RustSubMessage(msg("src/macro_tests.rs", 41,2,41,17, ERROR, "")),
-								new RustSubMessage(msg(STD_MACROS_PATH, 1,1,3,58, ERROR, ""))
+								new RustSubMessage(msg("src/macro_tests.rs", 41,2,41,17, INFO, "")),
+								new RustSubMessage(msg(STD_MACROS_PATH, 1,1,3,58, INFO, ""))
 							),
-							new RustSubMessage(msg(STD_MACROS_PATH, 1,1,2,64, ERROR, ""))
+							new RustSubMessage(msg(STD_MACROS_PATH, 1,1,2,64, INFO, ""))
 						),
 						null
 					), 
@@ -184,7 +184,7 @@ public class RustMessageParserTest extends CommonRustMessageParserTest {
 		String messageJson, RustMessage expected, Indexable<ToolSourceMessage> expectedSourceMessages
 	) throws CommonException 
 	{
-		RustBuildOutputParserJson msgParser = new RustBuildOutputParserJson();
+		RustJsonMessageParser msgParser = new RustJsonMessageParser();
 		ArrayList2<RustMainMessage> rustMessages = msgParser.parseStructuredMessages(new StringReader(messageJson));
 		if(expected == null) {
 			assertTrue(rustMessages.isEmpty());

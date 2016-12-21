@@ -73,7 +73,7 @@ public abstract class RustBuildOutputParser2 extends BuildOutputParser3 {
 		// Deprecated functionality, remove support for this at some point:
 		try {
 			if(output.lookahead() == '{') {
-				RustBuildOutputParserJson msgParser = new RustBuildOutputParserJson();
+				RustJsonMessageParser msgParser = new RustJsonMessageParser();
 				ArrayList2<RustMainMessage> rustMessages = msgParser.parseStructuredMessages(output.toReader());
 				
 				for (RustMainMessage rustMessage : rustMessages) {

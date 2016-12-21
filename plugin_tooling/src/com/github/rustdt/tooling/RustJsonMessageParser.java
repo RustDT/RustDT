@@ -30,7 +30,7 @@ import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.StringUtil;
 import melnorme.utilbox.status.Severity;
 
-public class RustBuildOutputParserJson {
+public class RustJsonMessageParser {
 	
 	protected final GsonHelper helper = new GsonHelper();
 	protected final ToolMessageParser messageParseHelper = new ToolMessageParser();
@@ -140,6 +140,9 @@ public class RustBuildOutputParserJson {
 		
 		String label = helper.getOptionalString(spanObject, "label");
 		subMessage.messageText = StringUtil.nullAsEmpty(label);
+		if(label == null && Severity.ERROR.getLabel().equalsIgnoreCase(subMessage.messageTypeString)) {
+			subMessage.messageTypeString = Severity.INFO.getLabel();
+		}
 		
 		RustMessage expansionMsg = null;
 		RustMessage defSiteMsg = null;

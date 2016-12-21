@@ -74,7 +74,7 @@ public class CargoMessageParser {
 	}
 	
 	protected RustMainMessage parseRustMessage(JsonObject object) throws CommonException {
-		RustBuildOutputParserJson rustMessageParser = new RustBuildOutputParserJson();
+		RustJsonMessageParser rustMessageParser = new RustJsonMessageParser();
 		return rustMessageParser.parseTopLevelRustMessage(object);
 	}
 	
