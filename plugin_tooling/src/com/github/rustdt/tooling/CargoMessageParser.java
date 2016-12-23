@@ -11,6 +11,7 @@
 package com.github.rustdt.tooling;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
+import static melnorme.utilbox.core.CoreUtil.areEqual;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -48,29 +49,42 @@ public class CargoMessageParser {
 	
 	public CargoMessage parseCargoMessage() throws CommonException {
 		try {
-			return doParseCargoMessage();
-		} catch(JsonSyntaxExceptionX e) {
-			throw new CommonException("JSON syntax error in Cargo message: ",  e);
-		} catch (IOException ioe) {
-			throw new CommonException("Unexpected IO Exception: ", ioe);
+			try {
+				return doParseCargoMessage();
+			} catch(JsonSyntaxExceptionX e) {
+				throw new CommonException("JSON syntax error: ",  e);
+			} catch (IOException ioe) {
+				throw new CommonException("Unexpected IO Exception: ", ioe);
+			}
+		} catch(CommonException e) {
+			// Wrap exception with more descriptive message
+			throw new CommonException("Error parsing Cargo JSON message: ",  e);
 		}
 	}
 	
 	public CargoMessage doParseCargoMessage() throws IOException, JsonSyntaxExceptionX, CommonException {
-		if(JsonParserX.isEndOfInput(jsonReader)) {
-			return null;
+		while (true) {
+			if(JsonParserX.isEndOfInput(jsonReader)) {
+				return null;
+			}
+			
+			JsonElement element = new JsonParserX().parse(jsonReader);
+			JsonObject cargoMsg = helper.asObject(element);
+			
+			String reason = helper.getStringOr(cargoMsg, "reason", "");
+			String packageId = helper.getStringOr(cargoMsg, "package_id", "");
+			
+			if(!areEqual(reason, "compiler-message")) {
+				// Ignore other messages, we have no use for them ATM
+				continue;
+			}
+			
+			CargoMessageTarget msgTarget = parseCargoMessageTarget(helper.getObject(cargoMsg, "target"));
+			RustMainMessage message = parseRustMessage(helper.getObject(cargoMsg, "message"));
+			
+			return new CargoMessage(reason, packageId, msgTarget, message);
+			
 		}
-		
-		JsonElement element = new JsonParserX().parse(jsonReader);
-		JsonObject cargoMsg = helper.asObject(element);
-		
-		String reason = helper.getStringOr(cargoMsg, "reason", "");
-		String packageId = helper.getStringOr(cargoMsg, "package_id", "");
-		
-		CargoMessageTarget msgTarget = parseCargoMessageTarget(helper.getObject(cargoMsg, "target"));
-		RustMainMessage message = parseRustMessage(helper.getObject(cargoMsg, "message"));
-		
-		return new CargoMessage(reason, packageId, msgTarget, message);
 	}
 	
 	protected RustMainMessage parseRustMessage(JsonObject object) throws CommonException {

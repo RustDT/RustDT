@@ -39,6 +39,12 @@ public class CargoMessageParserTest extends CommonRustMessageParserTest {
 				RustMessageParserTest.MSG_Simple
 			)
 		);
+		
+		checkEqual(
+			parseMessage(getClassResource("cargo_message_other.json")),
+			
+			null
+		);
 	}
 	
 	public void checkEqual(CargoMessage obtained, CargoMessage expected) {

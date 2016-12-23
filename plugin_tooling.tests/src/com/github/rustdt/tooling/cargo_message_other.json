@@ -1,0 +1,17 @@
+{
+	"features": [],
+	"filenames": ["D:\\devel\\rust\\languageserver-types\\target\\debug\\deps\\libitoa-64ca65e744a0e081.rlib"],
+	"package_id": "itoa 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+	"profile": {
+		"debug_assertions": true,
+		"debuginfo": true,
+		"opt_level": "0",
+		"test": false
+	},
+	"reason": "compiler-artifact",
+	"target": {
+		"kind": ["lib"],
+		"name": "itoa",
+		"src_path": "C:\\Users\\bruno\\.cargo\\registry\\src\\github.com-1ecc6299db9ec823\\itoa-0.1.1\\src\\lib.rs"
+	}
+}
