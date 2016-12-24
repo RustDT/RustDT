@@ -21,6 +21,7 @@ public enum StructureElementKind {
 	VAR,
 	FUNCTION,
 	STRUCT,
+	UNION, // Upcoming Rust feature
 	IMPL,
 	TRAIT,
 	ENUM,
@@ -32,6 +33,7 @@ public enum StructureElementKind {
 	USE_GROUP,
 	
 	TYPE_ALIAS, 
+	MACRO,
 	
 	UNKNOWN,
 	;
@@ -48,6 +50,7 @@ public enum StructureElementKind {
 		case FUNCTION: return visitor.visitFunction();
 		
 		case STRUCT: return visitor.visitStruct();
+		case UNION: return visitor.visitUnion();
 		case IMPL: return visitor.visitImpl();
 		case TRAIT: return visitor.visitTrait();
 		case ENUM: return visitor.visitEnum();
@@ -59,6 +62,7 @@ public enum StructureElementKind {
 		case USE_GROUP: return visitor.visitUseGroup();
 		
 		case TYPE_ALIAS: return visitor.visitTypeAlias();
+		case MACRO: return visitor.visitMacro();
 		case UNKNOWN: return visitor.visitUnknown();
 		
 		}
@@ -67,6 +71,7 @@ public enum StructureElementKind {
 	
 	public static interface StructureElementKindVisitor<RET> extends AbstractKindVisitor<RET> {
 		
+		public abstract RET visitUnion();
 		public abstract RET visitImpl();
 		public abstract RET visitTrait();
 		
@@ -77,6 +82,7 @@ public enum StructureElementKind {
 		public abstract RET visitEnumVariant();
 		
 		public abstract RET visitTypeAlias();
+		public abstract RET visitMacro();
 		
 	}
 	

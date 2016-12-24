@@ -24,4 +24,6 @@ public interface RustElementImages extends LangElementImages {
 	
 	ImageHandle T_ENUM_VARIANT = LangImages.createManaged(CAT, "t_enum_variant.png");
 	
+	ImageHandle T_MACRO = LangImages.createManaged(CAT, "t_macro.png");
+	
 }

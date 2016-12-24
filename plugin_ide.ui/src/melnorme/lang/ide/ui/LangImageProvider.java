@@ -52,6 +52,10 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	}
 	
 	@Override
+	public IManagedImage visitUnion() {
+		return LangElementImages.T_UNION;
+	}
+	@Override
 	public IManagedImage visitImpl() {
 		return RustElementImages.T_IMPL;
 	}
@@ -99,6 +103,11 @@ public class LangImageProvider extends AbstractLangImageProvider {
 	@Override
 	public IManagedImage visitAlias() {
 		throw assertFail();
+	}
+	
+	@Override
+	public IManagedImage visitMacro() {
+		return RustElementImages.T_MACRO;
 	}
 	
 	/* -----------------  ----------------- */
