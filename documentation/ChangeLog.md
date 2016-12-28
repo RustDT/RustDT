@@ -3,12 +3,12 @@
 ### 0.8.0
  * Added support for Cargo's JSON output, with `--message-format=json`. (#138) 
  * Invoking a build operation for a project now immediately cancels the pending build operation for that project, if any.
+   * (this greatly improves user experience)
  * Added syntax coloring support for `?` operator, and `macro_rules!`.
  * More lenient with `rustfmt` exit code 3, don't treat those warnings as a failure. (#144)
- * Added: Cargo `clean` Build Target. 
  * Build target `check` now defaults to `cargo check --message-format=json`.
-   * Note: `cargo check` only available in nightly ATM. 
-#TODO recheck on release 
+   * Note: As of the time of this release, `cargo check` only available in nightly Rust. 
+ * Added: Cargo `clean` Build Target. 
  * Fixed: "Member `def_site_span` is not an Object" error. (#146)
  * Fixed: Creating an Eclipse project (with "Use `cargo init`" disabled) in a location with an existing crate no longer creates a Hello World `src/main.rs`.
 
