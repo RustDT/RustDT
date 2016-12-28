@@ -79,11 +79,16 @@ public class RustProjectWizard extends LangNewProjectWizard {
 		String cargoManifest = HelloWorld_ManifestContents.replaceAll(Pattern.quote("$project_name$"), 
 			getProject().getName());
 		
-		projectCreator.createFile(getProject().getFile(CargoManifestParser.MANIFEST_FILENAME.toString()), 
+		boolean manifestCreated = projectCreator.createFile(getProject().getFile(CargoManifestParser.MANIFEST_FILENAME.toString()), 
 			cargoManifest, false, monitor);
 		
-		IFile mainModule = getProject().getFolder("src").getFile("main.rs");
-		projectCreator.createFile(mainModule, HelloWorld_ModuleContents, true, monitor);
+		if(!manifestCreated) {
+			// Cargo crate already exists
+			return;
+		} else {
+			IFile mainModule = getProject().getFolder("src").getFile("main.rs");
+			projectCreator.createFile(mainModule, HelloWorld_ModuleContents, true, monitor);
+		}
 	}
 	
 }
