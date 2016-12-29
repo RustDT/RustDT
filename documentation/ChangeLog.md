@@ -1,5 +1,8 @@
 ## release ChangeLog
 
+### (NextVersion)
+ * Fixed: Build Target's append environment variables might not replace variables correctly in Windows, due to case issues.
+
 ### 0.8.0
  * Added support for Cargo's JSON output, with `--message-format=json`. (#138) 
  * Invoking a build operation for a project now immediately cancels the pending build operation for that project, if any.
