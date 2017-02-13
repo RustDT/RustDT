@@ -37,6 +37,8 @@ A project has a set of Build Targets, each being a command invocation that build
 
 Build Targets can be enabled for a regular project build, or for auto-check. Auto-check is invoked when an editor is saved and no syntax errors are present in the source code. Normally it does not produce any artifacts, it just checks for compilation errors. **Note that auto-check is a different setting than the Eclipse workspace "Project / Build Automatically" option**. RustDT ignores the later option by default. Auto-check is also not invoked if a file is saved automatically due to a regular build being requested. 
 
+**Note: The `check` target uses the `cargo check` command by default, however that command is only available in Rust nightly build. This feature is estimated to be released on stable channel with Rust 1.16. **
+
 From the context menu of a Build Target, you can also directly create a Run or Debug launch configuration for one the target executables. 
 
 ### Editor and Navigation
