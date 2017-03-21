@@ -15,9 +15,11 @@ Also, to improve Eclipse performance and startup time, it is recommended you twe
 
 ### Configuration
 
-A [Rust installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`. Additionally:
+A [Rust toolchain installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the toolchain installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`. Additionally:
 
- * For code completion, you will need the [Racer](https://github.com/phildawes/racer) tool. You will also need the [Rust sources package](https://www.rust-lang.org/downloads.html). This package is not included in the Rust intallation, it must be downloaded separately (see [this Rust bug](https://github.com/rust-lang/rust/issues/19535)). Configure the `Rust 'src' Directory` to point to the 'src' directory of this package.
+ * You will need the Rust source component in the toolchain installation. This component is not included by default, it must be downloaded using `rustup component add rust-src`. Configure the "Rust 'src' Directory" to point to the 'src' directory (this will normally be the Rust toolchain base directory plus `lib\rustlib\src\rust\src`.
+
+ * For code completion, you will need the [Racer](https://github.com/phildawes/racer) tool. 
  
  * For Outline/Quick-Outline and on-the-fly parsing errors, you will need the [Rainicorn](https://github.com/RustDT/Rainicorn) tool. 
 
