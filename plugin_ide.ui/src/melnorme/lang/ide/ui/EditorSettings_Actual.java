@@ -99,6 +99,7 @@ public class EditorSettings_Actual {
 		public static final String ToggleComment = LangUIPlugin.PLUGIN_ID + ".commands.ToggleComment";
 		
 		public static final String QuickOutline = LangUIPlugin.PLUGIN_ID + ".commands.QuickOutline";
+		public static final String OpenType = LangUIPlugin.PLUGIN_ID + ".commands.OpenType";
 		public static final String Format = LangUIPlugin.PLUGIN_ID + ".commands.Format";
 		
 	}

@@ -26,7 +26,6 @@ import org.eclipse.jface.text.ISynchronizable;
 
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.engine.SourceModelManager.StructureInfo;
-import melnorme.lang.ide.core.engine.SourceModelManager.StructureUpdateTask;
 import melnorme.lang.ide.core.operations.build.BuildManager;
 import melnorme.lang.ide.core.utils.CoreExecutors;
 import melnorme.lang.ide.core.utils.DefaultBufferListener;

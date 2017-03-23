@@ -11,6 +11,7 @@
 package melnorme.lang.ide.core;
 
 import com.github.rustdt.ide.core.cargomodel.RustBundleModelManager;
+import com.github.rustdt.ide.core.engine.RustIndexManager;
 import com.github.rustdt.ide.core.engine.RustLanguageServerHandler;
 import com.github.rustdt.ide.core.engine.RustSourceModelManager;
 import com.github.rustdt.ide.core.operations.RustBuildManager;
@@ -23,7 +24,7 @@ import melnorme.utilbox.misc.ILogHandler;
 public class LangCore_Actual extends AbstractLangCore {
 	
 	public static final String PLUGIN_ID = "com.github.rustdt.ide.core";
-	public static final String NATURE_ID = PLUGIN_ID +".nature";
+	public static final String NATURE_ID = PLUGIN_ID + ".nature";
 	
 	public static final String BUILDER_ID = PLUGIN_ID + ".Builder";
 	public static final String BUILD_PROBLEM_ID = PLUGIN_ID + ".build_problem";
@@ -66,6 +67,9 @@ public class LangCore_Actual extends AbstractLangCore {
 		return new RustSourceModelManager();
 	}
 	
+	public static RustIndexManager createIndexManager() {
+		return new RustIndexManager();
+	}
 	
 	public static RustBundleModelManager createBundleModelManager() {
 		return new RustBundleModelManager();

@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-/** 
- * This is marker for LANG code whose contents is language specific, yet it it refered to by other LANG code.
+/**
+ * This is marker for LANG code whose contents is language specific, yet it is referred to by other LANG code.
  * Such code must not be place in the src-lang source folder
  */
 public @interface LANG_SPECIFIC {

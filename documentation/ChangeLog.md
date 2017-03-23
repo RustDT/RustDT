@@ -1,6 +1,7 @@
 ## release ChangeLog
 
 ### (NextVersion)
+ * Added support for Open Type (`Ctrl+Shift+T`)
  * Fixed: Build Target's append environment variables might not replace variables correctly in Windows, due to case issues.
 
 ### 0.8.0

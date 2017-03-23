@@ -162,10 +162,13 @@ public class ConcurrentlyDerivedData<DATA, SELF> {
 			}
 		}
 		
+		public void awaitUpdatedData() throws InterruptedException {
+			derivedData.awaitUpdatedData();
+		}
+		
 		protected abstract void handleRuntimeException(RuntimeException e);
 		
 		protected abstract DATA createNewData() throws OperationCancellation;
-		
 	}
 	
 	/* -----------------  ----------------- */
