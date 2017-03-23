@@ -16,7 +16,6 @@ import static melnorme.utilbox.core.CoreUtil.areEqual;
 import java.util.Optional;
 
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.common.SourceLineColumnRange;
 import melnorme.lang.tooling.parser.SourceLinesInfo;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.FileUtil;
@@ -109,13 +108,4 @@ public class SourceOpContext {
 		// TODO: we might need to do auto-detect of encoding.
 		return FileUtil.readFileContents(location, StringUtil.UTF8);
 	}
-	
-	public int getOffsetFor(SourceLocation findDefResult) throws CommonException {
-		String fileContents = getSourceFor(findDefResult.getFileLocation());
-		SourceLinesInfo linesInfo = new SourceLinesInfo(fileContents);
-		
-		SourceLineColumnRange sourceLCRange = findDefResult.getSourceRange();
-		return linesInfo.getOffsetForLine(sourceLCRange.getValidLineIndex()) + sourceLCRange.getValidColumnIndex();
-	}
-	
 }

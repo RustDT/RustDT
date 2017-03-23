@@ -19,7 +19,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import melnorme.lang.ide.core.EclipseCore;
 import melnorme.lang.ide.core.LangCore;
 import melnorme.lang.ide.core.operations.ToolManager;
 import melnorme.lang.ide.core.utils.EclipseUtils;
@@ -27,7 +26,6 @@ import melnorme.lang.ide.ui.EditorSettings_Actual;
 import melnorme.lang.ide.ui.editor.EditorUtils;
 import melnorme.lang.ide.ui.editor.EditorUtils.OpenNewEditorMode;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.common.SourceLineColumnRange;
 import melnorme.lang.tooling.common.ops.IOperationMonitor;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
 import melnorme.lang.tooling.toolchain.ops.SourceLocation;
@@ -59,24 +57,31 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorToolOpe
 			throws CommonException, OperationCancellation, OperationSoftFailure;
 	
 	@Override
-	protected void handleResultData(SourceLocation resultData) throws CommonException {
-		
-		SourceLineColumnRange sourceRange = resultData.getSourceRange();
-		
-		EclipseUtils.run(() -> openEditorForLocation(resultData.getFileLocation(), sourceRange));
+	protected void handleResultData(SourceLocation sourceLocation) throws CommonException {
+		EclipseUtils.run(() -> openEditorForLocation(sourceLocation.getFileLocation(), sourceLocation));
 	}
 	
-	protected void openEditorForLocation(Location fileLoc, SourceLineColumnRange sourceRange) 
-			throws CoreException, CommonException {
+	protected void openEditorForLocation(Location fileLoc, SourceLocation sourceLocation)
+		throws CoreException, CommonException {
 		IEditorInput newInput = getNewEditorInput(fileLoc);
-		
-		ITextEditor newEditor = EditorUtils.openTextEditorAndSetSelection(editor, EditorSettings_Actual.EDITOR_ID, 
+		ITextEditor newEditor = EditorUtils.openTextEditorAndSetSelection(editor, EditorSettings_Actual.EDITOR_ID,
 			newInput, openEditorMode, null);
 		
 		IDocument doc = EditorUtils.getEditorDocument(newEditor);
-		int selectionOffset = getOffsetFrom(doc, sourceRange.line, sourceRange.column);
+		SourceRange sourceRange = sourceLocation.getSourceRange((line, col) -> getOffsetFrom(doc, line, col));
+
 		
-		EditorUtils.setEditorSelection(newEditor, new SourceRange(selectionOffset, 0));
+		EditorUtils.setEditorSelection(newEditor, sourceRange);
+	}
+	
+	protected static int getOffsetFrom(IDocument doc, int line_oneBased, int column_oneBased) {
+		try {
+			int lineOffset = doc.getLineOffset(line_oneBased - 1);
+			return lineOffset + column_oneBased - 1;
+		} catch(BadLocationException e) {
+			LangCore.logError("Invalid line number: " + line_oneBased, e);
+			return 0;
+		}
 	}
 	
 	protected IEditorInput getNewEditorInput(Location newEditorFilePath) throws CommonException {
@@ -90,16 +95,4 @@ public abstract class AbstractOpenElementOperation extends AbstractEditorToolOpe
 			return EditorUtils.getBestEditorInputForLoc(newEditorFilePath);
 		}
 	}
-	
-	protected static int getOffsetFrom(IDocument doc, int line_oneBased, int column_oneBased) throws CoreException {
-		int lineOffset;
-		try {
-			lineOffset = doc.getLineOffset(line_oneBased-1);
-		} catch (BadLocationException e) {
-			throw EclipseCore.createCoreException("Invalid line number: " + line_oneBased, e);
-		}
-		
-		return lineOffset + column_oneBased-1;
-	}
-	
 }

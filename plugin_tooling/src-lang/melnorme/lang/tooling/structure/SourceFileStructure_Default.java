@@ -14,6 +14,8 @@ import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
 import static melnorme.utilbox.core.CoreUtil.areEqual;
 import static melnorme.utilbox.core.CoreUtil.nullToEmpty;
 
+import java.util.Optional;
+
 import melnorme.lang.tooling.common.ParserError;
 import melnorme.utilbox.collections.Indexable;
 import melnorme.utilbox.misc.HashcodeUtil;
@@ -56,8 +58,8 @@ public abstract class SourceFileStructure_Default extends AbstractStructureConta
 	/* -----------------  ----------------- */
 	
 	@Override
-	public Location getLocation() {
-		return location;
+	public Optional<Location> getLocation() {
+		return Optional.ofNullable(location);
 	}
 	
 	@Override

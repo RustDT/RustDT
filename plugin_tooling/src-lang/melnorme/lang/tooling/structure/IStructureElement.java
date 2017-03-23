@@ -16,7 +16,6 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.utilbox.misc.Location;
 
-
 /**
  * A structure element is a lightweight structure describing a top-level element 
  * obtained from a source file (compilation unit).
@@ -52,14 +51,13 @@ public interface IStructureElement extends IStructureElementContainer {
 	/** @return the containing {@link ISourceFileStructure} of this element. Can be null. */
 	ISourceFileStructure getContainingFileStructure();
 	
-	
 	/** @return the optional Location of this structure element. */
 	default Optional<Location> getLocation() {
 		ISourceFileStructure containingFileStructure = getContainingFileStructure();
 		if(containingFileStructure == null) {
 			return Optional.empty();
 		}
-		return Optional.ofNullable(containingFileStructure.getLocation());
+		return containingFileStructure.getLocation();
 	}
 	
 }

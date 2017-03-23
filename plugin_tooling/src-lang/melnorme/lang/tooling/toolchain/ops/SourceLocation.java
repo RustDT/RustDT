@@ -11,56 +11,46 @@
 package melnorme.lang.tooling.toolchain.ops;
 
 import static melnorme.utilbox.core.Assert.AssertNamespace.assertNotNull;
-import static melnorme.utilbox.core.CoreUtil.areEqual;
+import static melnorme.utilbox.core.Assert.AssertNamespace.assertTrue;
 
-import melnorme.lang.tooling.common.SourceLineColumnRange;
-import melnorme.utilbox.misc.HashcodeUtil;
+import java.util.Optional;
+import java.util.function.BiFunction;
+
+import melnorme.lang.tooling.ast.SourceRange;
 import melnorme.utilbox.misc.Location;
 
 public class SourceLocation {
 	
-	// XXX: need to refactor this, and SourceLineColumnRange to a more generic range 
 	protected final Location fileLocation;
-	protected final SourceLineColumnRange sourceRange;
+	protected final Optional<SourceRange> sourceRange;
+	protected int oneBasedLineNumber;
+	protected int oneBasedColNumber;
 	
-	public SourceLocation(Location fileLocation, SourceLineColumnRange sourceRange) {
+	private SourceLocation(Location fileLocation, Optional<SourceRange> sourceRange, int oneBasedLineNumber,
+		int oneBasedColNumber) {
 		this.fileLocation = assertNotNull(fileLocation);
-		this.sourceRange = assertNotNull(sourceRange);
+		this.sourceRange = sourceRange;
+		this.oneBasedLineNumber = oneBasedLineNumber;
+		this.oneBasedColNumber = oneBasedColNumber;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if(this == obj) return true;
-		if(!(obj instanceof SourceLocation)) return false;
-		
-		SourceLocation other = (SourceLocation) obj;
-		
-		return 
-				areEqual(fileLocation, other.fileLocation) &&
-				areEqual(sourceRange, other.sourceRange);
+	public static SourceLocation forSourceRange(Location location, SourceRange sourceRange) {
+		return new SourceLocation(location, Optional.of(sourceRange), 0, 0);
 	}
 	
-	@Override
-	public int hashCode() {
-		return HashcodeUtil.combinedHashCode(fileLocation, sourceRange);
-	}
-	
-	@Override
-	public String toString() {
-		return "SourceLocation[" + 
-			fileLocation + " @ " +
-			sourceRange.toString() + 
-		"]";
-	}
-	
-	/* -----------------  ----------------- */
-	
-	public SourceLineColumnRange getSourceRange() {
-		return sourceRange;
+	public static SourceLocation forOneBasedLineAndColNumber(Location fileLocation, int oneBasedLineNumber,
+		int oneBasedColNumber) {
+		assertTrue(oneBasedLineNumber > 0);
+		assertTrue(oneBasedColNumber > 0);
+		return new SourceLocation(fileLocation, Optional.empty(), oneBasedLineNumber, oneBasedColNumber);
 	}
 	
 	public Location getFileLocation() {
 		return fileLocation;
 	}
 	
+	public SourceRange getSourceRange(BiFunction<Integer, Integer, Integer> linesColsToAbsolutePositionMapper) {
+		return sourceRange.isPresent() ? sourceRange.get()
+			: new SourceRange(linesColsToAbsolutePositionMapper.apply(oneBasedLineNumber, oneBasedColNumber), 0);
+	}
 }

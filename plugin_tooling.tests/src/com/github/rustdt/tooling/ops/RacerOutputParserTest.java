@@ -28,9 +28,7 @@ import melnorme.lang.tooling.ElementAttributes;
 import melnorme.lang.tooling.ToolCompletionProposal;
 import melnorme.lang.tooling.ToolingMessages;
 import melnorme.lang.tooling.ast.SourceRange;
-import melnorme.lang.tooling.common.SourceLineColumnRange;
 import melnorme.lang.tooling.toolchain.ops.OperationSoftFailure;
-import melnorme.lang.tooling.toolchain.ops.SourceLocation;
 import melnorme.utilbox.collections.ArrayList2;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.MiscUtil;
@@ -176,7 +174,7 @@ public class RacerOutputParserTest extends CommonToolingTest {
 		
 		testParseResolvedMatch(buildParser, 
 			"MATCH other,19,3,"+LOC_ROOT+"RustProj/src/main.rs,Function,fn other(foo: i32) {", 
-			new SourceLocation(loc(LOC_ROOT+"/RustProj/src/main.rs"), new SourceLineColumnRange(19, 4)),
+			new RacerCompletionResult(loc(LOC_ROOT + "/RustProj/src/main.rs"), 19, 4),
 			null);
 		
 		testParseResolvedMatch(buildParser, "MATCH other,as", null, "Invalid integer: `as`");
@@ -184,10 +182,12 @@ public class RacerOutputParserTest extends CommonToolingTest {
 	}
 	
 	protected void testParseResolvedMatch(RacerCompletionOutputParser buildParser, String input,
-			SourceLocation expected, String expectedException) {
+		RacerCompletionResult expected, String expectedException) {
 		try {
-			SourceLocation result = buildParser.parseResolvedMatch(input);
-			assertAreEqual(result, expected);
+			RacerCompletionResult result = buildParser.parseResolvedMatch(input);
+			assertEquals(result.location, expected.location);
+			assertEquals(result.oneBasedLineNumber, expected.oneBasedLineNumber);
+			assertEquals(result.zeroBasedColumnNumber, expected.zeroBasedColumnNumber);
 			assertTrue(expectedException == null);
 		} catch(CommonException e) {
 			assertNotNull(expectedException);

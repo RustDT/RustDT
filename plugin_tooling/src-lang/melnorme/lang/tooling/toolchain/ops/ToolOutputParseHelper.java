@@ -13,7 +13,6 @@ package melnorme.lang.tooling.toolchain.ops;
 import java.nio.file.Path;
 
 import melnorme.lang.tooling.common.LineColumnPosition;
-import melnorme.lang.tooling.common.SourceLineColumnRange;
 import melnorme.utilbox.core.CommonException;
 import melnorme.utilbox.misc.Location;
 import melnorme.utilbox.misc.MiscUtil;
@@ -42,16 +41,6 @@ public interface ToolOutputParseHelper {
 	
 	default Location parseLocation(String pathString) throws CommonException {
 		return Location.create(pathString);
-	}
-	
-	public static SourceLocation parsePathLineColumn(String sourceString, String separator) 
-			throws CommonException {
-		
-		Pair<String, LineColumnPosition> pair = parsePathLineColumn2(sourceString, separator);
-		Location loc = Location.create(pair.getFirst());
-		LineColumnPosition lcPos = pair.getSecond();
-		
-		return new SourceLocation(loc, new SourceLineColumnRange(lcPos.line, lcPos.column));
 	}
 	
 	/**
