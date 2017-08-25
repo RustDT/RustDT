@@ -1,5 +1,7 @@
 Project website: http://rustdt.github.io/
 
+As of 2017, **RustDT is no longer actively maintained**, see this [blog post](http://pureconcepture.blogspot.co.uk/2017/07/goodbye-to-eclipse-end-of-era-for.html) for more information. If you are interested in contributing, you can for now fork the project - and there should be enough information here detailing how to build, test, release, etc.
+
 --
 
 [![Build Status](https://travis-ci.org/RustDT/RustDT.svg?branch=latest)](https://travis-ci.org/RustDT/RustDT)
