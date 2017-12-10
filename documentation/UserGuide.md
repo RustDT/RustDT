@@ -18,6 +18,7 @@ Also, to improve Eclipse performance and startup time, it is recommended you twe
 A [Rust toolchain installation](http://www.rust-lang.org/install.html) is required for most IDE functionality. The path to the toolchain installation should be configured in the `Rust` preference page, accessed from the menu `Window / Preferences`. Additionally:
 
  * You will need the Rust source component in the toolchain installation. This component is not included by default, it must be downloaded using `rustup component add rust-src`. Configure the "Rust 'src' Directory" to point to the 'src' directory (this will normally be the Rust toolchain base directory plus `lib\rustlib\src\rust\src`.
+   To find the Rust Toolchain base dir, run `rustc --print sysroot`
 
  * For code completion, you will need the [Racer](https://github.com/phildawes/racer) tool. 
  
