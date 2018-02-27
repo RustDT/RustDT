@@ -19,6 +19,7 @@ You will need [Maven](http://maven.apache.org/) for building RustDT.
  * You need [Eclipse PDE](https://eclipse.org/pde/) to develop Eclipse plugins. Download and start it.
  * Clone the Git repository.
  * In Eclipse, click "File / Import... ", and then "General / Existing projects into workspace". Select the Git repository folder as the "root directory", enable "Search for nested projects", and select all the Eclipse projects that show up. Click finish to import those projects.
+ 
 <a><img src="documentation/README_images/ImportPluginProjects.png" /><a/> <br/>
   
    * Note: The actual project names will be different from those in the screenshot above.
