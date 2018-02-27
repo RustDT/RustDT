@@ -19,9 +19,8 @@ You will need [Maven](http://maven.apache.org/) for building RustDT.
  * You need [Eclipse PDE](https://eclipse.org/pde/) to develop Eclipse plugins. Download and start it.
  * Clone the Git repository.
  * In Eclipse, click "File / Import... ", and then "General / Existing projects into workspace". Select the Git repository folder as the "root directory", enable "Search for nested projects", and select all the Eclipse projects that show up. Click finish to import those projects.
-<div align="center">
 <a><img src="documentation/README_images/ImportPluginProjects.png" /><a/> <br/>
-</div>
+  
    * Note: The actual project names will be different from those in the screenshot above.
    * Note: Java compiler settings will be automatically configured, since Eclipse compiler settings are stored in source version control.
  * Setup the target platform. Unfortunately due to limitations in Tycho/PDE tooling ([more info](https://github.com/tesla/m2eclipse-tycho/issues/29)) some manual steps are required:
@@ -31,9 +30,7 @@ You will need [Maven](http://maven.apache.org/) for building RustDT.
    1. Click "Add", then select "Software Site". 
    1. On the "Add Software Site" dialog, click "Add...", then "Local...", navigate to Git repo directory, then choose the `target-platform/deps-repository/repository` directory.
    1. On the "Add Software Site" dialog, the new repository should be selected. Click "Select All" to select all deps, then click "Finish". It should look more or less like this:
-<div align="center">
 <a><img src="documentation/README_images/Set_As_Target_Platform.png" /><a/> 
-</div>
    1. Then finally click "Set as Target Platform".
  * Build the workspace ( "Project / Build All"). Everything should build fine now, there should be no errors.
  * To start the IDE from your workspace: Open "Run / Run Configurations ...". Click on "Eclipse Application" to create a new launch for the plugins in your workspace. The default new configuration that is created should already be ready to be launched.
@@ -51,8 +48,6 @@ A release is a web site with an Eclipse p2 update site. The website may contain 
  1. To actually publish the project site, run `ant -f releng/ PublishProjectSite -DreleaseTag=<tagName>`. What happens here is that the whole project site will be pushed into a Git repository, to then be served in some way (for example Github Pages). If `projectSiteGitURL` is not specified, the default value in releng-build.properties will be used.
    * For more info on the Release Engineering script, run `ant -f releng/`, this will print the help.
  1. A branch or tag named `latest` should also be created in Github, pointing to the latest release commit. The previous `latest` tag can be deleted/overwritten. The documentation pages use this tag/branch in their links.
-
-
 
 ## Project design info and notes
 
