@@ -56,7 +56,7 @@ public class RustNamingRules {
 			"abstract", "alignof", "as", "become", "box",
 			"break", "const", "continue", "crate", "do",
 			"else", "enum", "extern", "false", "final",
-			"fn", "for", "if", "impl", "in",
+			"fn", "for", "if", "impl", "in", "dyn",
 			"let", "loop", "macro", "match", "mod",
 			"move", "mut", "offsetof", "override", "priv",
 			"proc", "pub", "pure", "ref", "return",
