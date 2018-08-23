@@ -43,7 +43,7 @@ public class RustFmtOperation implements AbstractToolOperation<String> {
 		ArrayList2<String> cmdLine = ArrayList2.create(rustFmt.toString());
 		
 //		cmdLine.add("--write-mode=diff");
-		cmdLine.add("--skip-children");
+//		cmdLine.add("--skip-children");
 		
 		ProcessBuilder pb = new ProcessBuilder(cmdLine);
 		// set directory, workaround for bug: https://github.com/rust-lang-nursery/rustfmt/issues/562

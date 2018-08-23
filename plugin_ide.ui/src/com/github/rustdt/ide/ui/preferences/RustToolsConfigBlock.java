@@ -85,7 +85,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 	}
 	
 	public static final Indexable<String> RAINICORN_CargoInstallArgs = list(
-		"--git", "https://github.com/RustDT/Rainicorn", "--tag", "version_1.x");
+		"--git", "https://github.com/snuk182/Rainicorn");
 	
 	public class RainicornLocationGroup extends AbstractToolLocationGroup {
 		

@@ -24,8 +24,8 @@ public class RustWordLexerRule extends WordLexerRule<RustColoringTokens> {
 	
 	public static final String[] keywords_control = { 
 			"abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", 
-			"do", "else", "enum", "extern", "final", "fn", "for", "if", "impl", "in", "let", 
-			"loop", "macro", "match", "mod", "move", "mut", "offsetof", "override", "dyn",
+			"do", "dyn", "else", "enum", "extern", "final", "fn", "for", "if", "impl", "in", "let", 
+			"loop", "macro", "match", "mod", "move", "mut", "offsetof", "override",
 			"priv", "proc", "pub", "pure", "ref", "return", "sizeof", "static", "struct", 
 			"trait", "type", "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield"
 	};

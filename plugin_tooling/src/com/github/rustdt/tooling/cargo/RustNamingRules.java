@@ -54,9 +54,9 @@ public class RustNamingRules {
 	
 	public static HashSet2<String> CRATE_NAME_BLACKLIST = new HashSet2<String>().addElements(array( 
 			"abstract", "alignof", "as", "become", "box",
-			"break", "const", "continue", "crate", "do",
+			"break", "const", "continue", "crate", "do", "dyn",
 			"else", "enum", "extern", "false", "final",
-			"fn", "for", "if", "impl", "in", "dyn",
+			"fn", "for", "if", "impl", "in",
 			"let", "loop", "macro", "match", "mod",
 			"move", "mut", "offsetof", "override", "priv",
 			"proc", "pub", "pure", "ref", "return",
