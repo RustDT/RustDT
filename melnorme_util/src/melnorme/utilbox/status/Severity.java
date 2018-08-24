@@ -50,10 +50,9 @@ public enum Severity {
 		
 		switch (severityString.toUpperCase()) {
 		case "WARNING": return WARNING;
-		case "ERROR": return ERROR;
 		case "INFO": return INFO;
 		default:
-			throw new CommonException("Invalid Severity string `" + severityString + "`.");
+		case "ERROR": return ERROR;
 		}
 	}
 	
