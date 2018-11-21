@@ -10,8 +10,6 @@
  *******************************************************************************/
 package lang_project_id.jvmcheck;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -41,31 +39,7 @@ public class JvmCheck implements IStartup, JvmCheckConstants_Actual {
 	
 	@Override
 	public void earlyStartup() {
-		final int javaVersion = getJavaVersion();
-		
-		if(javaVersion >= REQUIRED_JAVA_VERSION)
-			return;
-		
-		// Show error message to the user, because the platform just silently fails. 
-		// See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=417336
-		
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				Shell activeShell = getActiveWorkbenchShell();
-				
-				String message = "Could not start " + FEATURE_NAME + " because Java version is: " + javaVersion 
-						+ "\nVersion " + REQUIRED_JAVA_VERSION + " is required";
-				
-				System.err.println(message);
-				
-				if(activeShell == null) {
-					return;
-				}
-				MessageDialog.openError(activeShell, "Error", message);
-			}
-		});
-	
+			
 	}
 	
 	/** Gets the active workbench window. */
