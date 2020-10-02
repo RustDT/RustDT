@@ -27,9 +27,9 @@ public class RustSDKSrcLocationValidator extends LocationValidator {
 	@Override
 	protected Location getValidatedField_rest(Location location) throws ValidationException {
 		
-		if(!location.resolve_fromValid("libcore").toFile().exists()) {
+		if(!location.resolve_fromValid("libcore").toFile().exists() && !location.resolve_fromValid("core").toFile().exists()) {
 			throw createException(Severity.WARNING, 
-					MessageFormat.format("Path `{0}` does not contain {1}' directory.", location, "'libcore'"));
+					MessageFormat.format("Path `{0}` does not contain core library directory.", location));
 		}
 		
 		return location;
