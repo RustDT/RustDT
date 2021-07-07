@@ -11,7 +11,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.26.0</tycho-version>
+		<tycho-version>2.3.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<parentBaseDir>${project.parent.basedir}</parentBaseDir>
@@ -50,6 +50,11 @@
 			<layout>p2</layout>
 			<id>neon</id>
 			<url>http://download.eclipse.org/releases/neon</url>
+		</repository>
+		<repository>
+			<layout>p2</layout>
+			<id>2021-06</id>
+			<url>http://download.eclipse.org/releases/2021-06</url>
 		</repository>
 		<repository>
 			<layout>p2</layout>

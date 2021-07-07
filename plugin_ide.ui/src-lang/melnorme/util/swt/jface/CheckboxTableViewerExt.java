@@ -66,7 +66,7 @@ public class CheckboxTableViewerExt<ELEMENTS> extends CheckboxTableViewer {
 		return getSelection().iterator();
 	}
 	
-	public static interface ITypedStructuredSelection<ELEMENTS> extends IStructuredSelection, Iterable<ELEMENTS> {
+	public static interface ITypedStructuredSelection<ELEMENTS> extends IStructuredSelection {
 		
 		@Override
 		public ELEMENTS getFirstElement();
