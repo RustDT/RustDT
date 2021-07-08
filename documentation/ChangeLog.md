@@ -2,6 +2,9 @@
 
 ### (NextVersion)
  * Fixed: Build Target's append environment variables might not replace variables correctly in Windows, due to case issues.
+ 
+### 0.9.0
+ * Newer Eclipse builds support (2021-06)
 
 ### 0.8.0
  * Added support for Cargo's JSON output, with `--message-format=json`. (#138) 
