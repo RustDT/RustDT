@@ -38,6 +38,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 	/* -----------------  ----------------- */
 	
 	protected final ArrayList2<String> sourceArgs = new ArrayList2<>();
+	protected final String exeName;
 
 	public Start_CargoInstallJob_Operation(String crateName, DownloadToolTextField downloadToolTextField,
 			Indexable<String> sourceArgs, String exeName) {
@@ -47,6 +48,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 			downloadToolTextField, "", exeName);
 		
 		this.sourceArgs.addAll2(sourceArgs);
+		this.exeName = exeName;
 	}
 	
 	protected String getSDKPathString() {
@@ -65,7 +67,7 @@ public class Start_CargoInstallJob_Operation extends StartToolDownload_FromField
 		ArrayList2<String> args = ArrayList2.create("install");
 		args.addAll(sourceArgs);
 		args.addElements("--root", dest.toPathString());
-		args.addElements("--force");
+		args.addElements("--force", exeName);
 		
 		return toolMgr.createToolProcessBuilder(null, sdkToolPath, args.toArray(String.class));
 	}
