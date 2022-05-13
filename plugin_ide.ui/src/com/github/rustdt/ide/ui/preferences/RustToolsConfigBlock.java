@@ -59,7 +59,7 @@ public class RustToolsConfigBlock extends LangSDKConfigBlock {
 		return new RustSDKLocationValidator();
 	}
 	
-	public static final Indexable<String> RACER_CargoInstallArgs = list("racer");
+	public static final Indexable<String> RACER_CargoInstallArgs = list("--git", "https://github.com/snuk182/racer");
 	
 	public class RacerLocationGroup extends AbstractToolLocationGroup {
 		
